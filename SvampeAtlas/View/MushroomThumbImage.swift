@@ -10,12 +10,37 @@ import UIKit
 
 class MushroomThumbImage: UIImageView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    var circleLayer: CAShapeLayer?
+    
+    
+    override func awakeFromNib() {
+        setupView()
+        super.awakeFromNib()
     }
-    */
 
+    override func layoutSubviews() {
+        self.layer.cornerRadius = 50
+//        configureLayers()
+    }
+    
+    
+    func configureLayers() {
+        if circleLayer == nil {
+            let circleCenter = CGPoint(x: bounds.size.width / 2, y: bounds.size.height)
+            let circleRadius = bounds.size.width / 2
+            let circlePath = UIBezierPath(arcCenter: circleCenter, radius: circleRadius, startAngle: CGFloat(0), endAngle: CGFloat.pi * 2, clockwise: true)
+            let oval = UIBezierPath(ovalIn: frame)
+            circleLayer = CAShapeLayer()
+            circleLayer?.path = oval.cgPath
+            layer.mask = circleLayer
+        }
+    }
+    
+    func setupView() {
+        self.clipsToBounds = true
+        self.layer.shadowOpacity = 0.7
+        
+        
+        
+    }
 }

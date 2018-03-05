@@ -7,3 +7,16 @@
 //
 
 import Foundation
+
+class PersistanceService {
+    
+    
+    
+    
+    
+//    func retrieveAllStoredMushrooms() -> [Mushroom] {
+//    }
+    
+
+    
+}

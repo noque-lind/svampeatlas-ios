@@ -9,16 +9,62 @@
 import UIKit
 
 class MushroomCell: UITableViewCell {
-
+    
+    @IBOutlet weak var thumbImage: MushroomThumbImage!
+    @IBOutlet weak var mainTitle: UILabel!
+    @IBOutlet weak var secondaryTitle: UILabel!
+    
+    @IBOutlet weak var dkAmountTitle: UILabel!
+    @IBOutlet weak var dkAmount: UILabel!
+    @IBOutlet weak var dkLatestTitle: UILabel!
+    @IBOutlet weak var dkLatest: UILabel!
+    
     override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+        setupView()
+    }
+    
+    
+    override func prepareForReuse() {
+        thumbImage.image = nil
+    }
+    
+    
+    func configureCell(withMushroom mushroom: Mushroom) {
+        mainTitle.text = mushroom.vernacularName_dk?.vernacularname_dk
+        secondaryTitle.text = mushroom.vernacularName_dk?.appliedLatinName
+        dkAmount.text = String(describing: mushroom.statistics!.accepted_count)
+        downloadThumbImage(url: mushroom.images[0]!.thumburi)
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+    
 
-        // Configure the view for the selected state
+    
+    
+    
+    
+    
+    func downloadThumbImage(url: String) {
+        DataService.instance.getThumbImageForMushroom(url: url) { (image) in
+            DispatchQueue.main.async {
+                self.thumbImage.image = image
+            }
+        }
     }
-
+    
+    
+    func setupView() {
+        mainTitle.font = UIFont.appTitle()
+        secondaryTitle.font = UIFont.appTextHighlight(customSize: 16)
+        dkAmountTitle.font = UIFont.appText()
+        dkLatestTitle.font = UIFont.appText()
+        dkAmount.font = UIFont.appTextHighlight()
+        dkLatest.font = UIFont.appTextHighlight()
+        
+        dkAmountTitle.text = "Antal danske fund:"
+        dkLatestTitle.text = "Seneste danske fund:"
+        
+        
+        mainTitle.adjustsFontSizeToFitWidth = true
+        secondaryTitle.adjustsFontSizeToFitWidth = true
+    }
 }

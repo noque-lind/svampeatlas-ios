@@ -10,12 +10,20 @@ import UIKit
 
 class ImagesCollectionView: UICollectionView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
+    public private(set) var defaultHeightConstant: CGFloat!
+    
+    public func animateToDefaultPosition() {
+        heightConstraint.constant = self.defaultHeightConstant
+        collectionViewLayout.invalidateLayout()
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
+            self.superview?.layoutIfNeeded()
+        }, completion: nil)
     }
-    */
-
+    
+    override func awakeFromNib() {
+        defaultHeightConstant = heightConstraint.constant
+        
+        super.awakeFromNib()
+    }
 }

@@ -10,12 +10,16 @@ import UIKit
 
 class MushroomDetailsScrollView: UIScrollView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    public func setupInsets(collectionViewHeight: CGFloat) {
+        self.contentInset = UIEdgeInsets(top: collectionViewHeight, left: 0, bottom: 0, right: 0)
+        self.scrollIndicatorInsets = UIEdgeInsets(top: collectionViewHeight, left: 0, bottom: 0, right: 0)
     }
-    */
-
+    
+    
+    public func configureScrollView(withMushroom mushroom: Mushroom) {
+        self.contentSize = CGSize(width: self.frame.width, height: frame.size.height * 4)
+        let label = UILabel(frame: CGRect.init(x: 0, y: 600, width: 300, height: 300))
+        label.text = "HAHAHAHAA"
+        addSubview(label)
+    }
 }

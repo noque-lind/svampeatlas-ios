@@ -23,11 +23,12 @@ class ViewController: UIViewController {
     }
     
     
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.allowsSelection = true
         self.navigationController?.tabBarItem.badgeValue = "2"
         
         DataService.instance.getMushrooms { (mushrooms) in
@@ -56,6 +57,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let detailsVC = self.storyboard?.instantiateViewController(withIdentifier: "detailsVC") as? DetailsViewController else {return}
+        detailsVC.mushroom = mushrooms[indexPath.row]
+        self.navigationController!.pushViewController(detailsVC, animated: true)
     }
     
 }

@@ -8,14 +8,44 @@
 
 import UIKit
 
+protocol ImagesPageControlDataSource {
+    func numberOfPages() -> Int
+}
+
+protocol ImagesPageControlDelegate {
+    func didChangePage(toPage page: Int)
+}
+
 class ImagesPageControl: UIPageControl {
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    
+    public var dataSource: ImagesPageControlDataSource? = nil {
+        didSet {
+            setupPageControl()
+        }
     }
-    */
-
+    
+    public var delegate: ImagesPageControlDelegate? = nil
+    
+    public func nextPage() {
+        if currentPage == numberOfPages - 1 {
+            currentPage = 0
+        } else {
+            currentPage = currentPage + 1
+        }
+        delegate?.didChangePage(toPage: self.currentPage)
+    }
+    
+    
+    override func awakeFromNib() {
+        self.addTarget(self, action: #selector(changedValue(sender:)), for: .valueChanged)
+    }
+    
+    
+    private func setupPageControl() {
+        self.numberOfPages = dataSource!.numberOfPages()
+    }
+    
+    @objc private func changedValue(sender: ImagesPageControl) {
+        delegate?.didChangePage(toPage: sender.currentPage)
+    }
 }

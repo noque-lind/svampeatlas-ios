@@ -24,6 +24,11 @@
 		4A69BC922038D96500D3B88B /* SvampeAtlasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC912038D96500D3B88B /* SvampeAtlasTests.swift */; };
 		4A69BC9D2038D96500D3B88B /* SvampeAtlasUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC9C2038D96500D3B88B /* SvampeAtlasUITests.swift */; };
 		4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BCAB2039805100D3B88B /* Mushroom.swift */; };
+		4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA1A204E84C2003ED3BE /* DetailsViewController.swift */; };
+		4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA1C204E889E003ED3BE /* ImageCell.swift */; };
+		4AC5CA1F204E8DB0003ED3BE /* ImagesPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */; };
+		4AC5CA21204EA817003ED3BE /* MushroomDetailsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */; };
+		4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */; };
 		4AEE2F37204551B600D20C2D /* MushroomThumbImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */; };
 		4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F38204557ED00D20C2D /* PersistanceService.swift */; };
 		4AEE2F3B20455EDE00D20C2D /* MushroomContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */; };
@@ -70,6 +75,11 @@
 		4A69BC9C2038D96500D3B88B /* SvampeAtlasUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SvampeAtlasUITests.swift; sourceTree = "<group>"; };
 		4A69BC9E2038D96500D3B88B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A69BCAB2039805100D3B88B /* Mushroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mushroom.swift; sourceTree = "<group>"; };
+		4AC5CA1A204E84C2003ED3BE /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		4AC5CA1C204E889E003ED3BE /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
+		4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesPageControl.swift; sourceTree = "<group>"; };
+		4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomDetailsScrollView.swift; sourceTree = "<group>"; };
+		4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionView.swift; sourceTree = "<group>"; };
 		4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomThumbImage.swift; sourceTree = "<group>"; };
 		4AEE2F38204557ED00D20C2D /* PersistanceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistanceService.swift; sourceTree = "<group>"; };
 		4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomContainerView.swift; sourceTree = "<group>"; };
@@ -107,6 +117,9 @@
 				4A28AB8A2044454200F21EEE /* GradientView.swift */,
 				4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */,
 				4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */,
+				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
+				4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */,
+				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -116,6 +129,7 @@
 			children = (
 				4A0775CC20443D6B00DD5AF0 /* MushroomCell.swift */,
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
+				4AC5CA1C204E889E003ED3BE /* ImageCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -144,6 +158,7 @@
 			children = (
 				4A69BC7B2038D96500D3B88B /* ViewController.swift */,
 				4A69457520456C010041824E /* SideMenuController.swift */,
+				4AC5CA1A204E84C2003ED3BE /* DetailsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -348,15 +363,20 @@
 			files = (
 				4A69BC822038D96500D3B88B /* SvampeAtlas.xcdatamodeld in Sources */,
 				4AEE2F3B20455EDE00D20C2D /* MushroomContainerView.swift in Sources */,
+				4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */,
 				4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */,
+				4AC5CA21204EA817003ED3BE /* MushroomDetailsScrollView.swift in Sources */,
 				4A69457820456CD60041824E /* SideMenuStaticCell.swift in Sources */,
 				4A69BC7C2038D96500D3B88B /* ViewController.swift in Sources */,
 				4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */,
+				4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */,
 				4A28AB84204440FB00F21EEE /* DataService.swift in Sources */,
+				4AC5CA1F204E8DB0003ED3BE /* ImagesPageControl.swift in Sources */,
 				4A28AB872044413100F21EEE /* Constants.swift in Sources */,
 				4A0775CD20443D6B00DD5AF0 /* MushroomCell.swift in Sources */,
 				4A28AB892044443000F21EEE /* ELRevealViewController.swift in Sources */,
 				4AEE2F37204551B600D20C2D /* MushroomThumbImage.swift in Sources */,
+				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
 				4A69457620456C010041824E /* SideMenuController.swift in Sources */,
 				4A28AB8D20444B0300F21EEE /* AppProperties.swift in Sources */,

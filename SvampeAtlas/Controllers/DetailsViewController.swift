@@ -21,6 +21,8 @@ class DetailsViewController: UIViewController {
         super.viewDidLoad()
         imagesCollectionView.delegate = self
         imagesCollectionView.dataSource = self
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
         pageControl.delegate = self
         pageControl.dataSource = self
         scrollView.delegate = self

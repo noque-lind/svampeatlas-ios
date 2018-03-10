@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nbd-0V-aQq">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -17,7 +17,7 @@
             <objects>
                 <viewController id="nbd-0V-aQq" customClass="ELRevealViewController" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hr3-zL-tke">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="EIG-10-SWK"/>
@@ -30,8 +30,8 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <segue destination="fT0-vv-ujW" kind="custom" identifier="EL_main" customClass="ELRevealViewControllerSegueSetController" customModule="SvampeAtlas" customModuleProvider="target" id="Ohk-kT-wTw"/>
                         <segue destination="gVn-U8-qO3" kind="custom" identifier="EL_left" customClass="ELRevealViewControllerSegueSetController" customModule="SvampeAtlas" customModuleProvider="target" id="Nay-AE-qzx"/>
+                        <segue destination="BYZ-38-t0r" kind="custom" identifier="EL_main" customClass="ELRevealViewControllerSegueSetController" customModule="SvampeAtlas" customModuleProvider="target" id="fhf-oS-0Xd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yh7-ig-KGD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -43,15 +43,15 @@
             <objects>
                 <viewController id="gVn-U8-qO3" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gTu-0O-Nes">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5vV-st-OrR" customClass="GradientView" customModule="SvampeAtlas" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v8j-eL-re0">
-                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="667"/>
+                                <rect key="frame" x="0.0" y="44" width="188" height="734"/>
                                 <connections>
                                     <segue destination="Ygz-p4-kFx" kind="embed" id="nXr-a7-3r2"/>
                                 </connections>
@@ -59,28 +59,28 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="v8j-eL-re0" firstAttribute="top" secondItem="gTu-0O-Nes" secondAttribute="top" id="BZ1-W2-Pwv"/>
+                            <constraint firstItem="v8j-eL-re0" firstAttribute="top" secondItem="9Ta-t0-bVA" secondAttribute="top" id="AlJ-L7-uTE"/>
                             <constraint firstItem="9Ta-t0-bVA" firstAttribute="trailing" secondItem="5vV-st-OrR" secondAttribute="trailing" id="PkT-B8-IqR"/>
                             <constraint firstItem="v8j-eL-re0" firstAttribute="leading" secondItem="9Ta-t0-bVA" secondAttribute="leading" id="YjJ-Zf-ghd"/>
                             <constraint firstItem="9Ta-t0-bVA" firstAttribute="centerX" secondItem="v8j-eL-re0" secondAttribute="trailing" id="ZWy-PD-3fG"/>
                             <constraint firstItem="v8j-eL-re0" firstAttribute="bottom" secondItem="9Ta-t0-bVA" secondAttribute="bottom" id="bIb-oL-uC5"/>
                             <constraint firstItem="5vV-st-OrR" firstAttribute="top" secondItem="gTu-0O-Nes" secondAttribute="top" id="deX-UO-NW1"/>
                             <constraint firstItem="5vV-st-OrR" firstAttribute="leading" secondItem="9Ta-t0-bVA" secondAttribute="leading" id="fSs-Yt-ImC"/>
-                            <constraint firstItem="9Ta-t0-bVA" firstAttribute="bottom" secondItem="5vV-st-OrR" secondAttribute="bottom" id="tSz-AQ-AID"/>
+                            <constraint firstAttribute="bottom" secondItem="5vV-st-OrR" secondAttribute="bottom" id="lAD-CY-Oul"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9Ta-t0-bVA"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ftO-P2-E9B" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1258.4000000000001" y="818.14092953523243"/>
+            <point key="canvasLocation" x="-1258.4000000000001" y="817.98029556650249"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="ShK-Wc-iZC">
             <objects>
                 <viewController id="xhS-cM-wru" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XAT-ZK-btQ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="CfB-2o-PhC"/>
@@ -95,15 +95,15 @@
             <objects>
                 <tableViewController id="Ygz-p4-kFx" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="static" style="plain" separatorStyle="none" rowHeight="40" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="asM-sp-Nrn">
-                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="188" height="734"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="ZAj-tQ-uqK">
-                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="176"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" misplaced="YES" id="ZAj-tQ-uqK">
+                            <rect key="frame" x="0.0" y="0.0" width="188" height="176"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LogoSmall" translatesAutoresizingMaskIntoConstraints="NO" id="2IV-Cw-pGg">
-                                    <rect key="frame" x="48" y="48" width="91.5" height="80"/>
+                                    <rect key="frame" x="48.000000000000007" y="48" width="91.666666666666686" height="191"/>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -118,14 +118,14 @@
                             <tableViewSection id="Gkk-Dt-Hhq">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="UgK-ec-lFq" customClass="SideMenuStaticCell" customModule="SvampeAtlas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="176" width="187.5" height="40"/>
+                                        <rect key="frame" x="0.0" y="176" width="188" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UgK-ec-lFq" id="znE-jT-ULv">
-                                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="40"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="188" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nHb-NJ-fE2">
-                                                    <rect key="frame" x="8" y="8" width="171.5" height="24"/>
+                                                    <rect key="frame" x="8" y="8" width="171.66666666666666" height="24"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LogoSmall" translatesAutoresizingMaskIntoConstraints="NO" id="VrF-oo-0nI">
                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="24"/>
@@ -134,7 +134,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Svampe atlas" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Hg-UQ-8RK">
-                                                            <rect key="frame" x="28" y="0.0" width="143.5" height="24"/>
+                                                            <rect key="frame" x="28" y="0.0" width="143.66666666666666" height="24"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -152,18 +152,17 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="label" destination="7Hg-UQ-8RK" id="7eh-v8-RJP"/>
-                                            <segue destination="fT0-vv-ujW" kind="custom" customClass="ELRevealViewControllerSeguePushController" customModule="SvampeAtlas" customModuleProvider="target" id="yfo-RT-bjv"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Gmz-bB-y17" customClass="SideMenuStaticCell" customModule="SvampeAtlas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="216" width="187.5" height="40"/>
+                                        <rect key="frame" x="0.0" y="216" width="188" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Gmz-bB-y17" id="vaR-qt-uJ3">
-                                            <rect key="frame" x="0.0" y="0.0" width="187.5" height="40"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="188" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vJB-I8-fcH">
-                                                    <rect key="frame" x="8" y="8" width="171.5" height="24"/>
+                                                    <rect key="frame" x="8" y="8" width="171.66666666666666" height="24"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Camera" translatesAutoresizingMaskIntoConstraints="NO" id="vyF-r1-1VF">
                                                             <rect key="frame" x="0.0" y="0.0" width="20" height="24"/>
@@ -172,7 +171,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Arts bestemmelse" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kM2-yc-Og8">
-                                                            <rect key="frame" x="28" y="0.0" width="143.5" height="24"/>
+                                                            <rect key="frame" x="28" y="0.0" width="143.66666666666666" height="24"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -212,19 +211,22 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7fN-Mi-6pD" customClass="GradientView" customModule="SvampeAtlas" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7J-6a-8XL" customClass="CategoryView" customModule="SvampeAtlas" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="89"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2yQ-pK-KrM">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                                        <rect key="frame" x="0.0" y="44" width="375" height="45"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="45" id="PKp-ok-1bz"/>
+                                        </constraints>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="jKH-Mj-dIy">
                                             <size key="itemSize" width="50" height="45"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -263,16 +265,14 @@
                                 <constraints>
                                     <constraint firstItem="2yQ-pK-KrM" firstAttribute="leading" secondItem="d7J-6a-8XL" secondAttribute="leading" id="Gs9-L8-0na"/>
                                     <constraint firstAttribute="trailing" secondItem="2yQ-pK-KrM" secondAttribute="trailing" id="Rch-Ij-Ff0"/>
-                                    <constraint firstAttribute="height" constant="45" id="axc-xG-tKw"/>
-                                    <constraint firstItem="2yQ-pK-KrM" firstAttribute="top" secondItem="d7J-6a-8XL" secondAttribute="top" id="jii-xa-oPs"/>
                                     <constraint firstAttribute="bottom" secondItem="2yQ-pK-KrM" secondAttribute="bottom" id="mna-YT-rSw"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="collectionView" destination="2yQ-pK-KrM" id="6qO-mn-d4k"/>
                                 </connections>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5FK-VA-GVz">
-                                <rect key="frame" x="0.0" y="45" width="375" height="558"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5FK-VA-GVz" customClass="MushroomTableView" customModule="SvampeAtlas" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="89" width="375" height="723"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="mushroomCell" rowHeight="174" id="U6t-Sw-bb0" customClass="MushroomCell" customModule="SvampeAtlas" customModuleProvider="target">
@@ -322,13 +322,13 @@
                                                                             <rect key="frame" x="0.0" y="0.0" width="205" height="38"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vwk-JH-hxm">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="102.5" height="38"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="102.66666666666667" height="38"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                     <nil key="textColor"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BCt-BG-Y7F">
-                                                                                    <rect key="frame" x="102.5" y="0.0" width="102.5" height="38"/>
+                                                                                    <rect key="frame" x="102.66666666666666" y="0.0" width="102.33333333333334" height="38"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                     <nil key="textColor"/>
                                                                                     <nil key="highlightedColor"/>
@@ -339,13 +339,13 @@
                                                                             <rect key="frame" x="0.0" y="38" width="205" height="38"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2v-gP-iDJ">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="42" height="38"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="41.666666666666664" height="38"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                     <nil key="textColor"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kGf-ZL-5I5">
-                                                                                    <rect key="frame" x="42" y="0.0" width="163" height="38"/>
+                                                                                    <rect key="frame" x="41.666666666666657" y="0.0" width="163.33333333333334" height="38"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                     <nil key="textColor"/>
                                                                                     <nil key="highlightedColor"/>
@@ -391,20 +391,22 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5FK-VA-GVz" secondAttribute="bottom" id="3bR-4s-VHk"/>
                             <constraint firstItem="d7J-6a-8XL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="7y7-8A-7uZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="7fN-Mi-6pD" secondAttribute="trailing" id="9wE-av-RIE"/>
                             <constraint firstItem="5FK-VA-GVz" firstAttribute="top" secondItem="d7J-6a-8XL" secondAttribute="bottom" id="AOo-Rd-ktV"/>
-                            <constraint firstItem="d7J-6a-8XL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Aa6-R8-0mB"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="d7J-6a-8XL" secondAttribute="bottom" constant="-45" id="BiY-wj-ZOD"/>
                             <constraint firstItem="d7J-6a-8XL" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="BuB-NZ-Gmc"/>
+                            <constraint firstItem="d7J-6a-8XL" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Hjb-LX-0Ou"/>
                             <constraint firstItem="7fN-Mi-6pD" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="RFM-jt-ho7"/>
                             <constraint firstItem="5FK-VA-GVz" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="c8n-DK-yky"/>
                             <constraint firstItem="5FK-VA-GVz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="i5B-YD-Sy0"/>
                             <constraint firstItem="7fN-Mi-6pD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="tJR-k6-Sbd"/>
+                            <constraint firstAttribute="bottom" secondItem="5FK-VA-GVz" secondAttribute="bottom" id="w9s-IF-lEJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="7fN-Mi-6pD" secondAttribute="bottom" id="ykY-oF-fNv"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Svampe atlas" largeTitleDisplayMode="never" id="8db-Kb-sIf">
                         <barButtonItem key="leftBarButtonItem" image="Menu" style="plain" id="xdS-Ja-cOB"/>
                     </navigationItem>
@@ -415,18 +417,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="792.79999999999995" y="33.733133433283363"/>
+            <point key="canvasLocation" x="792.79999999999995" y="33.251231527093594"/>
         </scene>
         <!--Details View Controller-->
         <scene sceneID="CGv-Zc-Lz8">
             <objects>
                 <viewController storyboardIdentifier="detailsVC" id="4Be-uK-R79" customClass="DetailsViewController" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BD1-Cq-iq3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O7q-ae-aVF" customClass="MushroomDetailsScrollView" customModule="SvampeAtlas" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="250" width="375" height="417"/>
+                                <rect key="frame" x="0.0" y="250" width="375" height="528"/>
                             </scrollView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="WmE-cN-zC0" customClass="ImagesCollectionView" customModule="SvampeAtlas" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
@@ -442,7 +444,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageCell" id="Zdq-Z4-03h" customClass="ImageCell" customModule="SvampeAtlas" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="6.5" width="376" height="237"/>
+                                        <rect key="frame" x="0.0" y="6.666666666666667" width="376" height="237"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="376" height="237"/>
@@ -513,33 +515,10 @@
             </objects>
             <point key="canvasLocation" x="1680.8" y="33.733133433283363"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="uTc-N9-R8g">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fT0-vv-ujW" sceneMemberID="viewController">
-                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="sm5-lQ-oGm">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="J0D-hD-WOF"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hBH-Xd-pjt" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="32" y="33.283358320839582"/>
-        </scene>
     </scenes>
     <resources>
         <image name="Camera" width="34" height="25"/>
         <image name="LogoSmall" width="97" height="111"/>
         <image name="Menu" width="18" height="8"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="yfo-RT-bjv"/>
-    </inferredMetricsTieBreakers>
 </document>

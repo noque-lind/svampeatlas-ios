@@ -10,6 +10,8 @@ import UIKit
 
 class CategoryCell: UICollectionViewCell {
     
+    @IBOutlet weak var label: UILabel!
+    
     override var isSelected: Bool {
         didSet {
             if isSelected {
@@ -20,7 +22,11 @@ class CategoryCell: UICollectionViewCell {
         }
     }
     
-    @IBOutlet weak var label: UILabel!
+    override func awakeFromNib() {
+        label.textColor = UIColor.appSecondaryColour()
+    }
+    
+    
     
 
     func configureCell(title: String) {

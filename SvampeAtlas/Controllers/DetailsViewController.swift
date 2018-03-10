@@ -78,23 +78,34 @@ extension DetailsViewController: ImagesPageControlDataSource, ImagesPageControlD
 extension DetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == self.scrollView {
-            print(scrollView.contentOffset.y)
-            imagesCollectionView.heightConstraint.constant =  imagesCollectionView.heightConstraint.constant - ((scrollView.contentOffset.y) / 2)
-            imagesCollectionView.collectionViewLayout.invalidateLayout()
-            scrollView.setContentOffset(CGPoint.zero, animated: false)
-        }
+            if imagesCollectionView.heightConstraint.constant != imagesCollectionView.minimumHeight {
+                    imagesCollectionView.heightConstraint.constant =  imagesCollectionView.heightConstraint.constant - ((scrollView.contentOffset.y) / 3)
+                    imagesCollectionView.collectionViewLayout.invalidateLayout()
+                    scrollView.setContentOffset(CGPoint.zero, animated: false)
+            } else {
+                if scrollView.contentOffset.y < 0 {
+                    imagesCollectionView.heightConstraint.constant =  imagesCollectionView.heightConstraint.constant - ((scrollView.contentOffset.y) / 3)
+                    imagesCollectionView.collectionViewLayout.invalidateLayout()
+                    scrollView.setContentOffset(CGPoint.zero, animated: false)
+                }
+            }
+            
+            
+            
+            
+            
     }
-    
+    }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if scrollView == self.scrollView {
-            imagesCollectionView.animateToDefaultPosition()
+            imagesCollectionView.animateToPosition()
         }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if scrollView == self.scrollView {
-            imagesCollectionView.animateToDefaultPosition()
+            imagesCollectionView.animateToPosition()
         } else {
         pageControl.currentPage = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
         imageScrollTimer.invalidate()

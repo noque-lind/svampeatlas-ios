@@ -29,6 +29,8 @@
 		4AC5CA1F204E8DB0003ED3BE /* ImagesPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */; };
 		4AC5CA21204EA817003ED3BE /* MushroomDetailsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */; };
 		4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */; };
+		4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD43A0320529BDF001F6541 /* CategoryView.swift */; };
+		4AD43A0620529CF5001F6541 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD43A0520529CF5001F6541 /* CategoryCell.swift */; };
 		4AEE2F37204551B600D20C2D /* MushroomThumbImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */; };
 		4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F38204557ED00D20C2D /* PersistanceService.swift */; };
 		4AEE2F3B20455EDE00D20C2D /* MushroomContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */; };
@@ -80,6 +82,8 @@
 		4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesPageControl.swift; sourceTree = "<group>"; };
 		4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomDetailsScrollView.swift; sourceTree = "<group>"; };
 		4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionView.swift; sourceTree = "<group>"; };
+		4AD43A0320529BDF001F6541 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
+		4AD43A0520529CF5001F6541 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomThumbImage.swift; sourceTree = "<group>"; };
 		4AEE2F38204557ED00D20C2D /* PersistanceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistanceService.swift; sourceTree = "<group>"; };
 		4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomContainerView.swift; sourceTree = "<group>"; };
@@ -120,6 +124,7 @@
 				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
 				4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
+				4AD43A0320529BDF001F6541 /* CategoryView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -130,6 +135,7 @@
 				4A0775CC20443D6B00DD5AF0 /* MushroomCell.swift */,
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
 				4AC5CA1C204E889E003ED3BE /* ImageCell.swift */,
+				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -369,6 +375,7 @@
 				4A69457820456CD60041824E /* SideMenuStaticCell.swift in Sources */,
 				4A69BC7C2038D96500D3B88B /* ViewController.swift in Sources */,
 				4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */,
+				4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */,
 				4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */,
 				4A28AB84204440FB00F21EEE /* DataService.swift in Sources */,
 				4AC5CA1F204E8DB0003ED3BE /* ImagesPageControl.swift in Sources */,
@@ -381,6 +388,7 @@
 				4A69457620456C010041824E /* SideMenuController.swift in Sources */,
 				4A28AB8D20444B0300F21EEE /* AppProperties.swift in Sources */,
 				4A28AB8B2044454200F21EEE /* GradientView.swift in Sources */,
+				4AD43A0620529CF5001F6541 /* CategoryCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

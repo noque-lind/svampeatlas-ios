@@ -219,8 +219,60 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7J-6a-8XL" customClass="CategoryView" customModule="SvampeAtlas" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2yQ-pK-KrM">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="jKH-Mj-dIy">
+                                            <size key="itemSize" width="50" height="45"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="categoryCell" id="bER-9W-Dqy" customClass="CategoryCell" customModule="SvampeAtlas" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="45"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="45"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="838-Y0-G0T">
+                                                            <rect key="frame" x="4" y="12" width="42" height="21"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstItem="838-Y0-G0T" firstAttribute="centerY" secondItem="bER-9W-Dqy" secondAttribute="centerY" id="29v-Gd-5Km"/>
+                                                    <constraint firstAttribute="trailing" secondItem="838-Y0-G0T" secondAttribute="trailing" constant="4" id="LfK-70-koi"/>
+                                                    <constraint firstItem="838-Y0-G0T" firstAttribute="leading" secondItem="bER-9W-Dqy" secondAttribute="leading" constant="4" id="liJ-iQ-eVU"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outlet property="label" destination="838-Y0-G0T" id="GKn-k1-A60"/>
+                                                </connections>
+                                            </collectionViewCell>
+                                        </cells>
+                                    </collectionView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="2yQ-pK-KrM" firstAttribute="leading" secondItem="d7J-6a-8XL" secondAttribute="leading" id="Gs9-L8-0na"/>
+                                    <constraint firstAttribute="trailing" secondItem="2yQ-pK-KrM" secondAttribute="trailing" id="Rch-Ij-Ff0"/>
+                                    <constraint firstAttribute="height" constant="45" id="axc-xG-tKw"/>
+                                    <constraint firstItem="2yQ-pK-KrM" firstAttribute="top" secondItem="d7J-6a-8XL" secondAttribute="top" id="jii-xa-oPs"/>
+                                    <constraint firstAttribute="bottom" secondItem="2yQ-pK-KrM" secondAttribute="bottom" id="mna-YT-rSw"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="collectionView" destination="2yQ-pK-KrM" id="6qO-mn-d4k"/>
+                                </connections>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5FK-VA-GVz">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="45" width="375" height="558"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="mushroomCell" rowHeight="174" id="U6t-Sw-bb0" customClass="MushroomCell" customModule="SvampeAtlas" customModuleProvider="target">
@@ -287,13 +339,13 @@
                                                                             <rect key="frame" x="0.0" y="38" width="205" height="38"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2v-gP-iDJ">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="43" height="38"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="42" height="38"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                     <nil key="textColor"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kGf-ZL-5I5">
-                                                                                    <rect key="frame" x="43" y="0.0" width="162" height="38"/>
+                                                                                    <rect key="frame" x="42" y="0.0" width="163" height="38"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                     <nil key="textColor"/>
                                                                                     <nil key="highlightedColor"/>
@@ -339,13 +391,16 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5FK-VA-GVz" secondAttribute="bottom" id="3bR-4s-VHk"/>
+                            <constraint firstItem="d7J-6a-8XL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="7y7-8A-7uZ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="7fN-Mi-6pD" secondAttribute="trailing" id="9wE-av-RIE"/>
+                            <constraint firstItem="5FK-VA-GVz" firstAttribute="top" secondItem="d7J-6a-8XL" secondAttribute="bottom" id="AOo-Rd-ktV"/>
+                            <constraint firstItem="d7J-6a-8XL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Aa6-R8-0mB"/>
+                            <constraint firstItem="d7J-6a-8XL" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="BuB-NZ-Gmc"/>
                             <constraint firstItem="7fN-Mi-6pD" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="RFM-jt-ho7"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="5FK-VA-GVz" secondAttribute="bottom" id="fju-02-1BB"/>
-                            <constraint firstItem="5FK-VA-GVz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="jHv-fi-R6L"/>
-                            <constraint firstItem="5FK-VA-GVz" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="kpp-c9-4Fj"/>
+                            <constraint firstItem="5FK-VA-GVz" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="c8n-DK-yky"/>
+                            <constraint firstItem="5FK-VA-GVz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="i5B-YD-Sy0"/>
                             <constraint firstItem="7fN-Mi-6pD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="tJR-k6-Sbd"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5FK-VA-GVz" secondAttribute="trailing" id="xt8-9S-5Tv"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="7fN-Mi-6pD" secondAttribute="bottom" id="ykY-oF-fNv"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>

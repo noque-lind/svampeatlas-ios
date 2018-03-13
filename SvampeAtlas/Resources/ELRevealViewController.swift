@@ -148,6 +148,10 @@ extension ELRevealViewControllerDelegate {
         }
     }
     
+    override var prefersStatusBarHidden: Bool {
+        return (currentViewController.childViewControllerForStatusBarHidden?.prefersStatusBarHidden)!
+    }
+    
     public fileprivate(set) var currentRightViewController: UIViewController? {
         didSet {
             if currentLeftViewController != nil && currentRightViewController != nil {
@@ -200,10 +204,9 @@ extension ELRevealViewControllerDelegate {
             DispatchQueue.main.async {
                 self.toggleSideMenu()
             }
-        } else {
+        }
             removeChildViewControllerFromViewController(childViewController: currentViewController)
             addViewControllerAsChildViewController(childViewController: viewController)
-        }
     }
     
     /**
@@ -545,6 +548,7 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     fileprivate func springRevealPresentAnim(_ toVC: UIViewController, _ fromVC: ELRevealViewController, _ containerView: UIView, _ transitionContext: UIViewControllerContextTransitioning, _ modalView: UIView) {
+        toVC.view.transform = CGAffineTransform.identity
         toVC.view.frame = UIScreen.main.bounds
         switch fromVC.sideMenuPosition {
         case .left:
@@ -596,6 +600,7 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
                 springRevealPresentAnim(toVC, fromVC, containerView, transitionContext, modalView)
                 
             case .flyerReveal:
+                addSafeInsets(forVC: fromVC)
                 containerView.insertSubview(fromVC.view, at: 0)
                 toVC.view.frame = UIScreen.main.bounds
                 containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
@@ -667,7 +672,6 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
             guard let toVC = transitionContext.viewController(forKey: .to) as? ELRevealViewController  else {return}
             guard let fromVC = transitionContext.viewController(forKey: .from) else {return}
             let modalView = toVC.view.viewWithTag(75)
-            
             switch _animationType {
             case .springReveal:
                 if toVC.shouldShowNewViewControllerAnimation {
@@ -734,6 +738,8 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
             case .flyerReveal:
                 let view = transitionContext.containerView.viewWithTag(10)
                 let view2 = transitionContext.containerView.viewWithTag(20)
+                removeSafeInsets(forVC: toVC)
+                
                 
                 if toVC.shouldShowNewViewControllerAnimation {
                     toVC.shouldShowNewViewControllerAnimation = false
@@ -771,7 +777,12 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
                                 toVC.sideMenuShowing = false
                                 modalView?.removeFromSuperview()
                             }
-                            
+                            if #available(iOS 11.0, *) {
+                                print(fromVC.view.safeAreaLayoutGuide.layoutFrame)
+                                toVC.additionalSafeAreaInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+                            } else {
+                                // Fallback on earlier versions
+                            }
                             transitionContext.completeTransition(didTransitionComplete)
                             UIApplication.shared.keyWindow?.addSubview(toVC.view)
                             UIApplication.shared.keyWindow?.makeKeyAndVisible()
@@ -792,7 +803,14 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
                         let didTransitionComplete = !transitionContext.transitionWasCancelled
                         if didTransitionComplete {
                             toVC.sideMenuShowing = false
+                            
                             modalView?.removeFromSuperview()
+                        }
+                        if #available(iOS 11.0, *) {
+                            print(fromVC.view.safeAreaLayoutGuide.layoutFrame)
+                            toVC.additionalSafeAreaInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+                        } else {
+                            // Fallback on earlier versions
                         }
                         transitionContext.completeTransition(didTransitionComplete)
                         UIApplication.shared.keyWindow?.addSubview(toVC.view)
@@ -804,7 +822,24 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
         }
     }
     
-
+    private func addSafeInsets(forVC vc: UIViewController) {
+        if #available(iOS 11.0, *) {
+            print(vc.view.safeAreaLayoutGuide.layoutFrame)
+            vc.additionalSafeAreaInsets = UIEdgeInsets(top: vc.view.safeAreaLayoutGuide.layoutFrame.origin.y, left: 0.0, bottom: 0.0, right: 0.0)
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
+    private func removeSafeInsets(forVC vc: UIViewController) {
+        if #available(iOS 11.0, *) {
+            print(vc.view.safeAreaLayoutGuide.layoutFrame)
+            vc.additionalSafeAreaInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
     private func setupModalView(modalView: UIView, fromVC: ELRevealViewController) {
         modalView.backgroundColor = UIColor.darkGray
         modalView.alpha = 0

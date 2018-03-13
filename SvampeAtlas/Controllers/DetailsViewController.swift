@@ -8,7 +8,14 @@
 
 import UIKit
 
-class DetailsViewController: UIViewController {
+class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
+    func isAllowedToPushMenu() -> Bool? {
+        return false
+    }
+    
+    
+    
+    
     
     @IBOutlet weak var imagesCollectionView: ImagesCollectionView!
     @IBOutlet weak var pageControl: ImagesPageControl!
@@ -22,6 +29,7 @@ class DetailsViewController: UIViewController {
         imagesCollectionView.delegate = self
         imagesCollectionView.dataSource = self
         self.navigationController?.setNavigationBarHidden(true, animated: true)
+        imagesCollectionView.contentInsetAdjustmentBehavior = .never
         
         pageControl.delegate = self
         pageControl.dataSource = self
@@ -33,6 +41,16 @@ class DetailsViewController: UIViewController {
     private func setupImageTimer() {
         imageScrollTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(handleImageTimer), userInfo: nil, repeats: true)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.eLRevealViewController()?.setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    
     
     func setupScrollView() {
 //        scrollView.setupInsets(collectionViewHeight: imagesCollectionView.defaultHeightConstant)

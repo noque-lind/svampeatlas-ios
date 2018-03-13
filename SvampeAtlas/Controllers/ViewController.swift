@@ -29,8 +29,11 @@ class ViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.allowsSelection = true
+        
+        self.navigationController?.hidesBarsOnSwipe = true
         self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
         self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
+        self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.appWhite(), NSAttributedStringKey.font: UIFont.appTitle()]
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         view.backgroundColor = UIColor.appPrimaryColour()

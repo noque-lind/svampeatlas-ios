@@ -9,16 +9,37 @@
 import UIKit
 
 class MushroomTableView: UITableView {
+    public var categoryType: Category!
+    
     override func reloadData() {
         super.reloadData()
-        var delayCounter = 0.0
-        for cell in self.visibleCells {
-            cell.contentView.alpha = 0
-            UIView.animate(withDuration: 0.2, delay: TimeInterval(delayCounter), options: .curveEaseIn, animations: {
-                cell.contentView.transform = CGAffineTransform.identity
-                cell.contentView.alpha = 1
-            }, completion: nil)
-            delayCounter = delayCounter + 0.10
+        if self.visibleCells.count > 0 {
+            self.backgroundView = nil
+            var delayCounter = 0.0
+            for cell in self.visibleCells {
+                cell.contentView.alpha = 0
+                UIView.animate(withDuration: 0.2, delay: TimeInterval(delayCounter), options: .curveEaseIn, animations: {
+                    cell.contentView.transform = CGAffineTransform.identity
+                    cell.contentView.alpha = 1
+                }, completion: nil)
+                delayCounter = delayCounter + 0.10
+            }
+        } else {
+            guard let categoryType = categoryType else {return}
+            switch categoryType {
+            case .offline:
+                self.backgroundView = OfflineBackground(frame: self.frame)
+            default:
+                print("HAHAAHA")
+            }
+//             Should show a screen depending on the categoryType
         }
+        
     }
+    
+    func showLoader() {
+        self.backgroundView = UIView(frame: self.frame)
+        self.backgroundView?.controlActivityIndicator(wantRunning: true)
+    }
+    
 }

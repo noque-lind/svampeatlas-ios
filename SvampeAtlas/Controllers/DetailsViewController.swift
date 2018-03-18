@@ -13,18 +13,20 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
         return false
     }
     
-    
-    
-    
-    
     @IBOutlet weak var imagesCollectionView: ImagesCollectionView!
     @IBOutlet weak var pageControl: ImagesPageControl!
     @IBOutlet weak var scrollView: MushroomDetailsScrollView!
+    
+    @IBAction func backButtonPressed(sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     
     var mushroom: Mushroom!
     var imageScrollTimer: Timer!
 
     override func viewDidLoad() {
+        view.backgroundColor = UIColor.appSecondaryColour()
         super.viewDidLoad()
         imagesCollectionView.delegate = self
         imagesCollectionView.dataSource = self
@@ -43,18 +45,25 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.eLRevealViewController()?.setNeedsStatusBarAppearanceUpdate()
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+//        self.eLRevealViewController()?.setNeedsStatusBarAppearanceUpdate()
+        super.viewDidAppear(animated)
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
     }
     
-    
-    
     func setupScrollView() {
 //        scrollView.setupInsets(collectionViewHeight: imagesCollectionView.defaultHeightConstant)
         scrollView.configureScrollView(withMushroom: mushroom)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        imagesCollectionView.collectionViewLayout.invalidateLayout()
     }
 }
 

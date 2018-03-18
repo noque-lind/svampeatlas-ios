@@ -25,6 +25,8 @@
 		4A69BC922038D96500D3B88B /* SvampeAtlasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC912038D96500D3B88B /* SvampeAtlasTests.swift */; };
 		4A69BC9D2038D96500D3B88B /* SvampeAtlasUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC9C2038D96500D3B88B /* SvampeAtlasUITests.swift */; };
 		4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BCAB2039805100D3B88B /* Mushroom.swift */; };
+		4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A95D5442057D7B500EBB2C5 /* ActivityIndicatorView.swift */; };
+		4A95D5482057DFCE00EBB2C5 /* OfflineBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A95D5472057DFCE00EBB2C5 /* OfflineBackground.swift */; };
 		4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA1A204E84C2003ED3BE /* DetailsViewController.swift */; };
 		4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA1C204E889E003ED3BE /* ImageCell.swift */; };
 		4AC5CA1F204E8DB0003ED3BE /* ImagesPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */; };
@@ -79,6 +81,8 @@
 		4A69BC9C2038D96500D3B88B /* SvampeAtlasUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SvampeAtlasUITests.swift; sourceTree = "<group>"; };
 		4A69BC9E2038D96500D3B88B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A69BCAB2039805100D3B88B /* Mushroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mushroom.swift; sourceTree = "<group>"; };
+		4A95D5442057D7B500EBB2C5 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
+		4A95D5472057DFCE00EBB2C5 /* OfflineBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineBackground.swift; sourceTree = "<group>"; };
 		4AC5CA1A204E84C2003ED3BE /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		4AC5CA1C204E889E003ED3BE /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesPageControl.swift; sourceTree = "<group>"; };
@@ -119,6 +123,7 @@
 		4A0775CA20443D5200DD5AF0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4A95D5462057DDE900EBB2C5 /* MushroomTableViewBackgrounds */,
 				4A0775CB20443D5600DD5AF0 /* Cells */,
 				4A28AB8A2044454200F21EEE /* GradientView.swift */,
 				4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */,
@@ -158,6 +163,7 @@
 				4A41C45920541A990053CCF1 /* ELRevealViewController.swift */,
 				4A28AB862044413100F21EEE /* Constants.swift */,
 				4A28AB8C20444B0300F21EEE /* AppProperties.swift */,
+				4A95D5442057D7B500EBB2C5 /* ActivityIndicatorView.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -234,6 +240,14 @@
 				4A69BCAB2039805100D3B88B /* Mushroom.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		4A95D5462057DDE900EBB2C5 /* MushroomTableViewBackgrounds */ = {
+			isa = PBXGroup;
+			children = (
+				4A95D5472057DFCE00EBB2C5 /* OfflineBackground.swift */,
+			);
+			path = MushroomTableViewBackgrounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -371,8 +385,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A69BC822038D96500D3B88B /* SvampeAtlas.xcdatamodeld in Sources */,
+				4A95D5482057DFCE00EBB2C5 /* OfflineBackground.swift in Sources */,
 				4AEE2F3B20455EDE00D20C2D /* MushroomContainerView.swift in Sources */,
 				4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */,
+				4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */,
 				4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */,
 				4AC5CA21204EA817003ED3BE /* MushroomDetailsScrollView.swift in Sources */,
 				4A3061E12053F4840061E98F /* MushroomTableView.swift in Sources */,

@@ -53,8 +53,8 @@ class MushroomCell: UITableViewCell {
     
     
     func setupView() {
-        mainTitle.font = UIFont.appTitle()
-        secondaryTitle.font = UIFont.appTextHighlight(customSize: 16)
+        mainTitle.font = UIFont.appHeaderDetails()
+        secondaryTitle.font = UIFont.appPrimary()
         dkAmountTitle.font = UIFont.appText()
         dkLatestTitle.font = UIFont.appText()
         dkAmount.font = UIFont.appTextHighlight()

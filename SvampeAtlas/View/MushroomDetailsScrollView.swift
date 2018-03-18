@@ -10,6 +10,15 @@ import UIKit
 
 class MushroomDetailsScrollView: UIScrollView {
 
+   lazy var sideContainer: UIView = {
+    let view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: contentSize.height))
+    view.backgroundColor = UIColor.appPrimaryColour()
+    return view
+    }()
+    
+    
+    
+    
     public func setupInsets(collectionViewHeight: CGFloat) {
         self.contentInset = UIEdgeInsets(top: collectionViewHeight, left: 0, bottom: 0, right: 0)
         self.scrollIndicatorInsets = UIEdgeInsets(top: collectionViewHeight, left: 0, bottom: 0, right: 0)
@@ -18,8 +27,10 @@ class MushroomDetailsScrollView: UIScrollView {
     
     public func configureScrollView(withMushroom mushroom: Mushroom) {
         self.contentSize = CGSize(width: self.frame.width, height: frame.size.height * 4)
-        let label = UILabel(frame: CGRect.init(x: 0, y: 600, width: 300, height: 300))
+        let label = UILabel(frame: CGRect.init(x: 200, y: 600, width: 300, height: 300))
         label.text = "HAHAHAHAA"
+        addSubview(sideContainer)
         addSubview(label)
+        
     }
 }

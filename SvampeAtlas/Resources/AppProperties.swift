@@ -40,6 +40,23 @@ extension UIColor {
 }
 
 extension UIFont {
+    class func appHeader(customSize size: CGFloat = 20) -> UIFont {
+        return UIFont(name: "AvenirNext-DemiBold", size: size)!
+    }
+    
+    class func appHeaderDetails(customSize size: CGFloat = 16) -> UIFont {
+        return UIFont(name: "AvenirNext-Medium", size: size)!
+    }
+    
+    class func appPrimary(customSize size: CGFloat = 12) -> UIFont {
+        return UIFont(name: "AvenirNext-UltraLight", size: size)!
+    }
+    
+    class func appPrimaryHightlighed(customSize size: CGFloat = 12) -> UIFont {
+        return UIFont(name: "AvenirNext", size: size)!
+    }
+    
+    
     class func appTitle(customSize size: CGFloat = 20) -> UIFont {
         return UIFont(name: "AvenirNext-DemiBold", size: size)!
     }

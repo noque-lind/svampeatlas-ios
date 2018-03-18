@@ -824,7 +824,6 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
     
     private func addSafeInsets(forVC vc: UIViewController) {
         if #available(iOS 11.0, *) {
-            print(vc.view.safeAreaLayoutGuide.layoutFrame)
             vc.additionalSafeAreaInsets = UIEdgeInsets(top: vc.view.safeAreaLayoutGuide.layoutFrame.origin.y, left: 0.0, bottom: 0.0, right: 0.0)
         } else {
             // Fallback on earlier versions
@@ -833,7 +832,6 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
     
     private func removeSafeInsets(forVC vc: UIViewController) {
         if #available(iOS 11.0, *) {
-            print(vc.view.safeAreaLayoutGuide.layoutFrame)
             vc.additionalSafeAreaInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
         } else {
             // Fallback on earlier versions

@@ -8,9 +8,24 @@
 
 import UIKit
 
+protocol CategoryViewDelegate: NSObjectProtocol {
+    func newCategorySelected(category: Category)
+}
+
+enum Category: String {
+    case offline = "Offline"
+    case local = "Danske"
+    case favorites = "Favorites"
+    case rare = "Sjældne"
+}
+
 class CategoryView: UIView {
 
     @IBOutlet weak var collectionView: UICollectionView!
+    
+    weak var delegate: CategoryViewDelegate?
+    var items = [Category.offline, Category.local, Category.favorites, Category.rare]
+    private var selectedItem: Category!
     
     lazy var selectorViewWidthConstraint = NSLayoutConstraint()
     lazy var selectorViewCenterXConstraint = NSLayoutConstraint()
@@ -22,7 +37,7 @@ class CategoryView: UIView {
         return view
     }()
     
-    var items = ["Offline", "Danske", "Favoritter", "Sjældne"]
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -36,7 +51,11 @@ class CategoryView: UIView {
         let mask = CAShapeLayer()
         mask.path = path.cgPath
         selectorView.layer.mask = mask
+        collectionView.collectionViewLayout.invalidateLayout()
     }
+    
+    
+    
     
     
     func setup() {
@@ -59,6 +78,12 @@ class CategoryView: UIView {
             self.layoutIfNeeded()
         }
     }
+    
+    
+    public func firstSelect() {
+        collectionView.selectItem(at: IndexPath.init(row: 0, section: 0), animated: true, scrollPosition: .left)
+        collectionView(collectionView, didSelectItemAt: IndexPath.init(row: 0, section: 0))
+    }
 }
 
 extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -68,7 +93,7 @@ extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UI
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "categoryCell", for: indexPath) as? CategoryCell else {fatalError("Could not deque categoryCell")}
-        cell.configureCell(title: items[indexPath.row])
+        cell.configureCell(title: items[indexPath.row].rawValue)
         return cell
     }
     
@@ -76,7 +101,18 @@ extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UI
         return CGSize(width: collectionView.frame.size.width / CGFloat(items.count), height: collectionView.frame.size.height)
     }
     
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if selectedItem != items[indexPath.row] {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedItem = items[indexPath.row]
+        delegate?.newCategorySelected(category: items[indexPath.row])
         guard let cell = collectionView.cellForItem(at: indexPath) else {return}
         moveSelector(toCell: cell)
     }

@@ -19,28 +19,38 @@ class MushroomThumbImage: UIImageView {
     }
 
     override func layoutSubviews() {
-        self.layer.cornerRadius = 50
-//        configureLayers()
+        round()
     }
     
     
-    func configureLayers() {
-        if circleLayer == nil {
-            let circleCenter = CGPoint(x: bounds.size.width / 2, y: bounds.size.height)
-            let circleRadius = bounds.size.width / 2
-            let circlePath = UIBezierPath(arcCenter: circleCenter, radius: circleRadius, startAngle: CGFloat(0), endAngle: CGFloat.pi * 2, clockwise: true)
-            let oval = UIBezierPath(ovalIn: frame)
-            circleLayer = CAShapeLayer()
-            circleLayer?.path = oval.cgPath
-            layer.mask = circleLayer
-        }
-    }
+//    func configureLayers() {
+//        if circleLayer == nil {
+//            let circleCenter = CGPoint(x: bounds.size.width / 2, y: bounds.size.height)
+//            let circleRadius = bounds.size.width / 2
+//            let circlePath = UIBezierPath(arcCenter: circleCenter, radius: circleRadius, startAngle: CGFloat(0), endAngle: CGFloat.pi * 2, clockwise: true)
+//            let oval = UIBezierPath(ovalIn: frame)
+//            circleLayer = CAShapeLayer()
+//            circleLayer?.path = oval.cgPath
+//            layer.mask = circleLayer
+//        }
+//    }
     
     func setupView() {
         self.clipsToBounds = true
         self.layer.shadowOpacity = 0.7
-        
-        
-        
+//        round()
+    }
+    
+    
+    private func round() {
+        var path: UIBezierPath!
+        if UIApplication.shared.statusBarOrientation.isPortrait {
+            path = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
+        } else {
+        path = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.topRight, .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
+        }
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        layer.mask = shapeLayer
     }
 }

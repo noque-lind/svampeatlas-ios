@@ -53,7 +53,7 @@ extension UIFont {
     }
     
     class func appPrimaryHightlighed(customSize size: CGFloat = 12) -> UIFont {
-        return UIFont(name: "AvenirNext", size: size)!
+        return UIFont(name: "AvenirNext-Regular", size: size)!
     }
     
     

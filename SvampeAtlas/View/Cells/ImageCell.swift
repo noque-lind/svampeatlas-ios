@@ -15,15 +15,16 @@ class ImageCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        authorGradient.frame = authorGradientView.bounds
+        gradient.frame = image.bounds
     }
     
     
-   lazy var authorGradient: CAGradientLayer = {
+   lazy var gradient: CAGradientLayer = {
        let gradient = CAGradientLayer()
-        gradient.startPoint = CGPoint(x: 0, y: 1)
-        gradient.endPoint = CGPoint(x: 0, y: 0)
-        gradient.colors = [#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1).cgColor, #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor]
+        gradient.startPoint = CGPoint(x: 0, y: 0.8)
+        gradient.endPoint = CGPoint(x: 0, y: 1)
+        gradient.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
+        gradient.frame = image.bounds
         return gradient
     }()
     
@@ -31,7 +32,7 @@ class ImageCell: UICollectionViewCell {
        let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
-        view.layer.addSublayer(authorGradient)
+        view.layer.addSublayer(gradient)
         return view
     }()
     
@@ -54,16 +55,14 @@ class ImageCell: UICollectionViewCell {
         authorLabel.font = UIFont.appText(customSize: 12)
         authorLabel.textColor = UIColor.white
         setupAuthorGradient()
-        
-        
+        image.layer.mask = gradient
     }
     
     private func setupAuthorGradient() {
-        insertSubview(authorGradientView, belowSubview: authorLabel)
-        authorGradientView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        authorGradientView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        authorGradientView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-//        authorGradientView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        authorGradientView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//       image.addSubview(authorGradientView)
+//        authorGradientView.leadingAnchor.constraint(equalTo: image.leadingAnchor).isActive = true
+//        authorGradientView.trailingAnchor.constraint(equalTo: image.trailingAnchor).isActive = true
+//        authorGradientView.bottomAnchor.constraint(equalTo: image.bottomAnchor).isActive = true
+//        authorGradientView.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
 }

@@ -33,6 +33,7 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
         imagesCollectionView.contentInsetAdjustmentBehavior = .never
         
+        
         pageControl.delegate = self
         pageControl.dataSource = self
         scrollView.delegate = self
@@ -44,18 +45,30 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
         imageScrollTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(handleImageTimer), userInfo: nil, repeats: true)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
+    
     
     override func viewDidAppear(_ animated: Bool) {
-//        self.eLRevealViewController()?.setNeedsStatusBarAppearanceUpdate()
         super.viewDidAppear(animated)
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        imageScrollTimer.invalidate()
+        super.viewDidDisappear(animated)
+    }
+    
+    deinit {
+        print("Deeinit called")
     }
     
     override var prefersStatusBarHidden: Bool {
-        return true
+        return false
     }
+    
+    
     
     func setupScrollView() {
 //        scrollView.setupInsets(collectionViewHeight: imagesCollectionView.defaultHeightConstant)
@@ -141,5 +154,8 @@ extension DetailsViewController: UIScrollViewDelegate {
         setupImageTimer()
         }
     }
+}
+
+extension DetailsViewController: UIGestureRecognizerDelegate {
 }
 

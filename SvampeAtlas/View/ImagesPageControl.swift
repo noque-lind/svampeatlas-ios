@@ -8,23 +8,23 @@
 
 import UIKit
 
-protocol ImagesPageControlDataSource {
+protocol ImagesPageControlDataSource: NSObjectProtocol {
     func numberOfPages() -> Int
 }
 
-protocol ImagesPageControlDelegate {
+protocol ImagesPageControlDelegate: NSObjectProtocol {
     func didChangePage(toPage page: Int)
 }
 
 class ImagesPageControl: UIPageControl {
     
-    public var dataSource: ImagesPageControlDataSource? = nil {
+    public weak var dataSource: ImagesPageControlDataSource? = nil {
         didSet {
             setupPageControl()
         }
     }
     
-    public var delegate: ImagesPageControlDelegate? = nil
+    public weak var delegate: ImagesPageControlDelegate? = nil
     
     public func nextPage() {
         if currentPage == numberOfPages - 1 {

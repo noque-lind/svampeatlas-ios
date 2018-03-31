@@ -14,9 +14,9 @@ protocol CategoryViewDelegate: NSObjectProtocol {
 
 enum Category: String {
     case offline = "Offline"
-    case local = "Danske"
-    case favorites = "Favorites"
-    case rare = "Sjældne"
+    case local = "I nærheden"
+    case favorites = "Mine favoritter"
+    case rare = "Årstidens"
 }
 
 class CategoryView: UIView {
@@ -54,11 +54,7 @@ class CategoryView: UIView {
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
-    
-    
-    
-    
-    func setup() {
+    private func setup() {
         collectionView.delegate = self
         collectionView.dataSource = self
         addSubview(selectorView)
@@ -74,9 +70,9 @@ class CategoryView: UIView {
         selectorViewCenterXConstraint = selectorView.centerXAnchor.constraint(equalTo: cell.centerXAnchor)
         selectorViewCenterXConstraint.isActive = true
         
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseInOut, animations: {
             self.layoutIfNeeded()
-        }
+        }, completion: nil)
     }
     
     

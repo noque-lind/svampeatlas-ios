@@ -42,15 +42,23 @@ class MushroomThumbImage: UIImageView {
     }
     
     
+//    private func round() {
+//        var path: UIBezierPath!
+//        if UIApplication.shared.statusBarOrientation.isPortrait {
+//            path = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
+//        } else {
+//        path = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.topRight, .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
+//        }
+//        let shapeLayer = CAShapeLayer()
+//        shapeLayer.path = path.cgPath
+//        layer.mask = shapeLayer
+//    }
+    
     private func round() {
-        var path: UIBezierPath!
-        if UIApplication.shared.statusBarOrientation.isPortrait {
-            path = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
-        } else {
-        path = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.topRight, .bottomRight], cornerRadii: CGSize(width: 20, height: 20))
-        }
+        let radius = self.frame.size.height / 2
+        print(radius)
         let shapeLayer = CAShapeLayer()
-        shapeLayer.path = path.cgPath
+        shapeLayer.path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.topRight, .bottomRight], cornerRadii: CGSize(width: radius, height: radius)).cgPath
         layer.mask = shapeLayer
     }
 }

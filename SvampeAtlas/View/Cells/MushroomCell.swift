@@ -35,13 +35,6 @@ class MushroomCell: UITableViewCell {
         dkAmount.text = String(describing: mushroom.statistics!.accepted_count)
         downloadThumbImage(url: mushroom.images[0]!.thumburi)
     }
-
-    
-
-    
-    
-    
-    
     
     func downloadThumbImage(url: String) {
         DataService.instance.getThumbImageForMushroom(url: url) { (image) in

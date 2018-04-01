@@ -9,15 +9,7 @@
 import UIKit
 
 extension UIColor {
-    class func appDarkBlue() -> UIColor {
-       return #colorLiteral(red: 0.2142155468, green: 0.2800558805, blue: 0.3091996908, alpha: 1)
-    }
-    
-    class func appLightBlue() -> UIColor {
-       return #colorLiteral(red: 0.3772668242, green: 0.4889609814, blue: 0.5432303548, alpha: 1)
-    }
-    
-    class func appWhite() -> UIColor {
+   class func appWhite() -> UIColor {
         return #colorLiteral(red: 0.9137254902, green: 0.9254901961, blue: 0.9333333333, alpha: 1)
     }
     
@@ -35,6 +27,18 @@ extension UIColor {
 
     class func appThirdColour() -> UIColor {
        return #colorLiteral(red: 1, green: 0.2509803922, blue: 0.5058823529, alpha: 1)
+    }
+    
+    class func appGreen() -> UIColor {
+       return #colorLiteral(red: 0, green: 0.6509803922, blue: 0.462745098, alpha: 1)
+    }
+    
+    class func appRed() -> UIColor {
+      return  #colorLiteral(red: 0.5764705882, green: 0.1215686275, blue: 0.1137254902, alpha: 1)
+    }
+    
+    class func appYellow() -> UIColor {
+      return  #colorLiteral(red: 1, green: 0.6509803922, blue: 0.1882352941, alpha: 1)
     }
     
 }
@@ -56,6 +60,10 @@ extension UIFont {
         return UIFont(name: "AvenirNext-Regular", size: size)!
     }
     
+    class func appBold() -> UIFont {
+        return UIFont(name: "AvenirNext-Bold", size: 12)!
+    }
+    
     
     class func appTitle(customSize size: CGFloat = 20) -> UIFont {
         return UIFont(name: "AvenirNext-DemiBold", size: size)!
@@ -68,4 +76,6 @@ extension UIFont {
     class func appTextHighlight(customSize size: CGFloat = 13) -> UIFont {
         return UIFont(name: "AvenirNext-Regular", size: size)!
     }
+    
+
 }

@@ -13,7 +13,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var tableView: MushroomTableView!
     @IBOutlet weak var categoryView: CategoryView!
-    @IBOutlet weak var seachBar: UISearchBar!
+    @IBOutlet weak var searchBar: CustomSearchBar!
+    @IBOutlet weak var searchBarLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var searchBarWidthConstraint: NSLayoutConstraint!
     
     @IBAction func seachBarEntryChanged(_ sender: UISearchBar) {
         guard let text = sender.text, text != "" else {sender.setShowsCancelButton(false, animated: true); return}
@@ -23,11 +25,11 @@ class ViewController: UIViewController {
     var mushrooms = [Mushroom]() {
         didSet {
             if mushrooms.count == 0 {
-                seachBar.alpha = 0
+                searchBar.alpha = 0
                 tableView.alwaysBounceVertical = false
             } else {
                 tableView.alwaysBounceVertical = true
-                seachBar.alpha = 1
+                searchBar.alpha = 1
             }
         }
     }
@@ -40,7 +42,8 @@ class ViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         categoryView.delegate = self
-
+        searchBar.searchBarDelegate = self
+        
         self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
         self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
         self.navigationController?.navigationBar.isTranslucent = false
@@ -66,36 +69,21 @@ class ViewController: UIViewController {
     }
     
     private func setupView() {
-        tableView.contentInset = UIEdgeInsets(top: seachBar.frame.size.height, left: 0.0, bottom: 0.0, right: 0.0)
-        seachBar.barTintColor = UIColor.appPrimaryColour()
-        seachBar.showsScopeBar = true
-        seachBar.delegate = self
-        seachBar.placeholder = "Søg efter en art"
-        seachBar.tintColor = UIColor.appWhite()
-        if let textFieldInsideSearchBar = seachBar.value(forKey: "searchField") as? UITextField {
-            textFieldInsideSearchBar.textColor = UIColor.appWhite()
-            textFieldInsideSearchBar.font = UIFont.appPrimaryHightlighed()
-        }
+        searchBar.isHidden = true
+        tableView.contentInset = UIEdgeInsets(top: searchBar.frame.size.height + 8, left: 0.0, bottom: 0.0, right: 0.0)
+//        seachBar.barTintColor = UIColor.appPrimaryColour()
+//        seachBar.showsScopeBar = true
+//        seachBar.delegate = self
+//        seachBar.placeholder = "Søg efter en art"
+//        seachBar.tintColor = UIColor.appWhite()
+//        if let textFieldInsideSearchBar = seachBar.value(forKey: "searchField") as? UITextField {
+//            textFieldInsideSearchBar.textColor = UIColor.appWhite()
+//            textFieldInsideSearchBar.font = UIFont.appPrimaryHightlighed()
+//        }
         
         
-    }
-    
-    private func setSeachbarHidden(_ hidden: Bool) {
-        if !hidden {
-            if seachBar.alpha == 0 {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.seachBar.alpha = 1
-                })
-            }
-        } else {
-            if seachBar.alpha == 1 {
-                self.seachBar.alpha = 0
-            }
-        }
     }
 }
-
-
 
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -120,6 +108,30 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         guard let detailsVC = self.storyboard?.instantiateViewController(withIdentifier: "detailsVC") as? DetailsViewController else {return}
         detailsVC.mushroom = mushrooms[indexPath.row]
         self.navigationController!.pushViewController(detailsVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    @available(iOS 11.0, *)
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .normal, title: nil) { (action, view, completion) in
+            self.handleFavoritingOfMushroom(mushroom: self.mushrooms[indexPath.row])
+            completion(true)
+            
+        }
+        action.backgroundColor = UIColor.white.withAlphaComponent(0.0)
+        action.image = #imageLiteral(resourceName: "Favorite")
+        return UISwipeActionsConfiguration(actions: [action])
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let action = UITableViewRowAction(style: .normal, title: "Gem som favorit") { (action, indexPath) in
+            
+        }
+        action.backgroundColor = UIColor.white.withAlphaComponent(0.0)
+        return [action]
     }
 }
 
@@ -150,44 +162,66 @@ extension ViewController {
         tableView.showLoader()
         DataService.instance.getMushrooms { (mushrooms) in
             DispatchQueue.main.async {
+                self.searchBar.isHidden = false
+                self.shouldExpandSearchBar()
                 self.mushrooms = mushrooms
                 self.tableView.reloadData()
             }
         }
     }
+    
+    private func handleFavoritingOfMushroom(mushroom: Mushroom) {
+        
+    }
 }
 
-extension ViewController: UISearchBarDelegate {
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        seachBar.setShowsCancelButton(true, animated: true)
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        seachBar.setShowsCancelButton(false, animated: true)
-        seachBar.resignFirstResponder()
-        searchBar.text = nil
-        tableView.alpha = 1
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count > 0 {
-            tableView.alpha = 0
-        } else {
-            tableView.alpha = 1
+
+extension ViewController: CustomSearchBarDelegate {
+    func shouldCollapseSearchBar() {
+        if searchBar.isExpanded {
+        searchBarLeadingConstraint.isActive = false
+        searchBarWidthConstraint = searchBar.widthAnchor.constraint(equalToConstant: 58)
+        searchBarWidthConstraint.isActive = true
+        self.searchBar.collapsedProperties()
+        
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+            self.view.layoutIfNeeded()
+        }) { (succes) in
+            
+        }
         }
     }
     
-    
+    func shouldExpandSearchBar() {
+        if !searchBar.isExpanded && !searchBar.isHidden {
+        searchBarWidthConstraint.isActive = false
+        searchBarLeadingConstraint.isActive = true
+        
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: {
+            self.view.layoutIfNeeded()
+            self.searchBar.expandedProperties()
+        }) { (succes) in
+            
+        }
+        }
+    }
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if previousContentOffset != nil {
-            if scrollView.contentOffset.y <= -scrollView.contentInset.top {
-                setSeachbarHidden(false)
-            } else if previousContentOffset!.y > scrollView.contentOffset.y {
-                setSeachbarHidden(false)
-            } else {
-                setSeachbarHidden(true)
-            }
+        if scrollView.contentOffset.y <= -scrollView.contentInset.top {
+            shouldExpandSearchBar()
+        } else {
+            shouldCollapseSearchBar()
         }
-        previousContentOffset = scrollView.contentOffset
+    
+//        if previousContentOffset != nil {
+//            if scrollView.contentOffset.y <= -scrollView.contentInset.top {
+//                setSeachbarHidden(false)
+//            } else if previousContentOffset!.y > scrollView.contentOffset.y {
+//                setSeachbarHidden(false)
+//            } else {
+//                setSeachbarHidden(true)
+//            }
+//        }
+//        previousContentOffset = scrollView.contentOffset
     }
 }

@@ -32,8 +32,8 @@ struct Mushroom: Decodable {
     public private(set) var vernacularName_dk: Vernacularname_DK?
     public private(set) var statistics: Statistics?
     public private(set) var images: [Images?]
-    
-    
+    public private(set) var toxicityLevel: ToxicityLevel? = ToxicityLevel.eatable
+ 
     private enum CodingKeys: String, CodingKey {
         case id = "_id"
         case createdAt
@@ -129,6 +129,8 @@ struct Images: Decodable {
     public private(set) var collectionNumber: String
 }
 
-
-
-
+enum ToxicityLevel: String {
+    case toxic = "GIFTIG"
+    case eatable = "EATABLE"
+    case cautious = "VÆR FORSIGTIG"
+}

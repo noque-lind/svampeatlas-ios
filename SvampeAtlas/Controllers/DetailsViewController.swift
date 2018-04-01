@@ -31,7 +31,11 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
         imagesCollectionView.delegate = self
         imagesCollectionView.dataSource = self
         self.navigationController?.setNavigationBarHidden(true, animated: true)
-        imagesCollectionView.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 11.0, *) {
+            imagesCollectionView.contentInsetAdjustmentBehavior = .never
+        } else {
+            
+        }
         
         
         pageControl.delegate = self

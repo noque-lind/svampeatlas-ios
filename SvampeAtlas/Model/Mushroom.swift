@@ -31,7 +31,7 @@ struct Mushroom: Decodable {
     public private(set) var attributes: Attributes?
     public private(set) var vernacularName_dk: Vernacularname_DK?
     public private(set) var statistics: Statistics?
-    public private(set) var images: [Images?]
+    public private(set) var images: [Images]
     public private(set) var toxicityLevel: ToxicityLevel? = ToxicityLevel.eatable
  
     private enum CodingKeys: String, CodingKey {
@@ -91,6 +91,9 @@ struct AcceptedTaxon: Decodable {
 
 struct Attributes: Decodable {
     public private(set) var PresentInDK: Bool?
+    public private(set) var forvekslingsmuligheder: String?
+    public private(set) var oekologi: String?
+    public private(set) var diagnose: String?
 }
 
 struct Vernacularname_DK: Decodable {

@@ -39,7 +39,7 @@ class MushroomCell: UITableViewCell {
         secondaryTitle.text = mushroom.vernacularName_dk?.appliedLatinName
         dkAmount.text = String(describing: mushroom.statistics!.accepted_count)
         
-        downloadThumbImage(url: mushroom.images[0]!.thumburi)
+        downloadThumbImage(url: mushroom.images[0].thumburi)
         
         guard let toxicityLevel = mushroom.toxicityLevel else {toxicityLevelStackView.isHidden = true; return}
         toxicityLevelStackView.isHidden = false
@@ -81,6 +81,6 @@ class MushroomCell: UITableViewCell {
         secondaryTitle.adjustsFontSizeToFitWidth = true
         
         toxicityLabel.font = UIFont.appBold()
-//        toxicityLabel.translatesAutoresizingMaskIntoConstraints = false
+
     }
 }

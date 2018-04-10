@@ -8,32 +8,67 @@
 
 import UIKit
 
+class showImageAnimationInteractor: UIPercentDrivenInteractiveTransition {
+    var hasStarted = false
+    var shouldFinish = false
+}
+
+
 class ShowImageAnimationController: NSObject, UIViewControllerAnimatedTransitioning {
     
     private let imageFrame: CGRect
+    private let isBeingPresented: Bool
     
-    init(imageFrame: CGRect) {
+    
+    
+    init(isBeingPresented: Bool, imageFrame: CGRect) {
+        self.isBeingPresented = isBeingPresented
         self.imageFrame = imageFrame
     }
     
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 2.0
+        return 0.5
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromVC = transitionContext.viewController(forKey: .from) as? DetailsViewController, let toVC = transitionContext.viewController(forKey: .to), let snapshot = toVC.view.snapshotView(afterScreenUpdates: true) else {return}
+        guard
+            let fromVC = transitionContext.viewController(forKey: .from) as? PhotoVCViewController,
+            let toVC = transitionContext.viewController(forKey: .to),
+            let snapshot = toVC.view.snapshotView(afterScreenUpdates: true) else {return}
 
     
     let containerView = transitionContext.containerView
     let finalFrame = transitionContext.finalFrame(for: toVC)
         
-        snapshot.frame = imageFrame
+//        snapshot.frame = imageFrame
 
-        containerView.addSubview(toVC.view)
-        containerView.addSubview(snapshot)
-        toVC.view.isHidden = true
-    
+        
+        if isBeingPresented {
+            
+        } else {
+        
+        
+        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+       
+            let translationTransform = CGAffineTransform(translationX: 0.0, y: fromVC.view.frame.height)
+            
+            UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
+                fromVC.currentlyShownCell.transform = CGAffineTransform.identity
+                fromVC.collectionView.transform = translationTransform
+                fromVC.currentlyShownCell.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+                fromVC.view.alpha = 0
+            }) { (_) in
+                
+                if transitionContext.transitionWasCancelled {
+                    transitionContext.completeTransition(false)
+                    fromVC.currentlyShownCell.frame = fromVC.currentlyShownCellOriginFrame
+                } else {
+                    transitionContext.completeTransition(true)
+                }
+            }
+            
+        }
 
 }
 }

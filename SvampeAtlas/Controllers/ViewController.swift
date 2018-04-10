@@ -17,11 +17,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var searchBarLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchBarWidthConstraint: NSLayoutConstraint!
     
-    @IBAction func seachBarEntryChanged(_ sender: UISearchBar) {
-        guard let text = sender.text, text != "" else {sender.setShowsCancelButton(false, animated: true); return}
-        sender.setShowsCancelButton(true, animated: true)
-    }
-    
     var mushrooms = [Mushroom]() {
         didSet {
             if mushrooms.count == 0 {
@@ -33,9 +28,10 @@ class ViewController: UIViewController {
             }
         }
     }
-    private var hasBeenSetup = false
-    private var previousContentOffset: CGPoint?
     
+    var filteredMushrooms: [Mushroom]?
+    
+    private var hasBeenSetup = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,16 +39,7 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         categoryView.delegate = self
         searchBar.searchBarDelegate = self
-        
-        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
-        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.appWhite(), NSAttributedStringKey.font: UIFont.appTitle()]
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        view.backgroundColor = UIColor.appPrimaryColour()
         setupView()
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -71,32 +58,34 @@ class ViewController: UIViewController {
     private func setupView() {
         searchBar.isHidden = true
         tableView.contentInset = UIEdgeInsets(top: searchBar.frame.size.height + 8, left: 0.0, bottom: 0.0, right: 0.0)
-//        seachBar.barTintColor = UIColor.appPrimaryColour()
-//        seachBar.showsScopeBar = true
-//        seachBar.delegate = self
-//        seachBar.placeholder = "Søg efter en art"
-//        seachBar.tintColor = UIColor.appWhite()
-//        if let textFieldInsideSearchBar = seachBar.value(forKey: "searchField") as? UITextField {
-//            textFieldInsideSearchBar.textColor = UIColor.appWhite()
-//            textFieldInsideSearchBar.font = UIFont.appPrimaryHightlighed()
-//        }
-        
-        
+        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
+        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.appWhite(), NSAttributedStringKey.font: UIFont.appHeader()]
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        view.backgroundColor = UIColor.appPrimaryColour()
     }
 }
 
-
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let filteredMushrooms = filteredMushrooms {
+            return filteredMushrooms.count
+        } else {
         return mushrooms.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "mushroomCell", for: indexPath) as? MushroomCell else {
-            // Show error to user
-            return UITableViewCell()
+            fatalError("Could not deque mushroomCell")
         }
+        if let filteredMushrooms = filteredMushrooms {
+            cell.configureCell(withMushroom: filteredMushrooms[indexPath.row])
+        } else {
         cell.configureCell(withMushroom: mushrooms[indexPath.row])
+        }
         return cell
     }
     
@@ -135,6 +124,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension ViewController {
+    private func handleFavoritingOfMushroom(mushroom: Mushroom) {
+        
+    }
+}
+
 extension ViewController: CategoryViewDelegate {
     func newCategorySelected(category: Category) {
         tableView.categoryType = category
@@ -147,9 +142,7 @@ extension ViewController: CategoryViewDelegate {
             getDanishMushrooms()
         }
     }
-}
 
-extension ViewController {
     private func getOfflineMushrooms() {
         
     }
@@ -162,66 +155,60 @@ extension ViewController {
         tableView.showLoader()
         DataService.instance.getMushrooms { (mushrooms) in
             DispatchQueue.main.async {
-                self.searchBar.isHidden = false
-                self.shouldExpandSearchBar()
+                self.prepareSearchBar()
                 self.mushrooms = mushrooms
                 self.tableView.reloadData()
             }
         }
     }
-    
-    private func handleFavoritingOfMushroom(mushroom: Mushroom) {
-        
-    }
 }
 
 
 extension ViewController: CustomSearchBarDelegate {
-    func shouldCollapseSearchBar() {
-        if searchBar.isExpanded {
-        searchBarLeadingConstraint.isActive = false
-        searchBarWidthConstraint = searchBar.widthAnchor.constraint(equalToConstant: 58)
-        searchBarWidthConstraint.isActive = true
-        self.searchBar.collapsedProperties()
-        
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
-            self.view.layoutIfNeeded()
-        }) { (succes) in
-            
-        }
-        }
+    func newSearchEntry(entry: String) {
+        filteredMushrooms = []
+        tableView.reloadData()
     }
     
-    func shouldExpandSearchBar() {
-        if !searchBar.isExpanded && !searchBar.isHidden {
-        searchBarWidthConstraint.isActive = false
-        searchBarLeadingConstraint.isActive = true
-        
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: {
-            self.view.layoutIfNeeded()
-            self.searchBar.expandedProperties()
-        }) { (succes) in
-            
-        }
-        }
+    func clearedSearchEntry() {
+        filteredMushrooms = nil
+        tableView.reloadData()
     }
-
+    
+    private func prepareSearchBar() {
+        searchBar.isHidden = false
+        searchBar.expand()
+    }
+    
+    
+    func shouldExpandSearchBar(animationDuration: TimeInterval) {
+            searchBarWidthConstraint.isActive = false
+            searchBarLeadingConstraint.isActive = true
+            
+            UIView.animate(withDuration: animationDuration, delay: 0.0, options: .curveEaseIn, animations: {
+                self.view.layoutIfNeeded()
+            }) { (succes) in
+                
+            }
+    }
+    
+    func shouldCollapseSearchBar(animationDuration: TimeInterval) {
+            searchBarLeadingConstraint.isActive = false
+            searchBarWidthConstraint = searchBar.widthAnchor.constraint(equalToConstant: 58)
+            searchBarWidthConstraint.isActive = true
+        
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                self.view.layoutIfNeeded()
+            }) { (succes) in
+                
+            }
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y <= -scrollView.contentInset.top {
-            shouldExpandSearchBar()
+            searchBar.expand()
         } else {
-            shouldCollapseSearchBar()
+            searchBar.collapse()
         }
-    
-//        if previousContentOffset != nil {
-//            if scrollView.contentOffset.y <= -scrollView.contentInset.top {
-//                setSeachbarHidden(false)
-//            } else if previousContentOffset!.y > scrollView.contentOffset.y {
-//                setSeachbarHidden(false)
-//            } else {
-//                setSeachbarHidden(true)
-//            }
-//        }
-//        previousContentOffset = scrollView.contentOffset
     }
 }

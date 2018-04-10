@@ -15,6 +15,7 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
     
     @IBOutlet weak var imagesCollectionView: ImagesCollectionView!
     @IBOutlet weak var pageControl: ImagesPageControl!
+    @IBOutlet weak var scrollViewContainerView: UIView!
     @IBOutlet weak var scrollView: MushroomDetailsScrollView!
     
     @IBAction func backButtonPressed(sender: UIButton) {
@@ -24,7 +25,9 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
     
     var mushroom: Mushroom!
     var imageScrollTimer: Timer!
-
+    let interactor = showImageAnimationInteractor()
+    
+    
     override func viewDidLoad() {
         view.backgroundColor = UIColor.appSecondaryColour()
         super.viewDidLoad()
@@ -41,6 +44,7 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
         pageControl.delegate = self
         pageControl.dataSource = self
         scrollView.delegate = self
+        setupView()
         setupImageTimer()
         setupScrollView()
     }
@@ -72,7 +76,13 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
         return false
     }
     
-    
+    func setupView() {
+                scrollViewContainerView.layer.cornerRadius = 20
+                scrollViewContainerView.backgroundColor = UIColor.appSecondaryColour()
+                scrollViewContainerView.layer.shadowOpacity = 0.4
+                scrollViewContainerView.layer.shadowOffset = CGSize(width: 0.0, height: -2.0)
+            scrollViewContainerView.clipsToBounds = true
+    }
     
     func setupScrollView() {
 //        scrollView.setupInsets(collectionViewHeight: imagesCollectionView.defaultHeightConstant)
@@ -91,7 +101,7 @@ extension DetailsViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as? ImageCell {
-            cell.configureCell(url: (mushroom.images[indexPath.row]?.uri)!, photoAuthor: mushroom.images[indexPath.row]!.photographer)
+            cell.configureCell(url: (mushroom.images[indexPath.row].uri), photoAuthor: mushroom.images[indexPath.row].photographer)
         return cell
         } else {
             return UICollectionViewCell()
@@ -100,6 +110,14 @@ extension DetailsViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let photoVC = self.storyboard?.instantiateViewController(withIdentifier: "photoVC") as? PhotoVCViewController else {return}
+        photoVC.transitioningDelegate = self
+        photoVC.images = mushroom.images
+        photoVC.interactor = interactor
+        present(photoVC, animated: true, completion: nil)
     }
     
     
@@ -162,4 +180,23 @@ extension DetailsViewController: UIScrollViewDelegate {
 
 extension DetailsViewController: UIGestureRecognizerDelegate {
 }
+
+
+
+extension DetailsViewController: UIViewControllerTransitioningDelegate {
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        if interactor.hasStarted {
+            return interactor
+        } else {
+            return nil
+        }
+    }
+    
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return ShowImageAnimationController(isBeingPresented: false, imageFrame: CGRect.zero)
+    }
+}
+
 

@@ -17,6 +17,7 @@ enum Category: String {
     case local = "I nærheden"
     case favorites = "Mine favoritter"
     case rare = "Årstidens"
+    case test = "Test"
 }
 
 class CategoryView: UIView {
@@ -24,7 +25,7 @@ class CategoryView: UIView {
     @IBOutlet weak var collectionView: UICollectionView!
     
     weak var delegate: CategoryViewDelegate?
-    var items = [Category.offline, Category.local, Category.favorites, Category.rare]
+    var items = [Category.offline, Category.local, Category.favorites, Category.rare, Category.test]
     private var selectedItem: Category!
     
     lazy var selectorViewWidthConstraint = NSLayoutConstraint()
@@ -57,6 +58,7 @@ class CategoryView: UIView {
     private func setup() {
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.showsHorizontalScrollIndicator = false
         addSubview(selectorView)
         selectorViewWidthConstraint = selectorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: (1.0/CGFloat(items.count))/2)
         selectorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -94,7 +96,9 @@ extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UI
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.size.width / CGFloat(items.count), height: collectionView.frame.size.height)
+        let labelWidth = (items[indexPath.row].rawValue as NSString).size(withAttributes: [NSAttributedStringKey.font: UIFont.appHeaderDetails()])
+//        collectionView.frame.size.width / CGFloat(items.count)
+        return CGSize(width: labelWidth.width + 16, height: collectionView.frame.size.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -111,5 +115,17 @@ extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UI
         delegate?.newCategorySelected(category: items[indexPath.row])
         guard let cell = collectionView.cellForItem(at: indexPath) else {return}
         moveSelector(toCell: cell)
+        
+        if indexPath.row == items.count - 2 {
+            collectionView.scrollToItem(at: IndexPath.init(row: indexPath.row + 1, section: 0), at: UICollectionViewScrollPosition.right, animated: true)
+        } else if indexPath.row == 1 {
+            collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionViewScrollPosition.left, animated: true)
+        }
+    
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        selectorView.transform = CGAffineTransform(translationX: -scrollView.contentOffset.x, y: 0.0)
+//        scrollView.setContentOffset(CGPoint.zero, animated: false)
     }
 }

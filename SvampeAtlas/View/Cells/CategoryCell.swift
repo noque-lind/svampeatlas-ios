@@ -24,6 +24,7 @@ class CategoryCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         label.textColor = UIColor.appSecondaryColour()
+        label.font = UIFont.appHeaderDetails()
     }
     
     

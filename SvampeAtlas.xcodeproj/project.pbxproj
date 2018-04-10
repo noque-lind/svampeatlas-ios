@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0683D0207A581D00EB06D7 /* ResultsView.swift */; };
+		4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F76002079606B0082B873 /* RecognizeVC.swift */; };
+		4A1F7603207963E70082B873 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F7602207963E70082B873 /* CustomNavigationController.swift */; };
+		4A1F7605207966180082B873 /* PhotoVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F7604207966180082B873 /* PhotoVCViewController.swift */; };
+		4A1F760720796A510082B873 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F760620796A510082B873 /* PhotoCell.swift */; };
+		4A1F7609207A31150082B873 /* RecognizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F7608207A31150082B873 /* RecognizeView.swift */; };
 		4A28AB84204440FB00F21EEE /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A28AB83204440FB00F21EEE /* DataService.swift */; };
 		4A28AB872044413100F21EEE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A28AB862044413100F21EEE /* Constants.swift */; };
 		4A28AB8B2044454200F21EEE /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A28AB8A2044454200F21EEE /* GradientView.swift */; };
@@ -36,6 +42,8 @@
 		4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */; };
 		4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD43A0320529BDF001F6541 /* CategoryView.swift */; };
 		4AD43A0620529CF5001F6541 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD43A0520529CF5001F6541 /* CategoryCell.swift */; };
+		4ADF2B08207A5D9700C76276 /* ResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADF2B07207A5D9700C76276 /* ResultCell.swift */; };
+		4ADF2B0A207A5F3900C76276 /* SqueezeNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 4ADF2B09207A5F3900C76276 /* SqueezeNet.mlmodel */; };
 		4AEE2F37204551B600D20C2D /* MushroomThumbImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */; };
 		4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F38204557ED00D20C2D /* PersistanceService.swift */; };
 		4AEE2F3B20455EDE00D20C2D /* MushroomContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */; };
@@ -59,6 +67,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4A0683D0207A581D00EB06D7 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
+		4A1F76002079606B0082B873 /* RecognizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeVC.swift; sourceTree = "<group>"; };
+		4A1F7602207963E70082B873 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
+		4A1F7604207966180082B873 /* PhotoVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoVCViewController.swift; sourceTree = "<group>"; };
+		4A1F760620796A510082B873 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
+		4A1F7608207A31150082B873 /* RecognizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeView.swift; sourceTree = "<group>"; };
 		4A28AB83204440FB00F21EEE /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		4A28AB862044413100F21EEE /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4A28AB8A2044454200F21EEE /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
@@ -94,6 +108,8 @@
 		4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCollectionView.swift; sourceTree = "<group>"; };
 		4AD43A0320529BDF001F6541 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		4AD43A0520529CF5001F6541 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		4ADF2B07207A5D9700C76276 /* ResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCell.swift; sourceTree = "<group>"; };
+		4ADF2B09207A5F3900C76276 /* SqueezeNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SqueezeNet.mlmodel; sourceTree = "<group>"; };
 		4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomThumbImage.swift; sourceTree = "<group>"; };
 		4AEE2F38204557ED00D20C2D /* PersistanceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistanceService.swift; sourceTree = "<group>"; };
 		4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomContainerView.swift; sourceTree = "<group>"; };
@@ -130,12 +146,13 @@
 				4A95D5462057DDE900EBB2C5 /* MushroomTableViewBackgrounds */,
 				4A0775CB20443D5600DD5AF0 /* Cells */,
 				4A28AB8A2044454200F21EEE /* GradientView.swift */,
-				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
 				4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 				4AD43A0320529BDF001F6541 /* CategoryView.swift */,
 				4A3061E02053F4840061E98F /* MushroomTableView.swift */,
 				4AB6FA14207112F500870A46 /* CustomSearchBar.swift */,
+				4A1F7608207A31150082B873 /* RecognizeView.swift */,
+				4A0683D0207A581D00EB06D7 /* ResultsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -143,9 +160,9 @@
 		4A0775CB20443D5600DD5AF0 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				4A7891F320723BBF00B69427 /* ImageCell */,
 				4AB6FA132070F9B900870A46 /* MushroomCell */,
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
-				4AC5CA1C204E889E003ED3BE /* ImageCell.swift */,
 				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
 			);
 			path = Cells;
@@ -163,6 +180,7 @@
 		4A28AB852044412200F21EEE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4ADF2B09207A5F3900C76276 /* SqueezeNet.mlmodel */,
 				4A41C45920541A990053CCF1 /* ELRevealViewController.swift */,
 				4A28AB862044413100F21EEE /* Constants.swift */,
 				4A28AB8C20444B0300F21EEE /* AppProperties.swift */,
@@ -178,6 +196,9 @@
 				4A69BC7B2038D96500D3B88B /* ViewController.swift */,
 				4A69457520456C010041824E /* SideMenuController.swift */,
 				4AC5CA1A204E84C2003ED3BE /* DetailsViewController.swift */,
+				4A1F76002079606B0082B873 /* RecognizeVC.swift */,
+				4A1F7602207963E70082B873 /* CustomNavigationController.swift */,
+				4A1F7604207966180082B873 /* PhotoVCViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -246,6 +267,16 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		4A7891F320723BBF00B69427 /* ImageCell */ = {
+			isa = PBXGroup;
+			children = (
+				4AC5CA1C204E889E003ED3BE /* ImageCell.swift */,
+				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
+				4A1F760620796A510082B873 /* PhotoCell.swift */,
+			);
+			path = ImageCell;
+			sourceTree = "<group>";
+		};
 		4A95D5462057DDE900EBB2C5 /* MushroomTableViewBackgrounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -260,6 +291,7 @@
 				4A4AE30A2070181000178BFB /* MushroomCell.swift */,
 				4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */,
 				4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */,
+				4ADF2B07207A5D9700C76276 /* ResultCell.swift */,
 			);
 			path = MushroomCell;
 			sourceTree = "<group>";
@@ -406,19 +438,27 @@
 				4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */,
 				4AC5CA21204EA817003ED3BE /* MushroomDetailsScrollView.swift in Sources */,
 				4A3061E12053F4840061E98F /* MushroomTableView.swift in Sources */,
+				4A1F7603207963E70082B873 /* CustomNavigationController.swift in Sources */,
 				4A69457820456CD60041824E /* SideMenuStaticCell.swift in Sources */,
 				4A69BC7C2038D96500D3B88B /* ViewController.swift in Sources */,
 				4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */,
+				4A1F7605207966180082B873 /* PhotoVCViewController.swift in Sources */,
+				4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */,
 				4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */,
+				4A1F7609207A31150082B873 /* RecognizeView.swift in Sources */,
+				4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */,
+				4ADF2B0A207A5F3900C76276 /* SqueezeNet.mlmodel in Sources */,
 				4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */,
 				4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */,
 				4A28AB84204440FB00F21EEE /* DataService.swift in Sources */,
 				4AC5CA1F204E8DB0003ED3BE /* ImagesPageControl.swift in Sources */,
 				4A28AB872044413100F21EEE /* Constants.swift in Sources */,
+				4ADF2B08207A5D9700C76276 /* ResultCell.swift in Sources */,
 				4AEE2F37204551B600D20C2D /* MushroomThumbImage.swift in Sources */,
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
 				4A69457620456C010041824E /* SideMenuController.swift in Sources */,
+				4A1F760720796A510082B873 /* PhotoCell.swift in Sources */,
 				4A28AB8D20444B0300F21EEE /* AppProperties.swift in Sources */,
 				4A41C45A20541A9A0053CCF1 /* ELRevealViewController.swift in Sources */,
 				4AB6FA15207112F500870A46 /* CustomSearchBar.swift in Sources */,

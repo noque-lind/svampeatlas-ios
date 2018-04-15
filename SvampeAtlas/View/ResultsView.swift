@@ -38,7 +38,7 @@ extension ResultsView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! ResultCell
-        cell.configureCell(name: results[indexPath.row].identifier)
+        cell.configureCell(name: results[indexPath.row].identifier, confidence: results[indexPath.row].confidence)
         return cell
     }
 

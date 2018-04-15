@@ -138,6 +138,8 @@ extension ViewController: CategoryViewDelegate {
         switch category {
         case .offline:
             getOfflineMushrooms()
+        case .local:
+            break
         default:
             getDanishMushrooms()
         }

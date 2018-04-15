@@ -12,11 +12,12 @@ class ResultCell: UITableViewCell {
 
     @IBOutlet weak var mushroomThumbImageView: UIImageView?
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var confidenceLabel: UILabel!
     
     
-    
-    func configureCell(name: String) {
+    func configureCell(name: String, confidence: CGFloat) {
         nameLabel.text = name
+        confidenceLabel.text = "\(Int(confidence * 100))% sikker"
     }
     
     override func awakeFromNib() {
@@ -25,9 +26,10 @@ class ResultCell: UITableViewCell {
     }
     
     func setupView() {
-        nameLabel.font = UIFont.appPrimaryHightlighed()
+        nameLabel.font = UIFont.appHeaderDetails()
         nameLabel.textColor = UIColor.appWhite()
-        
+        confidenceLabel.font = UIFont.appPrimaryHightlighed()
+        confidenceLabel.textColor = UIColor.appWhite()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

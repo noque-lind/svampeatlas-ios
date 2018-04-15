@@ -19,6 +19,8 @@
 		4A28AB8D20444B0300F21EEE /* AppProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A28AB8C20444B0300F21EEE /* AppProperties.swift */; };
 		4A3061E12053F4840061E98F /* MushroomTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3061E02053F4840061E98F /* MushroomTableView.swift */; };
 		4A41C45A20541A9A0053CCF1 /* ELRevealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A41C45920541A990053CCF1 /* ELRevealViewController.swift */; };
+		4A4A8043207CA69D00041018 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A8042207CA69D00041018 /* MapVC.swift */; };
+		4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A8044207CD48900041018 /* LocationBackground.swift */; };
 		4A4AE30B2070181000178BFB /* MushroomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30A2070181000178BFB /* MushroomCell.swift */; };
 		4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */; };
 		4A69457620456C010041824E /* SideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69457520456C010041824E /* SideMenuController.swift */; };
@@ -79,6 +81,8 @@
 		4A28AB8C20444B0300F21EEE /* AppProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProperties.swift; sourceTree = "<group>"; };
 		4A3061E02053F4840061E98F /* MushroomTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomTableView.swift; sourceTree = "<group>"; };
 		4A41C45920541A990053CCF1 /* ELRevealViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ELRevealViewController.swift; sourceTree = "<group>"; };
+		4A4A8042207CA69D00041018 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
+		4A4A8044207CD48900041018 /* LocationBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationBackground.swift; sourceTree = "<group>"; };
 		4A4AE30A2070181000178BFB /* MushroomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MushroomCell.swift; sourceTree = "<group>"; };
 		4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowImageAnimationController.swift; sourceTree = "<group>"; };
 		4A69457520456C010041824E /* SideMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuController.swift; sourceTree = "<group>"; };
@@ -199,6 +203,7 @@
 				4A1F76002079606B0082B873 /* RecognizeVC.swift */,
 				4A1F7602207963E70082B873 /* CustomNavigationController.swift */,
 				4A1F7604207966180082B873 /* PhotoVCViewController.swift */,
+				4A4A8042207CA69D00041018 /* MapVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -281,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				4A95D5472057DFCE00EBB2C5 /* OfflineBackground.swift */,
+				4A4A8044207CD48900041018 /* LocationBackground.swift */,
 			);
 			path = MushroomTableViewBackgrounds;
 			sourceTree = "<group>";
@@ -435,6 +441,7 @@
 				4AEE2F3B20455EDE00D20C2D /* MushroomContainerView.swift in Sources */,
 				4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */,
 				4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */,
+				4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */,
 				4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */,
 				4AC5CA21204EA817003ED3BE /* MushroomDetailsScrollView.swift in Sources */,
 				4A3061E12053F4840061E98F /* MushroomTableView.swift in Sources */,
@@ -455,6 +462,7 @@
 				4A28AB872044413100F21EEE /* Constants.swift in Sources */,
 				4ADF2B08207A5D9700C76276 /* ResultCell.swift in Sources */,
 				4AEE2F37204551B600D20C2D /* MushroomThumbImage.swift in Sources */,
+				4A4A8043207CA69D00041018 /* MapVC.swift in Sources */,
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
 				4A69457620456C010041824E /* SideMenuController.swift in Sources */,

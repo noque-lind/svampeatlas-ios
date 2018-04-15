@@ -47,10 +47,14 @@ class MushroomCell: UITableViewCell {
         switch toxicityLevel {
         case .eatable:
             toxicityLabel.textColor = UIColor.appGreen()
+            toxicityLabel.text = "SPISELIG"
+            toxicityImageView.image = #imageLiteral(resourceName: "Edible")
         case .toxic:
             toxicityLabel.textColor = UIColor.appRed()
+            toxicityLabel.text = "GIFTIG"
         case .cautious:
             toxicityLabel.textColor = UIColor.appYellow()
+            toxicityLabel.text = "VÆR VARSOM"
         }
         
         

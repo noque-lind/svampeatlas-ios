@@ -90,18 +90,6 @@ class CustomSearchBar: UITextField {
         let radius = self.frame.height / 2
         shapeLayer.path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.topLeft, .bottomLeft], cornerRadii: CGSize(width: radius, height: radius)).cgPath
     }
-    
-    
-    override func becomeFirstResponder() -> Bool {
-        //        searchBarDelegate?.shouldExpandSearchBar()
-        super.becomeFirstResponder()
-        return true
-    }
-    
-    override func resignFirstResponder() -> Bool {
-        super.resignFirstResponder()
-        return true
-    }
 }
 
 extension CustomSearchBar {
@@ -114,6 +102,7 @@ extension CustomSearchBar {
         if !isExpanded {
             iconView.setImage(#imageLiteral(resourceName: "Exit"), for: [])
             expand()
+            self.becomeFirstResponder()
         } else {
             if iconView.image(for: []) != #imageLiteral(resourceName: "Search") {
                 collapse()

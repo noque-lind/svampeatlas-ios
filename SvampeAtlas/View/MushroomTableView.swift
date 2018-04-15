@@ -29,6 +29,8 @@ class MushroomTableView: UITableView {
             switch categoryType {
             case .offline:
                 self.backgroundView = OfflineBackground(frame: self.frame)
+            case .local:
+                self.backgroundView = LocationBackground(frame: self.frame)
             default:
                 print("HAHAAHA")
             }

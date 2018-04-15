@@ -111,7 +111,7 @@ extension RecognizeVC: RecognizeViewDelegate, AVCapturePhotoCaptureDelegate {
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
         let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first!
-        let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewPixelType, kCVPixelBufferWidthKey as String: 160, kCVPixelBufferHeightKey as String: 160]
+        let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewPixelType, kCVPixelBufferWidthKey as String: 227, kCVPixelBufferHeightKey as String: 227]
         settings.previewPhotoFormat = previewFormat
         
         cameraOutput.capturePhoto(with: settings, delegate: self)

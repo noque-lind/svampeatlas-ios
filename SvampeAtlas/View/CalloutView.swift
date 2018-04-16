@@ -10,7 +10,9 @@ import UIKit
 
 class CalloutView: UIView {
 
-    private var heightConstraint: NSLayoutConstraint!
+    private var imageViewWidthConstraint: NSLayoutConstraint!
+    private var imageViewTopConstraint: NSLayoutConstraint!
+    private var imageViewHeightConstraint: NSLayoutConstraint!
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -18,8 +20,6 @@ class CalloutView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        imageView.layer.cornerRadius = 10
         return imageView
     }()
     
@@ -81,31 +81,44 @@ class CalloutView: UIView {
         self.alpha = 0
         
         self.widthAnchor.constraint(equalToConstant: 250).isActive = true
-        heightConstraint = self.heightAnchor.constraint(equalToConstant: 0)
-        heightConstraint.isActive = true
+        self.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         addSubview(imageView)
-        imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: self.topAnchor)
+    }
+    
+    func setupConstraints(imageView: UIImageView) {
+            self.imageView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
+            self.imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalTo: imageView.widthAnchor)
+            self.imageViewWidthConstraint.isActive = true
+            self.imageViewHeightConstraint = self.imageView.heightAnchor.constraint(equalTo: imageView.heightAnchor)
+            self.imageViewHeightConstraint.isActive = true
+            self.bottomAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+            self.imageView.layer.cornerRadius = imageView.frame.width / 2
+            self.layer.cornerRadius = imageView.frame.width / 2
+            self.superview!.layoutIfNeeded()
     }
     
     
     
     func show(imageView: UIImageView) {
-        self.imageView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
-        bottomAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
-        heightConstraint.constant = 80
+        imageViewWidthConstraint.isActive = false
+        imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 80)
+        imageViewWidthConstraint.isActive = true
         
-        UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseInOut, animations: {
-            self.alpha = 1
-            self.backgroundColor = UIColor.appSecondaryColour().withAlphaComponent(1.0)
+        imageViewHeightConstraint.isActive = false
+        imageViewTopConstraint.isActive = true
+    
+        self.alpha = 1
+        
+        UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
             self.superview!.layoutIfNeeded()
         }) { (_) in
             self.setupContent()
-            
-            UIView.animate(withDuration: 0.3, animations: {
-                
+            UIView.animate(withDuration: 0.2, animations: {
+                self.backgroundColor = UIColor.appSecondaryColour().withAlphaComponent(1.0)
                 self.contentStackView.alpha = 1
                 self.toxicityLevelImageView.alpha = 1
             }, completion: nil)
@@ -136,7 +149,8 @@ class CalloutView: UIView {
         DispatchQueue.main.async {
             self.contentStackView.removeFromSuperview()
             self.toxicityLevelImageView.removeFromSuperview()
-            self.heightConstraint.constant = 0
+            self.imageViewTopConstraint.isActive = false
+            self.imageViewWidthConstraint.isActive = false
             self.superview!.layoutIfNeeded()
             self.backgroundColor = UIColor.appSecondaryColour().withAlphaComponent(0.0)
             self.contentStackView.alpha = 0

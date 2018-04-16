@@ -17,6 +17,8 @@
 		4A28AB872044413100F21EEE /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A28AB862044413100F21EEE /* Constants.swift */; };
 		4A28AB8B2044454200F21EEE /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A28AB8A2044454200F21EEE /* GradientView.swift */; };
 		4A28AB8D20444B0300F21EEE /* AppProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A28AB8C20444B0300F21EEE /* AppProperties.swift */; };
+		4A300A90208365DC003CB2A5 /* MushroomAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A300A8F208365DC003CB2A5 /* MushroomAnnotationView.swift */; };
+		4A300A92208388C3003CB2A5 /* CalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A300A91208388C3003CB2A5 /* CalloutView.swift */; };
 		4A3061E12053F4840061E98F /* MushroomTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A3061E02053F4840061E98F /* MushroomTableView.swift */; };
 		4A41C45A20541A9A0053CCF1 /* ELRevealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A41C45920541A990053CCF1 /* ELRevealViewController.swift */; };
 		4A4A8043207CA69D00041018 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A8042207CA69D00041018 /* MapVC.swift */; };
@@ -79,6 +81,8 @@
 		4A28AB862044413100F21EEE /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		4A28AB8A2044454200F21EEE /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		4A28AB8C20444B0300F21EEE /* AppProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProperties.swift; sourceTree = "<group>"; };
+		4A300A8F208365DC003CB2A5 /* MushroomAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomAnnotationView.swift; sourceTree = "<group>"; };
+		4A300A91208388C3003CB2A5 /* CalloutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalloutView.swift; sourceTree = "<group>"; };
 		4A3061E02053F4840061E98F /* MushroomTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomTableView.swift; sourceTree = "<group>"; };
 		4A41C45920541A990053CCF1 /* ELRevealViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ELRevealViewController.swift; sourceTree = "<group>"; };
 		4A4A8042207CA69D00041018 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
@@ -157,6 +161,8 @@
 				4AB6FA14207112F500870A46 /* CustomSearchBar.swift */,
 				4A1F7608207A31150082B873 /* RecognizeView.swift */,
 				4A0683D0207A581D00EB06D7 /* ResultsView.swift */,
+				4A300A8F208365DC003CB2A5 /* MushroomAnnotationView.swift */,
+				4A300A91208388C3003CB2A5 /* CalloutView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -453,6 +459,7 @@
 				4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */,
 				4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */,
 				4A1F7609207A31150082B873 /* RecognizeView.swift in Sources */,
+				4A300A92208388C3003CB2A5 /* CalloutView.swift in Sources */,
 				4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */,
 				4ADF2B0A207A5F3900C76276 /* SqueezeNet.mlmodel in Sources */,
 				4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */,
@@ -473,6 +480,7 @@
 				4A4AE30B2070181000178BFB /* MushroomCell.swift in Sources */,
 				4A28AB8B2044454200F21EEE /* GradientView.swift in Sources */,
 				4AD43A0620529CF5001F6541 /* CategoryCell.swift in Sources */,
+				4A300A90208365DC003CB2A5 /* MushroomAnnotationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

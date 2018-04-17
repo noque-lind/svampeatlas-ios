@@ -42,7 +42,7 @@ class MushroomAnnotationView: MKAnnotationView {
     
     lazy var imageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "IMG_15270")
+        imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +91,7 @@ class MushroomAnnotationView: MKAnnotationView {
         if selected {
             addSubview(calloutView)
             calloutView.setupConstraints(imageView: imageView)
-                calloutView.configureCalloutView(image: #imageLiteral(resourceName: "IMG_15270"), title: "Chanterelle", subtitle: "Cantharellus cibarius")
+                calloutView.configureCalloutView(image: #imageLiteral(resourceName: "agaricus-arvensis1"), title: "Chanterelle", subtitle: "Cantharellus cibarius")
              calloutView.show(imageView: imageView)
         } else {
             calloutView.hide(animated: animated)

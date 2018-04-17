@@ -135,30 +135,37 @@ extension ViewController: CategoryViewDelegate {
         tableView.categoryType = category
         mushrooms.removeAll()
         tableView.reloadData()
-        switch category {
-        case .offline:
-            getOfflineMushrooms()
-        case .local:
-            break
-        default:
-            getDanishMushrooms()
-        }
+        getMushrooms(categoryType: category)
     }
 
-    private func getOfflineMushrooms() {
-        
+    private func getMushrooms(categoryType category: Category) {
+        switch category {
+        case .local:
+            DataService.instance.getMushrooms { (mushrooms) in
+                DispatchQueue.main.async {
+                }
+            }
+        case .offline:
+            self.tableView.reloadData()
+        default:
+            tableView.showLoader()
+            DataService.instance.getMushrooms { (mushrooms) in
+                DispatchQueue.main.async {
+                    self.prepareSearchBar()
+                    self.mushrooms = mushrooms
+                    self.tableView.reloadData()
+                }
+        }
+    }
     }
     
-    private func getFavoritesMushrooms() {
-                tableView.reloadData()
-    }
-    
+
     private func getDanishMushrooms() {
         tableView.showLoader()
         DataService.instance.getMushrooms { (mushrooms) in
             DispatchQueue.main.async {
                 self.prepareSearchBar()
-                self.mushrooms = mushrooms
+                
                 self.tableView.reloadData()
             }
         }

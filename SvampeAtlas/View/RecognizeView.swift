@@ -24,18 +24,8 @@ class RecognizeView: UIVisualEffectView {
 
     @IBOutlet weak var resultsView: ResultsView!
     @IBOutlet weak var cameraControlsView: UIView!
-    
-    
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
 
-    
-    
-    
-    private var originHeightConstant: CGFloat!
-    var roundedMask = CAShapeLayer()
-    var delegate: RecognizeViewDelegate? = nil
-    
-    
     @IBAction func captureButtonPressed(sender: UIButton) {
         delegate?.capturePhoto()
         
@@ -50,11 +40,10 @@ class RecognizeView: UIVisualEffectView {
             activityView.centerYAnchor.constraint(equalTo: sender.centerYAnchor).isActive = true
             activityView.startAnimating()
         }
-        
-        
-        
-        
     }
+    
+    private var originHeightConstant: CGFloat!
+    var delegate: RecognizeViewDelegate? = nil
     
     func showResults(results: [temptModel]) {
         resultsView.results = results
@@ -90,7 +79,7 @@ class RecognizeView: UIVisualEffectView {
             self.layer.shadowRadius = 5.0
             self.superview?.layoutIfNeeded()
         }) { (finished) in
-            self.resultsView.showResults()
+//            self.resultsView.showResults()
         }
 }
   

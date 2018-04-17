@@ -39,13 +39,13 @@ class MushroomDetailsScrollView: UIScrollView {
         return label
     }()
     
-    lazy var map: MKMapView = {
-       let map = MKMapView()
-        map.heightAnchor.constraint(equalToConstant: 500).isActive = true
-        map.translatesAutoresizingMaskIntoConstraints = false
-        map.layer.cornerRadius = 10
-        map.isUserInteractionEnabled = false
-        return map
+    lazy var mapView: UIView = {
+        let mapView = MapView(mapViewConfiguration: MapViewConfiguration(regionRadius: 50000, mapViewCornerRadius: 10, descriptionViewContent: MapViewConfiguration.DescriptionViewContent(numberOfAnnotations: 10, withinRangeOf: "50km")))
+        mapView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.isUserInteractionEnabled = false
+        mapView.centerOnUserLocation()
+        return mapView
     }()
     
     lazy var primaryAndSecondaryTitleLabels: UIStackView = {
@@ -79,6 +79,13 @@ class MushroomDetailsScrollView: UIScrollView {
         return stackView
     }()
     
+    lazy var similarSpeciesView: SimilarSpeciesView = {
+        let similarSpeciesView = SimilarSpeciesView()
+        similarSpeciesView.translatesAutoresizingMaskIntoConstraints = false
+        similarSpeciesView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        return similarSpeciesView
+    }()
+    
     public func setupInsets(collectionViewHeight: CGFloat) {
         self.contentInset = UIEdgeInsets(top: collectionViewHeight, left: 0, bottom: 0, right: 0)
         self.scrollIndicatorInsets = UIEdgeInsets(top: collectionViewHeight, left: 0, bottom: 0, right: 0)
@@ -99,8 +106,9 @@ class MushroomDetailsScrollView: UIScrollView {
         contentStackView.addArrangedSubview(descriptionLabel)
         setupToxicityInformation(toxicityLevel: mushroom.toxicityLevel)
         setupRedlistInformation(redlistData: mushroom.redlistData)
-        contentStackView.addArrangedSubview(map)
-        
+        contentStackView.addArrangedSubview(similarSpeciesView)
+        similarSpeciesView.mushrooms = [mushroom]
+        contentStackView.addArrangedSubview(mapView)
         
         titleLabel.text = mushroom.vernacularName_dk?.vernacularname_dk
         secondaryTitleLabel.text = mushroom.vernacularName_dk?.appliedLatinName

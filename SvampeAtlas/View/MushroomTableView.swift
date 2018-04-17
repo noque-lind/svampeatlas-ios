@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum LocationBackgroundType {
+    case Map
+    case List
+}
+
 class MushroomTableView: UITableView {
     public var categoryType: Category!
     

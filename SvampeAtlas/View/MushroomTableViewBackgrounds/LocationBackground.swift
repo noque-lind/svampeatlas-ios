@@ -14,26 +14,20 @@ class LocationBackground: UIView {
     lazy var userLocationButton: UIButton = {
       let button = UIButton()
         button.backgroundColor = UIColor.appSecondaryColour()
-        button.layer.shadowOpacity = 0.4
+        button.layer.shadowOpacity = 0.2
         button.translatesAutoresizingMaskIntoConstraints = false
         button.widthAnchor.constraint(equalToConstant: 50).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         button.layer.cornerRadius = 25
-        button.addTarget(self, action: #selector(centerOnUserLocation), for: .touchUpInside)
+        button.addTarget(self, action: #selector(userLocationButtonPressed(_:)), for: .touchUpInside)
         return button
     }()
     
-    private var locationManager: CLLocationManager!
-    var mapViewRegionDidChangeBecauseOfUserInteration = false
-
-    lazy var mapView: MKMapView = {
-      let mapView = MKMapView()
-        mapView.delegate = self
+    lazy var mapView: MapView = {
+       let mapView = MapView()
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        mapView.showsUserLocation = true
         return mapView
     }()
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,42 +48,13 @@ class LocationBackground: UIView {
         self.addSubview(userLocationButton)
         userLocationButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
         userLocationButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
-        
-        
-        locationManager = CLLocationManager()
-        
-        centerOnUserLocation()
+    
+        mapView.centerOnUserLocation()
         
         
         // DEV TOOL
-        let tapGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(addAnnotation(sender:)))
+        let tapGestureRecognizer = UILongPressGestureRecognizer(target: mapView, action: #selector(mapView.addAnnotation(sender:)))
         self.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
-   @objc private func centerOnUserLocation() {
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.delegate = self
-            locationManager.startUpdatingLocation()
-            mapViewRegionDidChangeBecauseOfUserInteration = false
-        } else {
-            userLocationButton.isHidden = true
-        }
-    }
-    
-    @objc func addAnnotation(sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-        let touchPoint = sender.location(in: self)
-        let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-        
-            let mushroomPin = MushroomPin(coordinate: touchCoordinate, identifier: "mushroomPin", mushroom: nil)
-        mapView.addAnnotation(mushroomPin)
-        } else {
-            return
-        }
-    }
-    
-    private func addAnnotations() {
     }
     
     private func showsUserLocationButton(_ shouldShow: Bool, animated: Bool = true) {
@@ -102,48 +67,8 @@ class LocationBackground: UIView {
         }
     }
     
-    
-    
-    
-    
-    @IBAction func userLocationButtonPressed(_ sender: UIButton) {
-        centerOnUserLocation()
-        UIView.animate(withDuration: 0.2) {
-            sender.alpha = 0
-        }
-    }
-}
-
-extension LocationBackground: MKMapViewDelegate, CLLocationManagerDelegate {
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let mushroomPin = annotation as? MushroomPin else {return nil}
-        var mushroomAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "droppablePinView")
-        
-        if mushroomAnnotationView == nil {
-            mushroomAnnotationView = MushroomAnnotationView(annotation: mushroomPin, reuseIdentifier: "droppablePinView")
-        }
-        return mushroomAnnotationView
-    }
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-    }
-    
-    
-    
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else {return}
-        let region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude), 500, 500)
-        mapView.setRegion(region, animated: true)
-        locationManager.stopUpdatingLocation()
-        showsUserLocationButton(false)
-    }
-    
-    
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        if mapViewRegionDidChangeBecauseOfUserInteration {
-            showsUserLocationButton(true)
-        }
-        mapViewRegionDidChangeBecauseOfUserInteration = true
+    @objc private func userLocationButtonPressed(_ sender: UIButton) {
+        mapView.centerOnUserLocation()
+        showsUserLocationButton(false, animated: true)
     }
 }

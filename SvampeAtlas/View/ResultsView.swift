@@ -11,7 +11,17 @@ import UIKit
 class ResultsView: UIView {
 
     @IBOutlet weak var tableView: UITableView!
-    var results = [temptModel]()
+    
+    var results = [temptModel]() {
+        didSet {
+            tableView.delegate = self
+            tableView.dataSource = self
+            tableView.reloadData()
+            UIView.animate(withDuration: 0.2) {
+                self.alpha = 1
+            }
+        }
+    }
     
     override func awakeFromNib() {
         setupView()
@@ -19,15 +29,6 @@ class ResultsView: UIView {
     
     private func setupView() {
         alpha = 0
-    }
-    
-    func showResults() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.reloadData()
-        UIView.animate(withDuration: 0.2) {
-            self.alpha = 1
-        }
     }
 }
 

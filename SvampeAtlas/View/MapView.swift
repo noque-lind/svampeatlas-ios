@@ -27,7 +27,7 @@ struct MapViewConfiguration {
 class MapView: UIView {
     
     private lazy var descriptionView: UIView = {
-       let descriptionView = UIView()
+        let descriptionView = UIView()
         descriptionView.backgroundColor = UIColor.appPrimaryColour()
         descriptionView.layer.cornerRadius = 10
         descriptionView.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +50,10 @@ class MapView: UIView {
     private var locationManager: CLLocationManager!
     private var mapViewRegionDidChangeBecauseOfUserInteration = false
     private var mapViewConfiguration: MapViewConfiguration
-
+    
+    var hasDownloaded = false
+    
+    
     init(mapViewConfiguration: MapViewConfiguration = MapViewConfiguration()) {
         self.mapViewConfiguration = mapViewConfiguration
         super.init(frame: CGRect.zero)
@@ -62,7 +65,7 @@ class MapView: UIView {
         super.init(coder: aDecoder)
         setupView()
     }
-
+    
     private func setupView() {
         locationManager = CLLocationManager()
         
@@ -108,7 +111,7 @@ class MapView: UIView {
         numberOfAnnotationsLabel.textColor = UIColor.appWhite()
         numberOfAnnotationsLabel.textAlignment = .center
         numberOfAnnotationsLabel.text = "\(content.numberOfAnnotations) fund nær dig"
-    
+        
         let radiusLabel = UILabel()
         radiusLabel.font = UIFont.appPrimary()
         radiusLabel.textAlignment = .center
@@ -135,14 +138,29 @@ class MapView: UIView {
         }
     }
     
+   
+    func addObservationAnnotations(observations: [Observation]) {
+        var annotations = [ObservationPin]()
+        for observation in observations {
+            guard let geom = observation.geom else {continue}
+            let observationPin = ObservationPin(coordinate: CLLocationCoordinate2D.init(latitude: geom.coordinates.last!, longitude: geom.coordinates.first!), identifier: "observationPin", observation: observation)
+            annotations.append(observationPin)
+        }
+        
+        mapView.addAnnotations(annotations)
+        
+    }
+    
+
+    
     // TODO: REMOVE
     @objc func addAnnotation(sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             let touchPoint = sender.location(in: self)
             let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
             
-            let mushroomPin = MushroomPin(coordinate: touchCoordinate, identifier: "mushroomPin", mushroom: nil)
-            mapView.addAnnotation(mushroomPin)
+//            let mushroomPin = ObservationPin(coordinate: touchCoordinate, identifier: "mushroomPin", mushroom: nil)
+//            mapView.addAnnotation(mushroomPin)
         } else {
             return
         }
@@ -151,24 +169,51 @@ class MapView: UIView {
 
 extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let mushroomPin = annotation as? MushroomPin else {return nil}
-        var mushroomAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "droppablePinView")
-        
-        if mushroomAnnotationView == nil {
-            mushroomAnnotationView = MushroomAnnotationView(annotation: mushroomPin, reuseIdentifier: "droppablePinView")
+        if let observationPin = annotation as? ObservationPin {
+            var observationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "observationPinView")
+            
+            if observationPinView == nil {
+                observationPinView = ObservationPinView(annotation: observationPin, reuseIdentifier: "observationPinView")
+            }
+            return observationPinView
+        } else if #available(iOS 11.0, *)  {
+            guard let mkClusterAnnotation = annotation as? MKClusterAnnotation else {return nil}
+            var clusterAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterAnnotationView")
+            clusterAnnotationView?.annotation = mkClusterAnnotation
+            if clusterAnnotationView == nil {
+                clusterAnnotationView = ClusterPinView(annotation: mkClusterAnnotation, reuseIdentifier: "clusterAnnotationView")
+            }
+            return clusterAnnotationView
+        } else {
+            return nil
         }
-        return mushroomAnnotationView
     }
+    
+    
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
     }
     
     
     
-    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {return}
         let region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude), CLLocationDistance.init(mapViewConfiguration.regionRadius), CLLocationDistance.init(mapViewConfiguration.regionRadius))
+        
+        let circle = MKCircle(center: location.coordinate, radius: 50000)
+        
+        mapView.add(circle)
+        
+        
+        //                let coordinate1 = mapView.coordin
+        //                let coordinate2 = mapView.convert(CGPoint(x: circle.boundingMapRect.origin.x + circle.boundingMapRect.size.width, y: circle.boundingMapRect.origin.y), toCoordinateFrom: mapView)
+        //                let coordinate3 = mapView.convert(CGPoint(x: circle.boundingMapRect.origin.x, y: circle.boundingMapRect.origin.y + circle.boundingMapRect.size.height), toCoordinateFrom: mapView)
+        //                let coordinate4 = mapView.convert(CGPoint(x: circle.boundingMapRect.origin.x + circle.boundingMapRect.size.width, y: circle.boundingMapRect.origin.y + circle.boundingMapRect.size.height), toCoordinateFrom: mapView)
+        
+        
+        //        print(coordinate1, coordinate2, coordinate3, coordinate4)
+        
+        mapViewRegionDidChangeBecauseOfUserInteration = false
         mapView.setRegion(region, animated: true)
         locationManager.stopUpdatingLocation()
     }
@@ -176,8 +221,30 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         if mapViewRegionDidChangeBecauseOfUserInteration {
-
-        }
+            if !hasDownloaded {
+            let coordinate1 = mapView.convert(CGPoint(x: mapView.bounds.origin.x, y: mapView.bounds.origin.y), toCoordinateFrom: mapView)
+            let coordinate2 = mapView.convert(CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.origin.y), toCoordinateFrom: mapView)
+            let coordinate3 = mapView.convert(CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.maxY), toCoordinateFrom: mapView)
+            let coordinate4 = mapView.convert(CGPoint(x: mapView.bounds.origin.x, y: mapView.bounds.maxY), toCoordinateFrom: mapView)
+            print(coordinate1, coordinate2, coordinate3, coordinate4)
+            
+            //            let geoJSON =
+            //            """
+            //            https://svampe.databasen.org/api/observations/specieslist?geometry={"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[\(coordinate1.longitude),\(coordinate1.latitude)],[\(coordinate2.longitude),\(coordinate2.latitude)],[\(coordinate3.longitude),\(coordinate3.latitude)],[\(coordinate4.longitude),\(coordinate4.latitude)],[\(coordinate1.longitude),\(coordinate1.latitude)]]]}}&include=["{\"model\":\"DeterminationView\",\"as\":\"DeterminationView\",\"attributes\":[\"Taxon_id\",\"Recorded_as_id\",\"Taxon_FullName\",\"Taxon_vernacularname_dk\",\"Taxon_RankID\",\"Determination_validation\",\"Taxon_redlist_status\",\"Taxon_path\",\"Recorded_as_FullName\",\"Determination_user_id\",\"Determination_score\",\"Determination_validator_id\"],\"where\":{\"$and\":{\"$or\":{}}}}","{\"model\":\"User\",\"as\":\"PrimaryUser\",\"required\":false,\"where\":{}}","{\"model\":\"Locality\",\"as\":\"Locality\",\"attributes\":[\"_id\",\"name\"],\"where\":{},\"required\":true}"]&where={}
+            //            """
+            
+            let geoJSON = "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[\(coordinate1.longitude),\(coordinate1.latitude)],[\(coordinate2.longitude),\(coordinate2.latitude)],[\(coordinate3.longitude),\(coordinate3.latitude)],[\(coordinate4.longitude),\(coordinate4.latitude)],[\(coordinate1.longitude),\(coordinate1.latitude)]]]}}"
+            hasDownloaded = true
+            DataService.instance.getObservationsWithin(geoJSON: geoJSON) { (mushroom) in
+                DispatchQueue.main.sync {
+                    self.addObservationAnnotations(observations: mushroom)
+                }
+            }
+            }
+        } else {
+            
         mapViewRegionDidChangeBecauseOfUserInteration = true
+    
+        }
     }
 }

@@ -36,6 +36,8 @@ class MushroomTableView: UITableView {
                 self.backgroundView = OfflineBackground(frame: self.frame)
             case .local:
                 self.backgroundView = LocationBackground(frame: self.frame)
+            case .favorites:
+                self.backgroundView = FavoritesBackground(frame: self.frame)
             default:
                 print("HAHAAHA")
             }

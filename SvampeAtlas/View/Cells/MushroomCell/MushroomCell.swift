@@ -23,6 +23,7 @@ class MushroomCell: UITableViewCell {
     @IBOutlet weak var toxicityImageView: UIImageView!
     @IBOutlet weak var toxicityLabel: UILabel!
     
+    @IBOutlet weak var favoriteImageView: UIImageView!
     
     override func awakeFromNib() {
         setupView()
@@ -39,7 +40,7 @@ class MushroomCell: UITableViewCell {
         secondaryTitle.text = mushroom.vernacularName_dk?.appliedLatinName
         dkAmount.text = String(describing: mushroom.statistics!.accepted_count)
         
-        downloadThumbImage(url: mushroom.images[0].thumburi)
+        downloadThumbImage(url: mushroom.images![0].thumburi)
         
         guard let toxicityLevel = mushroom.toxicityLevel else {toxicityLevelStackView.isHidden = true; return}
         toxicityLevelStackView.isHidden = false
@@ -57,6 +58,7 @@ class MushroomCell: UITableViewCell {
             toxicityLabel.text = "VÆR VARSOM"
         }
         
+        favoriteImageView.isHidden = false
         
     }
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MushroomVC: UIViewController {
     
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var tableView: MushroomTableView!
@@ -68,7 +68,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension MushroomVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let filteredMushrooms = filteredMushrooms {
             return filteredMushrooms.count
@@ -124,13 +124,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension ViewController {
+extension MushroomVC {
     private func handleFavoritingOfMushroom(mushroom: Mushroom) {
         
     }
 }
 
-extension ViewController: CategoryViewDelegate {
+extension MushroomVC: CategoryViewDelegate {
     func newCategorySelected(category: Category) {
         tableView.categoryType = category
         mushrooms.removeAll()
@@ -146,7 +146,10 @@ extension ViewController: CategoryViewDelegate {
                 }
             }
         case .offline:
-            self.tableView.reloadData()
+            break
+            
+        case .favorites:
+            break
         default:
             tableView.showLoader()
             DataService.instance.getMushrooms { (mushrooms) in
@@ -173,7 +176,7 @@ extension ViewController: CategoryViewDelegate {
 }
 
 
-extension ViewController: CustomSearchBarDelegate {
+extension MushroomVC: CustomSearchBarDelegate {
     func newSearchEntry(entry: String) {
         filteredMushrooms = []
         tableView.reloadData()

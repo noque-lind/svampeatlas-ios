@@ -96,12 +96,12 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
 
 extension DetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return mushroom.images.count
+        return mushroom.images!.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as? ImageCell {
-            cell.configureCell(url: (mushroom.images[indexPath.row].uri), photoAuthor: mushroom.images[indexPath.row].photographer)
+            cell.configureCell(url: (mushroom.images![indexPath.row].uri), photoAuthor: mushroom.images![indexPath.row].photographer)
         return cell
         } else {
             return UICollectionViewCell()
@@ -115,7 +115,7 @@ extension DetailsViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let photoVC = self.storyboard?.instantiateViewController(withIdentifier: "photoVC") as? PhotoVCViewController else {return}
         photoVC.transitioningDelegate = self
-        photoVC.images = mushroom.images
+        photoVC.images = mushroom.images!
         photoVC.interactor = interactor
         present(photoVC, animated: true, completion: nil)
     }
@@ -130,7 +130,7 @@ extension DetailsViewController: UICollectionViewDelegate, UICollectionViewDataS
 
 extension DetailsViewController: ImagesPageControlDataSource, ImagesPageControlDelegate{
     func numberOfPages() -> Int {
-        return mushroom.images.count
+        return mushroom.images!.count
     }
     
     func didChangePage(toPage page: Int) {

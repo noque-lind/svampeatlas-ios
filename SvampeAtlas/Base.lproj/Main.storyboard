@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -96,81 +95,7 @@
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iB9-8t-6aB" customClass="ResultsView" customModule="SvampeAtlas" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
-                                            <subviews>
-                                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qao-xB-sPA">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <prototypes>
-                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="resultCell" rowHeight="80" id="RKF-Zw-ZlA" customClass="ResultCell" customModule="SvampeAtlas" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="28" width="375" height="80"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RKF-Zw-ZlA" id="lzX-kP-HJb">
-                                                                <rect key="frame" x="0.0" y="0.0" width="375" height="79.666666666666671"/>
-                                                                <autoresizingMask key="autoresizingMask"/>
-                                                                <subviews>
-                                                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="kQ4-PF-U6Q">
-                                                                        <rect key="frame" x="8" y="7.9999999999999964" width="359" height="63.666666666666657"/>
-                                                                        <subviews>
-                                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Wvd-5Z-FHb">
-                                                                                <rect key="frame" x="0.0" y="7" width="50" height="50"/>
-                                                                                <constraints>
-                                                                                    <constraint firstAttribute="width" secondItem="Wvd-5Z-FHb" secondAttribute="height" multiplier="1:1" id="aIw-Uf-po5"/>
-                                                                                </constraints>
-                                                                            </imageView>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="aip-2V-Ha8">
-                                                                                <rect key="frame" x="60" y="4" width="299" height="55.666666666666664"/>
-                                                                                <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C2w-zA-Nix">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="299" height="35.333333333333336"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3t-z9-GCe">
-                                                                                        <rect key="frame" x="0.0" y="35.333333333333336" width="299" height="20.333333333333336"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
-                                                                                </subviews>
-                                                                            </stackView>
-                                                                        </subviews>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="trailing" secondItem="aip-2V-Ha8" secondAttribute="trailing" constant="8" id="ClA-Ib-H9G"/>
-                                                                            <constraint firstAttribute="bottom" secondItem="aip-2V-Ha8" secondAttribute="bottom" constant="4" id="LjZ-kI-ibD"/>
-                                                                            <constraint firstItem="aip-2V-Ha8" firstAttribute="top" secondItem="kQ4-PF-U6Q" secondAttribute="top" constant="4" id="fo6-Sy-wMb"/>
-                                                                            <constraint firstItem="aip-2V-Ha8" firstAttribute="leading" secondItem="Wvd-5Z-FHb" secondAttribute="trailing" constant="8" id="rXW-ed-zbD"/>
-                                                                        </constraints>
-                                                                    </stackView>
-                                                                </subviews>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <constraints>
-                                                                    <constraint firstItem="kQ4-PF-U6Q" firstAttribute="leading" secondItem="lzX-kP-HJb" secondAttribute="leading" constant="8" id="0GW-ml-RXF"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="kQ4-PF-U6Q" secondAttribute="trailing" constant="8" id="F4o-Q8-Y7y"/>
-                                                                    <constraint firstAttribute="bottom" secondItem="kQ4-PF-U6Q" secondAttribute="bottom" constant="8" id="i3H-Jd-a0a"/>
-                                                                    <constraint firstItem="kQ4-PF-U6Q" firstAttribute="top" secondItem="lzX-kP-HJb" secondAttribute="top" constant="8" id="yHh-VL-WjS"/>
-                                                                </constraints>
-                                                            </tableViewCellContentView>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <connections>
-                                                                <outlet property="confidenceLabel" destination="E3t-z9-GCe" id="MAy-4W-dDd"/>
-                                                                <outlet property="mushroomThumbImageView" destination="Wvd-5Z-FHb" id="MEh-G8-DmZ"/>
-                                                                <outlet property="nameLabel" destination="C2w-zA-Nix" id="urR-UT-te4"/>
-                                                            </connections>
-                                                        </tableViewCell>
-                                                    </prototypes>
-                                                </tableView>
-                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstItem="qao-xB-sPA" firstAttribute="top" secondItem="iB9-8t-6aB" secondAttribute="top" id="1oV-Rw-WoK"/>
-                                                <constraint firstAttribute="trailing" secondItem="qao-xB-sPA" secondAttribute="trailing" id="H5M-bf-BJt"/>
-                                                <constraint firstItem="qao-xB-sPA" firstAttribute="leading" secondItem="iB9-8t-6aB" secondAttribute="leading" id="eZB-0r-wWa"/>
-                                                <constraint firstAttribute="bottom" secondItem="qao-xB-sPA" secondAttribute="bottom" id="n0L-au-abT"/>
-                                            </constraints>
-                                            <connections>
-                                                <outlet property="tableView" destination="qao-xB-sPA" id="flg-aq-daW"/>
-                                            </connections>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A21-Y8-cIb">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
@@ -207,6 +132,7 @@
                                 <blurEffect style="dark"/>
                                 <connections>
                                     <outlet property="cameraControlsView" destination="A21-Y8-cIb" id="IVW-MJ-ww7"/>
+                                    <outlet property="captureButton" destination="3vB-U7-BTO" id="hms-3l-Qm4"/>
                                     <outlet property="heightConstraint" destination="TGW-5a-J1j" id="v8x-v5-R3J"/>
                                     <outlet property="resultsView" destination="iB9-8t-6aB" id="Tmt-8e-aC5"/>
                                 </connections>
@@ -219,7 +145,7 @@
                             <constraint firstItem="iB9-8t-6aB" firstAttribute="bottom" secondItem="CfB-2o-PhC" secondAttribute="bottom" id="Jtt-ov-cDq"/>
                             <constraint firstAttribute="bottom" secondItem="kyV-ZL-m6y" secondAttribute="bottom" id="OdO-ve-ldO"/>
                             <constraint firstAttribute="bottom" secondItem="U44-FU-AIq" secondAttribute="bottom" id="PG8-8l-pf8"/>
-                            <constraint firstItem="kyV-ZL-m6y" firstAttribute="top" secondItem="CfB-2o-PhC" secondAttribute="bottom" constant="-70" id="TGW-5a-J1j"/>
+                            <constraint firstItem="kyV-ZL-m6y" firstAttribute="top" secondItem="CfB-2o-PhC" secondAttribute="bottom" priority="750" constant="-70" id="TGW-5a-J1j"/>
                             <constraint firstItem="U44-FU-AIq" firstAttribute="trailing" secondItem="CfB-2o-PhC" secondAttribute="trailing" id="qNR-rV-sHE"/>
                             <constraint firstItem="kyV-ZL-m6y" firstAttribute="leading" secondItem="CfB-2o-PhC" secondAttribute="leading" id="sBu-xz-oQV"/>
                             <constraint firstItem="A21-Y8-cIb" firstAttribute="bottom" secondItem="CfB-2o-PhC" secondAttribute="bottom" id="wsY-2v-ryS"/>
@@ -439,7 +365,7 @@
         <!--Svampe atlas-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MushroomVC" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="724"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -463,6 +389,13 @@
                                                 <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="twh-Cg-C8E" customClass="MushroomContainerView" customModule="SvampeAtlas" customModuleProvider="target">
                                                     <rect key="frame" x="8" y="8" width="367" height="134"/>
                                                     <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FavoriteGreen" translatesAutoresizingMaskIntoConstraints="NO" id="B5p-ab-CAd">
+                                                            <rect key="frame" x="348" y="4" width="15" height="15"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="15" id="n45-y4-nyO"/>
+                                                                <constraint firstAttribute="height" constant="15" id="sNa-SW-6vp"/>
+                                                            </constraints>
+                                                        </imageView>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vYP-QO-1YN" customClass="MushroomThumbImage" customModule="SvampeAtlas" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="134"/>
                                                             <constraints>
@@ -564,12 +497,14 @@
                                                     <constraints>
                                                         <constraint firstItem="kWW-I0-07X" firstAttribute="leading" secondItem="vYP-QO-1YN" secondAttribute="trailing" constant="16" id="76a-ky-7oO"/>
                                                         <constraint firstAttribute="bottom" secondItem="vYP-QO-1YN" secondAttribute="bottom" id="B5u-As-m0F"/>
+                                                        <constraint firstItem="B5p-ab-CAd" firstAttribute="top" secondItem="twh-Cg-C8E" secondAttribute="top" constant="4" id="CEQ-YO-SLP"/>
                                                         <constraint firstItem="vYP-QO-1YN" firstAttribute="top" secondItem="twh-Cg-C8E" secondAttribute="top" id="EHs-3Z-8Ub"/>
                                                         <constraint firstItem="vYP-QO-1YN" firstAttribute="leading" secondItem="twh-Cg-C8E" secondAttribute="leading" id="PQ3-ph-GDP"/>
                                                         <constraint firstAttribute="bottom" secondItem="kWW-I0-07X" secondAttribute="bottom" constant="8" id="Ud4-Nt-U8u"/>
                                                         <constraint firstItem="vYP-QO-1YN" firstAttribute="centerY" secondItem="twh-Cg-C8E" secondAttribute="centerY" id="XAj-bV-sKW"/>
                                                         <constraint firstItem="kWW-I0-07X" firstAttribute="top" secondItem="twh-Cg-C8E" secondAttribute="top" constant="8" id="a0z-JL-Ddb"/>
                                                         <constraint firstAttribute="trailing" secondItem="kWW-I0-07X" secondAttribute="trailing" constant="16" id="bUN-Fd-5P3"/>
+                                                        <constraint firstAttribute="trailing" secondItem="B5p-ab-CAd" secondAttribute="trailing" constant="4" id="h9m-3s-pIa"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -586,6 +521,7 @@
                                             <outlet property="dkAmountTitle" destination="Vwk-JH-hxm" id="4cO-7d-SkO"/>
                                             <outlet property="dkLatest" destination="kGf-ZL-5I5" id="K5b-Qj-ZXw"/>
                                             <outlet property="dkLatestTitle" destination="j2v-gP-iDJ" id="jMb-aV-T1K"/>
+                                            <outlet property="favoriteImageView" destination="B5p-ab-CAd" id="Ty1-00-lz6"/>
                                             <outlet property="mainTitle" destination="bTn-qp-Ify" id="E3m-rm-Jsz"/>
                                             <outlet property="secondaryTitle" destination="AJi-3y-8xm" id="az2-YW-Sqk"/>
                                             <outlet property="thumbImage" destination="vYP-QO-1YN" id="WuP-cq-tiv"/>
@@ -965,6 +901,7 @@
     <resources>
         <image name="Camera" width="34" height="25"/>
         <image name="CaptureBtn" width="50" height="50"/>
+        <image name="FavoriteGreen" width="36" height="33"/>
         <image name="IMG_15270" width="2560" height="1600"/>
         <image name="LogoSmall" width="97" height="111"/>
         <image name="Menu" width="18" height="8"/>

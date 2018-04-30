@@ -10,39 +10,29 @@ import UIKit
 import MapKit
 
 
-class MushroomPin: NSObject, MKAnnotation {
-    var mushroom: Mushroom?
+class ObservationPin: NSObject, MKAnnotation {
+    var observation: Observation
     var coordinate: CLLocationCoordinate2D
     var identifier: String
-    var title: String?
-    var subtitle: String?
     
-    init(coordinate: CLLocationCoordinate2D, identifier: String, mushroom: Mushroom?) {
+    init(coordinate: CLLocationCoordinate2D, identifier: String, observation: Observation) {
         self.coordinate = coordinate
         self.identifier = identifier
-        self.title = "Mushroom"
-        self.subtitle = "Mdjkcd"
-        self.mushroom = mushroom
+        self.observation = observation
         super.init()
     }
-    
-    
-    
 }
 
-class MushroomAnnotationView: MKAnnotationView {
-    
-    var mushroom: Mushroom?
-    
-    lazy var calloutView: CalloutView = {
-        let view = CalloutView()
+class ObservationPinView: MKAnnotationView {
+
+    lazy var calloutView: ObservationPinCalloutView = {
+        let view = ObservationPinCalloutView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     lazy var imageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -55,9 +45,11 @@ class MushroomAnnotationView: MKAnnotationView {
         }
     }
     
-    init(annotation: MushroomPin, reuseIdentifier: String?) {
+    private var observationPin: ObservationPin?
+    
+    init(annotation: ObservationPin, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        self.mushroom = annotation.mushroom
+        observationPin = annotation
         setupView()
     }
 
@@ -72,18 +64,36 @@ class MushroomAnnotationView: MKAnnotationView {
         imageView.layer.cornerRadius = imageView.frame.width / 2
     }
     
-    
-    
     private func setupView() {
         canShowCallout = false
         self.image = #imageLiteral(resourceName: "MushroomPin")
         self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
         
         self.addSubview(imageView)
-        imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 2).isActive = true
-        imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -2).isActive = true
-        imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2).isActive = true
+//        imageView.widthAnchor.constraint(equalToConstant: frame.width).isActive = true
+//        imageView.heightAnchor.constraint(equalToConstant: frame.width).isActive = true
+//        imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+//        imageView.frame.origin.y = 0
+        
+        
+        
+       imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 2).isActive = true
+       imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -2).isActive = true
+       imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2).isActive = true
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
+        imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
+//        guard let url = mushroom?.images![0].thumburi else {return}
+//
+//        DataService.instance.getThumbImageForMushroom(url: url) { (image) in
+//           self.imageView.image = image
+//
+//        }
+        
+        if #available(iOS 11.0, *) {
+//            displayPriority = .defaultHigh
+//            collisionMode = .circle
+            clusteringIdentifier = "clusterAnnotationView"
+        }
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

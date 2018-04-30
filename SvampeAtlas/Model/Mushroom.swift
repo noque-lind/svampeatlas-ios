@@ -26,12 +26,14 @@ struct Mushroom: Decodable {
     public private(set) var parent_id: Int?
     public private(set) var accepted_id: Int?
     public private(set) var probability: Int?
-    public private(set) var redlistData: [Redlistdata?]
+    public private(set) var redlistData: [Redlistdata]?
     public private(set) var acceptedTaxon: AcceptedTaxon?
     public private(set) var attributes: Attributes?
     public private(set) var vernacularName_dk: Vernacularname_DK?
     public private(set) var statistics: Statistics?
-    public private(set) var images: [Images]
+    public private(set) var images: [Images]?
+    
+    // This data is made up, not yet known if it exists.
     public private(set) var toxicityLevel: ToxicityLevel? = ToxicityLevel.eatable
  
     private enum CodingKeys: String, CodingKey {
@@ -134,6 +136,9 @@ struct Images: Decodable {
 
 enum ToxicityLevel: String {
     case toxic = "GIFTIG"
-    case eatable = "EATABLE"
+    case eatable = "SPISELIG"
     case cautious = "VÆR FORSIGTIG"
 }
+
+
+

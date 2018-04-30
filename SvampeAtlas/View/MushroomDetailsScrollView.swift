@@ -102,10 +102,11 @@ class MushroomDetailsScrollView: UIScrollView {
     }
     
     public func configureScrollView(withMushroom mushroom: Mushroom) {
+        print(mushroom.attributes?.forvekslingsmuligheder)
         contentStackView.addArrangedSubview(primaryAndSecondaryTitleLabels)
         contentStackView.addArrangedSubview(descriptionLabel)
         setupToxicityInformation(toxicityLevel: mushroom.toxicityLevel)
-        setupRedlistInformation(redlistData: mushroom.redlistData)
+        setupRedlistInformation(redlistData: mushroom.redlistData!)
         contentStackView.addArrangedSubview(similarSpeciesView)
         similarSpeciesView.mushrooms = [mushroom]
         contentStackView.addArrangedSubview(mapView)

@@ -70,5 +70,6 @@ class LocationBackground: UIView {
     @objc private func userLocationButtonPressed(_ sender: UIButton) {
         mapView.centerOnUserLocation()
         showsUserLocationButton(false, animated: true)
+        
     }
 }

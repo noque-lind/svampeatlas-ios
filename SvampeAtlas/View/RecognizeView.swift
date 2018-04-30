@@ -25,20 +25,26 @@ class RecognizeView: UIVisualEffectView {
     @IBOutlet weak var resultsView: ResultsView!
     @IBOutlet weak var cameraControlsView: UIView!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
-
+    @IBOutlet weak var captureButton: UIButton!
+    
+    lazy var activityIndicatorView: UIActivityIndicatorView = {
+       let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.hidesWhenStopped = true
+        view.color = UIColor.appPrimaryColour()
+        view.alpha = 0
+        return view
+    }()
+    
     @IBAction func captureButtonPressed(sender: UIButton) {
         delegate?.capturePhoto()
-        
-        
+        self.activityIndicatorView.startAnimating()
+        activityIndicatorView.alpha = 0
         UIView.animate(withDuration: 0.2, animations: {
             sender.alpha = 0
+            self.activityIndicatorView.alpha = 1
         }) { (_) in
-            let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-            sender.addSubview(activityView)
-            activityView.translatesAutoresizingMaskIntoConstraints = false
-            activityView.centerXAnchor.constraint(equalTo: sender.centerXAnchor).isActive = true
-            activityView.centerYAnchor.constraint(equalTo: sender.centerYAnchor).isActive = true
-            activityView.startAnimating()
+            
         }
     }
     
@@ -50,17 +56,16 @@ class RecognizeView: UIVisualEffectView {
         expandView()
     }
     
-
-    
-    
-    
-    override func awakeFromNib() {
+override func awakeFromNib() {
         setupView()
-        super.awakeFromNib()
+    super.awakeFromNib()
     }
     
     private func setupView() {
         layer.shadowOffset = CGSize(width: 0.0, height: -3.0)
+        contentView.addSubview(activityIndicatorView)
+        activityIndicatorView.centerXAnchor.constraint(equalTo: captureButton.centerXAnchor).isActive = true
+        activityIndicatorView.centerYAnchor.constraint(equalTo: captureButton.centerYAnchor).isActive = true
     }
     
     
@@ -70,16 +75,14 @@ class RecognizeView: UIVisualEffectView {
     
     private func expandView() {
         originHeightConstant = heightConstraint.constant
-        
         heightConstraint.constant = -500
-
-        
+        activityIndicatorView.stopAnimating()
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             self.layer.shadowOpacity = 0.4
             self.layer.shadowRadius = 5.0
             self.superview?.layoutIfNeeded()
         }) { (finished) in
-//            self.resultsView.showResults()
+            self.resultsView.showResults()
         }
 }
   

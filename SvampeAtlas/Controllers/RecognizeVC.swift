@@ -25,7 +25,7 @@ class RecognizeVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-setupView()
+            setupView()
         
         
         
@@ -37,11 +37,19 @@ setupView()
             super.viewDidAppear(animated)
             previewLayer.frame = cameraView.frame
     }
+    
+    override func viewDidLayoutSubviews() {
+        previewLayer.frame = cameraView.frame
+        super.viewDidLayoutSubviews()
+    }
     override func viewWillAppear(_ animated: Bool) {
         if !viewdidappearProcessed {
+            
+            // Creating the session
             captureSession = AVCaptureSession()
             captureSession.sessionPreset = AVCaptureSession.Preset.hd1920x1080
             
+            // Finding the backCamera of the device. TODO: Should make it failsafe
             let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
             
             do {
@@ -50,6 +58,7 @@ setupView()
                     captureSession.addInput(input)
                 }
                 
+                // Creating the output
                 cameraOutput = AVCapturePhotoOutput()
                 if captureSession.canAddOutput(cameraOutput) == true {
                     captureSession.addOutput(cameraOutput!)
@@ -59,7 +68,9 @@ setupView()
                     previewLayer.connection?.videoOrientation = .portrait
                     
                     cameraView.layer.addSublayer(previewLayer)
-                    captureSession.startRunning()
+                    DispatchQueue.main.async {
+                        self.captureSession.startRunning()
+                    }
                 }
             } catch {
                 debugPrint(error)
@@ -100,9 +111,6 @@ setupView()
         self.navigationController?.navigationBar.isTranslucent = true
             self.navigationController?.navigationBar.topItem?.title = "Arts-bestemmelse"
         self.navigationController?.navigationBar.barStyle = UIBarStyle.black
-        
-        
-        
     }
 }
 
@@ -112,15 +120,16 @@ extension RecognizeVC: RecognizeViewDelegate, AVCapturePhotoCaptureDelegate {
         let settings = AVCapturePhotoSettings()
         let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first!
         let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewPixelType, kCVPixelBufferWidthKey as String: 227, kCVPixelBufferHeightKey as String: 227]
-        settings.previewPhotoFormat = previewFormat
+//        settings.previewPhotoFormat = previewFormat
         
         cameraOutput.capturePhoto(with: settings, delegate: self)
-        captureSession.stopRunning()
+//        captureSession.stopRunning()
     }
     
     
     @available(iOS 11.0, *)
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        captureSession.stopRunning()
         if let error = error {
             debugPrint(error)
         } else {
@@ -130,7 +139,6 @@ extension RecognizeVC: RecognizeViewDelegate, AVCapturePhotoCaptureDelegate {
                 let request = VNCoreMLRequest(model: model, completionHandler: mlResultHandler)
                 let handler = VNImageRequestHandler(data: photoData!)
                 try handler.perform([request])
-                
             } catch {
                 debugPrint(error)
             }
@@ -143,16 +151,15 @@ extension RecognizeVC: RecognizeViewDelegate, AVCapturePhotoCaptureDelegate {
         var models = [temptModel]()
         
         for classification in results {
-            if classification.confidence < 0.5 {
+            if classification.confidence < 0.1 {
                 
             } else {
                 let result = temptModel(identifier: classification.identifier, confidence: CGFloat(classification.confidence))
                 print(classification)
             models.append(result)
-                
             }
-            recognizeView.showResults(results: models)
         }
+        recognizeView.showResults(results: models)
     }
     
 }

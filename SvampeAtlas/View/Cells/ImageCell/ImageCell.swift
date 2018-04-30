@@ -44,7 +44,7 @@ class ImageCell: UICollectionViewCell {
     
     func configureCell(url: String, photoAuthor: String) {
         authorLabel.text = photoAuthor
-        DataService.instance.getThumbImageForMushroom(url: url) { (image) in
+        DataService.instance.getImage(forUrl: url) { (image) in
             DispatchQueue.main.async {
                 self.image.image = image
             }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CalloutView: UIView {
+class ObservationPinCalloutView: UIView {
 
     private var imageViewWidthConstraint: NSLayoutConstraint!
     private var imageViewTopConstraint: NSLayoutConstraint!
@@ -151,9 +151,12 @@ class CalloutView: UIView {
             self.toxicityLevelImageView.removeFromSuperview()
             self.imageViewTopConstraint.isActive = false
             self.imageViewWidthConstraint.isActive = false
-            self.superview!.layoutIfNeeded()
             self.backgroundColor = UIColor.appSecondaryColour().withAlphaComponent(0.0)
             self.contentStackView.alpha = 0
+            
+            if let superView = self.superview {
+                superView.layoutIfNeeded()
+            }
             self.removeFromSuperview()
         }
     }

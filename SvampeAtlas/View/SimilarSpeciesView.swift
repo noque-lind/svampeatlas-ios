@@ -10,10 +10,19 @@ import UIKit
 
 class SimilarSpeciesView: UIView {
 
+    lazy var label: UILabel = {
+       let label = UILabel()
+        label.font = UIFont.appPrimaryHightlighed()
+        label.textColor = UIColor.appWhite()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Forvekslingsmuligheder"
+        return label
+    }()
+    
+    
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 150, height: 150)
        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -41,15 +50,20 @@ class SimilarSpeciesView: UIView {
     
     private func setupView() {
         backgroundColor = UIColor.clear
+        addSubview(label)
+        label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        label.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+        label.heightAnchor.constraint(equalToConstant: label.intrinsicContentSize.height).isActive = true
+        
         addSubview(collectionView)
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        collectionView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 16).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 }
 
-extension SimilarSpeciesView: UICollectionViewDataSource, UICollectionViewDelegate {
+extension SimilarSpeciesView: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return mushrooms.count
     }
@@ -58,6 +72,10 @@ extension SimilarSpeciesView: UICollectionViewDataSource, UICollectionViewDelega
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "similarSpeciesCell", for: indexPath) as? SimilarSpeciesCell else {fatalError()}
         cell.configureCell(mushroom: mushrooms[indexPath.row])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 150, height: collectionView.frame.size.height)
     }
 }
 
@@ -68,6 +86,7 @@ class SimilarSpeciesCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.layer.shadowOpacity = 0.4
         return imageView
     }()
     
@@ -104,14 +123,18 @@ class SimilarSpeciesCell: UICollectionViewCell {
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         
         addSubview(titleLabel)
-        titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
         titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8).isActive = true
         titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
     func configureCell(mushroom: Mushroom) {
-        imageView.image = #imageLiteral(resourceName: "IMG_15270")
+        DataService.instance.getThumbImageForMushroom(url: mushroom.images![0].thumburi) { (image) in
+            self.imageView.image = image
+        }
+        
+        
         titleLabel.text = mushroom.vernacularName_dk?.vernacularname_dk
     }
 }

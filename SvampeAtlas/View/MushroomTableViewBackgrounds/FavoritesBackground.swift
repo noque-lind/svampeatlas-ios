@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OfflineBackground: UIView {
+class FavoritesBackground: UIView {
 
     var contentStackView: UIStackView = {
        let stackView = UIStackView()
@@ -17,17 +17,18 @@ class OfflineBackground: UIView {
         stackView.spacing = 20
         
         let label = UILabel()
-        label.text = "Du har ikke downloaded nogle svampe til offline brug, vil du downloade?"
+        label.text = "Du har gjort nogle arter til en favorit endnu, swipe til venstre på en art for at gøre det."
         label.numberOfLines = 0
         label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
         label.textAlignment = .center
         stackView.addArrangedSubview(label)
         
-        let button = UIButton(type: UIButtonType.system)
-        button.setTitle("Download", for: [])
-        button.setTitleColor(UIColor.appThirdColour(), for: [])
-        stackView.addArrangedSubview(button)
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "FavoritingExample"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        stackView.addArrangedSubview(imageView)
         return stackView
     }()
     

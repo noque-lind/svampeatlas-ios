@@ -40,6 +40,16 @@ class ClusterPinView: MKAnnotationView {
         }
     }
     
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        // if super passed hit test, return the result
+        if let parentHitView = super.hitTest(point, with: event) {
+            return parentHitView
+            } else {
+                return calloutView.hitTest(convert(point, to: calloutView), with: event)
+            }
+    }
+    
     init(annotation: MKClusterAnnotation, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
             displayPriority = .defaultHigh

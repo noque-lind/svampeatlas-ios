@@ -26,6 +26,61 @@ class ClusterPinCalloutView: UIView {
     private var observations = [Observation]()
     
 
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if let result = tableView.hitTest(convert(point, to: tableView), with: event) {
+            return result
+        }
+        
+        
+        
+        let hitView = super.hitTest(point, with: event)
+        if hitView != nil {
+            self.superview?.bringSubview(toFront: self)
+        }
+        return hitView
+    }
+    
+//    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+//        let rect = self.bounds
+//        if !rect.contains(point) {
+//            for view in self.subviews {
+//                if view.frame.contains(point) {
+//                    break
+//                }
+//            }
+//            return false
+//        } else {
+//            return true
+//        }
+//
+//    }
+
+//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+//        let hitView = super.hitTest(point, with: event)
+//        if (hitView != nil)
+//        {
+//            self.superview?.bringSubview(toFront: self)
+//        }
+//        return hitView
+//    }
+//    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+//        let rect = self.bounds
+//        var isInside: Bool = rect.contains(point)
+//        if(!isInside)
+//        {
+//            for view in self.subviews
+//            {
+//                isInside = view.frame.contains(point)
+//                if isInside
+//                {
+//                    break
+//                }
+//            }
+//        }
+//        return isInside
+//    }
+    
+    
     init() {
         super.init(frame: CGRect.zero)
         setupView()
@@ -123,6 +178,7 @@ extension ClusterPinCalloutView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        let cell = tableView.dequeueReusableCell(withIdentifier: "observationCell", for: indexPath) as! ObservationCell
+        cell.configure(observation: observations[indexPath.row])
         return cell
     }
     

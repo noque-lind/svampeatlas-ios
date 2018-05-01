@@ -50,11 +50,6 @@ class LocationBackground: UIView {
         userLocationButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
     
         mapView.centerOnUserLocation()
-        
-        
-        // DEV TOOL
-        let tapGestureRecognizer = UILongPressGestureRecognizer(target: mapView, action: #selector(mapView.addAnnotation(sender:)))
-        self.addGestureRecognizer(tapGestureRecognizer)
     }
     
     private func showsUserLocationButton(_ shouldShow: Bool, animated: Bool = true) {

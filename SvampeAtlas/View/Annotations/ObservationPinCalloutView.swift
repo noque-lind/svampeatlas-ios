@@ -14,6 +14,14 @@ class ObservationPinCalloutView: UIView {
     private var imageViewTopConstraint: NSLayoutConstraint!
     private var imageViewHeightConstraint: NSLayoutConstraint!
     
+    private lazy var button: UIButton = {
+       let button = UIButton(type: UIButtonType.custom)
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = #imageLiteral(resourceName: "IMG_15270")
@@ -23,45 +31,32 @@ class ObservationPinCalloutView: UIView {
         return imageView
     }()
     
-    private lazy var titleLabel: UILabel = {
-       let label = UILabel()
-        label.font = UIFont.appPrimaryHightlighed()
-        label.textColor = UIColor.appWhite()
-        return label
+    lazy var observationView: ObservationView = {
+       let view = ObservationView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.alpha = 0
+        return view
     }()
     
-   private lazy var subtitleLabel: UILabel = {
-      let label = UILabel()
-        label.font = UIFont.appPrimary()
-        label.textColor = UIColor.appWhite()
-        return label
-    }()
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if let button = button.hitTest(convert(point, to: button), with: event) {
+            return button
+        } else {
+            return nil
+        }
+    }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("TOUCHES BEGAN INSIDE CALLOUT VIEW")
+    }
     
-    private lazy var toxicityLevelImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "Edible")
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        imageView.alpha = 0
-        return imageView
-    }()
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("TOUCHES MOVES INSIDE CALLOUT VIEW")
+    }
     
-    
-    private lazy var contentStackView: UIStackView = {
-      let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(subtitleLabel)
-        stackView.distribution = .fillEqually
-        stackView.alpha = 0
-        return stackView
-    }()
-    
-    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
     
     init() {
         super.init(frame: CGRect.zero)
@@ -82,6 +77,13 @@ class ObservationPinCalloutView: UIView {
         
         self.widthAnchor.constraint(equalToConstant: 250).isActive = true
         self.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        
+        addSubview(button)
+        button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        button.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        button.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         addSubview(imageView)
         imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -119,8 +121,7 @@ class ObservationPinCalloutView: UIView {
             self.setupContent()
             UIView.animate(withDuration: 0.2, animations: {
                 self.backgroundColor = UIColor.appSecondaryColour().withAlphaComponent(1.0)
-                self.contentStackView.alpha = 1
-                self.toxicityLevelImageView.alpha = 1
+                self.observationView.alpha = 1
             }, completion: nil)
         }
     }
@@ -138,21 +139,18 @@ class ObservationPinCalloutView: UIView {
         }
     }
     
-    func configureCalloutView(image: UIImage, title: String, subtitle: String) {
-        imageView.image = image
-        titleLabel.text = title
-        subtitleLabel.text = subtitle
+    func configureCalloutView(observation: Observation) {
+        observationView.configure(observation: observation)
     }
     
     
     private func reset() {
         DispatchQueue.main.async {
-            self.contentStackView.removeFromSuperview()
-            self.toxicityLevelImageView.removeFromSuperview()
+            self.observationView.removeFromSuperview()
             self.imageViewTopConstraint.isActive = false
             self.imageViewWidthConstraint.isActive = false
             self.backgroundColor = UIColor.appSecondaryColour().withAlphaComponent(0.0)
-            self.contentStackView.alpha = 0
+            self.observationView.alpha = 0
             
             if let superView = self.superview {
                 superView.layoutIfNeeded()
@@ -162,17 +160,19 @@ class ObservationPinCalloutView: UIView {
     }
     
     private func setupContent() {
-        self.addSubview(self.contentStackView)
-        self.contentStackView.leadingAnchor.constraint(equalTo: self.imageView.trailingAnchor, constant: 8).isActive = true
-        self.contentStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
-        self.contentStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
-        
-        addSubview(toxicityLevelImageView)
-        toxicityLevelImageView.leadingAnchor.constraint(equalTo: contentStackView.trailingAnchor, constant: 8).isActive = true
-        toxicityLevelImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
-        toxicityLevelImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        addSubview(observationView)
+        observationView.leadingAnchor.constraint(equalTo: self.imageView.trailingAnchor, constant: 8).isActive = true
+        observationView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
+        observationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+        observationView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
     }
     
     
 
+}
+
+extension ObservationPinCalloutView {
+    @objc func buttonPressed() {
+        print("Button pressed")
+    }
 }

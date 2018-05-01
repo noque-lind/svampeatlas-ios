@@ -38,11 +38,12 @@ class MapView: UIView {
         return descriptionView
     }()
     
-    private lazy var mapView: MKMapView = {
-        let mapView = MKMapView()
+    private lazy var mapView: CustomMapView = {
+        let mapView = CustomMapView()
         mapView.delegate = self
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.showsUserLocation = true
+        
         return mapView
     }()
     
@@ -50,9 +51,11 @@ class MapView: UIView {
     private var locationManager: CLLocationManager!
     private var mapViewRegionDidChangeBecauseOfUserInteration = false
     private var mapViewConfiguration: MapViewConfiguration
+    private var selectedAnnotationView: ObservationPinView?
+    
     
     var hasDownloaded = false
-    
+
     
     init(mapViewConfiguration: MapViewConfiguration = MapViewConfiguration()) {
         self.mapViewConfiguration = mapViewConfiguration
@@ -150,21 +153,6 @@ class MapView: UIView {
         mapView.addAnnotations(annotations)
         
     }
-    
-
-    
-    // TODO: REMOVE
-    @objc func addAnnotation(sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            let touchPoint = sender.location(in: self)
-            let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-            
-//            let mushroomPin = ObservationPin(coordinate: touchCoordinate, identifier: "mushroomPin", mushroom: nil)
-//            mapView.addAnnotation(mushroomPin)
-        } else {
-            return
-        }
-    }
 }
 
 extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
@@ -175,15 +163,18 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
             if observationPinView == nil {
                 observationPinView = ObservationPinView(annotation: observationPin, reuseIdentifier: "observationPinView")
             }
+            
+//            observationPinView?.clusteringIdentifier = "clusterAnnotationView"
             return observationPinView
-        } else if #available(iOS 11.0, *)  {
-            guard let mkClusterAnnotation = annotation as? MKClusterAnnotation else {return nil}
-            var clusterAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterAnnotationView")
-            clusterAnnotationView?.annotation = mkClusterAnnotation
-            if clusterAnnotationView == nil {
-                clusterAnnotationView = ClusterPinView(annotation: mkClusterAnnotation, reuseIdentifier: "clusterAnnotationView")
+        } else if let clusterPin = annotation as? MKClusterAnnotation {
+            var clusterPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterPinView")
+            clusterPinView?.annotation = clusterPin
+            
+            if clusterPinView == nil {
+                clusterPinView = ClusterPinView(annotation: clusterPin, reuseIdentifier: "clusterPinView")
             }
-            return clusterAnnotationView
+            return clusterPinView
+        
         } else {
             return nil
         }
@@ -192,8 +183,10 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
     
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("Was selected")
+        self.mapView.selectedAnnotationView = view as! ObservationPinView
+        selectedAnnotationView = view as! ObservationPinView
     }
-    
     
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

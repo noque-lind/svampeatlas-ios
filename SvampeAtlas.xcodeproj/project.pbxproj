@@ -28,6 +28,7 @@
 		4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A8044207CD48900041018 /* LocationBackground.swift */; };
 		4A4AE30B2070181000178BFB /* MushroomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30A2070181000178BFB /* MushroomCell.swift */; };
 		4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */; };
+		4A53026B209888E50043C1D3 /* CustomMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A53026A209888E50043C1D3 /* CustomMapView.swift */; };
 		4A6052D8208C95730078AF66 /* FavoritesBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6052D7208C95730078AF66 /* FavoritesBackground.swift */; };
 		4A69457620456C010041824E /* SideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69457520456C010041824E /* SideMenuController.swift */; };
 		4A69457820456CD60041824E /* SideMenuStaticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69457720456CD60041824E /* SideMenuStaticCell.swift */; };
@@ -100,6 +101,7 @@
 		4A4A8044207CD48900041018 /* LocationBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationBackground.swift; sourceTree = "<group>"; };
 		4A4AE30A2070181000178BFB /* MushroomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MushroomCell.swift; sourceTree = "<group>"; };
 		4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowImageAnimationController.swift; sourceTree = "<group>"; };
+		4A53026A209888E50043C1D3 /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
 		4A6052D7208C95730078AF66 /* FavoritesBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesBackground.swift; sourceTree = "<group>"; };
 		4A69457520456C010041824E /* SideMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuController.swift; sourceTree = "<group>"; };
 		4A69457720456CD60041824E /* SideMenuStaticCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuStaticCell.swift; sourceTree = "<group>"; };
@@ -189,7 +191,6 @@
 			isa = PBXGroup;
 			children = (
 				4AD107BB20976B8F00BA04D0 /* ObservationCell */,
-				4A7891F320723BBF00B69427 /* ImageCell */,
 				4AB6FA132070F9B900870A46 /* MushroomCell */,
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
 				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
@@ -223,9 +224,11 @@
 			isa = PBXGroup;
 			children = (
 				4A300A8F208365DC003CB2A5 /* ObservationPinView.swift */,
+				4A53026A209888E50043C1D3 /* CustomMapView.swift */,
 				4A300A91208388C3003CB2A5 /* ObservationPinCalloutView.swift */,
 				4A40CD712093325100F58F25 /* ClusterPinView.swift */,
 				4A40CD762094CBF000F58F25 /* ClusterPinCalloutView.swift */,
+				4A7891F320723BBF00B69427 /* ImageCell */,
 			);
 			path = Annotations;
 			sourceTree = "<group>";
@@ -313,6 +316,7 @@
 			isa = PBXGroup;
 			children = (
 				4AC5CA1C204E889E003ED3BE /* ImageCell.swift */,
+				4A4AE30A2070181000178BFB /* MushroomCell.swift */,
 				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
 				4A1F760620796A510082B873 /* PhotoCell.swift */,
 			);
@@ -332,7 +336,6 @@
 		4AB6FA132070F9B900870A46 /* MushroomCell */ = {
 			isa = PBXGroup;
 			children = (
-				4A4AE30A2070181000178BFB /* MushroomCell.swift */,
 				4AEE2F3A20455EDE00D20C2D /* MushroomContainerView.swift */,
 				4AEE2F36204551B600D20C2D /* MushroomThumbImage.swift */,
 				4ADF2B07207A5D9700C76276 /* ResultCell.swift */,
@@ -500,6 +503,7 @@
 				4A69BC7C2038D96500D3B88B /* MushroomVC.swift in Sources */,
 				4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */,
 				4A1F7605207966180082B873 /* PhotoVCViewController.swift in Sources */,
+				4A53026B209888E50043C1D3 /* CustomMapView.swift in Sources */,
 				4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */,
 				4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */,
 				4A40CD70209217B500F58F25 /* Observation.swift in Sources */,
@@ -697,7 +701,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6LS2B9CMEB;
 				INFOPLIST_FILE = SvampeAtlas/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.naturHistoriskMuseum.SvampeAtlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -713,7 +717,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6LS2B9CMEB;
 				INFOPLIST_FILE = SvampeAtlas/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.naturHistoriskMuseum.SvampeAtlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";

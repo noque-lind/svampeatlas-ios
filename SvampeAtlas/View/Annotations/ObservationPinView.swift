@@ -35,6 +35,7 @@ class ObservationPinView: MKAnnotationView {
        let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
+        imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -45,16 +46,51 @@ class ObservationPinView: MKAnnotationView {
         }
     }
     
-    private var observationPin: ObservationPin?
+    private var observationPin: ObservationPin {
+        get {
+            return annotation as! ObservationPin
+        }
+    }
     
-    init(annotation: ObservationPin, reuseIdentifier: String?) {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        observationPin = annotation
-        setupView()
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if isSelected {
+            guard let result = calloutView.hitTest(convert(point, to: calloutView), with: event) else {return nil}
+        } else {
+            return nil
+        }
+        
+        
+        if let result = calloutView.hitTest(convert(point, to: calloutView), with: event) {
+            return result
+        } else {
+            return super.hitTest(point, with: event)
+        }
+        
+        
+        // if super passed hit test, return the result
+        if let parentHitView = super.hitTest(point, with: event){
+            return parentHitView
+        } else {
+            return calloutView.hitTest(convert(point, to: calloutView), with: event)
+        }
     }
 
     
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Touches moved inside observationPINVIEW")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("Touches began inside observervationPINVIEw")
+    }
+    
+    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        setupView()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
+        
         super.init(coder: aDecoder)
         setupView()
     }
@@ -70,30 +106,20 @@ class ObservationPinView: MKAnnotationView {
         self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
         
         self.addSubview(imageView)
-//        imageView.widthAnchor.constraint(equalToConstant: frame.width).isActive = true
-//        imageView.heightAnchor.constraint(equalToConstant: frame.width).isActive = true
-//        imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-//        imageView.frame.origin.y = 0
-        
-        
-        
-       imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 2).isActive = true
-       imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -2).isActive = true
-       imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2).isActive = true
+       imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 1).isActive = true
+       imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1).isActive = true
+       imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 1).isActive = true
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
-        imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
-//        guard let url = mushroom?.images![0].thumburi else {return}
-//
-//        DataService.instance.getThumbImageForMushroom(url: url) { (image) in
-//           self.imageView.image = image
-//
-//        }
         
-        if #available(iOS 11.0, *) {
-//            displayPriority = .defaultHigh
-//            collisionMode = .circle
-            clusteringIdentifier = "clusterAnnotationView"
-        }
+//        if #available(iOS 11.0, *) {
+////            displayPriority = .defaultHigh
+////            collisionMode = .circle
+//            clusteringIdentifier = "clusterAnnotationView"
+//        }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -101,7 +127,7 @@ class ObservationPinView: MKAnnotationView {
         if selected {
             addSubview(calloutView)
             calloutView.setupConstraints(imageView: imageView)
-                calloutView.configureCalloutView(image: #imageLiteral(resourceName: "agaricus-arvensis1"), title: "Chanterelle", subtitle: "Cantharellus cibarius")
+                calloutView.configureCalloutView(observation: observationPin.observation)
              calloutView.show(imageView: imageView)
         } else {
             calloutView.hide(animated: animated)
@@ -112,14 +138,4 @@ class ObservationPinView: MKAnnotationView {
         super.prepareForReuse()
         calloutView.removeFromSuperview()
     }
-    
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
 }

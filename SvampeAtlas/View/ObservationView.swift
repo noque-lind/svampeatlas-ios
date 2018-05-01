@@ -34,7 +34,7 @@ class ObservationView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        imageView.alpha = 0
+        imageView.alpha = 1
         return imageView
     }()
     
@@ -46,7 +46,7 @@ class ObservationView: UIView {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
         stackView.distribution = .fillEqually
-        stackView.alpha = 0
+        stackView.alpha = 1
         return stackView
     }()
     
@@ -62,8 +62,6 @@ class ObservationView: UIView {
 
 
     private func setupView() {
-        backgroundColor = UIColor.clear
-        
         self.addSubview(self.contentStackView)
         self.contentStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         self.contentStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
@@ -74,5 +72,10 @@ class ObservationView: UIView {
         toxicityLevelImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
         toxicityLevelImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
 }
+    
+    func configure(observation: Observation) {
+        titleLabel.text = observation.determinationView?.taxon_danishName
+        subtitleLabel.text = observation.determinationView?.taxon_latinName
+    }
 
 }

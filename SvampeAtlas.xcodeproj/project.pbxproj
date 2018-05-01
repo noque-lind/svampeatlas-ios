@@ -167,6 +167,7 @@
 		4A0775CA20443D5200DD5AF0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4A530268209856930043C1D3 /* Annotations */,
 				4A95D5462057DDE900EBB2C5 /* MushroomTableViewBackgrounds */,
 				4A0775CB20443D5600DD5AF0 /* Cells */,
 				4A28AB8A2044454200F21EEE /* GradientView.swift */,
@@ -177,11 +178,7 @@
 				4AB6FA14207112F500870A46 /* CustomSearchBar.swift */,
 				4A1F7608207A31150082B873 /* RecognizeView.swift */,
 				4A0683D0207A581D00EB06D7 /* ResultsView.swift */,
-				4A300A8F208365DC003CB2A5 /* ObservationPinView.swift */,
-				4A40CD712093325100F58F25 /* ClusterPinView.swift */,
-				4A300A91208388C3003CB2A5 /* ObservationPinCalloutView.swift */,
 				4AD107BC20976C6000BA04D0 /* ObservationView.swift */,
-				4A40CD762094CBF000F58F25 /* ClusterPinCalloutView.swift */,
 				4AA1CC672085DFCB00254EBB /* MapView.swift */,
 				4AA1CC692086054200254EBB /* SimilarSpeciesView.swift */,
 			);
@@ -220,6 +217,17 @@
 				4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		4A530268209856930043C1D3 /* Annotations */ = {
+			isa = PBXGroup;
+			children = (
+				4A300A8F208365DC003CB2A5 /* ObservationPinView.swift */,
+				4A300A91208388C3003CB2A5 /* ObservationPinCalloutView.swift */,
+				4A40CD712093325100F58F25 /* ClusterPinView.swift */,
+				4A40CD762094CBF000F58F25 /* ClusterPinCalloutView.swift */,
+			);
+			path = Annotations;
 			sourceTree = "<group>";
 		};
 		4A69457420456BCE0041824E /* Controllers */ = {

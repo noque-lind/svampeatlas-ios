@@ -37,11 +37,10 @@ class ObservationCell: UITableViewCell {
     private func setupView() {
         backgroundColor = UIColor.clear
         
-        
         contentView.addSubview(thumbImageView)
         thumbImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        thumbImageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        thumbImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        thumbImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+        thumbImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
         thumbImageView.widthAnchor.constraint(equalTo: thumbImageView.heightAnchor).isActive = true
         
         contentView.addSubview(observationView)
@@ -49,6 +48,10 @@ class ObservationCell: UITableViewCell {
         observationView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
         observationView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         observationView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+    }
+    
+    func configure(observation: Observation) {
+        observationView.configure(observation: observation)
     }
     
 }

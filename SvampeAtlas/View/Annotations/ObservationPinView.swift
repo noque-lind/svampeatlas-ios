@@ -37,6 +37,8 @@ class ObservationPinView: MKAnnotationView {
         imageView.contentMode = .scaleAspectFill
         imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.borderColor = UIColor.appSecondaryColour().cgColor
+        imageView.layer.borderWidth = 2
         return imageView
     }()
     
@@ -83,7 +85,8 @@ class ObservationPinView: MKAnnotationView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        imageView.layer.cornerRadius = imageView.frame.width / 2
+//        imageView.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.width)
+         imageView.layer.cornerRadius = imageView.frame.width / 2
     }
     
     private func setupView() {
@@ -91,17 +94,15 @@ class ObservationPinView: MKAnnotationView {
         self.image = #imageLiteral(resourceName: "MushroomPin")
         self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
         
+        
         self.addSubview(imageView)
-       imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 1).isActive = true
-       imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -1).isActive = true
-       imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 1).isActive = true
+       imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 4).isActive = true
+       imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -4).isActive = true
+       imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
         imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         
-//        if #available(iOS 11.0, *) {
-////            displayPriority = .defaultHigh
-////            collisionMode = .circle
-//            clusteringIdentifier = "clusterAnnotationView"
-//        }
+        displayPriority = .defaultHigh
+        collisionMode = .rectangle
     }
     
     override var canBecomeFirstResponder: Bool {
@@ -112,8 +113,7 @@ class ObservationPinView: MKAnnotationView {
         super.setSelected(selected, animated: animated)
         if selected {
             addSubview(calloutView)
-            calloutView.setupConstraints(imageView: imageView)
-                calloutView.configureCalloutView(observation: observationPin.observation)
+                calloutView.configure(imageView: imageView, observation: observationPin.observation)
              calloutView.show(imageView: imageView)
         } else {
             calloutView.hide(animated: animated)

@@ -26,6 +26,7 @@ class ObservationPinCalloutView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -82,20 +83,6 @@ class ObservationPinCalloutView: UIView {
         imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: self.topAnchor)
     }
     
-    func setupConstraints(imageView: UIImageView) {
-            self.imageView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
-            self.imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalTo: imageView.widthAnchor)
-            self.imageViewWidthConstraint.isActive = true
-            self.imageViewHeightConstraint = self.imageView.heightAnchor.constraint(equalTo: imageView.heightAnchor)
-            self.imageViewHeightConstraint.isActive = true
-            self.bottomAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
-            self.imageView.layer.cornerRadius = imageView.frame.width / 2
-            self.layer.cornerRadius = imageView.frame.width / 2
-            self.superview!.layoutIfNeeded()
-    }
-    
-    
-    
     func show(imageView: UIImageView) {
         imageViewWidthConstraint.isActive = false
         imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 80)
@@ -118,8 +105,15 @@ class ObservationPinCalloutView: UIView {
     }
     
     func hide(animated: Bool) {
+        imageViewWidthConstraint.isActive = false
+        
+        imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 100)
+        
+        imageViewWidthConstraint.isActive = true
+        
         if animated {
             UIView.animate(withDuration: 0.2, animations: {
+                self.superview!.layoutIfNeeded()
                 self.alpha = 0
             }) { (_) in
                 self.reset()
@@ -130,8 +124,18 @@ class ObservationPinCalloutView: UIView {
         }
     }
     
-    func configureCalloutView(observation: Observation) {
+    func configure(imageView: UIImageView, observation: Observation) {
         observationView.configure(observation: observation)
+        
+        self.imageView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
+        self.imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalTo: imageView.widthAnchor)
+        self.imageViewWidthConstraint.isActive = true
+        self.imageViewHeightConstraint = self.imageView.heightAnchor.constraint(equalTo: imageView.heightAnchor)
+        self.imageViewHeightConstraint.isActive = true
+        self.bottomAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+        self.imageView.layer.cornerRadius = imageView.frame.width / 2
+        self.layer.cornerRadius = imageView.frame.width / 2
+        self.superview!.layoutIfNeeded()
     }
     
     

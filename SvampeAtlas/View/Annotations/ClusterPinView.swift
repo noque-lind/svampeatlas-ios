@@ -34,9 +34,13 @@ class ClusterPinView: MKAnnotationView {
         }
     }
     
-    private var observationPins: [ObservationPin] {
+    private var observations: [Observation] {
         get {
-            return (annotation as! MKClusterAnnotation).memberAnnotations as! [ObservationPin]
+            var observations = [Observation]()
+            for observationPin in (annotation as! MKClusterAnnotation).memberAnnotations as! [ObservationPin] {
+                observations.append(observationPin.observation)
+            }
+            return observations
         }
     }
     
@@ -81,9 +85,8 @@ class ClusterPinView: MKAnnotationView {
         super.setSelected(selected, animated: animated)
         if selected {
             addSubview(calloutView)
-            calloutView.setupConstraints(superView: self)
-            calloutView.configureCalloutView(observationPins: observationPins)
-             calloutView.show()
+            calloutView.configure(superView: self, observations: observations)
+            calloutView.show()
         } else {
             calloutView.hide(superView: self, animated: animated)
         }
@@ -93,14 +96,4 @@ class ClusterPinView: MKAnnotationView {
         super.prepareForReuse()
         calloutView.removeFromSuperview()
     }
-    
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
 }

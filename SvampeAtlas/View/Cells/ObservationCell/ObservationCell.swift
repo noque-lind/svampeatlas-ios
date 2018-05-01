@@ -10,6 +10,12 @@ import UIKit
 
 class ObservationCell: UITableViewCell {
 
+    lazy var button: UIButton = {
+       let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     lazy var thumbImageView: UIImageView = {
        let image = UIImageView()
         image.image = #imageLiteral(resourceName: "IMG_15270")
@@ -36,6 +42,17 @@ class ObservationCell: UITableViewCell {
     
     private func setupView() {
         backgroundColor = UIColor.clear
+        selectionStyle = .none
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(test))
+        addGestureRecognizer(tapGestureRecognizer)
+        
+        contentView.addSubview(button)
+        button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        button.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        button.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
         
         contentView.addSubview(thumbImageView)
         thumbImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
@@ -53,5 +70,10 @@ class ObservationCell: UITableViewCell {
     func configure(observation: Observation) {
         observationView.configure(observation: observation)
     }
+    
+    @objc func test() {
+        print("test")
+    }
+    
     
 }

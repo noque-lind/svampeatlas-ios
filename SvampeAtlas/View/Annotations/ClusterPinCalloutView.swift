@@ -10,15 +10,13 @@ import UIKit
 
 class ClusterPinCalloutView: UIView {
     
-    var heightConstraint: NSLayoutConstraint!
-    var widthConstraint: NSLayoutConstraint!
-    
-    private lazy var tableView: UITableView = {
-       let tableView = UITableView()
+    private lazy var tableView: CustomTableView = {
+       let tableView = CustomTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = UIColor.clear
         tableView.separatorStyle = .none
         tableView.alpha = 0
+        
         tableView.register(ObservationCell.self, forCellReuseIdentifier: "observationCell")
         return tableView
     }()
@@ -32,56 +30,17 @@ class ClusterPinCalloutView: UIView {
     }()
     
     private var observations = [Observation]()
+    var heightConstraint: NSLayoutConstraint!
+    var widthConstraint: NSLayoutConstraint!
+    private var rowHeight: CGFloat = 90
     
-
+    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if let button = button.hitTest(convert(point, to: button), with: event) {
-            return button
-        } else {
-            return nil
+        if let tableView = tableView.hitTest(convert(point, to: tableView), with: event) {
+            return tableView
         }
+         return button.hitTest(convert(point, to: button), with: event) 
     }
-    
-//    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-//        let rect = self.bounds
-//        if !rect.contains(point) {
-//            for view in self.subviews {
-//                if view.frame.contains(point) {
-//                    break
-//                }
-//            }
-//            return false
-//        } else {
-//            return true
-//        }
-//
-//    }
-
-//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-//        let hitView = super.hitTest(point, with: event)
-//        if (hitView != nil)
-//        {
-//            self.superview?.bringSubview(toFront: self)
-//        }
-//        return hitView
-//    }
-//    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-//        let rect = self.bounds
-//        var isInside: Bool = rect.contains(point)
-//        if(!isInside)
-//        {
-//            for view in self.subviews
-//            {
-//                isInside = view.frame.contains(point)
-//                if isInside
-//                {
-//                    break
-//                }
-//            }
-//        }
-//        return isInside
-//    }
-    
     
     init() {
         super.init(frame: CGRect.zero)
@@ -113,22 +72,30 @@ class ClusterPinCalloutView: UIView {
         tableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    func setupConstraints(superView: UIView) {
+    func configure(superView: UIView, observations: [Observation]) {
+        self.observations = observations
+
+        widthConstraint = widthAnchor.constraint(equalToConstant: superView.frame.width)
+        heightConstraint = heightAnchor.constraint(equalToConstant: super.frame.height)
+        
         centerXAnchor.constraint(equalTo: superView.centerXAnchor).isActive = true
         centerYAnchor.constraint(equalTo: superView.centerYAnchor).isActive = true
-        widthConstraint = widthAnchor.constraint(equalToConstant: superView.frame.width)
-        heightConstraint = heightAnchor.constraint(equalToConstant: superView.frame.height)
+        
         layer.cornerRadius = superView.frame.height / 2
         widthConstraint.isActive = true
         heightConstraint.isActive = true
         superView.layoutIfNeeded()
     }
-    
-    
 
+    
     func show() {
-        heightConstraint.constant = 300
         widthConstraint.constant = 250
+        
+        if observations.count >= 4 {
+           heightConstraint.constant = rowHeight * 4
+        } else {
+            heightConstraint.constant = rowHeight * CGFloat(observations.count)
+        }
         
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
             self.superview!.layoutIfNeeded()
@@ -144,6 +111,8 @@ class ClusterPinCalloutView: UIView {
     }
     
     func hide(superView: UIView,animated: Bool) {
+        observations.removeAll()
+        tableView.reloadData()
         if animated {
             widthConstraint.constant = superView.frame.width
             heightConstraint.constant = superView.frame.height
@@ -159,18 +128,14 @@ class ClusterPinCalloutView: UIView {
         }
     }
     
-    func configureCalloutView(observationPins: [ObservationPin]) {
-        for observationPin in observationPins {
-            observations.append(observationPin.observation)
-        }
-    }
+   
     
     
     private func reset() {
         DispatchQueue.main.async {
             self.widthConstraint.isActive = false
             self.heightConstraint.isActive = false
-            
+            self.tableView.alpha = 0
             if let superView = self.superview {
                 superView.layoutIfNeeded()
             }
@@ -191,12 +156,36 @@ extension ClusterPinCalloutView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
+       return rowHeight
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("didSelect row at: \(indexPath.row)")
     }
 }
 
 extension ClusterPinCalloutView {
     @objc func buttonPressed() {
         print("Button pressed")
+    }
+}
+
+class CustomTableView: UITableView {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if self.point(inside: point, with: event) {
+            return self
+        } else {
+            return nil
+            
+        }
+    }
+
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer is UITapGestureRecognizer {
+            return false
+        } else {
+            debugPrint(gestureRecognizer)
+            return true
+        }
     }
 }

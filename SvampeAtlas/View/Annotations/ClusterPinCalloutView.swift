@@ -23,21 +23,23 @@ class ClusterPinCalloutView: UIView {
         return tableView
     }()
     
+    private lazy var button: UIButton = {
+        let button = UIButton(type: UIButtonType.custom)
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private var observations = [Observation]()
     
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if let result = tableView.hitTest(convert(point, to: tableView), with: event) {
-            return result
+        if let button = button.hitTest(convert(point, to: button), with: event) {
+            return button
+        } else {
+            return nil
         }
-        
-        
-        
-        let hitView = super.hitTest(point, with: event)
-        if hitView != nil {
-            self.superview?.bringSubview(toFront: self)
-        }
-        return hitView
     }
     
 //    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -97,7 +99,13 @@ class ClusterPinCalloutView: UIView {
         self.clipsToBounds = true
         self.alpha = 0
         
-
+        addSubview(button)
+        button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        button.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        button.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+        
         addSubview(tableView)
         tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -184,5 +192,11 @@ extension ClusterPinCalloutView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
+    }
+}
+
+extension ClusterPinCalloutView {
+    @objc func buttonPressed() {
+        print("Button pressed")
     }
 }

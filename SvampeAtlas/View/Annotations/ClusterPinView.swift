@@ -42,12 +42,12 @@ class ClusterPinView: MKAnnotationView {
     
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        // if super passed hit test, return the result
-        if let parentHitView = super.hitTest(point, with: event) {
-            return parentHitView
-            } else {
-                return calloutView.hitTest(convert(point, to: calloutView), with: event)
-            }
+        if isSelected {
+            guard let result = calloutView.hitTest(convert(point, to: calloutView), with: event) else {return nil}
+            return result
+        } else {
+            return nil
+        }
     }
     
     init(annotation: MKClusterAnnotation, reuseIdentifier: String?) {

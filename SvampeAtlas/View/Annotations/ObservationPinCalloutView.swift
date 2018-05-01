@@ -24,7 +24,6 @@ class ObservationPinCalloutView: UIView {
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "IMG_15270")
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,14 +43,6 @@ class ObservationPinCalloutView: UIView {
         } else {
             return nil
         }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("TOUCHES BEGAN INSIDE CALLOUT VIEW")
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("TOUCHES MOVES INSIDE CALLOUT VIEW")
     }
     
     override var canBecomeFirstResponder: Bool {

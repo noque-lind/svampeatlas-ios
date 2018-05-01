@@ -173,6 +173,7 @@
 				4A95D5462057DDE900EBB2C5 /* MushroomTableViewBackgrounds */,
 				4A0775CB20443D5600DD5AF0 /* Cells */,
 				4A28AB8A2044454200F21EEE /* GradientView.swift */,
+				4A53026A209888E50043C1D3 /* CustomMapView.swift */,
 				4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 				4AD43A0320529BDF001F6541 /* CategoryView.swift */,
@@ -224,7 +225,6 @@
 			isa = PBXGroup;
 			children = (
 				4A300A8F208365DC003CB2A5 /* ObservationPinView.swift */,
-				4A53026A209888E50043C1D3 /* CustomMapView.swift */,
 				4A300A91208388C3003CB2A5 /* ObservationPinCalloutView.swift */,
 				4A40CD712093325100F58F25 /* ClusterPinView.swift */,
 				4A40CD762094CBF000F58F25 /* ClusterPinCalloutView.swift */,

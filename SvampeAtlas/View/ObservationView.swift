@@ -12,7 +12,6 @@ class ObservationView: UIView {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "test"
         label.font = UIFont.appPrimaryHightlighed()
         label.textColor = UIColor.appWhite()
         return label
@@ -20,7 +19,6 @@ class ObservationView: UIView {
     
     private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "test"
         label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
         return label

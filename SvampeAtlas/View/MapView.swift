@@ -164,7 +164,7 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
                 observationPinView = ObservationPinView(annotation: observationPin, reuseIdentifier: "observationPinView")
             }
             
-//            observationPinView?.clusteringIdentifier = "clusterAnnotationView"
+            observationPinView?.clusteringIdentifier = "clusterAnnotationView"
             return observationPinView
         } else if let clusterPin = annotation as? MKClusterAnnotation {
             var clusterPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterPinView")
@@ -179,15 +179,6 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
             return nil
         }
     }
-    
-    
-    
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("Was selected")
-        self.mapView.selectedAnnotationView = view as! ObservationPinView
-        selectedAnnotationView = view as! ObservationPinView
-    }
-    
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {return}

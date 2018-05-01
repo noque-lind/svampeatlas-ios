@@ -15,7 +15,6 @@ class CustomMapView: MKMapView {
     var selectedAnnotationView: ObservationPinView?
     
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        debugPrint(gestureRecognizer)
         if gestureRecognizer is UITapGestureRecognizer {
             return true
         } else {
@@ -24,15 +23,15 @@ class CustomMapView: MKMapView {
     }
     
     
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if let annotationView = selectedAnnotationView {
-            if let result = annotationView.hitTest(convert(point, to: annotationView), with: event) {
-                return result
-            } else {
-                return super.hitTest(point, with: event)
-            }
-        } else {
-            return super.hitTest(point, with: event)
-        }
-    }
+//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+//        if let annotationView = selectedAnnotationView {
+//            if let result = annotationView.hitTest(convert(point, to: annotationView), with: event) {
+//                return result
+//            } else {
+//                return super.hitTest(point, with: event)
+//            }
+//        } else {
+//            return super.hitTest(point, with: event)
+//        }
+//    }
 }

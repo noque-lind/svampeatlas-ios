@@ -55,23 +55,9 @@ class ObservationPinView: MKAnnotationView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if isSelected {
             guard let result = calloutView.hitTest(convert(point, to: calloutView), with: event) else {return nil}
-        } else {
-            return nil
-        }
-        
-        
-        if let result = calloutView.hitTest(convert(point, to: calloutView), with: event) {
             return result
         } else {
-            return super.hitTest(point, with: event)
-        }
-        
-        
-        // if super passed hit test, return the result
-        if let parentHitView = super.hitTest(point, with: event){
-            return parentHitView
-        } else {
-            return calloutView.hitTest(convert(point, to: calloutView), with: event)
+            return nil
         }
     }
 

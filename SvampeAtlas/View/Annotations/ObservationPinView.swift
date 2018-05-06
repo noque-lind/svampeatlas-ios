@@ -54,6 +54,12 @@ class ObservationPinView: MKAnnotationView {
         }
     }
     
+    weak var delegate: MapViewDelegate? = nil {
+        didSet {
+            calloutView.delegate = self.delegate
+        }
+    }
+    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if isSelected {
             guard let result = calloutView.hitTest(convert(point, to: calloutView), with: event) else {return nil}

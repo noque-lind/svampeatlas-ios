@@ -44,6 +44,12 @@ class ClusterPinView: MKAnnotationView {
         }
     }
     
+    weak var delegate: MapViewDelegate? = nil {
+        didSet {
+            calloutView.delegate = self.delegate
+        }
+    }
+    
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if isSelected {

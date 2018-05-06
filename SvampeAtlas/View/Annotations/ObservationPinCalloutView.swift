@@ -38,6 +38,9 @@ class ObservationPinCalloutView: UIView {
         return view
     }()
     
+    private var observation: Observation!
+    weak var delegate: MapViewDelegate? = nil
+    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if let button = button.hitTest(convert(point, to: button), with: event) {
             return button
@@ -126,6 +129,7 @@ class ObservationPinCalloutView: UIView {
     
     func configure(imageView: UIImageView, observation: Observation) {
         observationView.configure(observation: observation)
+        self.observation = observation
         
         self.imageView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
         self.imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalTo: imageView.widthAnchor)
@@ -168,6 +172,6 @@ class ObservationPinCalloutView: UIView {
 
 extension ObservationPinCalloutView {
     @objc func buttonPressed() {
-        print("Button pressed")
+        delegate?.shouldShowObservationDetails(observation: observation)
     }
 }

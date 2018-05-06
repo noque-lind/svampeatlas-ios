@@ -33,7 +33,7 @@ class ClusterPinCalloutView: UIView {
     var heightConstraint: NSLayoutConstraint!
     var widthConstraint: NSLayoutConstraint!
     private var rowHeight: CGFloat = 90
-    
+    weak var delegate: MapViewDelegate? = nil
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if let tableView = tableView.hitTest(convert(point, to: tableView), with: event) {
@@ -160,7 +160,7 @@ extension ClusterPinCalloutView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("didSelect row at: \(indexPath.row)")
+        delegate?.shouldShowObservationDetails(observation: observations[indexPath.row])
     }
 }
 

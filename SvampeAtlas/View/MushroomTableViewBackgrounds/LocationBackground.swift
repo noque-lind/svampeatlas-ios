@@ -26,8 +26,15 @@ class LocationBackground: UIView {
     lazy var mapView: MapView = {
        let mapView = MapView()
         mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.delegate = self
         return mapView
     }()
+    
+    var delegate: MushroomBackgroundDelegate? = nil {
+        didSet {
+            print("Didset")
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,4 +74,18 @@ class LocationBackground: UIView {
         showsUserLocationButton(false, animated: true)
         
     }
+}
+
+extension LocationBackground: MapViewDelegate {
+    func userLocationButtonShouldShow(shouldShow: Bool) {
+        
+    }
+    
+    func shouldShowObservationDetails(observation: Observation) {
+        let vc = UIViewController()
+        vc.view.backgroundColor = UIColor.white
+        delegate?.showVC(vc: vc)
+    }
+    
+    
 }

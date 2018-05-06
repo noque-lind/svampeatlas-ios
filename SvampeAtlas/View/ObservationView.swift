@@ -27,8 +27,9 @@ class ObservationView: UIView {
     
     private lazy var toxicityLevelImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "Edible")
+        imageView.image = #imageLiteral(resourceName: "DisclosureButton")
         imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
@@ -75,5 +76,4 @@ class ObservationView: UIView {
         titleLabel.text = observation.determinationView?.taxon_danishName
         subtitleLabel.text = observation.determinationView?.taxon_latinName
     }
-
 }

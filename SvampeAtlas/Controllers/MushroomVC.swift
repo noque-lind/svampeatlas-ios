@@ -37,6 +37,7 @@ class MushroomVC: UIViewController {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.mushroomBackgroundDelegate = self
         categoryView.delegate = self
         searchBar.searchBarDelegate = self
         setupView()
@@ -222,5 +223,11 @@ extension MushroomVC: CustomSearchBarDelegate {
         } else {
             searchBar.collapse()
         }
+    }
+}
+
+extension MushroomVC: MushroomBackgroundDelegate {
+    func showVC(vc: UIViewController) {
+        self.navigationController!.pushViewController(vc, animated: true)
     }
 }

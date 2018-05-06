@@ -41,7 +41,7 @@ final class ELRevealViewControllerSegueSetController: UIStoryboardSegue {
         let toVC = destination
         
         if (identifier == ELSegueMainVCIdentifier) {
-            fromVC?.addViewControllerAsChildViewController(childViewController: toVC)
+            fromVC?.addViewControllerAsChildViewController(childViewController: toVC, animated: false)
         } else if (identifier == ELSegueLeftVCIdentifier) {
             fromVC?.currentLeftViewController = toVC
             fromVC?.toggleSideMenu()
@@ -78,7 +78,7 @@ extension ELRevealViewControllerDelegate {
 }
 
 @IBDesignable final class ELRevealViewController: UIViewController {
-    // IBConfigurables
+   // IBConfigurables
     @IBInspectable private var revealVCLeft: Bool = true {
         didSet {
             if revealVCLeft {
@@ -96,7 +96,7 @@ extension ELRevealViewControllerDelegate {
     }
     
     
-    @IBInspectable private var springAnimation: Bool = true {
+@IBInspectable private var springAnimation: Bool = true {
         didSet {
             if springAnimation {
                 animationType = .springReveal
@@ -107,9 +107,9 @@ extension ELRevealViewControllerDelegate {
     @IBInspectable private var flyerAnimation: Bool = false {
         didSet {
             if flyerAnimation {
-                animationType = .flyerReveal
-            }
+            animationType = .flyerReveal
         }
+    }
     }
     
     @IBInspectable var menuWidthPercentage: CGFloat = MenuHelper.menuWidth {
@@ -137,7 +137,7 @@ extension ELRevealViewControllerDelegate {
     
     /**
      The currenct viewcontroller acting as the mainVC by ELRevealViewController
-     */
+    */
     public fileprivate(set) var currentViewController: UIViewController!
     
     public fileprivate(set) var currentLeftViewController: UIViewController? {
@@ -161,6 +161,10 @@ extension ELRevealViewControllerDelegate {
         return prefersStatusBarHidden
     }
     
+    override var shouldAutomaticallyForwardAppearanceMethods: Bool {
+        return false
+    }
+    
     /**
      Assign your view controller to this delegate, if you want to be notified of certain ELRevealViewController events.
      */
@@ -168,7 +172,7 @@ extension ELRevealViewControllerDelegate {
     
     /**
      Read this value to determine whether the ELRevealViewController will be revealed to the left or right side. Write to this value to change which side it should be revealed. Default is .left.
-     */
+    */
     public var sideMenuPosition: ELSidemenuPosition = ELSidemenuPosition.left {
         didSet {
             switch sideMenuPosition {
@@ -182,10 +186,10 @@ extension ELRevealViewControllerDelegate {
     
     /**
      Set this variable to define which animation type you wish to use.
-     */
+ */
     public var animationType: ELAnimationType = ELAnimationType.springReveal
     
-    
+
     /**
      This is the edgePan that handles the interactive revealing of the ELRevealViewController. You should not alter any values except .isEnabled, if you don't want your side menu to be interactive, and only usable by button.
      */
@@ -193,21 +197,36 @@ extension ELRevealViewControllerDelegate {
     
     /**
      Use this function to push a new view controller to be the currentViewController of ELRevealViewController. The revealVC will still be available after the transition. If the side menu is opened, the pushing will happen animated depending on the set animationtype.
-     */
+    */
     public func pushNewViewController(viewController: UIViewController) {
         if sideMenuShowing {
             if type(of: viewController) === type(of: currentViewController) {
+                
                 shouldShowNewViewControllerAnimation = false
+                
+                if let currentNavigationController = currentViewController as? UINavigationController, let newNavigationController = viewController as? UINavigationController {
+                    guard let currentNavigationRootController = currentNavigationController.topViewController, let newNavigationRootController = newNavigationController.topViewController else {shouldShowNewViewControllerAnimation = true; return}
+                    if type(of: currentNavigationRootController) !== type(of: newNavigationRootController) {
+                        shouldShowNewViewControllerAnimation = true
+                    }
+                } else if let currentTabBarController = currentViewController as? UITabBarController, let newTabBarController = viewController as? UITabBarController {
+                    guard let currentTabBarSelectedController = currentTabBarController.viewControllers?.first, let newTabBarSelectedController = newTabBarController.viewControllers?.first else {shouldShowNewViewControllerAnimation = true; return}
+                    if type(of: currentTabBarSelectedController) !== type(of: newTabBarSelectedController) {
+                        shouldShowNewViewControllerAnimation = true
+                    }
+                }
             } else {
                 shouldShowNewViewControllerAnimation = true
+            }
+            
+            if shouldShowNewViewControllerAnimation {
                 newViewController = viewController
             }
+            
             DispatchQueue.main.async {
                 self.toggleSideMenu()
             }
         }
-        //            removeChildViewControllerFromViewController(childViewController: currentViewController)
-        //            addViewControllerAsChildViewController(childViewController: viewController)
     }
     
     /**
@@ -245,10 +264,10 @@ extension ELRevealViewControllerDelegate {
     
     /**
      Use this initializer in an environment where you are not using storyboards at all. Both the mainVC, and revealVC should be entirely build and done programmatically. If no configuration is passed, default values are used which are: ELAnimationType.springReveal, menuWidthPercentage: 0.5, menuThresholdPercentage: 0.3.
-     */
+ */
     public init(mainVC: UIViewController, revealVC: UIViewController, revealVCPosition: ELSidemenuPosition, configuation: ELConfiguration?) {
         super.init(nibName: nil, bundle: nil)
-        addViewControllerAsChildViewController(childViewController: mainVC)
+        addViewControllerAsChildViewController(childViewController: mainVC, animated: false)
         prepareSideVC(viewController: revealVC)
         
         switch revealVCPosition {
@@ -264,7 +283,7 @@ extension ELRevealViewControllerDelegate {
         case .right:
             edgePan.edges = .right
         }
-        
+
         guard let configuation = configuation else {return}
         animationType = configuation.animationType
         MenuHelper.menuWidth = configuation.menuWidthPercentage
@@ -273,10 +292,10 @@ extension ELRevealViewControllerDelegate {
     
     /**
      Use this initializer in an environment where you are partially using storyboards, and you have designed your revealVC in a Main.storyboard file. NOTE: Your reveal VC must have either "LeftVC" or "RightVC" as a storyboard identifier, otherwise it will cause the application to crash. If no configuration is passed, default values are used which are: ELAnimationType.springReveal, menuWidthPercentage: 0.5, menuThresholdPercentage: 0.3.
-     */
+ */
     public init(mainVC: UIViewController, revealVCPosition: ELSidemenuPosition, configuation: ELConfiguration?) {
         super.init(nibName: nil, bundle: nil)
-        addViewControllerAsChildViewController(childViewController: mainVC)
+        addViewControllerAsChildViewController(childViewController: mainVC, animated: false)
         sideMenuPosition = revealVCPosition
         
         switch sideMenuPosition {
@@ -294,11 +313,11 @@ extension ELRevealViewControllerDelegate {
     
     /**
      Use this initializer in an environment where you have designed all your viewcontrollers in storyboard, but would prefer to programmatically setup your application. NOTE: Will crash if it could not find viewcontrollers with the specified identifiers inside Main.storyboard. They should be EL_main for your mainVC and EL_left or EL_right depending on the specified revealVCPosition. If no configuration is passed, default values are used which are: ELAnimationType.springReveal, menuWidthPercentage: 0.5, menuThresholdPercentage: 0.3.
-     */
+ */
     public init(mainVCIdentifier: String, revealVCIdentifier: String, revealVCPosition: ELSidemenuPosition, configuation: ELConfiguration?) {
         super.init(nibName: nil, bundle: nil)
         let mainVC = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: mainVCIdentifier)
-        addViewControllerAsChildViewController(childViewController: mainVC)
+        addViewControllerAsChildViewController(childViewController: mainVC, animated: false)
         
         let revealVC = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateViewController(withIdentifier: revealVCIdentifier)
         prepareSideVC(viewController: revealVC)
@@ -337,12 +356,12 @@ extension ELRevealViewControllerDelegate {
     
     /**
      This function finds the mainVC either via Segue or Storyboard identifier.
-     */
+    */
     private func firstAppInit() {
         if !self.performSegue(id: ELSegueMainVCIdentifier, sender: nil) {
             let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
             let mainVC = storyboard.instantiateViewController(withIdentifier: "MainVC")
-            addViewControllerAsChildViewController(childViewController: mainVC)
+            addViewControllerAsChildViewController(childViewController: mainVC, animated: false)
         }
     }
     
@@ -353,11 +372,25 @@ extension ELRevealViewControllerDelegate {
         sideMenuShowing = false
         UIApplication.shared.keyWindow?.addSubview(view)
         UIApplication.shared.keyWindow?.makeKeyAndVisible()
-        addViewControllerAsChildViewController(childViewController: currentViewController)
+        
+        if #available(iOS 11.0, *) {
+            self.additionalSafeAreaInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        }
+        
+        
+        addViewControllerAsChildViewController(childViewController: currentViewController, animated: false)
         setupEdgePan()
     }
     
-    fileprivate func addViewControllerAsChildViewController(childViewController: UIViewController) {
+    fileprivate func addViewControllerAsChildViewController(childViewController: UIViewController, animated: Bool = true) {
+        if !animated {
+            childViewController.beginAppearanceTransition(true, animated: false)
+            childViewController.endAppearanceTransition()
+        } else {
+            childViewController.beginAppearanceTransition(true, animated: true)
+        }
+        
+        
         childViewController.view.frame = view.bounds
         childViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addChildViewController(childViewController)
@@ -374,7 +407,7 @@ extension ELRevealViewControllerDelegate {
     
     
     
-    internal override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+   internal override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == ELSegueLeftVCIdentifier || segue.identifier == ELSegueRightVCIdentifier {
             prepareSideVC(viewController: segue.destination)
         }
@@ -398,18 +431,18 @@ extension ELRevealViewControllerDelegate {
     
     @objc fileprivate func handleEdgePanGesture(sender: UIScreenEdgePanGestureRecognizer) {
         if delegate?.isAllowedToPushMenu() == true || delegate?.isAllowedToPushMenu() == nil {
-            let translation = sender.translation(in: view)
-            var progress: CGFloat!
-            switch sideMenuPosition {
-            case .left:
-                progress = MenuHelper.calculateProgress(translationInView: translation, viewBounds: view.bounds, direction: .Right)
-            case .right:
-                progress = MenuHelper.calculateProgress(translationInView: translation, viewBounds: view.bounds, direction: .Left)
-            }
-            MenuHelper.mapGestureStateToInteractor(gestureState: sender.state, progress: progress, interactor: interactor, openAnimation: true, delegate: delegate) {
-                self.toggleSideMenu()
-            }
+        let translation = sender.translation(in: view)
+        var progress: CGFloat!
+        switch sideMenuPosition {
+        case .left:
+            progress = MenuHelper.calculateProgress(translationInView: translation, viewBounds: view.bounds, direction: .Right)
+        case .right:
+            progress = MenuHelper.calculateProgress(translationInView: translation, viewBounds: view.bounds, direction: .Left)
         }
+        MenuHelper.mapGestureStateToInteractor(gestureState: sender.state, progress: progress, interactor: interactor, openAnimation: true, delegate: delegate) {
+            self.toggleSideMenu()
+        }
+    }
     }
     
     private func prepareSideVC(viewController: UIViewController) {
@@ -434,7 +467,7 @@ extension ELRevealViewControllerDelegate {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
+         super.viewWillTransition(to: size, with: coordinator)
         if sideMenuShowing {
             reset()
         }
@@ -548,43 +581,6 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
         return 0.5
     }
     
-    fileprivate func springRevealPresentAnim(_ toVC: UIViewController, _ fromVC: ELRevealViewController, _ containerView: UIView, _ transitionContext: UIViewControllerContextTransitioning, _ modalView: UIView) {
-        toVC.view.transform = CGAffineTransform.identity
-        toVC.view.frame = UIScreen.main.bounds
-        switch fromVC.sideMenuPosition {
-        case .left:
-            toVC.view.transform = CGAffineTransform.init(translationX: -40, y: 0)
-        case .right:
-            toVC.view.transform = CGAffineTransform.init(translationX: toVC.view.bounds.origin.x + 40, y: 0)
-        }
-        
-        fromVC.view.layer.shadowOpacity = 0.7
-        containerView.insertSubview(fromVC.view, at: 0)
-        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
-        
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
-            modalView.alpha = 0.5
-            switch fromVC.sideMenuPosition {
-            case .left:
-                fromVC.view.center.x = (fromVC.view.center.x) + UIScreen.main.bounds.width * MenuHelper.menuWidth
-            case .right:
-                fromVC.view.center.x = (fromVC.view.center.x) - UIScreen.main.bounds.width * MenuHelper.menuWidth
-            }
-            toVC.view.transform = CGAffineTransform.identity
-        }) { (_) in
-            let didTransitionComplete = !transitionContext.transitionWasCancelled
-            if didTransitionComplete {
-                fromVC.sideMenuShowing = true
-                transitionContext.completeTransition(didTransitionComplete)
-            } else {
-                modalView.removeFromSuperview()
-                transitionContext.completeTransition(false)
-                UIApplication.shared.keyWindow?.addSubview(fromVC.view)
-                UIApplication.shared.keyWindow?.makeKeyAndVisible()
-            }
-        }
-    }
-    
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         if _isBeingPresented {
             guard let fromVC = transitionContext.viewController(forKey: .from) as? ELRevealViewController else {return}
@@ -599,74 +595,8 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
             switch _animationType {
             case .springReveal:
                 springRevealPresentAnim(toVC, fromVC, containerView, transitionContext, modalView)
-                
             case .flyerReveal:
-                addSafeInsets(forVC: fromVC)
-                containerView.insertSubview(fromVC.view, at: 0)
-                toVC.view.frame = UIScreen.main.bounds
-                containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
-                modalView.backgroundColor = UIColor.clear
-                modalView.alpha = 1
-                fromVC.view.layer.shadowOpacity = 0.7
-                fromVC.view.layer.shadowOffset = CGSize.zero
-                
-                let view = UIView()
-                view.backgroundColor = UIColor.white
-                view.alpha = 0.5
-                view.frame = fromVC.view.frame
-                view.center = fromVC.view.center
-                view.layer.shadowOpacity = 0.4
-                view.layer.shadowOffset = CGSize.zero
-                view.tag = 10
-                
-                let view2 = UIView()
-                view2.backgroundColor = UIColor.white
-                view2.alpha = 0.25
-                view2.frame = fromVC.view.frame
-                view2.center = fromVC.view.center
-                view2.layer.shadowOpacity = 0.2
-                view2.layer.shadowOffset = CGSize.zero
-                view2.tag = 20
-                
-                containerView.insertSubview(view, belowSubview: fromVC.view)
-                containerView.insertSubview(view2, belowSubview: view)
-                
-                UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
-                    let scale: CGFloat = 0.7
-                    switch fromVC.sideMenuPosition {
-                    case .left:
-                        fromVC.view.transform = CGAffineTransform(scaleX: scale, y: scale)
-                        fromVC.view.center.x = (fromVC.view.center.x) + (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale
-                        
-                        view.transform = CGAffineTransform(scaleX: scale, y: scale - 0.03)
-                        view.center.x = ((view.center.x) + (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale) - 9
-                        
-                        view2.transform = CGAffineTransform(scaleX: scale, y: scale - 0.06)
-                        view2.center.x = ((view2.center.x) + (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale) - 18
-                        
-                    case .right:
-                        fromVC.view.transform = CGAffineTransform(scaleX: scale, y: scale)
-                        fromVC.view.center.x = (fromVC.view.center.x) - (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale
-                        
-                        view.transform = CGAffineTransform(scaleX: scale, y: scale - 0.03)
-                        view.center.x = ((view.center.x) - (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale) + 9
-                        
-                        view2.transform = CGAffineTransform(scaleX: scale, y: scale - 0.06)
-                        view2.center.x = ((view2.center.x) - (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale) + 18
-                    }
-                }) { (_) in
-                    let didTransitionComplete = !transitionContext.transitionWasCancelled
-                    if didTransitionComplete {
-                        fromVC.sideMenuShowing = true
-                        transitionContext.completeTransition(didTransitionComplete)
-                    } else {
-                        self.removeSafeInsets(forVC: fromVC, onlyBottom: true)
-                        modalView.removeFromSuperview()
-                        transitionContext.completeTransition(false)
-                        UIApplication.shared.keyWindow?.addSubview(fromVC.view)
-                        UIApplication.shared.keyWindow?.makeKeyAndVisible()
-                    }
-                }
+                flyerRevealPresentAnim(fromVC, containerView, toVC, modalView, transitionContext)
                 
             }
         } else {
@@ -698,7 +628,7 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
                                 fromVC.view.transform = CGAffineTransform.init(translationX: -40, y: 0)
                             case .right:
                                 fromVC.view.transform = CGAffineTransform.init(translationX: fromVC.view.bounds.origin.x + 40, y: 0)
-                                
+                    
                             }
                         }) { (_) in
                             let didTransitionComplete = !transitionContext.transitionWasCancelled
@@ -709,6 +639,7 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
                             fromVC.view.transform = CGAffineTransform.identity
                             transitionContext.completeTransition(didTransitionComplete)
                             UIApplication.shared.keyWindow?.addSubview(toVC.view)
+                            toVC.currentViewController.endAppearanceTransition()
                             UIApplication.shared.keyWindow?.makeKeyAndVisible()
                         }
                     })
@@ -780,6 +711,7 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
                             }
                             transitionContext.completeTransition(didTransitionComplete)
                             UIApplication.shared.keyWindow?.addSubview(toVC.view)
+                            toVC.currentViewController.endAppearanceTransition()
                             UIApplication.shared.keyWindow?.makeKeyAndVisible()
                         }
                     })
@@ -812,9 +744,116 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
         }
     }
     
+    fileprivate func springRevealPresentAnim(_ toVC: UIViewController, _ fromVC: ELRevealViewController, _ containerView: UIView, _ transitionContext: UIViewControllerContextTransitioning, _ modalView: UIView) {
+        toVC.view.transform = CGAffineTransform.identity
+        toVC.view.frame = UIScreen.main.bounds
+        switch fromVC.sideMenuPosition {
+        case .left:
+            toVC.view.transform = CGAffineTransform.init(translationX: -40, y: 0)
+        case .right:
+            toVC.view.transform = CGAffineTransform.init(translationX: toVC.view.bounds.origin.x + 40, y: 0)
+        }
+        
+        fromVC.view.layer.shadowOpacity = 0.7
+        containerView.insertSubview(fromVC.view, at: 0)
+        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+        
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
+            modalView.alpha = 0.5
+            switch fromVC.sideMenuPosition {
+            case .left:
+                fromVC.view.center.x = (fromVC.view.center.x) + UIScreen.main.bounds.width * MenuHelper.menuWidth
+            case .right:
+                fromVC.view.center.x = (fromVC.view.center.x) - UIScreen.main.bounds.width * MenuHelper.menuWidth
+            }
+            toVC.view.transform = CGAffineTransform.identity
+        }) { (_) in
+            let didTransitionComplete = !transitionContext.transitionWasCancelled
+            if didTransitionComplete {
+                fromVC.sideMenuShowing = true
+                transitionContext.completeTransition(didTransitionComplete)
+            } else {
+                modalView.removeFromSuperview()
+                transitionContext.completeTransition(false)
+                UIApplication.shared.keyWindow?.addSubview(fromVC.view)
+                UIApplication.shared.keyWindow?.makeKeyAndVisible()
+            }
+        }
+    }
+    
+    fileprivate func flyerRevealPresentAnim(_ fromVC: ELRevealViewController, _ containerView: UIView, _ toVC: UIViewController, _ modalView: UIView, _ transitionContext: UIViewControllerContextTransitioning) {
+        addSafeInsets(forVC: fromVC)
+        containerView.insertSubview(fromVC.view, at: 0)
+        toVC.view.frame = UIScreen.main.bounds
+        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+        modalView.backgroundColor = UIColor.clear
+        modalView.alpha = 1
+        fromVC.view.layer.shadowOpacity = 0.7
+        fromVC.view.layer.shadowOffset = CGSize.zero
+        
+        let view = UIView()
+        view.backgroundColor = UIColor.white
+        view.alpha = 0.5
+        view.frame = fromVC.view.frame
+        view.center = fromVC.view.center
+        view.layer.shadowOpacity = 0.4
+        view.layer.shadowOffset = CGSize.zero
+        view.tag = 10
+        
+        let view2 = UIView()
+        view2.backgroundColor = UIColor.white
+        view2.alpha = 0.25
+        view2.frame = fromVC.view.frame
+        view2.center = fromVC.view.center
+        view2.layer.shadowOpacity = 0.2
+        view2.layer.shadowOffset = CGSize.zero
+        view2.tag = 20
+        
+        containerView.insertSubview(view, belowSubview: fromVC.view)
+        containerView.insertSubview(view2, belowSubview: view)
+        
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
+            let scale: CGFloat = 0.7
+            switch fromVC.sideMenuPosition {
+            case .left:
+                fromVC.view.transform = CGAffineTransform(scaleX: scale, y: scale)
+                fromVC.view.center.x = (fromVC.view.center.x) + (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale
+                
+                view.transform = CGAffineTransform(scaleX: scale, y: scale - 0.03)
+                view.center.x = ((view.center.x) + (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale) - 9
+                
+                view2.transform = CGAffineTransform(scaleX: scale, y: scale - 0.06)
+                view2.center.x = ((view2.center.x) + (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale) - 18
+                
+            case .right:
+                fromVC.view.transform = CGAffineTransform(scaleX: scale, y: scale)
+                fromVC.view.center.x = (fromVC.view.center.x) - (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale
+                
+                view.transform = CGAffineTransform(scaleX: scale, y: scale - 0.03)
+                view.center.x = ((view.center.x) - (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale) + 9
+                
+                view2.transform = CGAffineTransform(scaleX: scale, y: scale - 0.06)
+                view2.center.x = ((view2.center.x) - (UIScreen.main.bounds.width * MenuHelper.menuWidth) * scale) + 18
+            }
+        }) { (_) in
+            let didTransitionComplete = !transitionContext.transitionWasCancelled
+            if didTransitionComplete {
+                fromVC.sideMenuShowing = true
+                transitionContext.completeTransition(didTransitionComplete)
+            } else {
+                self.removeSafeInsets(forVC: fromVC, onlyBottom: true)
+                modalView.removeFromSuperview()
+                transitionContext.completeTransition(false)
+                UIApplication.shared.keyWindow?.addSubview(fromVC.view)
+                UIApplication.shared.keyWindow?.makeKeyAndVisible()
+            }
+        }
+    }
+    
+    
     private func addSafeInsets(forVC vc: ELRevealViewController) {
         if #available(iOS 11.0, *) {
-            _safeAreaLayoutGuideExtendedEdges = UIEdgeInsets(top: vc.view.safeAreaLayoutGuide.layoutFrame.origin.y, left: 0.0, bottom: vc.view.safeAreaInsets.bottom, right: 0.0)
+            _safeAreaLayoutGuideExtendedEdges = UIEdgeInsets(top: vc.view.safeAreaLayoutGuide.layoutFrame.origin.y, left: vc.view.safeAreaLayoutGuide.layoutFrame.origin.x, bottom: vc.view.safeAreaInsets.bottom, right: 0.0)
             vc.additionalSafeAreaInsets = _safeAreaLayoutGuideExtendedEdges!
         } else {
             // Fallback on earlier versions
@@ -825,19 +864,19 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
         if onlyBottom {
             if #available(iOS 11.0, *) {
                 _safeAreaLayoutGuideExtendedEdges = UIEdgeInsets(top: (_safeAreaLayoutGuideExtendedEdges?.top)!, left: 0.0, bottom: 0.0, right: 0.0)
-                vc.tabBarController?.tabBar.invalidateIntrinsicContentSize()
+                 vc.tabBarController?.tabBar.invalidateIntrinsicContentSize()
                 vc.additionalSafeAreaInsets = _safeAreaLayoutGuideExtendedEdges!
             } else {
-                
+               
                 // Fallback on earlier versions
             }
         } else {
-            if #available(iOS 11.0, *) {
-                _safeAreaLayoutGuideExtendedEdges = nil
-                vc.additionalSafeAreaInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-            } else {
-                // Fallback on earlier versions
-            }
+        if #available(iOS 11.0, *) {
+            _safeAreaLayoutGuideExtendedEdges = nil
+            vc.additionalSafeAreaInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        } else {
+            // Fallback on earlier versions
+        }
         }
     }
     
@@ -885,7 +924,7 @@ extension UIViewController {
     
     
     
-    fileprivate func canPerformSegue(id: String) -> Bool {
+   fileprivate func canPerformSegue(id: String) -> Bool {
         let segues = self.value(forKey: "storyboardSegueTemplates") as? [NSObject]
         let filtered = segues?.filter({ $0.value(forKey: "identifier") as? String == id })
         guard let count = filtered?.count, count > 0 else {return false}

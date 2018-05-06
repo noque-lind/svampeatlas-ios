@@ -43,10 +43,7 @@ class ObservationCell: UITableViewCell {
     private func setupView() {
         backgroundColor = UIColor.clear
         selectionStyle = .none
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(test))
-        addGestureRecognizer(tapGestureRecognizer)
-        
+
         contentView.addSubview(button)
         button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         button.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
@@ -70,10 +67,4 @@ class ObservationCell: UITableViewCell {
     func configure(observation: Observation) {
         observationView.configure(observation: observation)
     }
-    
-    @objc func test() {
-        print("test")
-    }
-    
-    
 }

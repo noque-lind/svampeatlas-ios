@@ -11,6 +11,7 @@ import MapKit
 
 protocol MapViewDelegate: class {
     func userLocationButtonShouldShow(shouldShow: Bool)
+    func shouldShowObservationDetails(observation: Observation)
 }
 
 struct MapViewConfiguration {
@@ -53,10 +54,8 @@ class MapView: UIView {
     private var mapViewConfiguration: MapViewConfiguration
     private var selectedAnnotationView: ObservationPinView?
     
-    
     var hasDownloaded = false
 
-    
     init(mapViewConfiguration: MapViewConfiguration = MapViewConfiguration()) {
         self.mapViewConfiguration = mapViewConfiguration
         super.init(frame: CGRect.zero)
@@ -158,20 +157,22 @@ class MapView: UIView {
 extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let observationPin = annotation as? ObservationPin {
-            var observationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "observationPinView")
+            var observationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "observationPinView") as? ObservationPinView
             
             if observationPinView == nil {
                 observationPinView = ObservationPinView(annotation: observationPin, reuseIdentifier: "observationPinView")
+                observationPinView?.delegate = self.delegate
             }
             
             observationPinView?.clusteringIdentifier = "clusterAnnotationView"
             return observationPinView
         } else if let clusterPin = annotation as? MKClusterAnnotation {
-            var clusterPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterPinView")
+            var clusterPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterPinView") as? ClusterPinView
             clusterPinView?.annotation = clusterPin
             
             if clusterPinView == nil {
                 clusterPinView = ClusterPinView(annotation: clusterPin, reuseIdentifier: "clusterPinView")
+                clusterPinView?.delegate = self.delegate
             }
             return clusterPinView
         
@@ -180,23 +181,14 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
         }
     }
     
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("didSelect")
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {return}
         let region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude), CLLocationDistance.init(mapViewConfiguration.regionRadius), CLLocationDistance.init(mapViewConfiguration.regionRadius))
-        
-        let circle = MKCircle(center: location.coordinate, radius: 50000)
-        
-        mapView.add(circle)
-        
-        
-        //                let coordinate1 = mapView.coordin
-        //                let coordinate2 = mapView.convert(CGPoint(x: circle.boundingMapRect.origin.x + circle.boundingMapRect.size.width, y: circle.boundingMapRect.origin.y), toCoordinateFrom: mapView)
-        //                let coordinate3 = mapView.convert(CGPoint(x: circle.boundingMapRect.origin.x, y: circle.boundingMapRect.origin.y + circle.boundingMapRect.size.height), toCoordinateFrom: mapView)
-        //                let coordinate4 = mapView.convert(CGPoint(x: circle.boundingMapRect.origin.x + circle.boundingMapRect.size.width, y: circle.boundingMapRect.origin.y + circle.boundingMapRect.size.height), toCoordinateFrom: mapView)
-        
-        
-        //        print(coordinate1, coordinate2, coordinate3, coordinate4)
-        
+    
         mapViewRegionDidChangeBecauseOfUserInteration = false
         mapView.setRegion(region, animated: true)
         locationManager.stopUpdatingLocation()
@@ -210,12 +202,6 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
             let coordinate2 = mapView.convert(CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.origin.y), toCoordinateFrom: mapView)
             let coordinate3 = mapView.convert(CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.maxY), toCoordinateFrom: mapView)
             let coordinate4 = mapView.convert(CGPoint(x: mapView.bounds.origin.x, y: mapView.bounds.maxY), toCoordinateFrom: mapView)
-            print(coordinate1, coordinate2, coordinate3, coordinate4)
-            
-            //            let geoJSON =
-            //            """
-            //            https://svampe.databasen.org/api/observations/specieslist?geometry={"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[\(coordinate1.longitude),\(coordinate1.latitude)],[\(coordinate2.longitude),\(coordinate2.latitude)],[\(coordinate3.longitude),\(coordinate3.latitude)],[\(coordinate4.longitude),\(coordinate4.latitude)],[\(coordinate1.longitude),\(coordinate1.latitude)]]]}}&include=["{\"model\":\"DeterminationView\",\"as\":\"DeterminationView\",\"attributes\":[\"Taxon_id\",\"Recorded_as_id\",\"Taxon_FullName\",\"Taxon_vernacularname_dk\",\"Taxon_RankID\",\"Determination_validation\",\"Taxon_redlist_status\",\"Taxon_path\",\"Recorded_as_FullName\",\"Determination_user_id\",\"Determination_score\",\"Determination_validator_id\"],\"where\":{\"$and\":{\"$or\":{}}}}","{\"model\":\"User\",\"as\":\"PrimaryUser\",\"required\":false,\"where\":{}}","{\"model\":\"Locality\",\"as\":\"Locality\",\"attributes\":[\"_id\",\"name\"],\"where\":{},\"required\":true}"]&where={}
-            //            """
             
             let geoJSON = "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[\(coordinate1.longitude),\(coordinate1.latitude)],[\(coordinate2.longitude),\(coordinate2.latitude)],[\(coordinate3.longitude),\(coordinate3.latitude)],[\(coordinate4.longitude),\(coordinate4.latitude)],[\(coordinate1.longitude),\(coordinate1.latitude)]]]}}"
             hasDownloaded = true
@@ -226,9 +212,7 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
             }
             }
         } else {
-            
         mapViewRegionDidChangeBecauseOfUserInteration = true
-    
         }
     }
 }

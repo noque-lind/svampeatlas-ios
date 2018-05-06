@@ -13,8 +13,20 @@ enum LocationBackgroundType {
     case List
 }
 
+protocol MushroomBackgroundDelegate: class {
+    func showVC(vc: UIViewController)
+}
+
 class MushroomTableView: UITableView {
     public var categoryType: Category!
+    weak var mushroomBackgroundDelegate: MushroomBackgroundDelegate? = nil
+    
+    lazy var locationBackground: LocationBackground = {
+       let locationBackground = LocationBackground()
+        return locationBackground
+    }()
+    
+    
     
     override func reloadData() {
         super.reloadData()
@@ -35,7 +47,9 @@ class MushroomTableView: UITableView {
             case .offline:
                 self.backgroundView = OfflineBackground(frame: self.frame)
             case .local:
-                self.backgroundView = LocationBackground(frame: self.frame)
+                locationBackground.frame = self.frame
+                locationBackground.delegate = self.mushroomBackgroundDelegate
+                self.backgroundView = locationBackground
             case .favorites:
                 self.backgroundView = FavoritesBackground(frame: self.frame)
             default:

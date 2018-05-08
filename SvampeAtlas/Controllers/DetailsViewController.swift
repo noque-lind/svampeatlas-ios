@@ -13,6 +13,12 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
         return false
     }
     
+    private var topGradientView: UIView = {
+       let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     @IBOutlet weak var imagesCollectionView: ImagesCollectionView!
     @IBOutlet weak var pageControl: ImagesPageControl!
     @IBOutlet weak var scrollViewContainerView: UIView!

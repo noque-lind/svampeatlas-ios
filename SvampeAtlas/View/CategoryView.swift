@@ -97,7 +97,6 @@ extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UI
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let labelWidth = (items[indexPath.row].rawValue as NSString).size(withAttributes: [NSAttributedStringKey.font: UIFont.appHeaderDetails()])
-//        collectionView.frame.size.width / CGFloat(items.count)
         return CGSize(width: labelWidth.width + 16, height: collectionView.frame.size.height)
     }
     
@@ -108,7 +107,6 @@ extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UI
             return false
         }
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedItem = items[indexPath.row]

@@ -24,6 +24,13 @@ class ObservationView: UIView {
         return label
     }()
     
+    private lazy var locationAndDateLabel: UILabel = {
+       let label = UILabel()
+        label.font = UIFont.appPrimary()
+        label.textColor = UIColor.appWhite()
+        return label
+    }()
+    
     
     private lazy var toxicityLevelImageView: UIImageView = {
         let imageView = UIImageView()
@@ -44,6 +51,7 @@ class ObservationView: UIView {
         stackView.axis = .vertical
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
+        stackView.addArrangedSubview(locationAndDateLabel)
         stackView.distribution = .fillEqually
         stackView.alpha = 1
         return stackView
@@ -74,6 +82,8 @@ class ObservationView: UIView {
     
     func configure(observation: Observation) {
         titleLabel.text = observation.determinationView?.taxon_danishName
-        subtitleLabel.text = observation.determinationView?.taxon_latinName
+        subtitleLabel.text = observation.observedBy
+        locationAndDateLabel.text = observation.locality?.name
+        
     }
 }

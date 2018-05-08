@@ -76,6 +76,16 @@ extension UIFont {
     class func appTextHighlight(customSize size: CGFloat = 13) -> UIFont {
         return UIFont(name: "AvenirNext-Regular", size: size)!
     }
-    
+}
 
+extension Float {
+    static func shadowOpacity() -> Float {
+        return 0.4
+    }
+}
+
+extension CGFloat {
+    static func cornerRadius() -> CGFloat {
+        return 2
+    }
 }

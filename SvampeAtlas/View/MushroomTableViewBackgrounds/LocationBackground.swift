@@ -11,6 +11,14 @@ import MapKit
 
 class LocationBackground: UIView {
     
+    private var settingsView:  MapViewSettingsView =  {
+       let view = MapViewSettingsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    
+    
     lazy var userLocationButton: UIButton = {
       let button = UIButton()
         button.backgroundColor = UIColor.appSecondaryColour()
@@ -52,10 +60,17 @@ class LocationBackground: UIView {
         mapView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         mapView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         
-        self.addSubview(userLocationButton)
-        userLocationButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
-        userLocationButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
-    
+        addSubview(settingsView)
+        settingsView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
+        settingsView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
+        
+        
+        
+        
+//        self.addSubview(userLocationButton)
+//        userLocationButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
+//        userLocationButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+//
         mapView.centerOnUserLocation()
     }
     

@@ -29,7 +29,7 @@
 		4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */; };
 		4A53026B209888E50043C1D3 /* CustomMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A53026A209888E50043C1D3 /* CustomMapView.swift */; };
 		4A6052D8208C95730078AF66 /* FavoritesBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6052D7208C95730078AF66 /* FavoritesBackground.swift */; };
-		4A69457620456C010041824E /* SideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69457520456C010041824E /* SideMenuController.swift */; };
+		4A69457620456C010041824E /* NavigationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69457520456C010041824E /* NavigationVC.swift */; };
 		4A69457820456CD60041824E /* SideMenuStaticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69457720456CD60041824E /* SideMenuStaticCell.swift */; };
 		4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC792038D96500D3B88B /* AppDelegate.swift */; };
 		4A69BC7C2038D96500D3B88B /* MushroomVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC7B2038D96500D3B88B /* MushroomVC.swift */; };
@@ -41,6 +41,9 @@
 		4A69BC9D2038D96500D3B88B /* SvampeAtlasUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC9C2038D96500D3B88B /* SvampeAtlasUITests.swift */; };
 		4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BCAB2039805100D3B88B /* Mushroom.swift */; };
 		4A702E00209F266900CE648B /* ELRevealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A702DFF209F266900CE648B /* ELRevealViewController.swift */; };
+		4A8A18B320A186710063C83B /* NavigationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A18B220A186710063C83B /* NavigationCell.swift */; };
+		4A8A18B520A190670063C83B /* MapViewSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A18B420A190670063C83B /* MapViewSettingsView.swift */; };
+		4A8A18B720A1B5320063C83B /* RedlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A18B620A1B5320063C83B /* RedlistView.swift */; };
 		4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A95D5442057D7B500EBB2C5 /* ActivityIndicatorView.swift */; };
 		4A95D5482057DFCE00EBB2C5 /* OfflineBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A95D5472057DFCE00EBB2C5 /* OfflineBackground.swift */; };
 		4AA1CC682085DFCB00254EBB /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA1CC672085DFCB00254EBB /* MapView.swift */; };
@@ -102,7 +105,7 @@
 		4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowImageAnimationController.swift; sourceTree = "<group>"; };
 		4A53026A209888E50043C1D3 /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
 		4A6052D7208C95730078AF66 /* FavoritesBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesBackground.swift; sourceTree = "<group>"; };
-		4A69457520456C010041824E /* SideMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuController.swift; sourceTree = "<group>"; };
+		4A69457520456C010041824E /* NavigationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationVC.swift; sourceTree = "<group>"; };
 		4A69457720456CD60041824E /* SideMenuStaticCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuStaticCell.swift; sourceTree = "<group>"; };
 		4A69BC762038D96500D3B88B /* SvampeAtlas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SvampeAtlas.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A69BC792038D96500D3B88B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -120,6 +123,9 @@
 		4A69BC9E2038D96500D3B88B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A69BCAB2039805100D3B88B /* Mushroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mushroom.swift; sourceTree = "<group>"; };
 		4A702DFF209F266900CE648B /* ELRevealViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ELRevealViewController.swift; sourceTree = "<group>"; };
+		4A8A18B220A186710063C83B /* NavigationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCell.swift; sourceTree = "<group>"; };
+		4A8A18B420A190670063C83B /* MapViewSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewSettingsView.swift; sourceTree = "<group>"; };
+		4A8A18B620A1B5320063C83B /* RedlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedlistView.swift; sourceTree = "<group>"; };
 		4A95D5442057D7B500EBB2C5 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		4A95D5472057DFCE00EBB2C5 /* OfflineBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineBackground.swift; sourceTree = "<group>"; };
 		4AA1CC672085DFCB00254EBB /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -184,6 +190,8 @@
 				4AD107BC20976C6000BA04D0 /* ObservationView.swift */,
 				4AA1CC672085DFCB00254EBB /* MapView.swift */,
 				4AA1CC692086054200254EBB /* SimilarSpeciesView.swift */,
+				4A8A18B420A190670063C83B /* MapViewSettingsView.swift */,
+				4A8A18B620A1B5320063C83B /* RedlistView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -195,6 +203,7 @@
 				4AB6FA132070F9B900870A46 /* MushroomCell */,
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
 				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
+				4A8A18B220A186710063C83B /* NavigationCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -236,8 +245,8 @@
 		4A69457420456BCE0041824E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4A69457520456C010041824E /* NavigationVC.swift */,
 				4A69BC7B2038D96500D3B88B /* MushroomVC.swift */,
-				4A69457520456C010041824E /* SideMenuController.swift */,
 				4AC5CA1A204E84C2003ED3BE /* DetailsViewController.swift */,
 				4A1F76002079606B0082B873 /* RecognizeVC.swift */,
 				4A1F7602207963E70082B873 /* CustomNavigationController.swift */,
@@ -494,12 +503,14 @@
 				4A702E00209F266900CE648B /* ELRevealViewController.swift in Sources */,
 				4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */,
 				4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */,
+				4A8A18B720A1B5320063C83B /* RedlistView.swift in Sources */,
 				4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */,
 				4AC5CA21204EA817003ED3BE /* MushroomDetailsScrollView.swift in Sources */,
 				4A3061E12053F4840061E98F /* MushroomTableView.swift in Sources */,
 				4A1F7603207963E70082B873 /* CustomNavigationController.swift in Sources */,
 				4A69457820456CD60041824E /* SideMenuStaticCell.swift in Sources */,
 				4AD107BF20976E2D00BA04D0 /* ObservationCell.swift in Sources */,
+				4A8A18B520A190670063C83B /* MapViewSettingsView.swift in Sources */,
 				4AA1CC6A2086054200254EBB /* SimilarSpeciesView.swift in Sources */,
 				4A69BC7C2038D96500D3B88B /* MushroomVC.swift in Sources */,
 				4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */,
@@ -524,9 +535,10 @@
 				4A4A8043207CA69D00041018 /* MapVC.swift in Sources */,
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
-				4A69457620456C010041824E /* SideMenuController.swift in Sources */,
+				4A69457620456C010041824E /* NavigationVC.swift in Sources */,
 				4A1F760720796A510082B873 /* PhotoCell.swift in Sources */,
 				4A28AB8D20444B0300F21EEE /* AppProperties.swift in Sources */,
+				4A8A18B320A186710063C83B /* NavigationCell.swift in Sources */,
 				4AB6FA15207112F500870A46 /* CustomSearchBar.swift in Sources */,
 				4A40CD722093325100F58F25 /* ClusterPinView.swift in Sources */,
 				4A4AE30B2070181000178BFB /* MushroomCell.swift in Sources */,

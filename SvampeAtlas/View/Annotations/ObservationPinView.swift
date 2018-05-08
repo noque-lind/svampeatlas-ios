@@ -91,7 +91,6 @@ class ObservationPinView: MKAnnotationView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-//        imageView.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.width)
          imageView.layer.cornerRadius = imageView.frame.width / 2
     }
     
@@ -99,8 +98,6 @@ class ObservationPinView: MKAnnotationView {
         canShowCallout = false
         self.image = #imageLiteral(resourceName: "MushroomPin")
         self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
-        
-        
         self.addSubview(imageView)
        imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 4).isActive = true
        imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -4).isActive = true
@@ -120,9 +117,9 @@ class ObservationPinView: MKAnnotationView {
         if selected {
             addSubview(calloutView)
                 calloutView.configure(imageView: imageView, observation: observationPin.observation)
-             calloutView.show(imageView: imageView)
+                calloutView.show(imageView: imageView)
         } else {
-            calloutView.hide(animated: animated)
+                calloutView.hide(animated: animated)
         }
     }
     

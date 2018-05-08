@@ -66,12 +66,11 @@ class ObservationPinCalloutView: UIView {
     
     private func setupView() {
         backgroundColor = UIColor.clear
-        layer.cornerRadius = 10
         self.clipsToBounds = true
         self.alpha = 0
         
-        self.widthAnchor.constraint(equalToConstant: 250).isActive = true
-        self.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        self.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
         
         addSubview(button)
@@ -88,7 +87,7 @@ class ObservationPinCalloutView: UIView {
     
     func show(imageView: UIImageView) {
         imageViewWidthConstraint.isActive = false
-        imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 80)
+        imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 100)
         imageViewWidthConstraint.isActive = true
         
         imageViewHeightConstraint.isActive = false
@@ -96,8 +95,9 @@ class ObservationPinCalloutView: UIView {
     
         self.alpha = 1
         
-        UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.2, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
             self.superview!.layoutIfNeeded()
+            
         }) { (_) in
             self.setupContent()
             UIView.animate(withDuration: 0.2, animations: {
@@ -110,7 +110,7 @@ class ObservationPinCalloutView: UIView {
     func hide(animated: Bool) {
         imageViewWidthConstraint.isActive = false
         
-        imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 100)
+        imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 120)
         
         imageViewWidthConstraint.isActive = true
         

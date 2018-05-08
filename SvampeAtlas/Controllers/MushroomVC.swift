@@ -30,8 +30,10 @@ class MushroomVC: UIViewController {
     }
     
     var filteredMushrooms: [Mushroom]?
+    private var previousContentOffset: CGPoint?
     
-    private var hasBeenSetup = false
+    
+private var hasBeenSetup = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,10 +46,7 @@ class MushroomVC: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if !hasBeenSetup {
         categoryView.firstSelect()
-            hasBeenSetup = true
-        }
         super.viewDidAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
@@ -180,12 +179,16 @@ extension MushroomVC: CategoryViewDelegate {
 extension MushroomVC: CustomSearchBarDelegate {
     func newSearchEntry(entry: String) {
         filteredMushrooms = []
+        previousContentOffset = tableView.contentOffset
         tableView.reloadData()
     }
     
     func clearedSearchEntry() {
         filteredMushrooms = nil
         tableView.reloadData()
+        
+        guard let previousContentOffset = previousContentOffset else {return}
+        self.tableView.setContentOffset(previousContentOffset, animated: false)
     }
     
     private func prepareSearchBar() {

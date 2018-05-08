@@ -71,7 +71,7 @@ class CustomSearchBar: UITextField {
         leftViewMode = .always
         leftView = iconView
         
-        font = UIFont.appPrimary()
+        font = UIFont.appPrimaryHightlighed()
         textColor = UIColor.appWhite()
         attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedStringKey.font: UIFont.appPrimary(), NSAttributedStringKey.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
         placeholder = "Søg efter en art her..."
@@ -106,6 +106,7 @@ extension CustomSearchBar {
         } else {
             if iconView.image(for: []) != #imageLiteral(resourceName: "Search") {
                 collapse()
+                searchBarDelegate?.clearedSearchEntry()
             }
         }
     }

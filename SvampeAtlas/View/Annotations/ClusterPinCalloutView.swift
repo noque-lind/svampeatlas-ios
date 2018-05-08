@@ -16,30 +16,23 @@ class ClusterPinCalloutView: UIView {
         tableView.backgroundColor = UIColor.clear
         tableView.separatorStyle = .none
         tableView.alpha = 0
-        
+        tableView.alwaysBounceVertical = false
         tableView.register(ObservationCell.self, forCellReuseIdentifier: "observationCell")
         return tableView
     }()
     
-    private lazy var button: UIButton = {
-        let button = UIButton(type: UIButtonType.custom)
-        button.backgroundColor = UIColor.clear
-        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
     private var observations = [Observation]()
+    
     var heightConstraint: NSLayoutConstraint!
     var widthConstraint: NSLayoutConstraint!
-    private var rowHeight: CGFloat = 90
+    private var rowHeight: CGFloat = 100
     weak var delegate: MapViewDelegate? = nil
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if let tableView = tableView.hitTest(convert(point, to: tableView), with: event) {
             return tableView
         }
-         return button.hitTest(convert(point, to: button), with: event) 
+        return nil
     }
     
     init() {
@@ -47,24 +40,17 @@ class ClusterPinCalloutView: UIView {
         setupView()
     }
     
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupView()
     }
-    
+
     private func setupView() {
         backgroundColor = UIColor.appPrimaryColour()
+        
+        
         self.clipsToBounds = true
         self.alpha = 0
-        
-        addSubview(button)
-        button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        button.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        button.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-        
         addSubview(tableView)
         tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -89,7 +75,7 @@ class ClusterPinCalloutView: UIView {
 
     
     func show() {
-        widthConstraint.constant = 250
+        widthConstraint.constant = 300
         
         if observations.count >= 4 {
            heightConstraint.constant = rowHeight * 4
@@ -128,10 +114,7 @@ class ClusterPinCalloutView: UIView {
         }
     }
     
-   
-    
-    
-    private func reset() {
+   private func reset() {
         DispatchQueue.main.async {
             self.widthConstraint.isActive = false
             self.heightConstraint.isActive = false
@@ -164,19 +147,12 @@ extension ClusterPinCalloutView: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension ClusterPinCalloutView {
-    @objc func buttonPressed() {
-        print("Button pressed")
-    }
-}
-
 class CustomTableView: UITableView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if self.point(inside: point, with: event) {
             return self
         } else {
             return nil
-            
         }
     }
 
@@ -184,7 +160,6 @@ class CustomTableView: UITableView {
         if gestureRecognizer is UITapGestureRecognizer {
             return false
         } else {
-            debugPrint(gestureRecognizer)
             return true
         }
     }

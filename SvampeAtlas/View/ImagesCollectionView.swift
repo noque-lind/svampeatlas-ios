@@ -30,7 +30,7 @@ class ImagesCollectionView: UICollectionView {
             }
         }
             collectionViewLayout.invalidateLayout()
-        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
             self.superview?.layoutIfNeeded()
         }, completion: nil)
         }

@@ -24,7 +24,7 @@ class GradientView: UIView {
     func setupView() {
         print(self.frame)
         gradient.frame = frame
-        gradient.colors = [UIColor.appPrimaryColour().cgColor, UIColor.appSecondaryColour().cgColor]
+        gradient.colors = [UIColor.appSecondaryColour().cgColor, UIColor.appPrimaryColour().cgColor]
         gradient.startPoint = CGPoint.zero
         gradient.endPoint = CGPoint(x: 1, y: 1)
         gradient.locations = [0.0, 1.0]

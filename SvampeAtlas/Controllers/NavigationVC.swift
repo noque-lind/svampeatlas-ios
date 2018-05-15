@@ -8,20 +8,12 @@
 
 import UIKit
 
-struct NavigationItem {
-    public private(set) var title: String
-    public private(set) var icon: UIImage
-    public private(set) var viewControllerIdentifier: String
-}
+
 
 class NavigationVC: UITableViewController {
     
-    
-    
     private var firstLoad = true
-    
-    
-    private let navigationItems = [NavigationItem.init(title: "SvampeAtlas", icon: #imageLiteral(resourceName: "LogoSmall"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]
+    private let navigationItems = [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "LogoSmall"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]
     
 
     override func viewDidLoad() {

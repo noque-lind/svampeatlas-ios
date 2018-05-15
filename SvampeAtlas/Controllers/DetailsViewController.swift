@@ -8,16 +8,9 @@
 
 import UIKit
 
-class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
-    func isAllowedToPushMenu() -> Bool? {
-        return false
-    }
+class DetailsViewController: UIViewController {
     
-    private var topGradientView: UIView = {
-       let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    
     
     @IBOutlet weak var imagesCollectionView: ImagesCollectionView!
     @IBOutlet weak var pageControl: ImagesPageControl!
@@ -39,7 +32,8 @@ class DetailsViewController: UIViewController, ELRevealViewControllerDelegate {
         super.viewDidLoad()
         imagesCollectionView.delegate = self
         imagesCollectionView.dataSource = self
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
+        self.navigationController?.navigationBar.isTranslucent = true
         if #available(iOS 11.0, *) {
             imagesCollectionView.contentInsetAdjustmentBehavior = .never
         } else {
@@ -184,7 +178,10 @@ extension DetailsViewController: UIScrollViewDelegate {
     }
 }
 
-extension DetailsViewController: UIGestureRecognizerDelegate {
+extension DetailsViewController: ELRevealViewControllerDelegate, UIGestureRecognizerDelegate {
+    func isAllowedToPushMenu() -> Bool? {
+        return false
+    }
 }
 
 

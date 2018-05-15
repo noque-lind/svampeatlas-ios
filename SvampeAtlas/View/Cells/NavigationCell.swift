@@ -14,7 +14,7 @@ class NavigationCell: UITableViewCell {
       let gradient = CAGradientLayer()
         gradient.startPoint = CGPoint(x: 0, y: 1)
         gradient.endPoint = CGPoint(x: 1, y: 1)
-        gradient.colors = [UIColor.appPrimaryColour().cgColor, UIColor.appSecondaryColour().cgColor]
+        gradient.colors = [UIColor.appPrimaryColour().cgColor, UIColor.clear.cgColor]
         gradient.locations = [0.0, 1.0]
         return gradient
     }()
@@ -35,9 +35,6 @@ class NavigationCell: UITableViewCell {
         return label
     }()
     
-    
-    
-    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
@@ -47,7 +44,6 @@ class NavigationCell: UITableViewCell {
         super.init(coder: aDecoder)
         setupView()
     }
-    
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -59,7 +55,6 @@ class NavigationCell: UITableViewCell {
             gradientView.removeFromSuperlayer()
         }
     }
-    
     
     private func setupView() {
         backgroundColor = UIColor.clear

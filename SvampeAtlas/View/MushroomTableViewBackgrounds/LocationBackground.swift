@@ -38,6 +38,13 @@ class LocationBackground: UIView {
         return mapView
     }()
     
+    lazy var listView: ListView = {
+       let listView = ListView()
+        listView.translatesAutoresizingMaskIntoConstraints = false
+        listView.delegate = self
+        return listView
+    }()
+    
     var delegate: MushroomBackgroundDelegate? = nil {
         didSet {
             print("Didset")

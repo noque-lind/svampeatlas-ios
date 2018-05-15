@@ -46,9 +46,10 @@ private var hasBeenSetup = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        categoryView.firstSelect()
+        
         super.viewDidAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,13 +59,19 @@ private var hasBeenSetup = false
     private func setupView() {
         searchBar.isHidden = true
         tableView.contentInset = UIEdgeInsets(top: searchBar.frame.size.height + 8, left: 0.0, bottom: 0.0, right: 0.0)
+        categoryView.firstSelect()
+        setupNavigationController()
+    }
+    
+    
+    private func setupNavigationController() {
+        self.navigationController?.view.backgroundColor = UIColor.appPrimaryColour()
         self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
         self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.appWhite(), NSAttributedStringKey.font: UIFont.appHeader()]
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
-        view.backgroundColor = UIColor.appPrimaryColour()
     }
 }
 

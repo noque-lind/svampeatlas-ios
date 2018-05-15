@@ -204,6 +204,7 @@
 			children = (
 				4AD107BB20976B8F00BA04D0 /* ObservationCell */,
 				4AB6FA132070F9B900870A46 /* MushroomCell */,
+				4A7891F320723BBF00B69427 /* ImageCell */,
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
 				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
 				4A8A18B220A186710063C83B /* NavigationCell.swift */,
@@ -240,7 +241,6 @@
 				4A300A91208388C3003CB2A5 /* ObservationPinCalloutView.swift */,
 				4A40CD712093325100F58F25 /* ClusterPinView.swift */,
 				4A40CD762094CBF000F58F25 /* ClusterPinCalloutView.swift */,
-				4A7891F320723BBF00B69427 /* ImageCell */,
 			);
 			path = Annotations;
 			sourceTree = "<group>";

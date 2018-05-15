@@ -10,7 +10,12 @@ import UIKit
 import MapKit
 
 class MushroomDetailsScrollView: UIScrollView {
+    
     @IBOutlet weak var contentStackView: UIStackView!
+    
+    
+    
+    
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -97,12 +102,13 @@ class MushroomDetailsScrollView: UIScrollView {
     
     
     private func setupView() {
+        contentInset = UIEdgeInsets(top: 200, left: 0, bottom: 0, right: 0)
+        scrollIndicatorInsets = UIEdgeInsets(top: 200, left: 0, bottom: 0, right: 0)
         contentStackView.spacing = 20
-
+        contentInsetAdjustmentBehavior = .never
     }
     
     public func configureScrollView(withMushroom mushroom: Mushroom) {
-        print(mushroom.attributes?.forvekslingsmuligheder)
         contentStackView.addArrangedSubview(primaryAndSecondaryTitleLabels)
         contentStackView.addArrangedSubview(descriptionLabel)
         setupToxicityInformation(toxicityLevel: mushroom.toxicityLevel)
@@ -190,4 +196,6 @@ class MushroomDetailsScrollView: UIScrollView {
         redlistStackView.addArrangedSubview(stackView)
         contentStackView.addArrangedSubview(redlistStackView)
     }
+    
+
 }

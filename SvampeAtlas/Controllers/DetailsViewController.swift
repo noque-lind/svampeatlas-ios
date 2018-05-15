@@ -10,12 +10,11 @@ import UIKit
 
 class DetailsViewController: UIViewController {
     
-    
-    
-    @IBOutlet weak var imagesCollectionView: ImagesCollectionView!
     @IBOutlet weak var pageControl: ImagesPageControl!
     @IBOutlet weak var scrollViewContainerView: UIView!
     @IBOutlet weak var scrollView: MushroomDetailsScrollView!
+    
+     @IBOutlet weak var imageCollectionView: ImagesCollectionView!
     
     @IBAction func backButtonPressed(sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
@@ -30,12 +29,10 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         view.backgroundColor = UIColor.appSecondaryColour()
         super.viewDidLoad()
-        imagesCollectionView.delegate = self
-        imagesCollectionView.dataSource = self
         
         self.navigationController?.navigationBar.isTranslucent = true
         if #available(iOS 11.0, *) {
-            imagesCollectionView.contentInsetAdjustmentBehavior = .never
+//            imagesCollectionView.contentInsetAdjustmentBehavior = .never
         } else {
             
         }
@@ -43,7 +40,7 @@ class DetailsViewController: UIViewController {
         
         pageControl.delegate = self
         pageControl.dataSource = self
-        scrollView.delegate = self
+//        scrollView.delegate = self
         setupView()
         setupImageTimer()
         setupScrollView()
@@ -53,7 +50,9 @@ class DetailsViewController: UIViewController {
         imageScrollTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(handleImageTimer), userInfo: nil, repeats: true)
     }
     
-    
+    @objc func handleImageTimer() {
+        pageControl.nextPage()
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -82,6 +81,10 @@ class DetailsViewController: UIViewController {
                 scrollViewContainerView.layer.shadowOpacity = 0.4
                 scrollViewContainerView.layer.shadowOffset = CGSize(width: 0.0, height: -2.0)
             scrollViewContainerView.clipsToBounds = true
+        imageCollectionView.setupHeightConstraint(defaultHeight: 200, navigationBarHeight: (self.navigationController?.navigationBar.frame.height)!)
+        scrollView.delegate = self
+        
+        
     }
     
     func setupScrollView() {
@@ -90,41 +93,34 @@ class DetailsViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        imagesCollectionView.collectionViewLayout.invalidateLayout()
+//        imagesCollectionView.collectionViewLayout.invalidateLayout()
     }
 }
 
-extension DetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return mushroom.images!.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as? ImageCell {
-            cell.configureCell(url: (mushroom.images![indexPath.row].uri), photoAuthor: mushroom.images![indexPath.row].photographer)
-        return cell
-        } else {
-            return UICollectionViewCell()
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let photoVC = self.storyboard?.instantiateViewController(withIdentifier: "photoVC") as? PhotoVCViewController else {return}
-        photoVC.transitioningDelegate = self
-        photoVC.images = mushroom.images!
-        photoVC.interactor = interactor
-        present(photoVC, animated: true, completion: nil)
-    }
-    
-    
-    
-    @objc func handleImageTimer() {
-        pageControl.nextPage()
-    }
+extension DetailsViewController {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return mushroom.images!.count
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        guard let photoVC = self.storyboard?.instantiateViewController(withIdentifier: "photoVC") as? PhotoVCViewController else {return}
+//        photoVC.transitioningDelegate = self
+//        photoVC.images = mushroom.images!
+//        photoVC.interactor = interactor
+//        present(photoVC, animated: true, completion: nil)
+//    }
+//
+//
+//
+//
     
 }
 
@@ -135,42 +131,25 @@ extension DetailsViewController: ImagesPageControlDataSource, ImagesPageControlD
     
     func didChangePage(toPage page: Int) {
         let indexPath = IndexPath(row: page, section: 0)
-        imagesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+//        imagesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 }
 
 extension DetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let adjustedContentOffset = scrollView.contentOffset.y + scrollView.contentInset.top
         if scrollView == self.scrollView {
-            if imagesCollectionView.heightConstraint.constant != imagesCollectionView.minimumHeight {
-                    imagesCollectionView.heightConstraint.constant =  imagesCollectionView.heightConstraint.constant - ((scrollView.contentOffset.y) / 3)
-                    imagesCollectionView.collectionViewLayout.invalidateLayout()
-                    scrollView.setContentOffset(CGPoint.zero, animated: false)
-            } else {
-                if scrollView.contentOffset.y < 0 {
-                    imagesCollectionView.heightConstraint.constant =  imagesCollectionView.heightConstraint.constant - ((scrollView.contentOffset.y) / 3)
-                    imagesCollectionView.collectionViewLayout.invalidateLayout()
-                    scrollView.setContentOffset(CGPoint.zero, animated: false)
-                }
+            let minValue = (max(adjustedContentOffset, 0))
+            imageCollectionView.transform = CGAffineTransform(translationX: 0.0, y: -minValue)
+            
+            if minValue <= 0 {
+                imageCollectionView.configureHeightConstraint(deltaValue: adjustedContentOffset)
             }
-            
-            
-            
-            
-            
     }
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if scrollView == self.scrollView {
-            imagesCollectionView.animateToPosition()
-        }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if scrollView == self.scrollView {
-            imagesCollectionView.animateToPosition()
-        } else {
+        if scrollView != self.scrollView {
         pageControl.currentPage = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
         imageScrollTimer.invalidate()
         setupImageTimer()

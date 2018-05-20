@@ -16,14 +16,27 @@ class ObservationCell: UITableViewCell {
         return button
     }()
     
-    lazy var thumbImageView: UIImageView = {
-       let image = UIImageView()
-        image.image = #imageLiteral(resourceName: "IMG_15270")
-        image.contentMode = .scaleAspectFill
-        image.clipsToBounds = true
-        image.translatesAutoresizingMaskIntoConstraints = false
-        return image
+    private var redlistView: RedlistView = {
+        let view = RedlistView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        return view
     }()
+    
+    lazy var thumbImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.image = #imageLiteral(resourceName: "IMG_15270")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.addSubview(redlistView)
+        redlistView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 4).isActive = true
+        redlistView.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 4).isActive = true
+        return imageView
+    }()
+    
     
     lazy var observationView: ObservationView = {
        let view = ObservationView()
@@ -66,5 +79,6 @@ class ObservationCell: UITableViewCell {
     
     func configure(observation: Observation) {
         observationView.configure(observation: observation)
+        redlistView.configure(observation.determinationView?.redlistStatus)
     }
 }

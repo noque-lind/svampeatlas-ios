@@ -8,55 +8,98 @@
 
 import UIKit
 
-class ImagesCollectionView: UICollectionView {
+protocol ImagesCollectionViewDelegate: class {
+    func changeNavigationbarBackgroundViewAlpha(_ alpha: CGFloat)
+    func didSelectImage(atIndexPath indexPath: IndexPath)
+}
 
-    private var heightConstraint: NSLayoutConstraint!
-    private var defaultHeight: CGFloat!
-    private var navigationBarHeight: CGFloat!
-    private var isExpanded: Bool = true
+
+class ImagesCollectionView: UIView {
+
+    private var heightConstraint = NSLayoutConstraint()
+    private var defaultHeight: CGFloat?
+    private var navigationBarHeight: CGFloat?
+    private var imageContentMode: UIViewContentMode
+    
     
     private var images = [Images]()
     
+    private lazy var pageControl: ELPageControl = {
+       let pageControl = ELPageControl()
+        pageControl.delegate = self
+        pageControl.dataSource = self
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        return pageControl
+    }()
     
-
-//    public func animateToPosition() {
-//        if heightConstraint.constant != minimumHeight {
-//        if heightConstraint.constant > (minimumHeight + ((maximumHeight - minimumHeight) / 5) * 4) {
-//            heightConstraint.constant = self.maximumHeight
-//            isExpanded = true
-//        } else {
-//            if !isExpanded && heightConstraint.constant > minimumHeight + ((maximumHeight - minimumHeight) / 5) {
-//                heightConstraint.constant = self.maximumHeight
-//                isExpanded = true
-//            } else {
-//            isExpanded = false
-//            heightConstraint.constant = self.minimumHeight
-//            }
-//        }
-//            collectionViewLayout.invalidateLayout()
-//        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
-////            self.superview?.layoutIfNeeded()
-//        }, completion: nil)
-//        }
-//    }
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        layout.sectionInset = UIEdgeInsets.zero
+       let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.contentInsetAdjustmentBehavior = .never
+        collectionView.isPagingEnabled = true
+        collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "imageCell")
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
+    }()
     
-    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
-        super.init(frame: frame, collectionViewLayout: layout)
+    deinit {
+        print("was deinited")
+    }
+    
+    private var imageScrollTimer: Timer?
+    
+    weak var delegate: ImagesCollectionViewDelegate? = nil
+    
+    init(imageContentMode: UIViewContentMode, defaultHeight: CGFloat? = nil, navigationBarHeight: CGFloat?) {
+        if let defaultHeight = defaultHeight {
+            self.defaultHeight = defaultHeight
+        }
+        
+        self.navigationBarHeight = navigationBarHeight
+        self.imageContentMode = imageContentMode
+        super.init(frame: CGRect.zero)
+        setupView()
+        
+        guard defaultHeight != nil else {return}
+        heightConstraint = self.heightAnchor.constraint(equalToConstant: defaultHeight!)
+        heightConstraint.isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("coder aDecoder not implemented inside ImagesCollectionView")
     }
     
     private func setupView() {
-        delegate = self
-        dataSource = self
-        register(ImageCell.self, forCellWithReuseIdentifier: "imageCell")
+        addSubview(collectionView)
+        collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
+        
+        addSubview(pageControl)
+        pageControl.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
+        pageControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
+        pageControl.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2).isActive = true
+        pageControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
+    }
+    
+    @objc func handleTimer() {
+        print("Timer fired")
+        pageControl.nextPage()
     }
     
     func configure(images: [Images]) {
         self.images = images
-        reloadData()
+        collectionView.reloadData()
+        pageControl.reloadData()
     }
     
     func setupHeightConstraint(defaultHeight: CGFloat, navigationBarHeight: CGFloat) {
@@ -66,22 +109,69 @@ class ImagesCollectionView: UICollectionView {
         self.navigationBarHeight = navigationBarHeight
     }
     
+    func configureTransform(deltaValue value: CGFloat) {
+        transform = CGAffineTransform(translationX: 0.0, y: -value)
+        let percentValue = 1 - ((frame.maxY - navigationBarHeight!) / (defaultHeight! - navigationBarHeight!))
+        delegate?.changeNavigationbarBackgroundViewAlpha(percentValue)
+    }
+    
     func configureHeightConstraint(deltaValue value: CGFloat) {
-        heightConstraint.constant = defaultHeight - value
-        
-        let percentValue = 1 - ((heightConstraint.constant - navigationBarHeight) / (defaultHeight - navigationBarHeight))
-        print(percentValue)
+        heightConstraint.constant = defaultHeight! - value
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
+    func configureTimer() {
+        imageScrollTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
+    }
+    
+    func invalidate() {
+        imageScrollTimer?.invalidate()
+        imageScrollTimer = nil
     }
 }
 
-extension ImagesCollectionView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ImagesCollectionView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as? ImageCell else {fatalError("Failed to deque imageCell")}
-        cell.configureCell(url: images[indexPath.row].uri, photoAuthor: images[indexPath.row].photographer)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as? ImageCell else {fatalError("Failed to deque imageCell")}
+        cell.configureCell(contentMode: imageContentMode, url: images[indexPath.row].uri, photoAuthor: images[indexPath.row].photographer)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return images.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+       delegate?.didSelectImage(atIndexPath: indexPath)
+    }
+}
+
+extension ImagesCollectionView: ELPageControlDelegate, ELPageControlDataSource {
+    func didChangePage(toPage page: Int) {
+        let indexPath = IndexPath(row: page, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
+    
+    func numberOfPages() -> Int {
+        return images.count
+    }
+}
+
+extension ImagesCollectionView: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+            pageControl.currentPage = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+        if imageScrollTimer != nil {
+            configureTimer()
+        }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if imageScrollTimer != nil {
+            imageScrollTimer?.invalidate()
+        }
     }
 }

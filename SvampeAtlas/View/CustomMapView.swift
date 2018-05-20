@@ -21,17 +21,4 @@ class CustomMapView: MKMapView {
         return false
         }
     }
-    
-    
-//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-//        if let annotationView = selectedAnnotationView {
-//            if let result = annotationView.hitTest(convert(point, to: annotationView), with: event) {
-//                return result
-//            } else {
-//                return super.hitTest(point, with: event)
-//            }
-//        } else {
-//            return super.hitTest(point, with: event)
-//        }
-//    }
 }

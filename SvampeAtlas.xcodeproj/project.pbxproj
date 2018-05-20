@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0683D0207A581D00EB06D7 /* ResultsView.swift */; };
 		4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F76002079606B0082B873 /* RecognizeVC.swift */; };
-		4A1F7605207966180082B873 /* PhotoVCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F7604207966180082B873 /* PhotoVCViewController.swift */; };
+		4A1F7605207966180082B873 /* ImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F7604207966180082B873 /* ImageVC.swift */; };
 		4A1F760720796A510082B873 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F760620796A510082B873 /* PhotoCell.swift */; };
 		4A1F7609207A31150082B873 /* RecognizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F7608207A31150082B873 /* RecognizeView.swift */; };
 		4A28AB84204440FB00F21EEE /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A28AB83204440FB00F21EEE /* DataService.swift */; };
@@ -26,6 +26,7 @@
 		4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A8044207CD48900041018 /* LocationBackground.swift */; };
 		4A4AE30B2070181000178BFB /* MushroomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30A2070181000178BFB /* MushroomCell.swift */; };
 		4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */; };
+		4A4E4CFF20AE00AD00B3F898 /* CustomNavigationControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4E4CFE20AE00AD00B3F898 /* CustomNavigationControllerViewController.swift */; };
 		4A53026B209888E50043C1D3 /* CustomMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A53026A209888E50043C1D3 /* CustomMapView.swift */; };
 		4A54F67220AB2C2F001C8EC8 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A54F67120AB2C2F001C8EC8 /* ListView.swift */; };
 		4A54F67420AB413B001C8EC8 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A54F67320AB413B001C8EC8 /* NavigationItem.swift */; };
@@ -86,7 +87,7 @@
 /* Begin PBXFileReference section */
 		4A0683D0207A581D00EB06D7 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 		4A1F76002079606B0082B873 /* RecognizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeVC.swift; sourceTree = "<group>"; };
-		4A1F7604207966180082B873 /* PhotoVCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoVCViewController.swift; sourceTree = "<group>"; };
+		4A1F7604207966180082B873 /* ImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVC.swift; sourceTree = "<group>"; };
 		4A1F760620796A510082B873 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		4A1F7608207A31150082B873 /* RecognizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeView.swift; sourceTree = "<group>"; };
 		4A28AB83204440FB00F21EEE /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
@@ -103,6 +104,7 @@
 		4A4A8044207CD48900041018 /* LocationBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationBackground.swift; sourceTree = "<group>"; };
 		4A4AE30A2070181000178BFB /* MushroomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MushroomCell.swift; sourceTree = "<group>"; };
 		4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowImageAnimationController.swift; sourceTree = "<group>"; };
+		4A4E4CFE20AE00AD00B3F898 /* CustomNavigationControllerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationControllerViewController.swift; sourceTree = "<group>"; };
 		4A53026A209888E50043C1D3 /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
 		4A54F67120AB2C2F001C8EC8 /* ListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		4A54F67320AB413B001C8EC8 /* NavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				4A28AB8A2044454200F21EEE /* GradientView.swift */,
 				4A53026A209888E50043C1D3 /* CustomMapView.swift */,
 				4AC5CA20204EA817003ED3BE /* MushroomDetailsScrollView.swift */,
+				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 				4AD43A0320529BDF001F6541 /* CategoryView.swift */,
 				4A3061E02053F4840061E98F /* MushroomTableView.swift */,
@@ -252,8 +255,9 @@
 				4A69BC7B2038D96500D3B88B /* MushroomVC.swift */,
 				4AC5CA1A204E84C2003ED3BE /* DetailsViewController.swift */,
 				4A1F76002079606B0082B873 /* RecognizeVC.swift */,
-				4A1F7604207966180082B873 /* PhotoVCViewController.swift */,
+				4A1F7604207966180082B873 /* ImageVC.swift */,
 				4A4A8042207CA69D00041018 /* MapVC.swift */,
+				4A4E4CFE20AE00AD00B3F898 /* CustomNavigationControllerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -329,7 +333,6 @@
 			children = (
 				4AC5CA1C204E889E003ED3BE /* ImageCell.swift */,
 				4A4AE30A2070181000178BFB /* MushroomCell.swift */,
-				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
 				4A1F760620796A510082B873 /* PhotoCell.swift */,
 			);
 			path = ImageCell;
@@ -516,7 +519,7 @@
 				4AA1CC6A2086054200254EBB /* SimilarSpeciesView.swift in Sources */,
 				4A69BC7C2038D96500D3B88B /* MushroomVC.swift in Sources */,
 				4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */,
-				4A1F7605207966180082B873 /* PhotoVCViewController.swift in Sources */,
+				4A1F7605207966180082B873 /* ImageVC.swift in Sources */,
 				4A53026B209888E50043C1D3 /* CustomMapView.swift in Sources */,
 				4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */,
 				4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */,
@@ -535,6 +538,7 @@
 				4ADF2B08207A5D9700C76276 /* ResultCell.swift in Sources */,
 				4AEE2F37204551B600D20C2D /* MushroomThumbImage.swift in Sources */,
 				4A4A8043207CA69D00041018 /* MapVC.swift in Sources */,
+				4A4E4CFF20AE00AD00B3F898 /* CustomNavigationControllerViewController.swift in Sources */,
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
 				4A54F67220AB2C2F001C8EC8 /* ListView.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,

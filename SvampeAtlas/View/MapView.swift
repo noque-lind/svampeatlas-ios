@@ -50,7 +50,19 @@ class MapView: UIView {
     
     weak var delegate: MapViewDelegate? = nil
     private var locationManager: CLLocationManager!
-    private var mapViewRegionDidChangeBecauseOfUserInteration = false
+    private var userLocationCoordinate: CLLocationCoordinate2D? {
+        didSet {
+            if oldValue == nil {
+                drawCircle(withRadius: CLLocationDistance.init(mapViewConfiguration.regionRadius), centerCoordinate: userLocationCoordinate!)
+            }
+        }
+    }
+    private var circleOverlay: MKOverlay? {
+        didSet {
+            downloadDataWithinRect(circleOverlay!.boundingMapRect)
+        }
+    }
+    
     private var mapViewConfiguration: MapViewConfiguration
     private var selectedAnnotationView: ObservationPinView?
     
@@ -75,7 +87,6 @@ class MapView: UIView {
         mapView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         mapView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         mapView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
         
         if let descriptionViewContent = mapViewConfiguration.descriptionViewContent {
             addSubview(descriptionView)
@@ -136,7 +147,6 @@ class MapView: UIView {
             locationManager.requestWhenInUseAuthorization()
             locationManager.delegate = self
             locationManager.startUpdatingLocation()
-            mapViewRegionDidChangeBecauseOfUserInteration = false
         }
     }
     
@@ -150,11 +160,50 @@ class MapView: UIView {
         }
         
         mapView.addAnnotations(annotations)
-        
     }
+    
+    func reset() {
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.removeOverlays(mapView.overlays)
+    }
+    
+    private func drawCircle(withRadius radius: CLLocationDistance, centerCoordinate coordinate: CLLocationCoordinate2D) {
+        let circle = MKCircle(center: coordinate, radius: radius)
+        circleOverlay = circle
+        mapView.add(circle)
+    }
+    
+    private func downloadDataWithinRect(_ rect: MKMapRect) {
+        let coordinate1 = MKCoordinateForMapPoint(MKMapPointMake(rect.origin.x, rect.origin.y))
+        let coordinate2 = MKCoordinateForMapPoint(MKMapPointMake(rect.origin.x + rect.size.width, rect.origin.y))
+        let coordinate3 = MKCoordinateForMapPoint(MKMapPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height))
+        let coordinate4 = MKCoordinateForMapPoint(MKMapPointMake(rect.origin.x, rect.origin.y + rect.size.height))
+        print(coordinate1, coordinate2, coordinate3, coordinate4)
+        
+        let geoJSON = "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[\(coordinate1.longitude),\(coordinate1.latitude)],[\(coordinate2.longitude),\(coordinate2.latitude)],[\(coordinate3.longitude),\(coordinate3.latitude)],[\(coordinate4.longitude),\(coordinate4.latitude)],[\(coordinate1.longitude),\(coordinate1.latitude)]]]}}"
+        hasDownloaded = true
+        DataService.instance.getObservationsWithin(geoJSON: geoJSON) { (mushroom) in
+            DispatchQueue.main.sync {
+                self.addObservationAnnotations(observations: mushroom)
+            }
+        }
+    }
+    
 }
 
 extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if overlay is MKCircle {
+            let circle = MKCircleRenderer(overlay: overlay)
+            circle.strokeColor = UIColor.clear
+            circle.fillColor = UIColor.appSecondaryColour().withAlphaComponent(0.1)
+            circle.lineWidth = 0
+            return circle
+        } else {
+            return MKOverlayRenderer()
+        }
+    }
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let observationPin = annotation as? ObservationPin {
             var observationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "observationPinView") as? ObservationPinView
@@ -187,32 +236,10 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {return}
-        let region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude), CLLocationDistance.init(mapViewConfiguration.regionRadius), CLLocationDistance.init(mapViewConfiguration.regionRadius))
-    
-        mapViewRegionDidChangeBecauseOfUserInteration = false
+        let coordinate = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        userLocationCoordinate = coordinate
+        let region = MKCoordinateRegionMakeWithDistance(coordinate, CLLocationDistance.init(mapViewConfiguration.regionRadius), CLLocationDistance.init(mapViewConfiguration.regionRadius))
         mapView.setRegion(region, animated: true)
         locationManager.stopUpdatingLocation()
-    }
-    
-    
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        if mapViewRegionDidChangeBecauseOfUserInteration {
-            if !hasDownloaded {
-            let coordinate1 = mapView.convert(CGPoint(x: mapView.bounds.origin.x, y: mapView.bounds.origin.y), toCoordinateFrom: mapView)
-            let coordinate2 = mapView.convert(CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.origin.y), toCoordinateFrom: mapView)
-            let coordinate3 = mapView.convert(CGPoint(x: mapView.bounds.maxX, y: mapView.bounds.maxY), toCoordinateFrom: mapView)
-            let coordinate4 = mapView.convert(CGPoint(x: mapView.bounds.origin.x, y: mapView.bounds.maxY), toCoordinateFrom: mapView)
-            
-            let geoJSON = "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[\(coordinate1.longitude),\(coordinate1.latitude)],[\(coordinate2.longitude),\(coordinate2.latitude)],[\(coordinate3.longitude),\(coordinate3.latitude)],[\(coordinate4.longitude),\(coordinate4.latitude)],[\(coordinate1.longitude),\(coordinate1.latitude)]]]}}"
-            hasDownloaded = true
-            DataService.instance.getObservationsWithin(geoJSON: geoJSON) { (mushroom) in
-                DispatchQueue.main.sync {
-                    self.addObservationAnnotations(observations: mushroom)
-                }
-            }
-            }
-        } else {
-        mapViewRegionDidChangeBecauseOfUserInteration = true
-        }
     }
 }

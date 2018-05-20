@@ -22,12 +22,25 @@ class ObservationPinCalloutView: UIView {
         return button
     }()
     
+    private var redlistView: RedlistView = {
+        let view = RedlistView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        view.alpha = 0
+        view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        return view
+    }()
+    
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.addSubview(redlistView)
+        redlistView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 4).isActive = true
+        redlistView.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 4).isActive = true
         return imageView
     }()
     
@@ -102,6 +115,7 @@ class ObservationPinCalloutView: UIView {
             self.setupContent()
             UIView.animate(withDuration: 0.2, animations: {
                 self.backgroundColor = UIColor.appSecondaryColour().withAlphaComponent(1.0)
+                self.redlistView.alpha = 1
                 self.observationView.alpha = 1
             }, completion: nil)
         }
@@ -129,6 +143,8 @@ class ObservationPinCalloutView: UIView {
     
     func configure(imageView: UIImageView, observation: Observation) {
         observationView.configure(observation: observation)
+        redlistView.configure(observation.determinationView?.redlistStatus)
+        
         self.observation = observation
         
         self.imageView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
@@ -150,7 +166,7 @@ class ObservationPinCalloutView: UIView {
             self.imageViewWidthConstraint.isActive = false
             self.backgroundColor = UIColor.appSecondaryColour().withAlphaComponent(0.0)
             self.observationView.alpha = 0
-            
+            self.redlistView.alpha = 0
             if let superView = self.superview {
                 superView.layoutIfNeeded()
             }

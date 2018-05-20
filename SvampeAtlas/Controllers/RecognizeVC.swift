@@ -26,11 +26,6 @@ class RecognizeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
             setupView()
-        
-        
-        
-        
-        // Do any additional setup after loading the view.
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -82,7 +77,11 @@ class RecognizeVC: UIViewController {
     }
     
     private func setupView() {
-        navigationBlurEffect()
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        
+        
+//        navigationBlurEffect()
         recognizeView.delegate = self
     }
     

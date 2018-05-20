@@ -11,13 +11,12 @@ import MapKit
 
 class LocationBackground: UIView {
     
-    private var settingsView:  MapViewSettingsView =  {
+    private lazy var settingsView:  MapViewSettingsView =  {
        let view = MapViewSettingsView()
+        view.delegate = self
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    
     
     lazy var userLocationButton: UIButton = {
       let button = UIButton()
@@ -110,4 +109,10 @@ extension LocationBackground: MapViewDelegate {
     }
     
     
+}
+
+extension LocationBackground: MapViewSettingsViewDelegate {
+    func newSearch() {
+        mapView.reset()
+    }
 }

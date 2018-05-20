@@ -34,7 +34,7 @@ class DataService {
         }
         
         guard let url = components.url else {return}
-            print(url)
+//            print(url)
         
         let request = URLRequest(url: url)
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in

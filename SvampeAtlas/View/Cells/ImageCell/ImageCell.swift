@@ -10,12 +10,27 @@ import UIKit
 
 class ImageCell: UICollectionViewCell {
     
-    @IBOutlet weak var image: UIImageView!
-    @IBOutlet weak var authorLabel: UILabel!
+    private var imageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        gradient.frame = image.bounds
+//        gradient.frame = image.bounds
     }
     
     
@@ -24,7 +39,7 @@ class ImageCell: UICollectionViewCell {
         gradient.startPoint = CGPoint(x: 0, y: 0.8)
         gradient.endPoint = CGPoint(x: 0, y: 1)
         gradient.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
-        gradient.frame = image.bounds
+//        gradient.frame = image.bounds
         return gradient
     }()
     
@@ -42,19 +57,27 @@ class ImageCell: UICollectionViewCell {
         super.awakeFromNib()
     }
     
-    func configureCell(url: String, photoAuthor: String) {
-        authorLabel.text = photoAuthor
+    func configureCell(contentMode: UIViewContentMode, url: String, photoAuthor: String) {
+        imageView.contentMode = contentMode
+        
         DataService.instance.getImage(forUrl: url) { (image) in
             DispatchQueue.main.async {
-                self.image.image = image
+                self.imageView.image = image
             }
         }
     }
     
     private func setupView() {
-        authorLabel.font = UIFont.appText(customSize: 12)
-        authorLabel.textColor = UIColor.white
-        setupAuthorGradient()
+        addSubview(imageView)
+        imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        imageView.topAnchor.constraint(equalTo: topAnchor, constant: -4).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 4).isActive = true
+        
+        
+//        authorLabel.font = UIFont.appText(customSize: 12)
+//        authorLabel.textColor = UIColor.white
+//        setupAuthorGradient()
 //        image.layer.mask = gradient
     }
     

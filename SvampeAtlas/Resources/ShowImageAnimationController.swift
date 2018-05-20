@@ -33,7 +33,7 @@ class ShowImageAnimationController: NSObject, UIViewControllerAnimatedTransition
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let fromVC = transitionContext.viewController(forKey: .from) as? PhotoVCViewController,
+            let fromVC = transitionContext.viewController(forKey: .from) as? ImageVC,
             let toVC = transitionContext.viewController(forKey: .to),
             let snapshot = toVC.view.snapshotView(afterScreenUpdates: true) else {return}
 
@@ -55,7 +55,7 @@ class ShowImageAnimationController: NSObject, UIViewControllerAnimatedTransition
             
             UIView.animate(withDuration: transitionDuration(using: transitionContext), animations: {
                 fromVC.currentlyShownCell.transform = CGAffineTransform.identity
-                fromVC.collectionView.transform = translationTransform
+                fromVC.imagesCollectionView.transform = translationTransform
                 fromVC.currentlyShownCell.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
                 fromVC.view.alpha = 0
             }) { (_) in

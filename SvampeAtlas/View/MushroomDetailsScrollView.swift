@@ -13,10 +13,6 @@ class MushroomDetailsScrollView: UIScrollView {
     
     @IBOutlet weak var contentStackView: UIStackView!
     
-    
-    
-    
-    
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.appHeader()
@@ -49,7 +45,7 @@ class MushroomDetailsScrollView: UIScrollView {
         mapView.heightAnchor.constraint(equalToConstant: 300).isActive = true
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.isUserInteractionEnabled = false
-        mapView.centerOnUserLocation()
+//        mapView.centerOnUserLocation()
         return mapView
     }()
     
@@ -80,7 +76,7 @@ class MushroomDetailsScrollView: UIScrollView {
         stackView.alignment = .center
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        stackView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         return stackView
     }()
     
@@ -102,8 +98,8 @@ class MushroomDetailsScrollView: UIScrollView {
     
     
     private func setupView() {
-        contentInset = UIEdgeInsets(top: 200, left: 0, bottom: 0, right: 0)
-        scrollIndicatorInsets = UIEdgeInsets(top: 200, left: 0, bottom: 0, right: 0)
+        contentInset = UIEdgeInsets(top: 300, left: 0, bottom: 0, right: 0)
+        scrollIndicatorInsets = UIEdgeInsets(top: 308, left: 0, bottom: 0, right: 0)
         contentStackView.spacing = 20
         contentInsetAdjustmentBehavior = .never
     }
@@ -158,42 +154,9 @@ class MushroomDetailsScrollView: UIScrollView {
         guard let redlistData = redlistData.first(where: {$0?.status != nil}) else {return}
         guard let status = redlistData?.status else {return}
         
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 5
-        
-        let redlistContainerView = UIView()
-        redlistContainerView.translatesAutoresizingMaskIntoConstraints = false
-        redlistContainerView.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        
-        let redlistView = UIView()
-        redlistContainerView.addSubview(redlistView)
-        redlistView.translatesAutoresizingMaskIntoConstraints = false
-        redlistView.layer.cornerRadius = (15 - 8) / 2
-        redlistView.leadingAnchor.constraint(equalTo: redlistContainerView.leadingAnchor, constant: 4).isActive = true
-        redlistView.trailingAnchor.constraint(equalTo: redlistContainerView.trailingAnchor, constant: -4).isActive = true
-        redlistView.topAnchor.constraint(equalTo: redlistContainerView.topAnchor, constant: 4).isActive = true
-        redlistView.bottomAnchor.constraint(equalTo: redlistContainerView.bottomAnchor, constant: -4).isActive = true
-        
-        
-        let redlistLabel = UILabel()
-        redlistLabel.font = UIFont.appBold()
-        redlistLabel.text = status
-        redlistView.backgroundColor = UIColor.appRed()
-        
-//        switch toxicityLevel {
-//        case .eatable:
-//            toxicityLabel.textColor = UIColor.appGreen()
-//        case .toxic:
-//            toxicityLabel.textColor = UIColor.appRed()
-//        case .cautious:
-//            toxicityLabel.textColor = UIColor.appYellow()
-//        }
-        
-        
-        stackView.addArrangedSubview(redlistContainerView)
-        stackView.addArrangedSubview(redlistLabel)
-        redlistStackView.addArrangedSubview(stackView)
+        let redlistView = RedlistView(detailed: true)
+        redlistStackView.addArrangedSubview(redlistView)
+        redlistView.configure(status)
         contentStackView.addArrangedSubview(redlistStackView)
     }
     

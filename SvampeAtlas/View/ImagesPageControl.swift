@@ -1,5 +1,5 @@
 //
-//  ImagesPageControl.swift
+//  ELPageControl.swift
 //  SvampeAtlas
 //
 //  Created by Emil Lind on 06/03/2018.
@@ -8,23 +8,34 @@
 
 import UIKit
 
-protocol ImagesPageControlDataSource: NSObjectProtocol {
+protocol ELPageControlDataSource: NSObjectProtocol {
     func numberOfPages() -> Int
 }
 
-protocol ImagesPageControlDelegate: NSObjectProtocol {
+protocol ELPageControlDelegate: NSObjectProtocol {
     func didChangePage(toPage page: Int)
 }
 
-class ImagesPageControl: UIPageControl {
+class ELPageControl: UIPageControl {
     
-    public weak var dataSource: ImagesPageControlDataSource? = nil {
+    public weak var dataSource: ELPageControlDataSource! = nil {
         didSet {
             setupPageControl()
         }
     }
     
-    public weak var delegate: ImagesPageControlDelegate? = nil
+    public weak var delegate: ELPageControlDelegate? = nil
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        setupView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+    
     
     public func nextPage() {
         if currentPage == numberOfPages - 1 {
@@ -35,17 +46,20 @@ class ImagesPageControl: UIPageControl {
         delegate?.didChangePage(toPage: self.currentPage)
     }
     
-    
-    override func awakeFromNib() {
-        self.addTarget(self, action: #selector(changedValue(sender:)), for: .valueChanged)
+    public func reloadData() {
+        setupPageControl()
     }
     
-    
+    private func setupView() {
+        tintColor = UIColor.appWhite()
+        self.addTarget(self, action: #selector(changedValue(sender:)), for: .valueChanged)
+    }
+
     private func setupPageControl() {
         self.numberOfPages = dataSource!.numberOfPages()
     }
     
-    @objc private func changedValue(sender: ImagesPageControl) {
+    @objc private func changedValue(sender: ELPageControl) {
         delegate?.didChangePage(toPage: sender.currentPage)
     }
 }

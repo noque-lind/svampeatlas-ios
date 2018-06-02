@@ -23,6 +23,10 @@ struct MapViewConfiguration {
     public private(set) var regionRadius: CGFloat = 500
     public private(set) var mapViewCornerRadius: CGFloat = 0.0
     public private(set) var descriptionViewContent: DescriptionViewContent?
+    
+    public mutating func changeRegionRadius(intoValue value: Double ) {
+        regionRadius = CGFloat(value * 1000)
+    }
 }
 
 class MapView: UIView {
@@ -63,7 +67,7 @@ class MapView: UIView {
         }
     }
     
-    private var mapViewConfiguration: MapViewConfiguration
+    var mapViewConfiguration: MapViewConfiguration
     private var selectedAnnotationView: ObservationPinView?
     
     var hasDownloaded = false
@@ -158,13 +162,17 @@ class MapView: UIView {
             let observationPin = ObservationPin(coordinate: CLLocationCoordinate2D.init(latitude: geom.coordinates.last!, longitude: geom.coordinates.first!), identifier: "observationPin", observation: observation)
             annotations.append(observationPin)
         }
-        
-        mapView.addAnnotations(annotations)
+        DispatchQueue.main.async {
+             self.mapView.addAnnotations(annotations)
+        }
+       
     }
     
     func reset() {
         mapView.removeAnnotations(mapView.annotations)
         mapView.removeOverlays(mapView.overlays)
+        userLocationCoordinate = nil
+        centerOnUserLocation()
     }
     
     private func drawCircle(withRadius radius: CLLocationDistance, centerCoordinate coordinate: CLLocationCoordinate2D) {
@@ -238,7 +246,7 @@ extension MapView: MKMapViewDelegate, CLLocationManagerDelegate {
         guard let location = locations.last else {return}
         let coordinate = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         userLocationCoordinate = coordinate
-        let region = MKCoordinateRegionMakeWithDistance(coordinate, CLLocationDistance.init(mapViewConfiguration.regionRadius), CLLocationDistance.init(mapViewConfiguration.regionRadius))
+        let region = MKCoordinateRegionMakeWithDistance(coordinate, CLLocationDistance.init(mapViewConfiguration.regionRadius * 3), CLLocationDistance.init(mapViewConfiguration.regionRadius * 3))
         mapView.setRegion(region, animated: true)
         locationManager.stopUpdatingLocation()
     }

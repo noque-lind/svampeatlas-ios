@@ -103,7 +103,7 @@ extension LocationBackground: MapViewDelegate {
     }
     
     func shouldShowObservationDetails(observation: Observation) {
-        let vc = UIViewController()
+        let vc = ObservationVC(observation: observation)
         vc.view.backgroundColor = UIColor.white
         delegate?.showVC(vc: vc)
     }
@@ -112,7 +112,8 @@ extension LocationBackground: MapViewDelegate {
 }
 
 extension LocationBackground: MapViewSettingsViewDelegate {
-    func newSearch() {
+    func newSearch(settings: ObservationSettings) {
+        mapView.mapViewConfiguration.changeRegionRadius(intoValue: settings.radius)
         mapView.reset()
     }
 }

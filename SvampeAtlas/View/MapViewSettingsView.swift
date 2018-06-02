@@ -13,8 +13,19 @@ enum MapViewOptionsType {
     case mapView
 }
 
+struct ObservationSettings {
+    enum ObservationAge {
+        case before2000
+        case after2000
+    }
+
+    var radius: Double
+    var age: ObservationAge
+}
+
+
 protocol MapViewSettingsViewDelegate {
-    func newSearch()
+    func newSearch(settings: ObservationSettings)
 }
 
 class MapViewSettingsView: UIView {
@@ -25,11 +36,13 @@ class MapViewSettingsView: UIView {
         tableView.alwaysBounceVertical = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.showsVerticalScrollIndicator = false
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.separatorStyle = .none
+        tableView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         tableView.register(OptionsCell.self, forCellReuseIdentifier: "optionsCell")
         return tableView
     }()
-    
     
     private lazy var settingsButton: UIButton = {
        let button = UIButton()
@@ -47,6 +60,7 @@ class MapViewSettingsView: UIView {
             }
         }
     }
+    
     private var radiusSliderLabel: UILabel?
     private var ageLabel: UILabel?
     
@@ -54,7 +68,9 @@ class MapViewSettingsView: UIView {
     private var heightConstraint = NSLayoutConstraint()
     private var widthConstraint = NSLayoutConstraint()
     private var optionItems = [MapViewOptionsType.listView, MapViewOptionsType.mapView]
+    
     var delegate: MapViewSettingsViewDelegate? = nil
+    var observationSettings: ObservationSettings?
     
     init() {
         super.init(frame: CGRect.zero)
@@ -82,10 +98,8 @@ class MapViewSettingsView: UIView {
 
     }
     
-    
-    
     private func expand() {
-        heightConstraint.constant = 130
+        heightConstraint.constant = 150
         widthConstraint.constant = 260
         setupOptions()
         settingsButton.setImage(#imageLiteral(resourceName: "Exit"), for: [])
@@ -101,8 +115,10 @@ class MapViewSettingsView: UIView {
         heightConstraint.constant = 40
         widthConstraint.constant = 40
         settingsButton.setImage(#imageLiteral(resourceName: "Settings"), for: [])
-        UIView.animate(withDuration: 0.2, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.4, options: UIViewAnimationOptions.curveEaseInOut, animations: {
-            self.advancedSettingsView?.alpha = 0
+        tableView.removeFromSuperview()
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            self.removeAdvancedSettingsView()
             self.superview!.layoutIfNeeded()
         }) { (_) in
             
@@ -113,12 +129,13 @@ class MapViewSettingsView: UIView {
     
     private func setupOptions() {
         addSubview(tableView)
-        tableView.widthAnchor.constraint(equalToConstant: 40-6).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -3).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
         tableView.topAnchor.constraint(equalTo: topAnchor, constant: 3).isActive = true
         tableView.bottomAnchor.constraint(equalTo: settingsButton.topAnchor, constant: 3).isActive = true
-        tableView.delegate = self
-        tableView.dataSource = self
+        
+        DispatchQueue.main.async {
+            self.superview!.layoutIfNeeded()
+        }
     }
     
     private func setupAdvancedSettings() {
@@ -152,15 +169,15 @@ class MapViewSettingsView: UIView {
                        let label = UILabel()
                         label.font = UIFont.appPrimary()
                         label.textColor = UIColor.appWhite()
-                        label.text = "Søgeradius: 2 km."
+                        label.text = "Søgeradius: 0.2 km."
                         radiusSliderLabel = label
                         return label
                     }()
                     
                     let slider: UISlider = {
                         let slider = UISlider()
-                        slider.maximumValue = 2500
-                        slider.minimumValue = 500
+                        slider.maximumValue = 3000
+                        slider.minimumValue = 200
                         slider.tintColor = UIColor.appPrimaryColour()
                         slider.addTarget(self, action: #selector(radiusSliderChanged(sender:)), for: UIControlEvents.valueChanged)
                         return slider
@@ -185,7 +202,17 @@ class MapViewSettingsView: UIView {
                         return label
                     }()
                     
+                    let segmentedControl: UISegmentedControl = {
+                       let segmentedControl = UISegmentedControl()
+                        segmentedControl.insertSegment(withTitle: "2 uger", at: 0, animated: false)
+                        segmentedControl.insertSegment(withTitle: "3 mdr", at: 1, animated: false)
+                        segmentedControl.insertSegment(withTitle: "1 år", at: 2, animated: false)
+                        segmentedControl.tintColor = UIColor.appWhite()
+                        return segmentedControl
+                    }()
+                    
                     stackView.addArrangedSubview(label)
+                    stackView.addArrangedSubview(segmentedControl)
                     return stackView
                 }()
                 
@@ -221,8 +248,8 @@ class MapViewSettingsView: UIView {
         self.advancedSettingsView = advancedSettingsView
         
         addSubview(self.advancedSettingsView!)
-        self.advancedSettingsView?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
-        self.advancedSettingsView?.trailingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: -8).isActive = true
+        self.advancedSettingsView?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
+        self.advancedSettingsView?.trailingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: 0).isActive = true
         self.advancedSettingsView?.topAnchor.constraint(equalTo: topAnchor, constant: 4).isActive = true
         self.advancedSettingsView?.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4).isActive = true
         
@@ -247,12 +274,16 @@ extension MapViewSettingsView {
     }
     
     @objc func searchButtonPressed(sender: UIButton) {
-        delegate?.newSearch()
+        delegate?.newSearch(settings: observationSettings!)
     }
 
     @objc func radiusSliderChanged(sender: UISlider) {
-        let kilometres = Double(sender.value / 1000).rounded(toPlaces: 1)
-        radiusSliderLabel?.text = "Søgeradius: \(kilometres) km."
+        if observationSettings != nil {
+            observationSettings?.radius = Double(sender.value / 1000).rounded(toPlaces: 1)
+        } else {
+            observationSettings = ObservationSettings(radius: Double(sender.value / 1000).rounded(toPlaces: 1), age: ObservationSettings.ObservationAge.after2000)
+        }
+        radiusSliderLabel?.text = "Søgeradius: \(observationSettings!.radius) km."
     }
 }
 

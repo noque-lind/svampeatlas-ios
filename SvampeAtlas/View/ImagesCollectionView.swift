@@ -41,6 +41,7 @@ class ImagesCollectionView: UIView {
        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.backgroundColor = UIColor.appPrimaryColour()
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.isPagingEnabled = true
         collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "imageCell")

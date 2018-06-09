@@ -19,10 +19,9 @@ class ObservationVC: UIViewController, ELRevealViewControllerDelegate {
     lazy var scrollView: CustomScrollView = {
        let scrollView = CustomScrollView(topInset: 300)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.configureScrollView(withObservation: observation)
         return scrollView
     }()
-    
-    
     
     lazy var imagesCollectionView: ImagesCollectionView = {
         let collectionView = ImagesCollectionView(imageContentMode: UIViewContentMode.scaleAspectFill, defaultHeight: 300, navigationBarHeight: self.navigationController?.navigationBar.frame.maxY)
@@ -47,12 +46,6 @@ class ObservationVC: UIViewController, ELRevealViewControllerDelegate {
     
     private var observation: Observation
 
-    
-    
-    
-    
-    
-    
     init(observation: Observation) {
         self.observation = observation
         super.init(nibName: nil, bundle: nil)
@@ -75,6 +68,9 @@ class ObservationVC: UIViewController, ELRevealViewControllerDelegate {
     
     
     private func setupView() {
+        view.backgroundColor = UIColor.appSecondaryColour()
+        
+        
         view.addSubview(scrollView)
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true

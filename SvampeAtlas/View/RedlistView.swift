@@ -60,6 +60,9 @@ class RedlistView: UIView {
     }
     
     private func setupView(detailed: Bool) {
+        heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        
         backgroundColor = UIColor.clear
         addSubview(backgroundView)
         if detailed {

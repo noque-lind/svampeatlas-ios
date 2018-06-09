@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0683D0207A581D00EB06D7 /* ResultsView.swift */; };
+		4A1B178120C3F6E200E1F1B2 /* ToxicityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */; };
 		4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F76002079606B0082B873 /* RecognizeVC.swift */; };
 		4A1F7605207966180082B873 /* ImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F7604207966180082B873 /* ImageVC.swift */; };
 		4A1F760720796A510082B873 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F760620796A510082B873 /* PhotoCell.swift */; };
@@ -89,6 +90,7 @@
 
 /* Begin PBXFileReference section */
 		4A0683D0207A581D00EB06D7 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
+		4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToxicityView.swift; sourceTree = "<group>"; };
 		4A1F76002079606B0082B873 /* RecognizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeVC.swift; sourceTree = "<group>"; };
 		4A1F7604207966180082B873 /* ImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageVC.swift; sourceTree = "<group>"; };
 		4A1F760620796A510082B873 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				4AA1CC692086054200254EBB /* SimilarSpeciesView.swift */,
 				4A8A18B420A190670063C83B /* MapViewSettingsView.swift */,
 				4A8A18B620A1B5320063C83B /* RedlistView.swift */,
+				4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */,
 				4A80756D20BD50EE00F958AC /* CustomNavigationBar.swift */,
 			);
 			path = View;
@@ -519,6 +522,7 @@
 				4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */,
 				4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */,
 				4A8A18B720A1B5320063C83B /* RedlistView.swift in Sources */,
+				4A1B178120C3F6E200E1F1B2 /* ToxicityView.swift in Sources */,
 				4AEE2F39204557ED00D20C2D /* PersistanceService.swift in Sources */,
 				4AC5CA21204EA817003ED3BE /* MushroomDetailsScrollView.swift in Sources */,
 				4A3061E12053F4840061E98F /* MushroomTableView.swift in Sources */,

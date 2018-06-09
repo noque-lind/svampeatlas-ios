@@ -121,10 +121,7 @@ lazy var similarSpeciesView: SimilarSpeciesView = {
         configureRedlistInformation(redlistStatus: mushroom.redlistData?.first?.status)
         configureToxicityInformation(toxicityLevel: mushroom.toxicityLevel)
         
-        
-        
-//            setupToxicityInformation(toxicityLevel: mushroom.toxicityLevel)
-//            setupRedlistInformation(redlistData: mushroom.redlistData!)
+
             contentStackView.addArrangedSubview(similarSpeciesView)
             similarSpeciesView.mushrooms = [mushroom]
             contentStackView.addArrangedSubview(mapView)
@@ -249,8 +246,8 @@ lazy var similarSpeciesView: SimilarSpeciesView = {
         guard let toxicityLevel = toxicityLevel else {return}
         
         let toxicityView = ToxicityView()
-        toxicityView.configure(toxicityLevel)
         redlistStackViewViewAndToxicityStackView.addArrangedSubview(toxicityView)
+        toxicityView.configure(toxicityLevel)
         
         if redlistStackViewViewAndToxicityStackView.superview == nil {
             contentStackView.addArrangedSubview(redlistStackViewViewAndToxicityStackView)

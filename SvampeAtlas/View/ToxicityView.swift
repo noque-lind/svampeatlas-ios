@@ -14,11 +14,13 @@ class ToxicityView: UIView {
        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
     private lazy var label: UILabel = {
        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.appPrimaryHightlighed()
         label.textColor = UIColor.appWhite()
         label.textAlignment = .center
@@ -36,7 +38,7 @@ class ToxicityView: UIView {
     }
     
     private func setupView() {
-        heightAnchor.constraint(equalToConstant: 15).isActive = true
+        heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         backgroundColor = UIColor.clear
         addSubview(toxicityIcon)

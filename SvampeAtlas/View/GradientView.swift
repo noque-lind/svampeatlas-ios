@@ -11,6 +11,15 @@ class GradientView: UIView {
     
     var gradient = CAGradientLayer()
 
+    init() {
+        super.init(frame: CGRect.zero)
+        setupView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override func awakeFromNib() {
         setupView()
         super.awakeFromNib()

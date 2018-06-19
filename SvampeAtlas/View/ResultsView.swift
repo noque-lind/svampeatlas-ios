@@ -8,9 +8,15 @@
 
 import UIKit
 
+
+protocol ResultsViewDelegate: class {
+    func didSelectSpecies(species: temptModel)
+    func retry()
+}
+
+
 class ResultsView: UIView {
 
-    
     lazy var headerLabel: UILabel = {
        let label = UILabel()
         label.font = UIFont.appHeader()
@@ -65,17 +71,26 @@ class ResultsView: UIView {
     
     
     var results = [temptModel]()
+    weak var delegate: ResultsViewDelegate? = nil
     
-    override func awakeFromNib() {
+    
+    init() {
+        super.init(frame: CGRect.zero)
         setupView()
-        super.awakeFromNib()
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     
     private func setupView() {
         alpha = 0
     }
     
     func showResults() {
+        tableView.reloadData()
+        
         addSubview(topView)
         topView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         topView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
@@ -100,22 +115,96 @@ class ResultsView: UIView {
             headerLabel.text = "Øv"
             secondaryLabel.text = "Vi har desværre intet forslag til, hvilket art det er. Prøv venligst igen"
         }
+    }
+    
+    func reset() {
+        results.removeAll()
         
+        topView.alpha = 0
+        tableView.alpha = 0
+        topView.removeFromSuperview()
+        tableView.removeFromSuperview()
+        alpha = 0
     }
 }
 
 extension ResultsView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return results.count
+        return results.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! ResultCell
-        cell.configureCell(name: results[indexPath.row].identifier, confidence: results[indexPath.row].confidence)
-        return cell
+        if indexPath.row == results.count {
+            return RetryCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! ResultCell
+            cell.configureCell(name: results[indexPath.row].identifier, confidence: results[indexPath.row].confidence)
+            return cell
+        }
+        
+        
+        
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        if indexPath.row == results.count {
+            return 100
+        } else {
+        return 78
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == results.count {
+            delegate?.retry()
+        } else {
+        delegate?.didSelectSpecies(species: results[indexPath.row])
+        }
+    }
+}
+
+fileprivate class RetryCell: UITableViewCell {
+    
+    private var contentStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let iconImageView = UIImageView()
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = #imageLiteral(resourceName: "Reload")
+        
+        let label = UILabel()
+        label.text = "Prøv igen"
+        label.textColor = UIColor.appWhite()
+        label.font = UIFont.appPrimaryHightlighed()
+        
+        stackView.addArrangedSubview(iconImageView)
+        stackView.addArrangedSubview(label)
+        return stackView
+    }()
+    
+    
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    private func setupView() {
+        backgroundColor = UIColor.clear
+        selectionStyle = .none
+        
+        
+        contentView.addSubview(contentStackView)
+        contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16).isActive = true
+        contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
+        contentStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
     }
 }

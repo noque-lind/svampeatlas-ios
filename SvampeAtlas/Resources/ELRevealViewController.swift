@@ -226,6 +226,9 @@ extension ELRevealViewControllerDelegate {
             DispatchQueue.main.async {
                 self.toggleSideMenu()
             }
+        } else {
+            removeChildViewControllerFromViewController(childViewController: currentViewController)
+            addViewControllerAsChildViewController(childViewController: viewController, animated: false)
         }
     }
     

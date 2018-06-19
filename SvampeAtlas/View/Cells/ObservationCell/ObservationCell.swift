@@ -79,6 +79,6 @@ class ObservationCell: UITableViewCell {
     
     func configure(observation: Observation) {
         observationView.configure(observation: observation)
-        redlistView.configure(observation.determinationView?.redlistStatus)
+        redlistView.configure(observation.determinationView?.redlistStatus)        
     }
 }

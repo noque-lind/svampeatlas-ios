@@ -14,6 +14,9 @@ struct Observation: Decodable {
     public private(set) var observedBy: String?
     public private(set) var observationDate: String?
     public private(set) var locality: Locality?
+    public private(set) var ecologyNote: String?
+    public private(set) var dataSource: String?
+    
     
     private enum CodingKeys: String, CodingKey {
         case geom = "geom"
@@ -21,7 +24,8 @@ struct Observation: Decodable {
         case observedBy = "verbatimLeg"
         case observationDate = "observationDate"
         case locality = "Locality"
-        
+        case ecologyNote = "ecologynote"
+        case dataSource = "dataSource"
     }
 }
 
@@ -34,12 +38,14 @@ struct DeterminationView: Decodable {
     public private(set) var taxon_latinName: String?
     public private(set) var taxon_danishName: String?
     public private(set) var redlistStatus: String?
+    public private(set) var determinationValidation: String?
     
     private enum CodingKeys: String, CodingKey {
         case taxon_id = "Taxon_id"
         case taxon_latinName = "Taxon_FullName"
         case taxon_danishName = "Taxon_vernacularname_dk"
         case redlistStatus = "Taxon_redlist_status"
+        case determinationValidation = "Determination_validation"
     }
 }
 

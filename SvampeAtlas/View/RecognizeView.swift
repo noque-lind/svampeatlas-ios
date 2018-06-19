@@ -13,113 +13,95 @@ struct temptModel {
     var confidence: CGFloat
 }
 
-
-
 protocol RecognizeViewDelegate: NSObjectProtocol {
     func capturePhoto()
+    func pushVC(vc: UIViewController)
+    func resetSession()
 }
 
 
 class RecognizeView: UIVisualEffectView {
 
-    @IBOutlet weak var resultsView: ResultsView!
-    @IBOutlet weak var cameraControlsView: UIView!
-    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var captureButton: UIButton!
-    
-    lazy var activityIndicatorView: UIActivityIndicatorView = {
-       let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    private lazy var resultsView: ResultsView = {
+       let view = ResultsView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.hidesWhenStopped = true
-        view.color = UIColor.appPrimaryColour()
-        view.alpha = 0
+        view.delegate = self
         return view
     }()
     
-    @IBAction func captureButtonPressed(sender: UIButton) {
-        delegate?.capturePhoto()
-        self.activityIndicatorView.startAnimating()
-        activityIndicatorView.alpha = 0
-        UIView.animate(withDuration: 0.2, animations: {
-            sender.alpha = 0
-            self.activityIndicatorView.alpha = 1
-        }) { (_) in
-            
-        }
-    }
+    lazy var cameraControlsView: CameraControlsView = {
+        let view = CameraControlsView()
+        view.delegate = self
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
-    private var originHeightConstant: CGFloat!
+    var topConstraint: NSLayoutConstraint!
     var delegate: RecognizeViewDelegate? = nil
+    public private(set) var isExpanded = false
     
-    func showResults(results: [temptModel]) {
-        resultsView.results = results
-        expandView()
+    override init(effect: UIVisualEffect?) {
+        super.init(effect: effect)
+        setupView()
     }
     
-override func awakeFromNib() {
-        setupView()
-    super.awakeFromNib()
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
     private func setupView() {
-        layer.shadowOffset = CGSize(width: 0.0, height: -3.0)
-        contentView.addSubview(activityIndicatorView)
-        activityIndicatorView.centerXAnchor.constraint(equalTo: captureButton.centerXAnchor).isActive = true
-        activityIndicatorView.centerYAnchor.constraint(equalTo: captureButton.centerYAnchor).isActive = true
-    }
-    
-    
-    private func collapseView() {
+        contentView.addSubview(cameraControlsView)
+        cameraControlsView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        cameraControlsView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        cameraControlsView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        cameraControlsView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         
+        contentView.addSubview(resultsView)
+        resultsView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        resultsView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        resultsView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        resultsView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
     
     private func expandView() {
-        originHeightConstant = heightConstraint.constant
-        heightConstraint.constant = -500
-        activityIndicatorView.stopAnimating()
+        topConstraint.constant = -500
+        isExpanded = true
+        cameraControlsView.removeActivityIndicator()
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
-            self.layer.shadowOpacity = 0.4
-            self.layer.shadowRadius = 5.0
             self.superview?.layoutIfNeeded()
         }) { (finished) in
             self.resultsView.showResults()
         }
 }
   
-   
+    func showResults(results: [temptModel]) {
+        resultsView.results = results
+        expandView()
+    }
     
+    func reset() {
+        topConstraint.constant = -70
+        isExpanded = false
+        resultsView.reset()
+        cameraControlsView.reset()
+        UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
+            self.superview?.layoutIfNeeded()
+        }) { (finished) in
+        }
+    }
+}
+
+extension RecognizeView: CameraControlsViewDelegate, ResultsViewDelegate {
+    func capturePhoto() {
+        delegate?.capturePhoto()
+    }
     
+    func didSelectSpecies(species: temptModel) {
+        delegate?.pushVC(vc: NewObservationVC())
+    }
     
+    func retry() {
+        delegate?.resetSession()
+    }
     
-//    private func round() {
-//        let radius = 25
-//
-//        let shapeLayer = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: radius, height: radius))
-//
-//
-//        // create new animation
-//        let anim = CABasicAnimation(keyPath: "path")
-//
-//        // from value is the current mask path
-//        anim.fromValue = self.roundedMask
-//
-//        // to value is the new path
-//        anim.toValue = shapeLayer.cgPath
-//
-//        // duration of your animation
-//        anim.duration = 5.0
-//
-//        // custom timing function to make it look smooth
-//        anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-//
-//        // add animation
-//        roundedMask.add(anim, forKey: nil)
-//
-//        // update the path property on the mask layer, using a CATransaction to prevent an implicit animation
-//        CATransaction.begin()
-//        CATransaction.setDisableActions(true)
-//        roundedMask.path = shapeLayer.cgPath
-//        CATransaction.commit()
-//
-//    }
 }

@@ -85,68 +85,12 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kyV-ZL-m6y" customClass="RecognizeView" customModule="SvampeAtlas" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="708" width="375" height="104"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="2Gm-YA-jeW">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="104"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iB9-8t-6aB" customClass="ResultsView" customModule="SvampeAtlas" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A21-Y8-cIb">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3vB-U7-BTO">
-                                                    <rect key="frame" x="162.66666666666666" y="10" width="50" height="50"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="50" id="Rhk-4P-RYf"/>
-                                                        <constraint firstAttribute="width" constant="50" id="qQg-yT-GuW"/>
-                                                    </constraints>
-                                                    <state key="normal" image="CaptureBtn"/>
-                                                    <connections>
-                                                        <action selector="captureButtonPressedWithSender:" destination="kyV-ZL-m6y" eventType="touchUpInside" id="ayw-Tr-vfX"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstItem="3vB-U7-BTO" firstAttribute="centerY" secondItem="A21-Y8-cIb" secondAttribute="centerY" id="JZY-S7-L1F"/>
-                                                <constraint firstItem="3vB-U7-BTO" firstAttribute="centerX" secondItem="A21-Y8-cIb" secondAttribute="centerX" id="jxj-kL-NUi"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="iB9-8t-6aB" firstAttribute="top" secondItem="2Gm-YA-jeW" secondAttribute="top" id="Cyf-Qw-k8g"/>
-                                        <constraint firstItem="A21-Y8-cIb" firstAttribute="top" secondItem="2Gm-YA-jeW" secondAttribute="top" id="Oyy-5c-vVe"/>
-                                        <constraint firstAttribute="trailing" secondItem="A21-Y8-cIb" secondAttribute="trailing" id="Wu5-zP-D8Q"/>
-                                        <constraint firstItem="iB9-8t-6aB" firstAttribute="leading" secondItem="2Gm-YA-jeW" secondAttribute="leading" id="dGT-Cq-F4a"/>
-                                        <constraint firstItem="A21-Y8-cIb" firstAttribute="leading" secondItem="2Gm-YA-jeW" secondAttribute="leading" id="mbD-aa-mPg"/>
-                                        <constraint firstAttribute="trailing" secondItem="iB9-8t-6aB" secondAttribute="trailing" id="wkl-Eo-iw1"/>
-                                    </constraints>
-                                </view>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <blurEffect style="dark"/>
-                                <connections>
-                                    <outlet property="cameraControlsView" destination="A21-Y8-cIb" id="IVW-MJ-ww7"/>
-                                    <outlet property="captureButton" destination="3vB-U7-BTO" id="hms-3l-Qm4"/>
-                                    <outlet property="heightConstraint" destination="TGW-5a-J1j" id="v8x-v5-R3J"/>
-                                    <outlet property="resultsView" destination="iB9-8t-6aB" id="Tmt-8e-aC5"/>
-                                </connections>
-                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="kyV-ZL-m6y" firstAttribute="trailing" secondItem="CfB-2o-PhC" secondAttribute="trailing" id="D5o-lD-CVP"/>
                             <constraint firstItem="U44-FU-AIq" firstAttribute="top" secondItem="XAT-ZK-btQ" secondAttribute="top" id="HJ2-oK-F5R"/>
-                            <constraint firstItem="iB9-8t-6aB" firstAttribute="bottom" secondItem="CfB-2o-PhC" secondAttribute="bottom" id="Jtt-ov-cDq"/>
-                            <constraint firstAttribute="bottom" secondItem="kyV-ZL-m6y" secondAttribute="bottom" id="OdO-ve-ldO"/>
                             <constraint firstAttribute="bottom" secondItem="U44-FU-AIq" secondAttribute="bottom" id="PG8-8l-pf8"/>
-                            <constraint firstItem="kyV-ZL-m6y" firstAttribute="top" secondItem="CfB-2o-PhC" secondAttribute="bottom" priority="750" constant="-70" id="TGW-5a-J1j"/>
                             <constraint firstItem="U44-FU-AIq" firstAttribute="trailing" secondItem="CfB-2o-PhC" secondAttribute="trailing" id="qNR-rV-sHE"/>
-                            <constraint firstItem="kyV-ZL-m6y" firstAttribute="leading" secondItem="CfB-2o-PhC" secondAttribute="leading" id="sBu-xz-oQV"/>
-                            <constraint firstItem="A21-Y8-cIb" firstAttribute="bottom" secondItem="CfB-2o-PhC" secondAttribute="bottom" id="wsY-2v-ryS"/>
                             <constraint firstItem="U44-FU-AIq" firstAttribute="leading" secondItem="CfB-2o-PhC" secondAttribute="leading" id="yri-30-auO"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="CfB-2o-PhC"/>
@@ -154,12 +98,11 @@
                     <navigationItem key="navigationItem" id="dmY-kE-Aap"/>
                     <connections>
                         <outlet property="cameraView" destination="U44-FU-AIq" id="wTe-M1-3Jt"/>
-                        <outlet property="recognizeView" destination="kyV-ZL-m6y" id="bDN-Sr-phb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cCA-zt-RI3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1228" y="727.83251231527095"/>
+            <point key="canvasLocation" x="1487" y="728"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="cQM-BH-A6c">
@@ -640,11 +583,10 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kfb-oU-4Bz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="277.60000000000002" y="728.57142857142856"/>
+            <point key="canvasLocation" x="711" y="728"/>
         </scene>
     </scenes>
     <resources>
-        <image name="CaptureBtn" width="50" height="50"/>
         <image name="FavoriteGreen" width="36" height="33"/>
         <image name="IMG_15270" width="2560" height="1600"/>
         <image name="LogoSmall" width="97" height="111"/>

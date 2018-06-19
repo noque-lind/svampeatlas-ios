@@ -44,6 +44,8 @@
 		4A69BC9D2038D96500D3B88B /* SvampeAtlasUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC9C2038D96500D3B88B /* SvampeAtlasUITests.swift */; };
 		4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BCAB2039805100D3B88B /* Mushroom.swift */; };
 		4A702E00209F266900CE648B /* ELRevealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A702DFF209F266900CE648B /* ELRevealViewController.swift */; };
+		4A70A5DB20D78CC4007B6214 /* NewObservationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A70A5DA20D78CC4007B6214 /* NewObservationVC.swift */; };
+		4A70A5DD20D8E61E007B6214 /* CameraControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A70A5DC20D8E61E007B6214 /* CameraControlsView.swift */; };
 		4A80756C20BD4E7D00F958AC /* ObservationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A80756B20BD4E7D00F958AC /* ObservationVC.swift */; };
 		4A80756E20BD50EE00F958AC /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A80756D20BD50EE00F958AC /* CustomNavigationBar.swift */; };
 		4A80757020BD717100F958AC /* CustomScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A80756F20BD717100F958AC /* CustomScrollView.swift */; };
@@ -132,6 +134,8 @@
 		4A69BC9E2038D96500D3B88B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A69BCAB2039805100D3B88B /* Mushroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mushroom.swift; sourceTree = "<group>"; };
 		4A702DFF209F266900CE648B /* ELRevealViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ELRevealViewController.swift; sourceTree = "<group>"; };
+		4A70A5DA20D78CC4007B6214 /* NewObservationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewObservationVC.swift; sourceTree = "<group>"; };
+		4A70A5DC20D8E61E007B6214 /* CameraControlsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControlsView.swift; sourceTree = "<group>"; };
 		4A80756B20BD4E7D00F958AC /* ObservationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationVC.swift; sourceTree = "<group>"; };
 		4A80756D20BD50EE00F958AC /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		4A80756F20BD717100F958AC /* CustomScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomScrollView.swift; sourceTree = "<group>"; };
@@ -199,6 +203,7 @@
 				4A3061E02053F4840061E98F /* MushroomTableView.swift */,
 				4AB6FA14207112F500870A46 /* CustomSearchBar.swift */,
 				4A1F7608207A31150082B873 /* RecognizeView.swift */,
+				4A70A5DC20D8E61E007B6214 /* CameraControlsView.swift */,
 				4A0683D0207A581D00EB06D7 /* ResultsView.swift */,
 				4AD107BC20976C6000BA04D0 /* ObservationView.swift */,
 				4AA1CC672085DFCB00254EBB /* MapView.swift */,
@@ -270,6 +275,7 @@
 				4A4E4CFE20AE00AD00B3F898 /* CustomNavigationControllerViewController.swift */,
 				4A80756B20BD4E7D00F958AC /* ObservationVC.swift */,
 				4A80756F20BD717100F958AC /* CustomScrollView.swift */,
+				4A70A5DA20D78CC4007B6214 /* NewObservationVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -536,10 +542,12 @@
 				4A53026B209888E50043C1D3 /* CustomMapView.swift in Sources */,
 				4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */,
 				4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */,
+				4A70A5DB20D78CC4007B6214 /* NewObservationVC.swift in Sources */,
 				4A40CD70209217B500F58F25 /* Observation.swift in Sources */,
 				4A1F7609207A31150082B873 /* RecognizeView.swift in Sources */,
 				4AA1CC682085DFCB00254EBB /* MapView.swift in Sources */,
 				4A300A92208388C3003CB2A5 /* ObservationPinCalloutView.swift in Sources */,
+				4A70A5DD20D8E61E007B6214 /* CameraControlsView.swift in Sources */,
 				4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */,
 				4ADF2B0A207A5F3900C76276 /* SqueezeNet.mlmodel in Sources */,
 				4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */,

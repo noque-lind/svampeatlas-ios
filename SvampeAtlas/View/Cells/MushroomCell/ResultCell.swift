@@ -10,45 +10,48 @@ import UIKit
 
 class ResultCell: UITableViewCell {
 
-    lazy var thumbImageView: UIImageView = {
-        let imageView = UIImageView()
+    private lazy var backgroundContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.appPrimaryColour()
+        view.addSubview(thumbImageView)
+        thumbImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        thumbImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
+        thumbImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        return view
+    }()
+    
+    
+    lazy var thumbImageView: MushroomThumbImage = {
+        let imageView = MushroomThumbImage()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        imageView.contentMode = .scaleAspectFit
+        imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
     
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.appHeaderDetails()
+        label.font = UIFont.appPrimaryHightlighed()
         label.textColor = UIColor.appWhite()
         return label
     }()
     
     lazy var confidenceLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.appPrimaryHightlighed()
+        label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
         return label
     }()
     
     lazy var textStackView: UIStackView = {
        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(confidenceLabel)
-        return stackView
-    }()
-    
-    lazy var contentStackView: UIStackView = {
-      let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 16
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(thumbImageView)
-        stackView.addArrangedSubview(textStackView)
         return stackView
     }()
     
@@ -66,17 +69,26 @@ class ResultCell: UITableViewCell {
     
     override func layoutSubviews() {
         thumbImageView.layer.cornerRadius = thumbImageView.frame.height / 2
+        super.layoutSubviews()
     }
     
     private func setupView() {
+        accessoryType = .disclosureIndicator
+        selectionStyle = .none
+        tintColor = UIColor.appWhite()
         backgroundColor = UIColor.clear
         
+        insertSubview(backgroundContainerView, at: 0)
+        backgroundContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        backgroundContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        backgroundContainerView.topAnchor.constraint(equalTo: topAnchor, constant: 4).isActive = true
+        backgroundContainerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4).isActive = true
         
-        addSubview(contentStackView)
-        contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
-        contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
-        contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+        contentView.addSubview(textStackView)
+        textStackView.leadingAnchor.constraint(equalTo: thumbImageView.trailingAnchor, constant: 16).isActive = true
+        textStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
+        textStackView.topAnchor.constraint(equalTo: backgroundContainerView.topAnchor, constant: 16).isActive = true
+        textStackView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor, constant: -16).isActive = true
     }
     
     
@@ -87,11 +99,4 @@ class ResultCell: UITableViewCell {
         confidenceLabel.text = "\(Int(confidence * 100))% sikker"
         thumbImageView.image = #imageLiteral(resourceName: "IMG_15270")
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

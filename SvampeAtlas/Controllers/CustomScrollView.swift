@@ -128,7 +128,24 @@ lazy var similarSpeciesView: SimilarSpeciesView = {
         }
     
     public func configureScrollView(withObservation observation: Observation) {
-        configureUpperStackView(isObservation: true, first: observation.determinationView?.taxon_danishName, second: observation.observedBy, third: observation.locality?.name)
+        configureUpperStackView(isObservation: true, first: observation.determinationView?.taxon_danishName, second: observation.observedBy, third: observation.ecologyNote)
+        
+        var informationArray = [(String, String)]()
+        
+        if let locality = observation.locality?.name, locality != "" {
+            informationArray.append(("Lokalitet:", locality))
+        }
+        
+        if let observationDate = observation.observationDate, observationDate != "" {
+            informationArray.append(("Fundets dato:", observationDate))
+        }
+        
+        if let dataSource = observation.dataSource, dataSource != "" {
+            informationArray.append(("Kilde:", dataSource))
+        }
+        
+        configureInformationStackView(informations: informationArray)
+        
     }
     
     
@@ -139,7 +156,7 @@ lazy var similarSpeciesView: SimilarSpeciesView = {
             stackView.spacing = 10
             stackView.alignment = .center
             
-            if let first = first {
+            if let first = first, first != "" {
                 if isObservation {
                     upperFirstLabel.text = "Fund af: \(first)"
                 } else {
@@ -148,7 +165,7 @@ lazy var similarSpeciesView: SimilarSpeciesView = {
                 stackView.addArrangedSubview(upperFirstLabel)
             }
             
-            if let second = second {
+            if let second = second, second != "" {
                 if isObservation {
                     let userStackView = UIStackView()
                     userStackView.axis = .horizontal
@@ -170,27 +187,11 @@ lazy var similarSpeciesView: SimilarSpeciesView = {
                 
             }
             
-            if let third = third {
-                if isObservation {
-                    let locationStackView = UIStackView()
-                    locationStackView.axis = .horizontal
-                    locationStackView.spacing = 5
-                    
-                    let iconView = UIImageView()
-                    iconView.image = #imageLiteral(resourceName: "ListView")
-                    iconView.translatesAutoresizingMaskIntoConstraints = false
-                    iconView.widthAnchor.constraint(equalTo: iconView.heightAnchor).isActive = true
-                    
-                    upperThirdLabel.text = third
-                    locationStackView.addArrangedSubview(iconView)
-                    locationStackView.addArrangedSubview(upperThirdLabel)
-                    stackView.addArrangedSubview(locationStackView)
-                } else {
+            if let third = third, third != "" {
                     upperThirdLabel.textAlignment = NSTextAlignment.justified
                     upperThirdLabel.numberOfLines = 0
                     upperThirdLabel.text = third
                     stackView.addArrangedSubview(upperThirdLabel)
-                }
             }
             return stackView
         }()

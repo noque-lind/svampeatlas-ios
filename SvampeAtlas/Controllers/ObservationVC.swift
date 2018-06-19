@@ -8,7 +8,9 @@
 
 import UIKit
 
-class ObservationVC: UIViewController, ELRevealViewControllerDelegate {
+class ObservationVC: UIViewController, ELRevealViewControllerDelegate, UIGestureRecognizerDelegate {
+
+    
 
     private var customNavigationBar: CustomNavigationBar = {
        let view = CustomNavigationBar()
@@ -59,8 +61,19 @@ class ObservationVC: UIViewController, ELRevealViewControllerDelegate {
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         setupView()
         super.viewWillAppear(animated)
+    }
+    
+    
+    
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        super.viewDidDisappear(animated)
     }
     
     

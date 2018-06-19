@@ -10,6 +10,16 @@ import UIKit
 
 class MushroomThumbImage: UIImageView {
 
+    init() {
+        super.init(frame: CGRect.zero)
+        setupView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+    
     override func awakeFromNib() {
         setupView()
         super.awakeFromNib()

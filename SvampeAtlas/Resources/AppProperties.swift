@@ -18,7 +18,7 @@ extension UIColor {
     }
     
     class func appPrimaryColour() -> UIColor {
-        return #colorLiteral(red: 0.2142155468, green: 0.2800558805, blue: 0.3091996908, alpha: 1)
+        return #colorLiteral(red: 0.2156862745, green: 0.2784313725, blue: 0.3098039216, alpha: 1)
     }
     
     class func appSecondaryColour() -> UIColor {

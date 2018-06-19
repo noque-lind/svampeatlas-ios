@@ -13,6 +13,22 @@ import Vision
 
 class RecognizeVC: UIViewController {
 
+    private var recognizeView: RecognizeView = {
+       let view = RecognizeView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var cameraView: UIView = {
+       let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let tapGestureRecognizer = UITapGestureRecognizer()
+        tapGestureRecognizer.addTarget(self, action: #selector(cameraViewWasTapped(sender:)))
+        view.addGestureRecognizer(tapGestureRecognizer)
+        return view
+    }()
+    
+    
     var captureSession: AVCaptureSession!
     var cameraOutput: AVCapturePhotoOutput!
     var previewLayer: AVCaptureVideoPreviewLayer!
@@ -20,8 +36,8 @@ class RecognizeVC: UIViewController {
     
     var photoData: Data?
     
-    @IBOutlet weak var recognizeView: RecognizeView!
-    @IBOutlet weak var cameraView: UIView!
+    
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,10 +93,22 @@ class RecognizeVC: UIViewController {
     }
     
     private func setupView() {
+        view.addSubview(cameraView)
+        cameraView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        cameraView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        cameraView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        view.addSubview(recognizeView)
+        recognizeView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        recognizeView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        recognizeView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        recognizeView.topConstraint = recognizeView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70)
+        recognizeView.topConstraint.isActive = true
+        
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-        
-        
+
 //        navigationBlurEffect()
         recognizeView.delegate = self
     }
@@ -111,10 +139,31 @@ class RecognizeVC: UIViewController {
             self.navigationController?.navigationBar.topItem?.title = "Arts-bestemmelse"
         self.navigationController?.navigationBar.barStyle = UIBarStyle.black
     }
+    
+    @objc private func cameraViewWasTapped(sender: UITapGestureRecognizer) {
+        if recognizeView.isExpanded {
+           reset()
+        } else {
+            recognizeView.cameraControlsView.captureButtonPressed()
+        }
+    }
+    
+    private func reset() {
+        recognizeView.reset()
+        captureSession.startRunning()
+    }
 }
 
 
 extension RecognizeVC: RecognizeViewDelegate, AVCapturePhotoCaptureDelegate {
+    func resetSession() {
+        reset()
+    }
+    
+    func pushVC(vc: UIViewController) {
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
         let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first!
@@ -124,6 +173,8 @@ extension RecognizeVC: RecognizeViewDelegate, AVCapturePhotoCaptureDelegate {
         cameraOutput.capturePhoto(with: settings, delegate: self)
 //        captureSession.stopRunning()
     }
+    
+    
     
     
     @available(iOS 11.0, *)

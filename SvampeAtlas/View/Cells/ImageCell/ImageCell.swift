@@ -57,12 +57,14 @@ class ImageCell: UICollectionViewCell {
         super.awakeFromNib()
     }
     
-    func configureCell(contentMode: UIViewContentMode, url: String, photoAuthor: String) {
+    func configureCell(contentMode: UIView.ContentMode, url: String, photoAuthor: String?) {
         imageView.contentMode = contentMode
         
         DataService.instance.getImage(forUrl: url) { (image) in
-            DispatchQueue.main.async {
+            if self.imageView.image == nil {
                 self.imageView.image = image
+            } else {
+                self.imageView.fadeToNewImage(image: image)
             }
         }
     }

@@ -130,11 +130,11 @@ class SimilarSpeciesCell: UICollectionViewCell {
     }
     
     func configureCell(mushroom: Mushroom) {
-        DataService.instance.getThumbImageForMushroom(url: mushroom.images![0].thumburi) { (image) in
-            self.imageView.image = image
-        }
+//        DataService.instance.getThumbImageForMushroom(url: mushroom.images![0].thumbUrl!) { (image) in
+//            self.imageView.image = image
+//        }
         
         
-        titleLabel.text = mushroom.vernacularName_dk?.vernacularname_dk
+        titleLabel.text = mushroom.danishName ?? mushroom.fullName
     }
 }

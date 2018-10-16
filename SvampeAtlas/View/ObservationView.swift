@@ -24,37 +24,62 @@ class ObservationView: UIView {
         return label
     }()
     
-    private lazy var locationAndDateLabel: UILabel = {
-       let label = UILabel()
+    private lazy var userNameLabel: UILabel = {
+        let label = UILabel()
         label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
         return label
     }()
     
-    
-    private lazy var toxicityLevelImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "DisclosureButton")
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.heightAnchor.constraint(equalToConstant: 15).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 15).isActive = true
-        imageView.alpha = 1
-        return imageView
-    }()
-    
-    
     private lazy var contentStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(subtitleLabel)
-        stackView.addArrangedSubview(locationAndDateLabel)
-        stackView.distribution = .fillEqually
+        stackView.spacing = 20
+        
+        let upperStackView: UIStackView = {
+            let stackView = UIStackView()
+            stackView.axis = .vertical
+            stackView.spacing = 0
+            stackView.addArrangedSubview(titleLabel)
+            stackView.addArrangedSubview(subtitleLabel)
+            return stackView
+        }()
+        
+        let userNameStackView: UIStackView = {
+            let stackView = UIStackView()
+            stackView.spacing = 4
+            stackView.axis = .horizontal
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            stackView.heightAnchor.constraint(equalToConstant: 14).isActive = true
+            
+            let profileImageView: UIImageView = {
+                let imageView = UIImageView()
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
+                imageView.image = #imageLiteral(resourceName: "Profile")
+                return imageView
+            }()
+            stackView.addArrangedSubview(profileImageView)
+            stackView.addArrangedSubview(userNameLabel)
+            return stackView
+        }()
+        
+        stackView.addArrangedSubview(upperStackView)
+        stackView.addArrangedSubview(userNameStackView)
         stackView.alpha = 1
         return stackView
+    }()
+    
+    private lazy var disclosureIndicator: UIImageView = {
+       let imageView = UIImageView()
+        imageView.image = #imageLiteral(resourceName: "DisclosureButton")
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
     init() {
@@ -65,25 +90,36 @@ class ObservationView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupView()
-}
-
-
+    }
+    
+    
     private func setupView() {
+        addSubview(disclosureIndicator)
+        disclosureIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        disclosureIndicator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2).isActive = true
+        
         self.addSubview(self.contentStackView)
         self.contentStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
-        self.contentStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
-        self.contentStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+        self.contentStackView.trailingAnchor.constraint(equalTo: disclosureIndicator.leadingAnchor, constant: -4).isActive = true
+        self.contentStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         
-        addSubview(toxicityLevelImageView)
-        toxicityLevelImageView.leadingAnchor.constraint(equalTo: contentStackView.trailingAnchor, constant: 8).isActive = true
-        toxicityLevelImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-        toxicityLevelImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-}
+        
+    }
     
     func configure(observation: Observation) {
-        titleLabel.text = observation.determinationView?.taxon_danishName
-        subtitleLabel.text = observation.observedBy
-        locationAndDateLabel.text = observation.locality?.name
+        titleLabel.text = observation.speciesProperties.name
+        subtitleLabel.text = nil
+        if let dateString = Date(ISO8601String: observation.date!)?.convert(into: DateFormatter.Style.short) {
+            subtitleLabel.text = dateString
+        }
         
+        if let locationString = observation.location {
+            if subtitleLabel.text == nil {
+                subtitleLabel.text = locationString
+            } else {
+                subtitleLabel.text?.append(", \(locationString)")
+            }
+        }
+        userNameLabel.text = observation.observedBy
     }
 }

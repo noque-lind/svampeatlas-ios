@@ -13,16 +13,9 @@ class CustomNavigationBar: UIView {
     private var contentViewTopAnchor = NSLayoutConstraint()
     
     private lazy var backgroundView: UIView = {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect.init(style: UIBlurEffectStyle.light))
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect.init(style: UIBlurEffect.Style.light))
         visualEffectView.translatesAutoresizingMaskIntoConstraints = false
         return visualEffectView
-    }()
-    
-    private lazy var contentStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        return stackView
     }()
     
     private lazy var contentView: UIView = {
@@ -30,13 +23,6 @@ class CustomNavigationBar: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.alpha = 0
-        
-
-        view.addSubview(contentStackView)
-        contentStackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        contentStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        contentStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        contentStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         return view
     }()
     
@@ -77,19 +63,32 @@ class CustomNavigationBar: UIView {
     
     func changeAlpha(_ alpha: CGFloat) {
         self.alpha = alpha
-        if alpha >= 1.0 {
+        if alpha >= 1.2 {
             showContent()
         } else {
             hideContent()
         }
     }
     
-    func configureContent(stackView: UIStackView, alignment: UIStackViewAlignment) {
-        stackView.axis = .horizontal
-        contentStackView.alignment = alignment
-        contentStackView.addArrangedSubview(stackView)
+    func configureTitle(_ string: String?) {
+        guard let string = string else {return}
+        let label: UILabel = {
+           let label = UILabel()
+            label.font = UIFont.appHeader()
+            label.textColor = UIColor.appWhite()
+            label.textAlignment = .center
+            label.text = string
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+        
+        contentView.addSubview(label)
+        label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     
+
     private func showContent() {
         if contentView.alpha == 0 {
             contentView.transform = CGAffineTransform(translationX: 0.0, y: 5.0)

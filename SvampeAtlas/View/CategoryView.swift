@@ -13,11 +13,11 @@ protocol CategoryViewDelegate: NSObjectProtocol {
 }
 
 enum Category: String {
-    case offline = "Offline"
-    case local = "I nærheden"
+    case nearby = "Fund i nærheden"
     case favorites = "Mine favoritter"
-    case rare = "Årstidens"
-    case test = "Test"
+    case mushrooms = "Svampearter"
+    case seasonal = "Årstidens arter"
+    case eatable = "Spiselige arter"
 }
 
 class CategoryView: UIView {
@@ -25,7 +25,7 @@ class CategoryView: UIView {
     @IBOutlet weak var collectionView: UICollectionView!
     
     weak var delegate: CategoryViewDelegate?
-    var items = [Category.offline, Category.local, Category.favorites, Category.rare, Category.test]
+    var items = [Category.favorites, Category.mushrooms, Category.nearby, Category.seasonal, Category.eatable]
     private var selectedItem: Category!
     
     lazy var selectorViewWidthConstraint = NSLayoutConstraint()
@@ -78,8 +78,8 @@ class CategoryView: UIView {
     }
     
     
-    public func firstSelect() {
-        collectionView.selectItem(at: IndexPath.init(row: 0, section: 0), animated: true, scrollPosition: .left)
+    public func firstSelect(index: Int) {
+        collectionView.selectItem(at: IndexPath.init(row: index, section: 0), animated: true, scrollPosition: .left)
         collectionView(collectionView, didSelectItemAt: IndexPath.init(row: 0, section: 0))
     }
 }
@@ -96,7 +96,7 @@ extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UI
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let labelWidth = (items[indexPath.row].rawValue as NSString).size(withAttributes: [NSAttributedStringKey.font: UIFont.appHeaderDetails()])
+        let labelWidth = (items[indexPath.row].rawValue as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.appHeaderDetails()])
         return CGSize(width: labelWidth.width + 16, height: collectionView.frame.size.height)
     }
     
@@ -115,9 +115,9 @@ extension CategoryView: UICollectionViewDelegate, UICollectionViewDataSource, UI
         moveSelector(toCell: cell)
         
         if indexPath.row == items.count - 2 {
-            collectionView.scrollToItem(at: IndexPath.init(row: indexPath.row + 1, section: 0), at: UICollectionViewScrollPosition.right, animated: true)
+            collectionView.scrollToItem(at: IndexPath.init(row: indexPath.row + 1, section: 0), at: UICollectionView.ScrollPosition.right, animated: true)
         } else if indexPath.row == 1 {
-            collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionViewScrollPosition.left, animated: true)
+            collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionView.ScrollPosition.left, animated: true)
         }
     
     }

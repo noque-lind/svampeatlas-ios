@@ -12,14 +12,8 @@ import MapKit
 @available(iOS 11.0, *)
 class ClusterPinView: MKAnnotationView {
     
-    lazy var calloutView: ClusterPinCalloutView = {
-        let view = ClusterPinCalloutView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    lazy var countLabel: UILabel = {
-       let label = UILabel()
+    private lazy var countLabel: UILabel = {
+        let label = UILabel()
         label.font = UIFont.appHeader()
         label.textColor = UIColor.appWhite()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -27,59 +21,71 @@ class ClusterPinView: MKAnnotationView {
         return label
     }()
     
+    private var calloutView: ClusterPinCalloutView?
+    
     override var annotation: MKAnnotation? {
         willSet {
-            guard let cluster = newValue as? MKClusterAnnotation else {return}
-            countLabel.text = "\(cluster.memberAnnotations.count)"
+            calloutView?.removeFromSuperview()
+            calloutView = nil
+        } didSet {
+            if let annotations = annotation as? MKClusterAnnotation {
+                countLabel.text = "\(annotations.memberAnnotations.count)"
+                
+            }
         }
     }
+    
     
     private var observations: [Observation] {
         get {
-            var observations = [Observation]()
-            for observationPin in (annotation as! MKClusterAnnotation).memberAnnotations as! [ObservationPin] {
-                observations.append(observationPin.observation)
-            }
+            let observations = ((annotation as! MKClusterAnnotation).memberAnnotations as! [ObservationPin]).compactMap({$0.observation})
             return observations
+            
+            //            var observations = [Observation]()
+            //            for observationPin in (annotation as! MKClusterAnnotation).memberAnnotations as! [ObservationPin] {
+            //                observations.append(observationPin.observation)
+            //            }
+            
         }
     }
     
-    weak var delegate: MapViewDelegate? = nil {
-        didSet {
-            calloutView.delegate = self.delegate
-        }
+    weak var delegate: MapViewDelegate? = nil
+    
+    //
+    //    weak var delegate: NavigationDelegate? = nil {
+    //        didSet {
+    //            calloutView.delegate = self.delegate
+    //        }
+    //    }
+    //
+    
+    
+    
+    init(annotation: MKClusterAnnotation, reuseIdentifier: String?) {
+        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+        setupView()
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if isSelected {
-            guard let result = calloutView.hitTest(convert(point, to: calloutView), with: event) else {return nil}
+            guard let result = calloutView?.hitTest(convert(point, to: calloutView), with: event) else {return nil}
             return result
         } else {
             return nil
         }
     }
     
-    init(annotation: MKClusterAnnotation, reuseIdentifier: String?) {
-        super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-            displayPriority = .defaultHigh
-            collisionMode = .circle
-        setupView()
-    }
-
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupView()
-    }
-    
-    
-
     private func setupView() {
+        displayPriority = .required
+        collisionMode = .circle
         canShowCallout = false
         self.image = #imageLiteral(resourceName: "ClusterPin")
         self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
-    
+        
         addSubview(countLabel)
         countLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         countLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
@@ -90,16 +96,29 @@ class ClusterPinView: MKAnnotationView {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {
-            addSubview(calloutView)
+            
+            let calloutView: ClusterPinCalloutView = {
+                let view = ClusterPinCalloutView()
+                view.translatesAutoresizingMaskIntoConstraints = false
+                view.delegate = delegate
+                return view
+            }()
+            
+            self.calloutView = calloutView
+            addSubview(self.calloutView!)
             calloutView.configure(superView: self, observations: observations)
             calloutView.show()
         } else {
-            calloutView.hide(superView: self, animated: animated)
+            calloutView?.hide(superView: self, animated: animated, completion: {
+                self.calloutView?.removeFromSuperview()
+                self.calloutView = nil
+            })
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        calloutView.removeFromSuperview()
+        calloutView?.removeFromSuperview()
+        calloutView = nil
     }
 }

@@ -63,7 +63,7 @@ extension UIView {
         
         
                 // ActivitySetup
-        activityIndicator.activityIndicatorViewStyle = .whiteLarge
+        activityIndicator.style = .whiteLarge
         activityIndicator.startAnimating()
         activityIndicator.hidesWhenStopped = true
         

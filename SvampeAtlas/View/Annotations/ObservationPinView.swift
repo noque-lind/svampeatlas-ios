@@ -25,26 +25,26 @@ class ObservationPin: NSObject, MKAnnotation {
 
 class ObservationPinView: MKAnnotationView {
 
-    lazy var calloutView: ObservationPinCalloutView = {
-        let view = ObservationPinCalloutView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    lazy var imageView: UIImageView = {
-       let imageView = UIImageView()
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView()
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.image = #imageLiteral(resourceName: "agaricus-arvensis1")
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.borderColor = UIColor.appSecondaryColour().cgColor
+        imageView.layer.borderColor = UIColor.appPrimaryColour().cgColor
         imageView.layer.borderWidth = 2
         return imageView
     }()
     
+    private var calloutView: ObservationPinCalloutView?
+    
     override var annotation: MKAnnotation? {
         willSet {
-            calloutView.removeFromSuperview()
+            calloutView?.removeFromSuperview()
+            calloutView = nil
+        }   didSet {
+            if annotation != nil {
+                configure()
+            }
         }
     }
     
@@ -54,77 +54,94 @@ class ObservationPinView: MKAnnotationView {
         }
     }
     
-    weak var delegate: MapViewDelegate? = nil {
-        didSet {
-            calloutView.delegate = self.delegate
-        }
-    }
-    
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if isSelected {
-            guard let result = calloutView.hitTest(convert(point, to: calloutView), with: event) else {return nil}
-            return result
-        } else {
-            return nil
-        }
-    }
+    weak var delegate: MapViewDelegate? = nil
 
+    private var withImage: Bool
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("Touches moved inside observationPINVIEW")
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("Touches began inside observervationPINVIEw")
-    }
-    
-    override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+    init(annotation: MKAnnotation?, reuseIdentifier: String?, withImage: Bool) {
+        self.withImage = withImage
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         setupView()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        
-        super.init(coder: aDecoder)
-        setupView()
+        fatalError()
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if isSelected {
+            guard let result = calloutView?.hitTest(convert(point, to: calloutView), with: event) else {return nil}
+            return result
+        } else {
+            return nil
+        }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-         imageView.layer.cornerRadius = imageView.frame.width / 2
+        if withImage {
+            imageView.layer.cornerRadius = imageView.frame.width / 2
+        }
     }
     
     private func setupView() {
         canShowCallout = false
-        self.image = #imageLiteral(resourceName: "MushroomPin")
-        self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
-        self.addSubview(imageView)
-       imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 4).isActive = true
-       imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -4).isActive = true
-       imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
-        imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
-        
         displayPriority = .defaultHigh
         collisionMode = .rectangle
+        self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
+        
+        if withImage {
+            self.image = #imageLiteral(resourceName: "SinglePin")
+            self.addSubview(imageView)
+            imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 4).isActive = true
+            imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -4).isActive = true
+            imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
+        } else {
+            self.image = #imageLiteral(resourceName: "SinglePinNoImage")
+        }
     }
     
     override var canBecomeFirstResponder: Bool {
         return true
     }
     
+    private func configure() {
+        imageView.image = nil
+        guard let imageURL = observationPin.observation.images?.first?.url else {return}
+        DataService.instance.getImage(forUrl: imageURL, size: .mini) { (image) in
+            DispatchQueue.main.async {
+                self.imageView.image = image
+            }
+        }
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {
-            addSubview(calloutView)
-                calloutView.configure(imageView: imageView, observation: observationPin.observation)
-                calloutView.show(imageView: imageView)
+            calloutView = ObservationPinCalloutView(withImage: withImage)
+            addSubview(calloutView!)
+            calloutView!.translatesAutoresizingMaskIntoConstraints = false
+            calloutView!.delegate = delegate
+            if withImage {
+                calloutView!.configure(imageView: imageView, observation: observationPin.observation)
+            } else {
+                calloutView!.configure(imageView: nil, observation: observationPin.observation)
+                calloutView!.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -4).isActive = true
+                calloutView!.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
+            }
+            calloutView!.show()
         } else {
-                calloutView.hide(animated: animated)
+            calloutView?.hide(animated: animated, completion: {
+                self.calloutView?.removeFromSuperview()
+                self.calloutView = nil
+            })
         }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        calloutView.removeFromSuperview()
+        calloutView?.removeFromSuperview()
+        calloutView = nil
     }
 }

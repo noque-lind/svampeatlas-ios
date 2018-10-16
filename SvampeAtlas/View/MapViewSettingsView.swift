@@ -13,19 +13,9 @@ enum MapViewOptionsType {
     case mapView
 }
 
-struct ObservationSettings {
-    enum ObservationAge {
-        case before2000
-        case after2000
-    }
-
-    var radius: Double
-    var age: ObservationAge
-}
-
-
-protocol MapViewSettingsViewDelegate {
-    func newSearch(settings: ObservationSettings)
+protocol MapViewSettingsViewDelegate: class {
+    func wasCollapsed()
+    func wasExpanded()
 }
 
 class MapViewSettingsView: UIView {
@@ -56,38 +46,42 @@ class MapViewSettingsView: UIView {
         didSet {
             if advancedSettingsView == nil {
                 radiusSliderLabel = nil
-                ageLabel = nil
+                ageSliderLabel = nil
             }
         }
     }
     
     private var radiusSliderLabel: UILabel?
-    private var ageLabel: UILabel?
+    private var ageSliderLabel: UILabel?
     
     private var isExpanded = false
     private var heightConstraint = NSLayoutConstraint()
     private var widthConstraint = NSLayoutConstraint()
     private var optionItems = [MapViewOptionsType.listView, MapViewOptionsType.mapView]
     
-    var delegate: MapViewSettingsViewDelegate? = nil
-    var observationSettings: ObservationSettings?
+    weak var delegate: MapViewSettingsViewDelegate? = nil
+    private unowned var filteringSettings: FilteringSettings
     
-    init() {
+    init(filteringSettings: FilteringSettings) {
+        self.filteringSettings = filteringSettings
         super.init(frame: CGRect.zero)
         setupView()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder) not implemented in mapViewSettingsView")
+        fatalError()
     }
     
     private func setupView() {
+        layer.shadowOpacity = 0.4
+        layer.shadowOffset = CGSize(width: 0.0, height: 1)
+        layer.shadowRadius = 1.0
         widthConstraint = widthAnchor.constraint(equalToConstant: 40)
         heightConstraint = heightAnchor.constraint(equalToConstant: 40)
         layer.cornerRadius = 40 / 2
         widthConstraint.isActive = true
         heightConstraint.isActive = true
-        backgroundColor = UIColor.appSecondaryColour()
+        backgroundColor = UIColor.appPrimaryColour()
         
         
         addSubview(settingsButton)
@@ -99,11 +93,13 @@ class MapViewSettingsView: UIView {
     }
     
     private func expand() {
+        delegate?.wasExpanded()
+        
         heightConstraint.constant = 150
         widthConstraint.constant = 260
         setupOptions()
         settingsButton.setImage(#imageLiteral(resourceName: "Exit"), for: [])
-        UIView.animate(withDuration: 0.2, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.4, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.2, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.4, options: UIView.AnimationOptions.curveEaseInOut, animations: {
             self.superview!.layoutIfNeeded()
         }) { (_) in
             self.setupAdvancedSettings()
@@ -116,6 +112,7 @@ class MapViewSettingsView: UIView {
         widthConstraint.constant = 40
         settingsButton.setImage(#imageLiteral(resourceName: "Settings"), for: [])
         tableView.removeFromSuperview()
+        delegate?.wasCollapsed()
         
         UIView.animate(withDuration: 0.2, animations: {
             self.removeAdvancedSettingsView()
@@ -159,6 +156,7 @@ class MapViewSettingsView: UIView {
                 stackView.translatesAutoresizingMaskIntoConstraints = false
                 stackView.axis = .vertical
                 stackView.spacing = 10
+                stackView.distribution = .fillEqually
                 
                 let radiusStackView: UIStackView = {
                    let stackView = UIStackView()
@@ -169,17 +167,20 @@ class MapViewSettingsView: UIView {
                        let label = UILabel()
                         label.font = UIFont.appPrimary()
                         label.textColor = UIColor.appWhite()
-                        label.text = "Søgeradius: 0.2 km."
+                        let regionRadius = (filteringSettings.regionRadius / 1000).rounded(toPlaces: 1)
+                        label.attributedText = createAttributedText(normalText: "Radius: ", highligtedText: "\(regionRadius) km")
                         radiusSliderLabel = label
                         return label
                     }()
                     
                     let slider: UISlider = {
                         let slider = UISlider()
-                        slider.maximumValue = 3000
-                        slider.minimumValue = 200
-                        slider.tintColor = UIColor.appPrimaryColour()
-                        slider.addTarget(self, action: #selector(radiusSliderChanged(sender:)), for: UIControlEvents.valueChanged)
+                        slider.maximumValue = Float(5000)
+                        slider.minimumValue = Float(1000)
+                        slider.tag = 40
+                        slider.tintColor = UIColor.appSecondaryColour()
+                        slider.value = Float(filteringSettings.regionRadius)
+                        slider.addTarget(self, action: #selector(sliderChangedValue(sender:)), for: UIControl.Event.valueChanged)
                         return slider
                     }()
                     
@@ -197,35 +198,31 @@ class MapViewSettingsView: UIView {
                         let label = UILabel()
                         label.font = UIFont.appPrimary()
                         label.textColor = UIColor.appWhite()
-                        label.text = "Fundets alder:"
-                        ageLabel = label
+                        let pronoun = filteringSettings.age == 1 ? "år": "år"
+                        label.attributedText = createAttributedText(normalText: "Fundets alder: ", highligtedText: "\(filteringSettings.age) \(pronoun)")
+                        ageSliderLabel = label
                         return label
                     }()
                     
-                    let segmentedControl: UISegmentedControl = {
-                       let segmentedControl = UISegmentedControl()
-                        segmentedControl.insertSegment(withTitle: "2 uger", at: 0, animated: false)
-                        segmentedControl.insertSegment(withTitle: "3 mdr", at: 1, animated: false)
-                        segmentedControl.insertSegment(withTitle: "1 år", at: 2, animated: false)
-                        segmentedControl.tintColor = UIColor.appWhite()
-                        return segmentedControl
+                    let slider: UISlider = {
+                        let slider = UISlider()
+                        slider.maximumValue = Float(8)
+                        slider.minimumValue = Float(1)
+                        slider.tag = 50
+                        slider.tintColor = UIColor.appSecondaryColour()
+                        slider.value = Float(filteringSettings.age)
+                        slider.addTarget(self, action: #selector(sliderChangedValue(sender:)), for: UIControl.Event.valueChanged)
+                        return slider
                     }()
                     
                     stackView.addArrangedSubview(label)
-                    stackView.addArrangedSubview(segmentedControl)
+                    stackView.addArrangedSubview(slider)
                     return stackView
                 }()
                 
-                let searchButton: UIButton = {
-                   let button = UIButton()
-                    button.addTarget(self, action: #selector(searchButtonPressed(sender:)), for: .touchUpInside)
-                    button.backgroundColor = UIColor.appPrimaryColour()
-                    return button
-                }()
-                
+            
                 stackView.addArrangedSubview(radiusStackView)
                 stackView.addArrangedSubview(ageStackView)
-                stackView.addArrangedSubview(searchButton)
                 
                 return stackView
                 
@@ -262,6 +259,12 @@ class MapViewSettingsView: UIView {
         advancedSettingsView?.removeFromSuperview()
         advancedSettingsView = nil
     }
+    
+    private func createAttributedText(normalText: String, highligtedText: String) -> NSAttributedString {
+        let first = NSMutableAttributedString(string: normalText, attributes: [NSAttributedString.Key.font: UIFont.appPrimary()])
+        first.append(NSAttributedString(string: highligtedText, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed()]))
+        return first
+    }
 }
 
 extension MapViewSettingsView {
@@ -273,17 +276,19 @@ extension MapViewSettingsView {
         }
     }
     
-    @objc func searchButtonPressed(sender: UIButton) {
-        delegate?.newSearch(settings: observationSettings!)
-    }
-
-    @objc func radiusSliderChanged(sender: UISlider) {
-        if observationSettings != nil {
-            observationSettings?.radius = Double(sender.value / 1000).rounded(toPlaces: 1)
-        } else {
-            observationSettings = ObservationSettings(radius: Double(sender.value / 1000).rounded(toPlaces: 1), age: ObservationSettings.ObservationAge.after2000)
+    @objc func sliderChangedValue(sender: UISlider) {
+        if sender.tag == 40 {
+            filteringSettings.regionRadius = CGFloat(sender.value)
+            let regionsRadius = CGFloat(sender.value / 1000).rounded(toPlaces: 1)
+            radiusSliderLabel?.attributedText = createAttributedText(normalText: "Radius: ", highligtedText: "\(regionsRadius) km")
+        } else if sender.tag == 50 {
+            filteringSettings.age = Int(sender.value)
+            let pronoun = sender.value < 2 ? "år": "år"
+            ageSliderLabel?.attributedText = createAttributedText(normalText: "Fundets alder: ", highligtedText: "\(filteringSettings.age) \(pronoun)")
         }
-        radiusSliderLabel?.text = "Søgeradius: \(observationSettings!.radius) km."
+        
+        
+        
     }
 }
 
@@ -318,14 +323,14 @@ fileprivate class OptionsCell: UITableViewCell {
     
     private var iconImageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = UIViewContentMode.center
+        view.contentMode = UIView.ContentMode.center
         view.translatesAutoresizingMaskIntoConstraints = false
         view.clipsToBounds = true
         return view
     }()
     
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
     }
@@ -353,10 +358,10 @@ fileprivate class OptionsCell: UITableViewCell {
 }
 
 
-fileprivate extension Double {
+fileprivate extension CGFloat {
     /// Rounds the double to decimal places value
-    func rounded(toPlaces places:Int) -> Double {
-        let divisor = pow(10.0, Double(places))
+    func rounded(toPlaces places:Int) -> CGFloat {
+        let divisor = pow(10.0, CGFloat(places))
         return (self * divisor).rounded() / divisor
     }
 }

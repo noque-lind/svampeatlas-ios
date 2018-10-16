@@ -53,7 +53,7 @@ final class ELRevealViewControllerSegueSetController: UIStoryboardSegue {
 }
 
 final class ELRevealViewControllerSeguePushController: UIStoryboardSegue {
-    open override func perform() {
+    public override func perform() {
         let fromVC = source.eLRevealViewController()
         let dvc = destination
         fromVC?.pushNewViewController(viewController: dvc)
@@ -157,7 +157,7 @@ extension ELRevealViewControllerDelegate {
     }
     
     override var prefersStatusBarHidden: Bool {
-        guard let prefersStatusBarHidden = currentViewController.childViewControllerForStatusBarHidden?.prefersStatusBarHidden else {return false}
+        guard let prefersStatusBarHidden = currentViewController.childForStatusBarHidden?.prefersStatusBarHidden else {return false}
         return prefersStatusBarHidden
     }
     
@@ -396,16 +396,16 @@ extension ELRevealViewControllerDelegate {
         
         childViewController.view.frame = view.bounds
         childViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        addChildViewController(childViewController)
+        addChild(childViewController)
         view.insertSubview(childViewController.view, at: 0)
-        childViewController.didMove(toParentViewController: self)
+        childViewController.didMove(toParent: self)
         currentViewController = childViewController
     }
     
     fileprivate func removeChildViewControllerFromViewController(childViewController: UIViewController) {
-        childViewController.willMove(toParentViewController: nil)
+        childViewController.willMove(toParent: nil)
         childViewController.view.removeFromSuperview()
-        childViewController.removeFromParentViewController()
+        childViewController.removeFromParent()
     }
     
     
@@ -544,7 +544,7 @@ fileprivate struct MenuHelper {
         }
     }
     
-    fileprivate static func mapGestureStateToInteractor(gestureState: UIGestureRecognizerState, progress: CGFloat, interactor: Interactor?, openAnimation: Bool, delegate: ELRevealViewControllerDelegate?, triggerSegue: @escaping () -> Void) {
+    fileprivate static func mapGestureStateToInteractor(gestureState: UIGestureRecognizer.State, progress: CGFloat, interactor: Interactor?, openAnimation: Bool, delegate: ELRevealViewControllerDelegate?, triggerSegue: @escaping () -> Void) {
         guard let interactor = interactor else {return}
         switch gestureState {
         case .began:

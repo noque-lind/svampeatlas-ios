@@ -14,8 +14,28 @@ import Vision
 class RecognizeVC: UIViewController {
 
     private var recognizeView: RecognizeView = {
-       let view = RecognizeView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
+       let view = RecognizeView(effect: UIBlurEffect(style: UIBlurEffect.Style.dark))
         view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var errorView: UIView = {
+      let view = UIView()
+        view.backgroundColor = UIColor.black
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.appPrimaryHightlighed()
+        label.textAlignment = .center
+        label.textColor = UIColor.appWhite()
+        label.text = "Der skete en fejl med at få dit kamera til at fungere."
+        label.numberOfLines = 0
+        
+        view.addSubview(label)
+        label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
+        label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32).isActive = true
+        label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         return view
     }()
     
@@ -28,68 +48,96 @@ class RecognizeVC: UIViewController {
         return view
     }()
     
+    private lazy var imageView: UIImageView = {
+       let view = UIImageView()
+        view.backgroundColor = UIColor.clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
     
-    var captureSession: AVCaptureSession!
-    var cameraOutput: AVCapturePhotoOutput!
+    private lazy var menuButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(#imageLiteral(resourceName: "MenuButton"), for: [])
+        button.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var exitButton: UIButton = {
+      let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(#imageLiteral(resourceName: "Exit"), for: [])
+        button.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    var captureSession: AVCaptureSession?
+    var cameraOutput: AVCapturePhotoOutput?
+    
     var previewLayer: AVCaptureVideoPreviewLayer!
-    var viewdidappearProcessed = false
     
     var photoData: Data?
-    
+    var isObservation: Bool
     
    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
             setupView()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
-            previewLayer.frame = cameraView.frame
+    init(isObservation: Bool) {
+        self.isObservation = isObservation
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
     }
     
     override func viewDidLayoutSubviews() {
-        previewLayer.frame = cameraView.frame
+        previewLayer?.frame = cameraView.frame
         super.viewDidLayoutSubviews()
     }
+    
     override func viewWillAppear(_ animated: Bool) {
-        if !viewdidappearProcessed {
+        
+        guard let backCamera = AVCaptureDevice.default(for: AVMediaType.video) else {showCameraError(); return}
+        
+        captureSession = AVCaptureSession()
+        captureSession?.sessionPreset = AVCaptureSession.Preset.high
+        
+        do {
+            try addCameraInput(device: backCamera)
+            try createCameraOutput()
             
-            // Creating the session
-            captureSession = AVCaptureSession()
-            captureSession.sessionPreset = AVCaptureSession.Preset.hd1920x1080
+            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+            previewLayer.videoGravity = .resizeAspect
             
-            // Finding the backCamera of the device. TODO: Should make it failsafe
-            let backCamera = AVCaptureDevice.default(for: AVMediaType.video)
-            
-            do {
-                let input = try AVCaptureDeviceInput(device: backCamera!)
-                if captureSession.canAddInput(input) == true {
-                    captureSession.addInput(input)
-                }
-                
-                // Creating the output
-                cameraOutput = AVCapturePhotoOutput()
-                if captureSession.canAddOutput(cameraOutput) == true {
-                    captureSession.addOutput(cameraOutput!)
-                    
-                    previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
-                    previewLayer.videoGravity = AVLayerVideoGravity.resizeAspect
-                    previewLayer.connection?.videoOrientation = .portrait
-                    
-                    cameraView.layer.addSublayer(previewLayer)
-                    DispatchQueue.main.async {
-                        self.captureSession.startRunning()
-                    }
-                }
-            } catch {
-                debugPrint(error)
+            if UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown {
+                previewLayer.connection?.videoOrientation = .portrait
+            } else if UIDevice.current.orientation == .landscapeLeft {
+                previewLayer.connection?.videoOrientation = .landscapeLeft
+            } else if UIDevice.current.orientation == .landscapeRight {
+                previewLayer.connection?.videoOrientation = .landscapeRight
             }
-            viewdidappearProcessed = true
+            
+            cameraView.layer.addSublayer(previewLayer)
+            DispatchQueue.main.async {
+                self.captureSession?.startRunning()
+            }
+        } catch {
+            debugPrint(error)
         }
         super.viewWillAppear(animated)
-        
     }
     
     private func setupView() {
@@ -99,6 +147,12 @@ class RecognizeVC: UIViewController {
         cameraView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         cameraView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
+        view.addSubview(imageView)
+        imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
         view.addSubview(recognizeView)
         recognizeView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         recognizeView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -106,10 +160,18 @@ class RecognizeVC: UIViewController {
         recognizeView.topConstraint = recognizeView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -70)
         recognizeView.topConstraint.isActive = true
         
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-
-//        navigationBlurEffect()
+        if isObservation {
+            view.addSubview(exitButton)
+            exitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+            exitButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
+        } else {
+            view.addSubview(menuButton)
+            menuButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
+            menuButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        }
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         recognizeView.delegate = self
     }
     
@@ -133,13 +195,6 @@ class RecognizeVC: UIViewController {
         }
     }
     
-    func navigationBlurEffect() {
-        // Add blur view
-        self.navigationController?.navigationBar.isTranslucent = true
-            self.navigationController?.navigationBar.topItem?.title = "Arts-bestemmelse"
-        self.navigationController?.navigationBar.barStyle = UIBarStyle.black
-    }
-    
     @objc private func cameraViewWasTapped(sender: UITapGestureRecognizer) {
         if recognizeView.isExpanded {
            reset()
@@ -150,52 +205,101 @@ class RecognizeVC: UIViewController {
     
     private func reset() {
         recognizeView.reset()
-        captureSession.startRunning()
+        imageView.image = nil
+        captureSession?.startRunning()
+    }
+    
+    private func showCameraError() {
+        view.insertSubview(errorView, at: 0)
+        errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        errorView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+    
+    private func addCameraInput(device: AVCaptureDevice) throws {
+        let input = try AVCaptureDeviceInput(device:device)
+        if captureSession?.canAddInput(input) == true {
+            captureSession?.addInput(input)
+        } else {
+            throw NSError.init(domain: "Input error", code: 1, userInfo: nil)
+        }
+    }
+    
+    private func createCameraOutput() throws {
+        cameraOutput = AVCapturePhotoOutput()
+        if captureSession?.canAddOutput(cameraOutput!) == true {
+            captureSession?.addOutput(cameraOutput!)
+        } else {
+            throw NSError.init(domain: "Output Error", code: 1, userInfo: nil)
+        }
+    }
+    
+    @objc private func menuButtonTapped() {
+        if isObservation {
+            self.eLRevealViewController()?.pushNewViewController(viewController: NewObservationVC())
+        } else {
+            self.eLRevealViewController()?.toggleSideMenu()
+        }
     }
 }
 
 
-extension RecognizeVC: RecognizeViewDelegate, AVCapturePhotoCaptureDelegate {
+extension RecognizeVC: RecognizeViewDelegate {
+    func photoFromPhotoLibraryWasChoosen(image: UIImage) {
+        captureSession?.stopRunning()
+        imageView.image = image
+        if let cgImage = image.cgImage {
+            processImage(cgImage, model: SqueezeNet().model)
+        }
+    }
+    
+    func presentVC(vc: UIViewController) {
+        captureSession?.stopRunning()
+        self.present(vc, animated: true, completion: nil)
+    }
+    
     func resetSession() {
         reset()
     }
     
     func pushVC(vc: UIViewController) {
+        captureSession?.stopRunning()
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    
     
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
         let previewPixelType = settings.availablePreviewPhotoPixelFormatTypes.first!
-        let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewPixelType, kCVPixelBufferWidthKey as String: 227, kCVPixelBufferHeightKey as String: 227]
+//        let previewFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewPixelType, kCVPixelBufferWidthKey as String: 227, kCVPixelBufferHeightKey as String: 227]
 //        settings.previewPhotoFormat = previewFormat
         
-        cameraOutput.capturePhoto(with: settings, delegate: self)
+        cameraOutput?.capturePhoto(with: settings, delegate: self)
 //        captureSession.stopRunning()
     }
-    
-    
-    
-    
-    @available(iOS 11.0, *)
+}
+
+extension RecognizeVC: AVCapturePhotoCaptureDelegate {
+
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        captureSession.stopRunning()
+        captureSession?.stopRunning()
         if let error = error {
             debugPrint(error)
         } else {
-            photoData = photo.fileDataRepresentation()
-            do {
-                let model = try VNCoreMLModel(for: SqueezeNet().model)
-                let request = VNCoreMLRequest(model: model, completionHandler: mlResultHandler)
-                let handler = VNImageRequestHandler(data: photoData!)
-                try handler.perform([request])
-            } catch {
-                debugPrint(error)
+            if let imageData = photo.fileDataRepresentation() {
+                if let image = UIImage.init(data: imageData) {
+                    if let cgImage = image.cgImage {
+                        processImage(cgImage, model: SqueezeNet().model)
+                    }
+                }
             }
+            
         }
     }
+
     
-    @available(iOS 11.0, *)
     func mlResultHandler(request: VNRequest, error: Error?) {
         guard let results = request.results as? [VNClassificationObservation] else {return}
         var models = [temptModel]()
@@ -212,4 +316,16 @@ extension RecognizeVC: RecognizeViewDelegate, AVCapturePhotoCaptureDelegate {
         recognizeView.showResults(results: models)
     }
     
+    
+    
+    private func processImage(_ image: CGImage, model: MLModel) {
+        do {
+            let model = try VNCoreMLModel(for: SqueezeNet().model)
+            let request = VNCoreMLRequest(model: model, completionHandler: mlResultHandler)
+            let handler = VNImageRequestHandler(cgImage: image)
+            try handler.perform([request])
+        } catch {
+            debugPrint(error)
+        }
+    }
 }

@@ -109,8 +109,8 @@ class ResultsView: UIView {
         }
         
         if results.count > 0 {
-            headerLabel.text = "Fedt, vi har nogle forslag"
-            secondaryLabel.text = "Vi tror måske at det kan være en af disse \(results.count) arter. (DISCLAIMER)"
+            headerLabel.text = "Vi har \(results.count) forslag"
+            secondaryLabel.text = "Vær opmærksom på at disse forslag altid er givet med en vis usikkerhed"
         } else {
             headerLabel.text = "Øv"
             secondaryLabel.text = "Vi har desværre intet forslag til, hvilket art det er. Prøv venligst igen"
@@ -135,7 +135,7 @@ extension ResultsView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == results.count {
-            return RetryCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+            return RetryCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! ResultCell
             cell.configureCell(name: results[indexPath.row].identifier, confidence: results[indexPath.row].confidence)
@@ -188,7 +188,7 @@ fileprivate class RetryCell: UITableViewCell {
     
     
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
     }

@@ -19,10 +19,10 @@ class ImagesCollectionView: UIView {
     private var heightConstraint = NSLayoutConstraint()
     private var defaultHeight: CGFloat?
     private var navigationBarHeight: CGFloat?
-    private var imageContentMode: UIViewContentMode
+    private var imageContentMode: UIView.ContentMode
     
     
-    private var images = [Images]()
+    private var images = [Image]()
     
     private lazy var pageControl: ELPageControl = {
        let pageControl = ELPageControl()
@@ -50,15 +50,20 @@ class ImagesCollectionView: UIView {
         return collectionView
     }()
     
+    var currentlyShownCell: UICollectionViewCell? {
+        get {
+            return collectionView.visibleCells.first
+        }
+    }
+    
     deinit {
         print("was deinited")
     }
     
     private var imageScrollTimer: Timer?
-    
     weak var delegate: ImagesCollectionViewDelegate? = nil
     
-    init(imageContentMode: UIViewContentMode, defaultHeight: CGFloat? = nil, navigationBarHeight: CGFloat?) {
+    init(imageContentMode: UIView.ContentMode, defaultHeight: CGFloat? = nil, navigationBarHeight: CGFloat?) {
         if let defaultHeight = defaultHeight {
             self.defaultHeight = defaultHeight
         }
@@ -74,7 +79,7 @@ class ImagesCollectionView: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("coder aDecoder not implemented inside ImagesCollectionView")
+        fatalError()
     }
     
     private func setupView() {
@@ -93,11 +98,10 @@ class ImagesCollectionView: UIView {
     }
     
     @objc func handleTimer() {
-        print("Timer fired")
         pageControl.nextPage()
     }
     
-    func configure(images: [Images]) {
+    func configure(images: [Image]) {
         self.images = images
         collectionView.reloadData()
         pageControl.reloadData()
@@ -134,7 +138,7 @@ class ImagesCollectionView: UIView {
 extension ImagesCollectionView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "imageCell", for: indexPath) as? ImageCell else {fatalError("Failed to deque imageCell")}
-        cell.configureCell(contentMode: imageContentMode, url: images[indexPath.row].uri, photoAuthor: images[indexPath.row].photographer)
+        cell.configureCell(contentMode: imageContentMode, url: images[indexPath.row].url, photoAuthor: images[indexPath.row].photographer)
         return cell
     }
     

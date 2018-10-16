@@ -22,8 +22,8 @@ class ResultCell: UITableViewCell {
     }()
     
     
-    lazy var thumbImageView: MushroomThumbImage = {
-        let imageView = MushroomThumbImage()
+    lazy var thumbImageView: RoundedImageView = {
+        let imageView = RoundedImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
         imageView.contentMode = .scaleAspectFill
@@ -57,7 +57,7 @@ class ResultCell: UITableViewCell {
     
     
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
     }
@@ -68,7 +68,6 @@ class ResultCell: UITableViewCell {
     }
     
     override func layoutSubviews() {
-        thumbImageView.layer.cornerRadius = thumbImageView.frame.height / 2
         super.layoutSubviews()
     }
     
@@ -91,12 +90,9 @@ class ResultCell: UITableViewCell {
         textStackView.bottomAnchor.constraint(equalTo: backgroundContainerView.bottomAnchor, constant: -16).isActive = true
     }
     
-    
-    
-    
     func configureCell(name: String, confidence: CGFloat) {
         nameLabel.text = name
         confidenceLabel.text = "\(Int(confidence * 100))% sikker"
-        thumbImageView.image = #imageLiteral(resourceName: "IMG_15270")
+        thumbImageView.configureImage(url: nil)
     }
 }

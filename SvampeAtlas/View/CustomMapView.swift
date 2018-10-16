@@ -10,9 +10,7 @@ import UIKit
 import MapKit
 
 class CustomMapView: MKMapView {
-    
-
-    var selectedAnnotationView: ObservationPinView?
+//    var selectedAnnotationView: ObservationPinView?
     
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer is UITapGestureRecognizer {

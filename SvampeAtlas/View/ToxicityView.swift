@@ -53,7 +53,9 @@ class ToxicityView: UIView {
         label.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    func configure(_ toxicityLevel: ToxicityLevel) {
+    func configure(_ toxicityLevel: ToxicityLevel?) {
+        guard let toxicityLevel = toxicityLevel else {return}
+        
         label.text = toxicityLevel.rawValue
         
         switch toxicityLevel {

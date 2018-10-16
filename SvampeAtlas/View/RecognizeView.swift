@@ -16,7 +16,9 @@ struct temptModel {
 protocol RecognizeViewDelegate: NSObjectProtocol {
     func capturePhoto()
     func pushVC(vc: UIViewController)
+    func presentVC(vc: UIViewController)
     func resetSession()
+    func photoFromPhotoLibraryWasChoosen(image: UIImage)
 }
 
 
@@ -67,6 +69,7 @@ class RecognizeView: UIVisualEffectView {
         topConstraint.constant = -500
         isExpanded = true
         cameraControlsView.removeActivityIndicator()
+        cameraControlsView.alpha = 0
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             self.superview?.layoutIfNeeded()
         }) { (finished) in
@@ -84,6 +87,7 @@ class RecognizeView: UIVisualEffectView {
         isExpanded = false
         resultsView.reset()
         cameraControlsView.reset()
+        cameraControlsView.alpha = 1
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             self.superview?.layoutIfNeeded()
         }) { (finished) in
@@ -92,6 +96,14 @@ class RecognizeView: UIVisualEffectView {
 }
 
 extension RecognizeView: CameraControlsViewDelegate, ResultsViewDelegate {
+    func photoFromPhotoLibraryWasChoosen(image: UIImage) {
+        delegate?.photoFromPhotoLibraryWasChoosen(image: image)
+    }
+    
+    func presentVC(_ vc: UIViewController) {
+        delegate?.presentVC(vc: vc)
+    }
+    
     func capturePhoto() {
         delegate?.capturePhoto()
     }

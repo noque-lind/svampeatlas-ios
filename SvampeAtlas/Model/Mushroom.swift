@@ -7,138 +7,188 @@
 //
 
 import Foundation
-struct Mushroom: Decodable {
-    public private(set) var id: Int?
-    public private(set) var createdAt: String?
-    public private(set) var updatedAt: String?
-    public private(set) var path: String?
-    public private(set) var systematicPath: String?
-    public private(set) var fullName: String?
-    public private(set) var funIndexCurrUseNumber: Int?
-    public private(set) var funIndexTypificationNumber: Int?
-    public private(set) var funIndexNumber: Int?
-    public private(set) var rankID: Int?
-    public private(set) var rankName: String?
-    public private(set) var taxonName: String?
-    public private(set) var author: String?
-    public private(set) var vernacularName_dk_id: Int?
-    public private(set) var morphogroup_id: Int?
-    public private(set) var parent_id: Int?
-    public private(set) var accepted_id: Int?
-    public private(set) var probability: Int?
-    public private(set) var redlistData: [Redlistdata]?
-    public private(set) var acceptedTaxon: AcceptedTaxon?
-    public private(set) var attributes: Attributes?
-    public private(set) var vernacularName_dk: Vernacularname_DK?
-    public private(set) var statistics: Statistics?
-    public private(set) var images: [Images]?
-    
-    // This data is made up, not yet known if it exists.
-    public private(set) var toxicityLevel: ToxicityLevel? = ToxicityLevel.eatable
- 
-    private enum CodingKeys: String, CodingKey {
-        case id = "_id"
-        case createdAt
-        case updatedAt
-        case path = "Path"
-        case systematicPath = "SystematicPath"
-        case fullName = "FullName"
-        case funIndexCurrUseNumber = "FunIndexCurrUseNumber"
-        case funIndexTypificationNumber = "FunIndexTypificationNumber"
-        case funIndexNumber = "FunIndexNumber"
-        case rankID = "RankID"
-        case rankName = "RankName"
-        case taxonName = "TaxonName"
-        case author = "Author"
-        case vernacularName_dk_id = "vernacularname_dk_id"
-        case morphogroup_id
-        case parent_id
-        case accepted_id
-        case probability
-        case redlistData = "redlistdata"
-        case acceptedTaxon
-        case attributes
-        case vernacularName_dk = "Vernacularname_DK"
-        case statistics = "Statistics"
-        case images = "Images"
-    }
-    
-    
- }
+import UIKit
 
-struct Redlistdata: Decodable {
-    public private(set) var status: String?
+
+fileprivate struct PrivateMushroom: Decodable {
+    var id: Int?
+    var fullName: String?
+    var author: String?
+    var updatedAt: String?
+    var probability: Int?
+    var vernacularnameDK: PrivateVernacularNameDK?
+    var redlistdata: [PrivateRedlistData]?
+    var images: [PrivateImage]?
+    var attributes: PrivateAttributes?
+    var statistics: PrivateStatistics?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case fullName = "FullName"
+        case author = "Author"
+        case updatedAt
+        case probability
+        case vernacularnameDK = "Vernacularname_DK"
+        case redlistdata
+        case images
+        case attributes
+        case statistics = "Statistics"
+    }
 }
 
-struct AcceptedTaxon: Decodable {
-    public private(set) var _id: Int?
-    public private(set) var createdAt: String?
+fileprivate struct PrivateVernacularNameDK: Decodable {
+    var vernacularname_dk: String?
+    var source: String?
+}
+
+fileprivate struct PrivateRedlistData: Decodable {
+    var status: String?
+    var year: Int?
+    var udbredelse: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case status
+        case year
+        case udbredelse = "Udbredelse"
+    }
+}
+
+fileprivate struct PrivateImage: Decodable {
+    var thumbURL: String?
+    var url: String?
+    var photographer: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case thumbURL = "thumburi"
+        case url = "uri"
+        case photographer
+    }
+}
+
+fileprivate struct PrivateAttributes: Decodable {
+    var diagnose: String?
+    var forvekslingsmuligheder: String?
+    var oekologi: String?
+    var spiselighedsrapport: String?
+}
+
+fileprivate struct PrivateStatistics: Decodable {
+    var totalObservations: Int?
+    var lastAcceptedRecord: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case totalObservations = "total_count"
+        case lastAcceptedRecord = "last_accepted_record"
+    }
+}
+
+struct Mushroom: Decodable {
+    public private(set) var id: Int
+    public private(set) var fullName: String
     public private(set) var updatedAt: String?
-    public private(set) var Path: String?
-    public private(set) var SystematicPath: String?
-    public private(set) var FullName: String?
-    public private(set) var FunIndexCurrUseNumber: Int?
-    public private(set) var FunIndexTypificationNumber: Int?
-    public private(set) var FunIndexNumber: Int?
-    public private(set) var RankID: Int?
-    public private(set) var RankName: String?
-    public private(set) var TaxonName: String?
-    public private(set) var Author: String?
-    public private(set) var vernacularname_dk_id: Int?
-    public private(set) var morphogroup_id: Int?
-    public private(set) var parent_id: Int?
-    public private(set) var accepted_id: Int?
-    public private(set) var probability: Int?
+    public private(set) var danishName: String?
+    public private(set) var totalObservations: Int?
+    public private(set) var lastAcceptedObservation: String?
+    public private(set) var redlistData: RedlistData?
+    public private(set) var attributes: Attributes?
+    public private(set) var images: [Image]?
+
+    init(from decoder: Decoder) throws {
+        let privateMushroom = try PrivateMushroom(from: decoder)
+        id = privateMushroom.id ?? 0
+        fullName = privateMushroom.fullName?.capitalizeFirst() ?? ""
+        updatedAt = privateMushroom.updatedAt
+        danishName = privateMushroom.vernacularnameDK?.vernacularname_dk?.capitalizeFirst()
+        totalObservations = privateMushroom.statistics?.totalObservations
+        lastAcceptedObservation = privateMushroom.statistics?.lastAcceptedRecord
+        
+        if let privateRedlistData = privateMushroom.redlistdata?.first, let status = privateRedlistData.status {
+            redlistData = RedlistData(status: status, year: privateRedlistData.year, spread: privateRedlistData.udbredelse)
+        }
+        
+        if let privateAttributes = privateMushroom.attributes {
+            attributes = Attributes(ecology: privateAttributes.oekologi?.capitalizeFirst(), diagnosis: privateAttributes.diagnose?.capitalizeFirst(), toxicityLevel: nil)
+        }
+        
+        if let privateImages = privateMushroom.images, privateImages.count != 0 {
+            images = [Image]()
+            for privateImage in privateImages {
+                guard let url = privateImage.url else {break}
+                images?.append(Image(thumbURL: privateImage.thumbURL, url: url, photographer: privateImage.photographer))
+            }
+        }
+    }
+    
+    init(from cdMushroom: CDMushroom) {
+        id = Int(cdMushroom.id)
+        fullName = cdMushroom.fullName ?? "Uventet fejl"
+        danishName = cdMushroom.danishName
+        updatedAt = cdMushroom.updatedAt
+        
+        if let redlistStatus = cdMushroom.redlistStatus {
+            redlistData = RedlistData(status: redlistStatus, year: nil, spread: nil)
+        }
+        
+        
+        if let attributes = cdMushroom.attributes {
+            self.attributes = Attributes(ecology: attributes.ecology, diagnosis: attributes.diagnosis, toxicityLevel: nil)
+        }
+        
+        if let cdImages = cdMushroom.images?.allObjects as? [CDImage], cdImages.count != 0 {
+            images = [Image]()
+            for cdImage in cdImages {
+                guard let url = cdImage.url else {continue}
+                images?.append(Image(thumbURL: nil, url: url, photographer: cdImage.photographer))
+            }
+        }
+        
+    }
+}
+
+
+struct Image: Decodable {
+    public private(set) var thumbURL: String?
+    public private(set) var url: String
+    public private(set) var photographer: String?
+}
+
+struct RedlistData: Decodable {
+    public private(set) var status: String
+    public private(set) var year: Int?
+    public private(set) var spread: String?
 }
 
 struct Attributes: Decodable {
-    public private(set) var PresentInDK: Bool?
-    public private(set) var forvekslingsmuligheder: String?
-    public private(set) var oekologi: String?
-    public private(set) var diagnose: String?
-}
-
-struct Vernacularname_DK: Decodable {
-    public private(set) var _id: Int?
-    public private(set) var taxon_id: Int?
-    public private(set) var createdAt: String?
-    public private(set) var updatedAt: String?
-    public private(set) var vernacularname_dk: String?
-    public private(set) var appliedLatinName: String?
-    public private(set) var source: String?
-    public private(set) var note: String?
-}
-
-struct Statistics: Decodable {
-    public private(set) var taxon_id: Int
-    public private(set) var createdAt: String
-    public private(set) var updatedAt: String
-    public private(set) var accepted_count: Int
-    public private(set) var total_count: Int
-    public private(set) var accepted_count_before_atlas: Int
-    public private(set) var accepted_count_during_atlas: Int
-    public private(set) var accepted_count_after_atlas: Int
-    public private(set) var last_accepted_record: String
-    public private(set) var first_accepted_record: String
-}
-
-struct Images: Decodable {
-    public private(set) var _id: Int
-    public private(set) var taxon_id: Int
-    public private(set) var createdAt: String
-    public private(set) var updatedAt: String
-    public private(set) var thumburi: String
-    public private(set) var uri: String
-    public private(set) var photographer: String
-    public private(set) var country: String
-    public private(set) var collectionNumber: String
+    public private(set) var ecology: String?
+    public private(set) var diagnosis: String?
+    public private(set) var toxicityLevel: ToxicityLevel? = ToxicityLevel.createRandom()
+    
+    private enum CodingKeys: String, CodingKey {
+        case ecology
+        case diagnosis
+    }
 }
 
 enum ToxicityLevel: String {
     case toxic = "GIFTIG"
     case eatable = "SPISELIG"
     case cautious = "VÆR FORSIGTIG"
+    
+    static func createRandom() -> ToxicityLevel {
+       let random = arc4random_uniform(3)
+        switch random {
+        case 0:
+            return ToxicityLevel.cautious
+        case 1:
+            return ToxicityLevel.eatable
+        default:
+            return ToxicityLevel.eatable
+    
+        }
+    }
 }
+
+
 
 
 

@@ -8,43 +8,48 @@
 
 import UIKit
 
-
 protocol CustomSearchBarDelegate: NSObjectProtocol {
-    func shouldExpandSearchBar(animationDuration: TimeInterval)
-    func shouldCollapseSearchBar(animationDuration: TimeInterval)
     func newSearchEntry(entry: String)
     func clearedSearchEntry()
 }
 
 class CustomSearchBar: UITextField {
     
-    @IBOutlet weak var heightConstraint: NSLayoutConstraint!
+    var leadingConstraint = NSLayoutConstraint()
+    var widthConstraint = NSLayoutConstraint()
+    var heightConstraint = NSLayoutConstraint()
     
     lazy var iconView: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0.0, y: 0.0, width: heightConstraint.constant, height: heightConstraint.constant))
+        let button = UIButton()
         button.backgroundColor = UIColor.appSecondaryColour()
         button.setImage(#imageLiteral(resourceName: "Search"), for: [])
-        button.clipsToBounds = true
+        button.clipsToBounds = false
         button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         button.layer.shadowRadius = 1.5
         button.layer.masksToBounds = false
-        button.layer.cornerRadius = heightConstraint.constant / 2
         button.addTarget(self, action: #selector(searchButtonPressed(sender:)), for: .touchUpInside)
         return button
     }()
     
+    private var progressBarView: ProgressBarView?
+    private var recentSearch: String?
     weak var searchBarDelegate: CustomSearchBarDelegate? = nil
     public private(set) var isExpanded: Bool = false
     private var shapeLayer = CAShapeLayer()
     
-    override func awakeFromNib() {
+    init() {
+        super.init(frame: CGRect.zero)
         setupView()
-        super.awakeFromNib()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
     }
     
     override func layoutSubviews() {
         round()
+        iconView.frame = CGRect(x: 0, y: 0, width: heightConstraint.constant, height: heightConstraint.constant)
         super.layoutSubviews()
     }
     
@@ -64,38 +69,48 @@ class CustomSearchBar: UITextField {
     
     private func setupView() {
         self.backgroundColor = UIColor.clear
-        
-        iconView.layer.shadowOpacity = 0.4
-        layer.mask = nil
+        returnKeyType = .search
+        //        iconView.layer.shadowOpacity = 0.4
         
         leftViewMode = .always
         leftView = iconView
         
         font = UIFont.appPrimaryHightlighed()
         textColor = UIColor.appWhite()
-        attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedStringKey.font: UIFont.appPrimary(), NSAttributedStringKey.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
+        attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
         placeholder = "Søg efter en art her..."
         
         clearButtonMode = .always
         tintColor = UIColor.appWhite()
         
-        
-        
-        
-        self.addTarget(self, action: #selector(editingChanged(sender:)), for: UIControlEvents.editingChanged)
+        self.addTarget(self, action: #selector(returnButtonPressed(sender:)), for: UIControl.Event.editingDidEndOnExit)
+        self.addTarget(self, action: #selector(editingChanged(sender:)), for: UIControl.Event.editingChanged)
     }
     
     
     private func round() {
-        let radius = self.frame.height / 2
+        let radius = frame.height / 2
+        iconView.layer.cornerRadius = radius
         shapeLayer.path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.topLeft, .bottomLeft], cornerRadii: CGSize(width: radius, height: radius)).cgPath
+        layer.mask = shapeLayer
     }
 }
 
 extension CustomSearchBar {
     @objc func editingChanged(sender: UITextField) {
-        guard let entry = sender.text, entry != "" else {searchBarDelegate?.clearedSearchEntry(); return}
-        searchBarDelegate?.newSearchEntry(entry: entry)
+        guard let text = sender.text, text != "" else {progressBarView?.reset(); searchBarDelegate?.clearedSearchEntry(); return}
+        
+        if text.last != " " && text.count > 3 {
+            beginLoadTimer()
+        } else {
+            progressBarView?.reset()
+        }
+    }
+    
+    @objc private func returnButtonPressed(sender: UIButton) {
+        progressBarView?.reset()
+        guard let text = text, text != "" && text != " " else {return}
+        completedLoading()
     }
     
     @objc func searchButtonPressed(sender: UIButton) {
@@ -113,16 +128,18 @@ extension CustomSearchBar {
     
     func expand() {
         if !isHidden && !isExpanded {
-            searchBarDelegate?.shouldExpandSearchBar(animationDuration: 0.2)
+            widthConstraint.isActive = false
+            leadingConstraint.isActive = true
             
             iconView.layer.shadowOpacity = 0.0
             self.layer.mask = self.shapeLayer
-           
+            
             
             UIView.animate(withDuration: 0.2) {
+                self.superview?.layoutIfNeeded()
                 self.backgroundColor = UIColor.appPrimaryColour().withAlphaComponent(0.9)
-                 self.textColor = UIColor.appWhite().withAlphaComponent(1.0)
-                self.attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedStringKey.font: UIFont.appPrimary(), NSAttributedStringKey.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
+                self.textColor = UIColor.appWhite().withAlphaComponent(1.0)
+                self.attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
             }
             isExpanded = true
         }
@@ -130,15 +147,66 @@ extension CustomSearchBar {
     
     func collapse() {
         if isExpanded {
-            searchBarDelegate?.shouldCollapseSearchBar(animationDuration: 0.2)
+            leadingConstraint.isActive = false
+            widthConstraint.isActive = true
+            
+            progressBarView?.reset()
+            progressBarView?.removeFromSuperview()
+            progressBarView = nil
+            
+            UIView.animate(withDuration: 0.2) {
+                self.superview?.layoutIfNeeded()
+            }
+            
             iconView.setImage(#imageLiteral(resourceName: "Search"), for: [])
             self.backgroundColor = UIColor.clear
             iconView.layer.shadowOpacity = 0.4
             layer.mask = nil
+            clipsToBounds = false
             textColor = UIColor.appWhite().withAlphaComponent(0.0)
-            attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedStringKey.font: UIFont.appPrimary(), NSAttributedStringKey.foregroundColor: UIColor.appWhite().withAlphaComponent(0.0)])
+            attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.0)])
             _ = self.resignFirstResponder()
             isExpanded = false
         }
     }
+    
+    private func beginLoadTimer() {
+        if progressBarView != nil {
+            progressBarView?.startLoading()
+        } else {
+            progressBarView = ProgressBarView()
+            progressBarView?.translatesAutoresizingMaskIntoConstraints = false
+            insertSubview(progressBarView!, belowSubview: iconView)
+            progressBarView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+            progressBarView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+            progressBarView?.heightAnchor.constraint(equalToConstant: 2).isActive = true
+            progressBarView?.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            progressBarView?.delegate = self
+            progressBarView?.startLoading()
+        }
+    }
 }
+
+extension CustomSearchBar: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return true
+    }
+}
+
+extension CustomSearchBar: ProgressBarViewDelegate {
+    func completedLoading() {
+        guard let entry = text, entry != recentSearch else {return}
+        searchBarDelegate?.newSearchEntry(entry: entry)
+        recentSearch = entry
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        }) { (_) in
+            UIView.animate(withDuration: 0.1, animations: {
+                self.transform = CGAffineTransform.identity
+            })
+        }
+    }
+}
+
+

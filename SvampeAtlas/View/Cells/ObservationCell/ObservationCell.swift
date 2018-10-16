@@ -10,41 +10,28 @@ import UIKit
 
 class ObservationCell: UITableViewCell {
 
-    lazy var button: UIButton = {
+   private lazy var button: UIButton = {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-    private var redlistView: RedlistView = {
-        let view = RedlistView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
-        return view
-    }()
-    
-    lazy var thumbImageView: UIImageView = {
-       let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "IMG_15270")
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
+    private lazy var thumbImageView: RoundedImageView = {
+       let imageView = RoundedImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        imageView.addSubview(redlistView)
-        redlistView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 4).isActive = true
-        redlistView.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 4).isActive = true
+        imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
         return imageView
     }()
     
-    
-    lazy var observationView: ObservationView = {
+    private lazy var observationView: ObservationView = {
        let view = ObservationView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    private var stackViewLeadingConstraint: NSLayoutConstraint!
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
     }
@@ -63,22 +50,39 @@ class ObservationCell: UITableViewCell {
         button.topAnchor.constraint(equalTo: topAnchor).isActive = true
         button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
+        let stackView: UIStackView = {
+           let view = UIStackView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.axis = .horizontal
+            view.addArrangedSubview(thumbImageView)
+            view.addArrangedSubview(observationView)
+            view.spacing = 8
+            return view
+        }()
         
-        contentView.addSubview(thumbImageView)
-        thumbImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        thumbImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        thumbImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
-        thumbImageView.widthAnchor.constraint(equalTo: thumbImageView.heightAnchor).isActive = true
-        
-        contentView.addSubview(observationView)
-        observationView.leadingAnchor.constraint(equalTo: thumbImageView.trailingAnchor, constant: 8).isActive = true
-        observationView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
-        observationView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        observationView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+        contentView.addSubview(stackView)
+        stackViewLeadingConstraint = stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0)
+        stackViewLeadingConstraint.isActive = true
+        stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
+        stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4).isActive = true
     }
     
     func configure(observation: Observation) {
         observationView.configure(observation: observation)
-        redlistView.configure(observation.determinationView?.redlistStatus)        
+        
+        if let imageURL = observation.images?.first?.url {
+                thumbImageView.configureImage(url: imageURL)
+                thumbImageView.isHidden = false
+                stackViewLeadingConstraint.isActive = false
+                stackViewLeadingConstraint.constant = 0
+                stackViewLeadingConstraint.isActive = true
+        } else {
+                thumbImageView.isHidden = true
+//                thumbImageView.image = nil
+                stackViewLeadingConstraint.isActive = false
+                stackViewLeadingConstraint.constant = 8
+                stackViewLeadingConstraint.isActive = true
+        }
     }
 }

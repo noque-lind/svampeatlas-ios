@@ -8,12 +8,10 @@
 
 import UIKit
 
-
-
 class NavigationVC: UITableViewController {
     
     private var firstLoad = true
-    private let navigationItems = [[NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "LogoSmall"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
+    private let navigationItems = [[NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
     
 
     override func viewDidLoad() {
@@ -79,9 +77,11 @@ extension NavigationVC {
         let identifier = navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier
         switch identifier {
         case "RecognizeVC":
-            vc = UINavigationController(rootViewController: RecognizeVC())
+            vc = UINavigationController(rootViewController: RecognizeVC(isObservation: false))
         case "NewObservationVC":
             vc = NewObservationVC()
+        case "FieldWalkVC":
+            vc = FieldWalkVC()
         default:
             vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier)
         }

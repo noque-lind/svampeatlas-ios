@@ -16,6 +16,17 @@ class NewObservationVC: UIViewController {
         return view
     }()
     
+    private lazy var menuButton: UIButton = {
+      let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(#imageLiteral(resourceName: "MenuButton"), for: [])
+        button.widthAnchor.constraint(equalToConstant: 34).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var dividerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.appWhite()
@@ -67,6 +78,11 @@ class NewObservationVC: UIViewController {
         containerStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         containerStackView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         containerStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        view.addSubview(menuButton)
+        menuButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        menuButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+        
         
         view.addSubview(dividerView)
         dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
@@ -127,8 +143,8 @@ class NewObservationVC: UIViewController {
         return containerView
     }
 
-    @objc private func viewWasTapped(sender: UITapGestureRecognizer) {
-        print("Was tapped")
+    @objc private func menuButtonTapped() {
+        self.eLRevealViewController()?.toggleSideMenu()
     }
     
     @objc private func viewWasHeld(sender: UILongPressGestureRecognizer) {
@@ -142,7 +158,7 @@ class NewObservationVC: UIViewController {
             } else {
                 switch sender.view!.tag {
                 case 0:
-                    self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: RecognizeVC()))
+                    self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: RecognizeVC(isObservation: true)))
                 case 1:
                     return
                 default: return

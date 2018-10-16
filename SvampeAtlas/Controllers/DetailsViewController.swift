@@ -8,19 +8,29 @@
 
 import UIKit
 
+enum DetailsContent {
+    case mushroom(mushroom : Mushroom)
+    case observation(observation: Observation, showSpeciesView: Bool)
+}
+
 class DetailsViewController: UIViewController {
     
-    lazy var scrollView: CustomScrollView = {
-        let scrollView = CustomScrollView(topInset: 300)
+    private lazy var scrollView: DetailsScrollView = {
+        var topInset = self.navigationController?.navigationBar.frame.maxY ?? 0
+        if images != nil, images?.count != 0 {
+            topInset = 300
+        }
+    
+        let scrollView = DetailsScrollView(topInset: topInset)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.customDelegate = self
         return scrollView
     }()
     
-    lazy var imagesCollectionView: ImagesCollectionView = {
-       let collectionView = ImagesCollectionView(imageContentMode: UIViewContentMode.scaleAspectFill, defaultHeight: 300, navigationBarHeight: self.navigationController?.navigationBar.frame.maxY)
+    private lazy var imagesCollectionView: ImagesCollectionView = {
+        let collectionView = ImagesCollectionView(imageContentMode: UIView.ContentMode.scaleAspectFill, defaultHeight: 300, navigationBarHeight: (self.navigationController?.navigationBar.frame.maxY))
         collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.configure(images: mushroom.images!)
         collectionView.configureTimer()
         return collectionView
     }()
@@ -28,89 +38,84 @@ class DetailsViewController: UIViewController {
     private lazy var customNavigationBar: CustomNavigationBar = {
         let view = CustomNavigationBar()
         view.translatesAutoresizingMaskIntoConstraints = false
-        
-        let stackView = UIStackView()
-        stackView.spacing = 10
-        
-        let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "Camera"), for: [])
-        
-       stackView.addArrangedSubview(button)
-        
-        if let count = mushroom.images?.count {
-            let label = UILabel()
-            label.font = UIFont.appPrimaryHightlighed()
-            label.textColor = UIColor.appWhite()
-            label.text = "\(count) billeder"
-            stackView.addArrangedSubview(label)
-        }
-        
-        view.configureContent(stackView: stackView, alignment: UIStackViewAlignment.center)
         return view
     }()
-
     
-    var mushroom: Mushroom
-    var imageScrollTimer: Timer!
     let interactor = showImageAnimationInteractor()
+    let detailsContent: DetailsContent
+    var images: [Image]?
+    private var hasBeenSetup = false
     
-    
-    init(mushroom: Mushroom) {
-        self.mushroom = mushroom
+    init(detailsContent: DetailsContent) {
+        self.detailsContent = detailsContent
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError()
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
+        if !hasBeenSetup {
+            setupView()
+            hasBeenSetup = true
+        }
+        self.eLRevealViewController()?.delegate = self
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        setupView()
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         super.viewWillAppear(animated)
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        super.viewDidAppear(animated)
     }
 
-   
-    override func viewDidDisappear(_ animated: Bool) {
+   override func viewDidDisappear(_ animated: Bool) {
+    if images != nil {
+        imagesCollectionView.invalidate()
+    }
+    
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        imagesCollectionView.invalidate()
         super.viewDidDisappear(animated)
     }
     
     deinit {
-        print("Deeinit called")
+        debugPrint("DetailsViewController was deinited correctly")
     }
     
-    override var prefersStatusBarHidden: Bool {
-        return false
-    }
-    
-    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
-        return UIStatusBarAnimation.slide
-    }
-    
-    func setupView() {
+    private func setupView() {
+        switch detailsContent {
+        case .mushroom(mushroom: let mushroom):
+            customNavigationBar.configureTitle(mushroom.danishName ?? mushroom.fullName)
+            images = mushroom.images
+            scrollView.configureScrollView(withMushroom: mushroom)
+        case .observation(observation: let observation, let showSpeciesView):
+            customNavigationBar.configureTitle("Fund af: \(observation.speciesProperties.name)")
+            images = observation.images
+            scrollView.configureScrollView(withObservation: observation, showSpeciesView: showSpeciesView)
+        }
+        
         view.backgroundColor = UIColor.appSecondaryColour()
         view.addSubview(scrollView)
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        scrollView.configureScrollView(withMushroom: mushroom)
         
-        
-        view.addSubview(imagesCollectionView)
-        imagesCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        imagesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        imagesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
+        if let images = images {
+            view.addSubview(imagesCollectionView)
+            imagesCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            imagesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            imagesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            imagesCollectionView.configure(images: images)
+        }
+    
+    
         view.addSubview(customNavigationBar)
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -123,8 +128,9 @@ class DetailsViewController: UIViewController {
 
 extension DetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard images != nil else {return}
         let adjustedContentOffset = scrollView.contentOffset.y + scrollView.contentInset.top
-        if scrollView == self.scrollView {
+        if scrollView == self.scrollView && images != nil {
             let minValue = (max(adjustedContentOffset, 0))
             imagesCollectionView.configureTransform(deltaValue: minValue)
             if minValue <= 0 {
@@ -139,8 +145,6 @@ extension DetailsViewController: ELRevealViewControllerDelegate, UIGestureRecogn
         return false
     }
 }
-
-
 
 extension DetailsViewController: UIViewControllerTransitioningDelegate {
     
@@ -160,7 +164,7 @@ extension DetailsViewController: UIViewControllerTransitioningDelegate {
 
 extension DetailsViewController: ImagesCollectionViewDelegate {
     func didSelectImage(atIndexPath indexPath: IndexPath) {
-        let photoVC = ImageVC(images: mushroom.images!)
+        let photoVC = ImageVC(images: images!)
         photoVC.transitioningDelegate = self
         photoVC.interactor = interactor
         present(photoVC, animated: true, completion: nil)
@@ -168,5 +172,15 @@ extension DetailsViewController: ImagesCollectionViewDelegate {
     
     func changeNavigationbarBackgroundViewAlpha(_ alpha: CGFloat) {
         customNavigationBar.changeAlpha(alpha)
+    }
+}
+
+extension DetailsViewController: NavigationDelegate {
+    func presentVC(_ vc: UIViewController) {
+        
+    }
+    
+    func pushVC(_ vc: UIViewController) {
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

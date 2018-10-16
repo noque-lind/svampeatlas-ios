@@ -10,14 +10,9 @@ import UIKit
 
 class ClusterPinCalloutView: UIView {
     
-    private lazy var tableView: CustomTableView = {
-       let tableView = CustomTableView()
+    private lazy var observationsTableView: ObservationsTableView = {
+       let tableView = ObservationsTableView(automaticallyAdjustHeight: false)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = UIColor.clear
-        tableView.separatorStyle = .none
-        tableView.alpha = 0
-        tableView.alwaysBounceVertical = false
-        tableView.register(ObservationCell.self, forCellReuseIdentifier: "observationCell")
         return tableView
     }()
     
@@ -25,16 +20,20 @@ class ClusterPinCalloutView: UIView {
     
     var heightConstraint: NSLayoutConstraint!
     var widthConstraint: NSLayoutConstraint!
-    private var rowHeight: CGFloat = 100
-    weak var delegate: MapViewDelegate? = nil
+    private var rowHeight: CGFloat = 120
+    weak var delegate: NavigationDelegate? = nil {
+        didSet {
+            observationsTableView.delegate = delegate
+        }
+    }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if let tableView = tableView.hitTest(convert(point, to: tableView), with: event) {
-            return tableView
+        if let observationsTableView = observationsTableView.hitTest(convert(point, to: observationsTableView), with: event) {
+            return observationsTableView
         }
         return nil
     }
-    
+   
     init() {
         super.init(frame: CGRect.zero)
         setupView()
@@ -47,15 +46,13 @@ class ClusterPinCalloutView: UIView {
 
     private func setupView() {
         backgroundColor = UIColor.appPrimaryColour()
-        
-        
         self.clipsToBounds = true
         self.alpha = 0
-        addSubview(tableView)
-        tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        addSubview(observationsTableView)
+        observationsTableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        observationsTableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        observationsTableView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        observationsTableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
     func configure(superView: UIView, observations: [Observation]) {
@@ -87,80 +84,33 @@ class ClusterPinCalloutView: UIView {
             self.superview!.layoutIfNeeded()
             self.alpha = 1
         }) { (_) in
-            self.tableView.delegate = self
-            self.tableView.dataSource = self
-            self.tableView.reloadData()
+            self.observationsTableView.configure(observations: self.observations)
             UIView.animate(withDuration: 0.2, animations: {
-                self.tableView.alpha = 1
+                self.observationsTableView.alpha = 1
             }, completion: nil)
         }
     }
     
-    func hide(superView: UIView,animated: Bool) {
+    func hide(superView: UIView, animated: Bool, completion: @escaping () -> ()) {
         observations.removeAll()
-        tableView.reloadData()
+        observationsTableView.configure(observations: observations)
+        
         if animated {
             widthConstraint.constant = superView.frame.width
             heightConstraint.constant = superView.frame.height
+            
             UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
                 self.superview!.layoutIfNeeded()
                 self.alpha = 0
             }) { (_) in
-                self.reset()
+                completion()
             }
         } else {
-            alpha = 0
-            reset()
+            completion()
         }
     }
     
-   private func reset() {
-        DispatchQueue.main.async {
-            self.widthConstraint.isActive = false
-            self.heightConstraint.isActive = false
-            self.tableView.alpha = 0
-            if let superView = self.superview {
-                superView.layoutIfNeeded()
-            }
-            self.removeFromSuperview()
-        }
-    }
-}
-
-extension ClusterPinCalloutView: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return observations.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       let cell = tableView.dequeueReusableCell(withIdentifier: "observationCell", for: indexPath) as! ObservationCell
-        cell.configure(observation: observations[indexPath.row])
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-       return rowHeight
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.shouldShowObservationDetails(observation: observations[indexPath.row])
-    }
-}
-
-class CustomTableView: UITableView {
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if self.point(inside: point, with: event) {
-            return self
-        } else {
-            return nil
-        }
-    }
-
-    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if gestureRecognizer is UITapGestureRecognizer {
-            return false
-        } else {
-            return true
-        }
+    deinit {
+        print("CluserCalloutViewDeinit")
     }
 }

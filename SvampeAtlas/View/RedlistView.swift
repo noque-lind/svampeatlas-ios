@@ -10,7 +10,6 @@ import UIKit
 
 class RedlistView: UIView {
 
-    
     private var label: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.appWhite()
@@ -23,7 +22,9 @@ class RedlistView: UIView {
     private lazy var backgroundView: UIView = {
        let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         view.addSubview(label)
+        
         view.clipsToBounds = true
         label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 2).isActive = true
         label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -2).isActive = true
@@ -41,12 +42,11 @@ class RedlistView: UIView {
         return label
     }()
     
-    var detailed: Bool
+    private var detailed: Bool
     
     override func layoutSubviews() {
         super.layoutSubviews()
         backgroundView.layer.cornerRadius = backgroundView.frame.height / 2
-        print(backgroundView.frame.height)
     }
     
     init(detailed: Bool = false) {
@@ -60,16 +60,13 @@ class RedlistView: UIView {
     }
     
     private func setupView(detailed: Bool) {
-        heightAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        
         backgroundColor = UIColor.clear
         addSubview(backgroundView)
         if detailed {
             backgroundView.topAnchor.constraint(equalTo: topAnchor).isActive = true
             backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-            backgroundView.widthAnchor.constraint(equalTo: heightAnchor).isActive = true
+            
             
             addSubview(detailsLabel)
             detailsLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -84,7 +81,7 @@ class RedlistView: UIView {
         }
     }
     
-    func configure(_ redlistStatus: String?) {
+    func configure(_ redlistStatus: String?, black: Bool = false) {
         label.text = redlistStatus
         if let redlistStatus = redlistStatus {
         switch redlistStatus {
@@ -103,12 +100,26 @@ class RedlistView: UIView {
             if detailed {
                 detailsLabel.text = "Sårbar art"
             }
+        
+        case "DD":
+            backgroundView.backgroundColor = UIColor.gray
+            if detailed {
+                detailsLabel.text = "Vides ikke"
+            }
         default:
             backgroundView.backgroundColor = UIColor.clear
         }
         } else {
             backgroundView.backgroundColor = UIColor.clear
             label.text = ""
+        }
+        
+        if detailed && black {
+            detailsLabel.textColor = UIColor.appPrimaryColour()
+        } else {
+            if detailed {
+                detailsLabel.textColor = UIColor.white
+            }
         }
     }
 }

@@ -69,10 +69,12 @@
 		4AEE2F37204551B600D20C2D /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F36204551B600D20C2D /* RoundedImageView.swift */; };
 		DB12BC2421354BAA00FFA037 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB12BC2321354BAA00FFA037 /* AuthService.swift */; };
 		DB12BC262135507F00FFA037 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB12BC252135507F00FFA037 /* User.swift */; };
-		DB12BC28213551FD00FFA037 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB12BC27213551FD00FFA037 /* UserCell.swift */; };
+		DB12BC28213551FD00FFA037 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB12BC27213551FD00FFA037 /* UserView.swift */; };
 		DB1F85532122F3ED00658619 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1F85522122F3ED00658619 /* Date+Extension.swift */; };
 		DB2A52CF216383E20000F483 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2A52CE216383E20000F483 /* UIImageView+Extension.swift */; };
 		DB2EC90C216D285F00B980A0 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2EC90B216D285F00B980A0 /* Double+Extension.swift */; };
+		DB42E37221776EB8003C3585 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37121776EB8003C3585 /* UserService.swift */; };
+		DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37321777811003C3585 /* ProfileImageView.swift */; };
 		DB679392214CF659003B34B2 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679391214CF659003B34B2 /* String+Extension.swift */; };
 		DB679394214CF7EA003B34B2 /* MushroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679393214CF7EA003B34B2 /* MushroomView.swift */; };
 		DB679396214D00DA003B34B2 /* ObservationsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679395214D00DA003B34B2 /* ObservationsTableView.swift */; };
@@ -171,10 +173,12 @@
 		4AEE2F36204551B600D20C2D /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
 		DB12BC2321354BAA00FFA037 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		DB12BC252135507F00FFA037 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		DB12BC27213551FD00FFA037 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		DB12BC27213551FD00FFA037 /* UserView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		DB1F85522122F3ED00658619 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		DB2A52CE216383E20000F483 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		DB2EC90B216D285F00B980A0 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
+		DB42E37121776EB8003C3585 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		DB42E37321777811003C3585 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
 		DB679391214CF659003B34B2 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		DB679393214CF7EA003B34B2 /* MushroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomView.swift; sourceTree = "<group>"; };
 		DB679395214D00DA003B34B2 /* ObservationsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationsTableView.swift; sourceTree = "<group>"; };
@@ -240,6 +244,7 @@
 				4A53026A209888E50043C1D3 /* CustomMapView.swift */,
 				4AB6FA14207112F500870A46 /* CustomSearchBar.swift */,
 				DB679395214D00DA003B34B2 /* ObservationsTableView.swift */,
+				DB42E37321777811003C3585 /* ProfileImageView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -254,7 +259,7 @@
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
 				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
 				4A8A18B220A186710063C83B /* NavigationCell.swift */,
-				DB12BC27213551FD00FFA037 /* UserCell.swift */,
+				DB12BC27213551FD00FFA037 /* UserView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -263,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				4A28AB83204440FB00F21EEE /* DataService.swift */,
+				DB42E37121776EB8003C3585 /* UserService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -593,9 +599,10 @@
 				4AD107BF20976E2D00BA04D0 /* ObservationCell.swift in Sources */,
 				DB12BC2421354BAA00FFA037 /* AuthService.swift in Sources */,
 				4A8A18B520A190670063C83B /* MapViewSettingsView.swift in Sources */,
+				DB42E37221776EB8003C3585 /* UserService.swift in Sources */,
 				4AA1CC6A2086054200254EBB /* SimilarSpeciesView.swift in Sources */,
 				4A69BC7C2038D96500D3B88B /* MushroomVC.swift in Sources */,
-				DB12BC28213551FD00FFA037 /* UserCell.swift in Sources */,
+				DB12BC28213551FD00FFA037 /* UserView.swift in Sources */,
 				4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */,
 				4A1F7605207966180082B873 /* ImageVC.swift in Sources */,
 				DBEE2858212441DB0017817A /* AppError.swift in Sources */,
@@ -611,6 +618,7 @@
 				4A70A5DD20D8E61E007B6214 /* CameraControlsView.swift in Sources */,
 				DB9F59952175F4D9007790D3 /* MapViewToolBarView.swift in Sources */,
 				DB2EC90C216D285F00B980A0 /* Double+Extension.swift in Sources */,
+				DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */,
 				4A72AB8620EE530900F9E45C /* CoreDataHelper.swift in Sources */,
 				DB679392214CF659003B34B2 /* String+Extension.swift in Sources */,
 				4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */,

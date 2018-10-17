@@ -60,8 +60,9 @@ class RecognizeVC: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(#imageLiteral(resourceName: "MenuButton"), for: [])
-        button.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 31).isActive = true
+        button.imageEdgeInsets = UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)
         button.backgroundColor = UIColor.clear
         button.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
         return button
@@ -71,8 +72,9 @@ class RecognizeVC: UIViewController {
       let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(#imageLiteral(resourceName: "Exit"), for: [])
-        button.widthAnchor.constraint(equalToConstant: 14).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        button.imageEdgeInsets = UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)
         button.backgroundColor = UIColor.clear
         button.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
         return button
@@ -167,8 +169,8 @@ class RecognizeVC: UIViewController {
             exitButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         } else {
             view.addSubview(menuButton)
-            menuButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-            menuButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+            menuButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+            menuButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
         }
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)

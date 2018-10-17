@@ -18,11 +18,9 @@ class MapViewToolBarView: UIView {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(#imageLiteral(resourceName: "MKAnnotationPinSolid"), for: UIControl.State.normal)
-        button.widthAnchor.constraint(equalToConstant: 14).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 14).isActive = true
-//        button.addTarget(self, action: #selector(drag(control:event:)), for: UIControl.Event.touchDragInside)
-//        button.addTarget(self, action: #selector(drag(control:event:)), for: [UIControl.Event.touchDragExit, UIControl.Event.touchDragOutside])
-        
+        button.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        button.imageEdgeInsets = UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)
         return button
     }()
     
@@ -146,7 +144,7 @@ class MapViewToolBarView: UIView {
             print(location.x)
             print(annotationButton.center.x)
             annotationButton.transform = annotationButton.transform.translatedBy(x: location.x - annotationButton.center.x, y: location.y - annotationButton.center.y)
-            gesture.setTranslation(CGPoint(x: 0, y: -5), in: superview)
+            gesture.setTranslation(CGPoint(x: 0, y: -10), in: superview)
             let translation = gesture.translation(in: superview)
             annotationButton.transform = annotationButton.transform.translatedBy(x: translation.x, y: translation.y)
         case .changed:

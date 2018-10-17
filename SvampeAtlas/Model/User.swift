@@ -8,7 +8,14 @@
 
 import Foundation
 
-struct User {
+struct User: Decodable {
     public private(set) var name: String
-    public private(set) var profileImageURL: String
+    public private(set) var initials: String
+    public private(set) var email: String
+    
+    enum CodingKeys: String, CodingKey {
+        case initials = "Initialer"
+        case email
+        case name
+    }
 }

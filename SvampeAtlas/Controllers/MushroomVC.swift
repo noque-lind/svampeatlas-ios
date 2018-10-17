@@ -41,6 +41,10 @@ class MushroomVC: UIViewController {
         super.viewDidLoad()
         categoryView.delegate = self
         setupView()
+        
+        UserService.instance.getUserDetails { (appError, user) in
+            print(user)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

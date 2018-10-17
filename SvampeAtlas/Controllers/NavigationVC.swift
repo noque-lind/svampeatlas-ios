@@ -10,6 +10,14 @@ import UIKit
 
 class NavigationVC: UITableViewController {
     
+    private var userView: UserView = {
+       let view = UserView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.autoresizingMask = []
+        view.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        return view
+    }()
+    
     private var firstLoad = true
     private let navigationItems = [[NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
     
@@ -21,7 +29,24 @@ class NavigationVC: UITableViewController {
     
     private func setupView() {
         tableView.register(NavigationCell.self, forCellReuseIdentifier: "navigationCell")
+        tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         clearsSelectionOnViewWillAppear = false
+        
+        tableView.tableHeaderView = userView
+        userView.centerXAnchor.constraint(equalTo: tableView.centerXAnchor).isActive = true
+        userView.topAnchor.constraint(equalTo: tableView.topAnchor).isActive = true
+        userView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
+        userView.setNeedsLayout()
+        userView.layoutIfNeeded()
+        
+        
+        UserService.instance.getUserDetails { (appError, user) in
+            if let user = user {
+                DispatchQueue.main.async {
+                    self.userView.configure(user: user)
+                }
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,6 +67,7 @@ extension NavigationVC {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return navigationItems[section].count
     }
+    
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == 0 {

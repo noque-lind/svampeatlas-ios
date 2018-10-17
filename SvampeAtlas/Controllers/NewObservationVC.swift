@@ -20,8 +20,9 @@ class NewObservationVC: UIViewController {
       let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(#imageLiteral(resourceName: "MenuButton"), for: [])
-        button.widthAnchor.constraint(equalToConstant: 34).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 31).isActive = true
+        button.imageEdgeInsets = UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)
         button.backgroundColor = UIColor.clear
         button.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
         return button
@@ -80,7 +81,7 @@ class NewObservationVC: UIViewController {
         containerStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         view.addSubview(menuButton)
-        menuButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        menuButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         menuButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         
         

@@ -20,11 +20,6 @@ class GradientView: UIView {
         super.init(coder: aDecoder)
     }
     
-    override func awakeFromNib() {
-        setupView()
-        super.awakeFromNib()
-    }
-
     override func layoutSubviews() {
         gradient.frame = frame
         super.layoutSubviews()

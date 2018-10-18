@@ -76,6 +76,7 @@ class ObservationsTableView: UIView {
     func configure(observations: [Observation]) {
         if automaticallyAdjustHeight {
             heightAnchor.constraint(equalToConstant: rowHeight * CGFloat(observations.count)).isActive = true
+            tableView.panGestureRecognizer.isEnabled = false
         }
         
         self.observations = observations

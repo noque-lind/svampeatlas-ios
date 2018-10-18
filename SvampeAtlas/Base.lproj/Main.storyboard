@@ -36,10 +36,10 @@
             </objects>
             <point key="canvasLocation" x="-1257" y="34"/>
         </scene>
-        <!--View Controller-->
+        <!--NavigationVC-->
         <scene sceneID="Ta7-V6-otX">
             <objects>
-                <viewController id="gVn-U8-qO3" sceneMemberID="viewController">
+                <viewController id="gVn-U8-qO3" customClass="NavigationVC" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gTu-0O-Nes">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -48,23 +48,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v8j-eL-re0">
-                                <rect key="frame" x="0.0" y="44" width="262.66666666666669" height="734"/>
-                                <connections>
-                                    <segue destination="Ygz-p4-kFx" kind="embed" id="nXr-a7-3r2"/>
-                                </connections>
-                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="v8j-eL-re0" firstAttribute="top" secondItem="9Ta-t0-bVA" secondAttribute="top" id="AlJ-L7-uTE"/>
                             <constraint firstItem="9Ta-t0-bVA" firstAttribute="trailing" secondItem="5vV-st-OrR" secondAttribute="trailing" id="PkT-B8-IqR"/>
-                            <constraint firstItem="v8j-eL-re0" firstAttribute="leading" secondItem="9Ta-t0-bVA" secondAttribute="leading" id="YjJ-Zf-ghd"/>
-                            <constraint firstItem="v8j-eL-re0" firstAttribute="bottom" secondItem="9Ta-t0-bVA" secondAttribute="bottom" id="bIb-oL-uC5"/>
                             <constraint firstItem="5vV-st-OrR" firstAttribute="top" secondItem="gTu-0O-Nes" secondAttribute="top" id="deX-UO-NW1"/>
                             <constraint firstItem="5vV-st-OrR" firstAttribute="leading" secondItem="9Ta-t0-bVA" secondAttribute="leading" id="fSs-Yt-ImC"/>
                             <constraint firstAttribute="bottom" secondItem="5vV-st-OrR" secondAttribute="bottom" id="lAD-CY-Oul"/>
-                            <constraint firstItem="v8j-eL-re0" firstAttribute="trailing" secondItem="9Ta-t0-bVA" secondAttribute="trailing" multiplier="0.7" id="o1d-7T-bYz"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9Ta-t0-bVA"/>
                     </view>
@@ -119,25 +109,6 @@
             </objects>
             <point key="canvasLocation" x="1902" y="-652"/>
         </scene>
-        <!--NavigationVC-->
-        <scene sceneID="cBQ-Io-cLs">
-            <objects>
-                <tableViewController id="Ygz-p4-kFx" customClass="NavigationVC" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="40" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="asM-sp-Nrn">
-                        <rect key="frame" x="0.0" y="0.0" width="262.66666666666669" height="734"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <sections/>
-                        <connections>
-                            <outlet property="dataSource" destination="Ygz-p4-kFx" id="0wy-cA-lAZ"/>
-                            <outlet property="delegate" destination="Ygz-p4-kFx" id="jaM-Ad-G7O"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="fuR-58-F9C" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1258" y="1528"/>
-        </scene>
         <!--MapVC-->
         <scene sceneID="dVk-rx-qov">
             <objects>
@@ -189,10 +160,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="724"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7fN-Mi-6pD" customClass="GradientView" customModule="SvampeAtlas" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="690"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7J-6a-8XL" customClass="CategoryView" customModule="SvampeAtlas" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
                                 <subviews>
@@ -248,13 +215,9 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="d7J-6a-8XL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="7y7-8A-7uZ"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="7fN-Mi-6pD" secondAttribute="trailing" id="9wE-av-RIE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="d7J-6a-8XL" secondAttribute="bottom" constant="-45" id="BiY-wj-ZOD"/>
                             <constraint firstItem="d7J-6a-8XL" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="BuB-NZ-Gmc"/>
                             <constraint firstItem="d7J-6a-8XL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="HMg-87-aVG"/>
-                            <constraint firstItem="7fN-Mi-6pD" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="RFM-jt-ho7"/>
-                            <constraint firstItem="7fN-Mi-6pD" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="tJR-k6-Sbd"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="7fN-Mi-6pD" secondAttribute="bottom" id="ykY-oF-fNv"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

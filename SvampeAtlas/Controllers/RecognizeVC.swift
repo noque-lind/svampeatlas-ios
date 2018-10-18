@@ -122,7 +122,7 @@ class RecognizeVC: UIViewController {
             try createCameraOutput()
             
             previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
-            previewLayer.videoGravity = .resizeAspect
+            previewLayer.videoGravity = .resizeAspectFill
             
             if UIDevice.current.orientation == .portrait || UIDevice.current.orientation == .portraitUpsideDown {
                 previewLayer.connection?.videoOrientation = .portrait

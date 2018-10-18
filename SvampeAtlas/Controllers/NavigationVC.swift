@@ -8,13 +8,33 @@
 
 import UIKit
 
-class NavigationVC: UITableViewController {
+class NavigationVC: UIViewController {
     
-    private var userView: UserView = {
+    private var gradientView: GradientView = {
+       let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var tableView: UITableView = {
+       let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = UIColor.clear
+        tableView.register(NavigationCell.self, forCellReuseIdentifier: "navigationCell")
+        tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        tableView.separatorStyle = .none
+//        tableView.clearsSelectionOnViewWillAppear = false
+        tableView.tableHeaderView = userView
+        return tableView
+    }()
+    
+    private lazy var userView: UserView = {
        let view = UserView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.autoresizingMask = []
-        view.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 180).isActive = true
         return view
     }()
     
@@ -28,17 +48,26 @@ class NavigationVC: UITableViewController {
     }
     
     private func setupView() {
-        tableView.register(NavigationCell.self, forCellReuseIdentifier: "navigationCell")
-        tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
-        clearsSelectionOnViewWillAppear = false
+        view.addSubview(gradientView)
+        gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        gradientView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        tableView.tableHeaderView = userView
+        view.addSubview(tableView)
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        let trailingConstraint = NSLayoutConstraint(item: tableView, attribute: .trailing, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .trailing, multiplier: 0.6, constant: 0.0)
+        view.addConstraint(trailingConstraint)
+        trailingConstraint.isActive = true
+        
+        
         userView.centerXAnchor.constraint(equalTo: tableView.centerXAnchor).isActive = true
         userView.topAnchor.constraint(equalTo: tableView.topAnchor).isActive = true
         userView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
         userView.setNeedsLayout()
         userView.layoutIfNeeded()
-        
         
         UserService.instance.getUserDetails { (appError, user) in
             if let user = user {
@@ -58,59 +87,58 @@ class NavigationVC: UITableViewController {
     }
 }
 
-extension NavigationVC {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return navigationItems.count
     }
     
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return navigationItems[section].count
     }
+
     
-    
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 50
-        } else {
-            return 0.0
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
-            let view = UIView()
-            view.backgroundColor = UIColor.clear
-            return view
-        } else {
-            return nil
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "navigationCell", for: indexPath) as! NavigationCell
-        cell.configureCell(navigationItem: navigationItems[indexPath.section][indexPath.row])
-        return cell
+                cell.configureCell(navigationItem: navigationItems[indexPath.section][indexPath.row])
+                return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == 0 {
+                        return 50
+                    } else {
+                        return 0.0
+                    }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if section == 0 {
+                        let view = UIView()
+                        view.backgroundColor = UIColor.clear
+                        return view
+                    } else {
+                        return nil
+                    }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 40
     }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var vc: UIViewController?
         
-        let identifier = navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier
-        switch identifier {
-        case "RecognizeVC":
-            vc = UINavigationController(rootViewController: RecognizeVC(isObservation: false))
-        case "NewObservationVC":
-            vc = NewObservationVC()
-        case "FieldWalkVC":
-            vc = FieldWalkVC()
-        default:
-            vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier)
-        }
-    self.eLRevealViewController()?.pushNewViewController(viewController: vc!)
+                let identifier = navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier
+                switch identifier {
+                case "RecognizeVC":
+                    vc = UINavigationController(rootViewController: RecognizeVC(isObservation: false))
+                case "NewObservationVC":
+                    vc = NewObservationVC()
+                case "FieldWalkVC":
+                    vc = FieldWalkVC()
+                default:
+                    vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier)
+                }
+            self.eLRevealViewController()?.pushNewViewController(viewController: vc!)
     }
 }

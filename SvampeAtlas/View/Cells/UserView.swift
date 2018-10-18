@@ -79,7 +79,7 @@ class UserView: UIView {
         contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         contentStackView.topAnchor.constraint(equalTo: topAnchor
             , constant: 8).isActive = true
-        contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+        contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -32).isActive = true
         contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
     }
     

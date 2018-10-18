@@ -21,7 +21,9 @@ class DetailsViewController: UIViewController {
             topInset = 300
         }
     
-        let scrollView = DetailsScrollView(topInset: topInset)
+        let scrollView = DetailsScrollView()
+        scrollView.contentInset = UIEdgeInsets.init(top: topInset, left: 0.0, bottom: scrollView.contentInset.bottom, right: 0.0)
+        scrollView.scrollIndicatorInsets = UIEdgeInsets.init(top: topInset, left: 0.0, bottom: scrollView.contentInset.bottom, right: 0.0)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.customDelegate = self
         return scrollView
@@ -55,6 +57,11 @@ class DetailsViewController: UIViewController {
         fatalError()
     }
     
+    override func viewDidLayoutSubviews() {
+        scrollView.contentInset = UIEdgeInsets.init(top: scrollView.contentInset.top, left: 0.0, bottom: view.safeAreaInsets.bottom, right: 0.0)
+        scrollView.scrollIndicatorInsets = UIEdgeInsets(top: scrollView.contentInset.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         if !hasBeenSetup {
             setupView()
@@ -71,6 +78,7 @@ class DetailsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+
         super.viewDidAppear(animated)
     }
 
@@ -102,8 +110,8 @@ class DetailsViewController: UIViewController {
         
         view.backgroundColor = UIColor.appSecondaryColour()
         view.addSubview(scrollView)
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         

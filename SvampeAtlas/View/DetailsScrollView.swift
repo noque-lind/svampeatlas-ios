@@ -97,11 +97,9 @@ class DetailsScrollView: UIScrollView {
     
     weak var customDelegate: NavigationDelegate?
     
-    init(topInset: CGFloat) {
+    init() {
         super.init(frame: CGRect.zero)
         contentInsetAdjustmentBehavior = .never
-        contentInset = UIEdgeInsets.init(top: topInset, left: 0.0, bottom: 0, right: 0.0)
-        scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: 0, right: 0)
         setupView()
     }
     

@@ -12,6 +12,12 @@ class MushroomVC: UIViewController {
     
     @IBOutlet weak var categoryView: CategoryView!
     
+    private var gradientView: GradientView = {
+       let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var menuButton: UIBarButtonItem = {
         let button = UIBarButtonItem(image: #imageLiteral(resourceName: "MenuButton"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(menuButtonPressed))
         return button
@@ -34,6 +40,7 @@ class MushroomVC: UIViewController {
         view.isHidden = true
         return view
     }()
+    
     
     private var hasAppeared = false
 
@@ -62,6 +69,13 @@ class MushroomVC: UIViewController {
     }
     
     private func setupView() {
+        view.insertSubview(gradientView, at: 0)
+        gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        gradientView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        
         view.addSubview(mushroomDataView)
         mushroomDataView.topAnchor.constraint(equalTo: categoryView.bottomAnchor).isActive = true
         mushroomDataView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true

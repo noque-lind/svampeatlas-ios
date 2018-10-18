@@ -55,7 +55,7 @@ class LocationBackground: MushroomDataBackgroundView {
         
         addSubview(settingsView)
         settingsView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
-        settingsView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
+        settingsView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
         
         insertSubview(mapViewToolBarView, belowSubview: settingsView)
         mapViewToolBarView.trailingAnchor.constraint(equalTo: settingsView.trailingAnchor).isActive = true

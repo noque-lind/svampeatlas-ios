@@ -17,6 +17,35 @@ class UserService {
     private var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOjI3MDYsImlhdCI6MTUzOTc3Nzg1Mn0.J0FKieI-ABCv8q5k05eAyKwuH_CX7pI9a_RsEYU-FxU"
     
     
+    func login(initials: String, password: String, completion: @escaping (AppError?) -> ()) {
+        var urlRequest = URLRequest(url: URL(string: LOGIN_URL)!)
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpMethod = "POST"
+        
+        let json = try? JSONSerialization.data(withJSONObject: ["Initialer": initials, "password": password])
+        urlRequest.httpBody = json
+        
+        let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            do {
+                let data = try self.handleURLSession(data: data, response: response, error: error)
+                let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+                self.handleLoginJSON(json: json)
+                completion(nil)
+            } catch let error as AppError {
+                completion(error)
+            } catch {
+                completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"))
+            }
+        }
+        
+        task.resume()
+    }
+    
+    private func handleLoginJSON(json: Any) {
+        guard let json = json as? [String: Any] else {return}
+        guard let token = json["token"] as? String else {return}
+        print(token)
+    }
     
     
     func getUserDetails(completion: @escaping (AppError?, User?) -> ()) {
@@ -65,7 +94,12 @@ class UserService {
     }
     
     private func handleURLResponse(response: HTTPURLResponse) -> AppError {
-        return AppError(title: "test", message: "test")
+        switch response.statusCode {
+        case 401:
+            return AppError(title: "Forkert kodeord", message: "Du har indtastet et forkert kodeord, prøv igen.")
+        default:
+            return AppError(title: "Uventet fejl", message: "Åh nej, det skete noget der ikke skulle ske. Prøv hvad du gjorde igen.")
+        }
     }
 }
 

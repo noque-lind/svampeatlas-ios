@@ -39,7 +39,7 @@ class NavigationVC: UIViewController {
     }()
     
     private var firstLoad = true
-    private let navigationItems = [[NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
+    private let navigationItems = [[NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Exit"), viewControllerIdentifier: "LoginVC")], [NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
     
 
     override func viewDidLoad() {
@@ -104,21 +104,15 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 {
+
                         return 50
-                    } else {
-                        return 0.0
-                    }
+
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == 0 {
                         let view = UIView()
                         view.backgroundColor = UIColor.clear
                         return view
-                    } else {
-                        return nil
-                    }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -136,6 +130,8 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
                     vc = NewObservationVC()
                 case "FieldWalkVC":
                     vc = FieldWalkVC()
+                case "LoginVC":
+                    vc = LoginVC()
                 default:
                     vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier)
                 }

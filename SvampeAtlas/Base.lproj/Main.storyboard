@@ -10,6 +10,14 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--LoginVC-->
+        <scene sceneID="ORS-gP-Kun">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="v0t-SH-t9k" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="39R-Cn-d23" customClass="LoginVC" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController"/>
+            </objects>
+            <point key="canvasLocation" x="-1697" y="-548"/>
+        </scene>
         <!--Reveal View Controller-->
         <scene sceneID="QaE-HU-sKn">
             <objects>

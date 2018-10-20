@@ -79,6 +79,10 @@
 		DB679394214CF7EA003B34B2 /* MushroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679393214CF7EA003B34B2 /* MushroomView.swift */; };
 		DB679396214D00DA003B34B2 /* ObservationsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679395214D00DA003B34B2 /* ObservationsTableView.swift */; };
 		DB8CC0DC2158288E00C958F0 /* NavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */; };
+		DB8CF0A3217B486700ADAFB0 /* ELTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0A2217B486700ADAFB0 /* ELTextField.swift */; };
+		DB8CF0A7217BA99200ADAFB0 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */; };
+		DB8CF0A9217BAA3800ADAFB0 /* GradientImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0A8217BAA3800ADAFB0 /* GradientImageView.swift */; };
+		DB8CF0AD217BB22F00ADAFB0 /* ELKeyboardHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0AC217BB22F00ADAFB0 /* ELKeyboardHelper.swift */; };
 		DB8D1731211B293E00C38D2C /* Array+MergeElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8D1730211B293E00C38D2C /* Array+MergeElements.swift */; };
 		DB8D1733211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8D1732211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift */; };
 		DB95F7EB21141BFF003F8C93 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */; };
@@ -183,6 +187,10 @@
 		DB679393214CF7EA003B34B2 /* MushroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomView.swift; sourceTree = "<group>"; };
 		DB679395214D00DA003B34B2 /* ObservationsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationsTableView.swift; sourceTree = "<group>"; };
 		DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDelegate.swift; sourceTree = "<group>"; };
+		DB8CF0A2217B486700ADAFB0 /* ELTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELTextField.swift; sourceTree = "<group>"; };
+		DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		DB8CF0A8217BAA3800ADAFB0 /* GradientImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientImageView.swift; sourceTree = "<group>"; };
+		DB8CF0AC217BB22F00ADAFB0 /* ELKeyboardHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELKeyboardHelper.swift; sourceTree = "<group>"; };
 		DB8D1730211B293E00C38D2C /* Array+MergeElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+MergeElements.swift"; sourceTree = "<group>"; };
 		DB8D1732211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+DistanceFrom.swift"; sourceTree = "<group>"; };
 		DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
@@ -245,6 +253,7 @@
 				4AB6FA14207112F500870A46 /* CustomSearchBar.swift */,
 				DB679395214D00DA003B34B2 /* ObservationsTableView.swift */,
 				DB42E37321777811003C3585 /* ProfileImageView.swift */,
+				DB8CF0A8217BAA3800ADAFB0 /* GradientImageView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -276,6 +285,7 @@
 		4A28AB852044412200F21EEE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DB8CF0A2217B486700ADAFB0 /* ELTextField.swift */,
 				4A702DFF209F266900CE648B /* ELRevealViewController.swift */,
 				4A28AB8C20444B0300F21EEE /* AppProperties.swift */,
 				4ADF2B09207A5F3900C76276 /* SqueezeNet.mlmodel */,
@@ -286,6 +296,7 @@
 				DB12BC2321354BAA00FFA037 /* AuthService.swift */,
 				DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */,
 				4A72AB8520EE530900F9E45C /* CoreDataHelper.swift */,
+				DB8CF0AC217BB22F00ADAFB0 /* ELKeyboardHelper.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -312,6 +323,7 @@
 				4A1F7604207966180082B873 /* ImageVC.swift */,
 				4A4E4CFE20AE00AD00B3F898 /* CustomNavigationControllerViewController.swift */,
 				4A70A5DA20D78CC4007B6214 /* NewObservationVC.swift */,
+				DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -581,6 +593,7 @@
 			files = (
 				4A69BC822038D96500D3B88B /* SvampeAtlas.xcdatamodeld in Sources */,
 				4A6052D8208C95730078AF66 /* FavoritesBackground.swift in Sources */,
+				DB8CF0A3217B486700ADAFB0 /* ELTextField.swift in Sources */,
 				4A95D5482057DFCE00EBB2C5 /* OfflineBackground.swift in Sources */,
 				4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */,
 				4AD107BD20976C6000BA04D0 /* ObservationView.swift in Sources */,
@@ -588,6 +601,7 @@
 				4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */,
 				4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */,
 				4A8A18B720A1B5320063C83B /* RedlistView.swift in Sources */,
+				DB8CF0A9217BAA3800ADAFB0 /* GradientImageView.swift in Sources */,
 				4A1B178120C3F6E200E1F1B2 /* ToxicityView.swift in Sources */,
 				DB9F59972176249F007790D3 /* FieldWalkVC.swift in Sources */,
 				DB679394214CF7EA003B34B2 /* MushroomView.swift in Sources */,
@@ -613,6 +627,7 @@
 				DB2A52CF216383E20000F483 /* UIImageView+Extension.swift in Sources */,
 				4A40CD70209217B500F58F25 /* Observation.swift in Sources */,
 				4A1F7609207A31150082B873 /* RecognizeView.swift in Sources */,
+				DB8CF0AD217BB22F00ADAFB0 /* ELKeyboardHelper.swift in Sources */,
 				4AA1CC682085DFCB00254EBB /* MapView.swift in Sources */,
 				4A300A92208388C3003CB2A5 /* ObservationPinCalloutView.swift in Sources */,
 				4A70A5DD20D8E61E007B6214 /* CameraControlsView.swift in Sources */,
@@ -637,6 +652,7 @@
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
 				4A54F67220AB2C2F001C8EC8 /* ListView.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
+				DB8CF0A7217BA99200ADAFB0 /* LoginVC.swift in Sources */,
 				4A69457620456C010041824E /* NavigationVC.swift in Sources */,
 				4A1F760720796A510082B873 /* PhotoCell.swift in Sources */,
 				4A80756E20BD50EE00F958AC /* CustomNavigationBar.swift in Sources */,

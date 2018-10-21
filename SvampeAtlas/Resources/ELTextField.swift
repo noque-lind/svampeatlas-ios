@@ -12,7 +12,6 @@ final class ELTextField: UITextField {
     private lazy var backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.appSecondaryColour()
         view.layer.shadowOpacity = 0.5
         view.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         view.layer.shadowRadius = 4.0
@@ -48,6 +47,15 @@ final class ELTextField: UITextField {
     
     private var isExpanded: Bool = false
     private var hasPlaceholder: Bool = false
+    private var originalPlaceholder: String?
+    private var originalBackgroundColor: UIColor?
+    private var showsError = false
+    /**
+     By altering this value, an imageView is automatically inserted on the leading edge of the textfield. The imageview.image value is then given this icon.
+     - important: The icon must be 14x14 pixel
+     
+     - returns: Nothing
+     */
     
     var icon: UIImage? {
         didSet {
@@ -55,21 +63,50 @@ final class ELTextField: UITextField {
         }
     }
     
+    override var backgroundColor: UIColor? {
+        didSet {
+            if let backgroundColor = backgroundColor, backgroundColor != UIColor.clear {
+                backgroundView.backgroundColor = backgroundColor
+                originalBackgroundColor = backgroundColor
+                self.backgroundColor = nil
+            }
+        }
+    }
+    
+    
+    /**
+     When ELTextField is given an placeholder, it automatically ensures it adjusts its layout.
+     - important: Must not change the value after it has been set initially
+     
+     - returns: Nothing
+     */
     override var placeholder: String? {
         didSet {
             if !hasPlaceholder && placeholder != nil && placeholder != "" {
+                originalPlaceholder = placeholder
                 setupPlaceholder()
             }
             updatePlaceholder()
         }
     }
     
+    /**
+     If no value is set, the placeholder color is defaults to the textColor property
+     
+     - returns: Nothing
+     */
     var placeholderColor: UIColor? {
         didSet {
             updatePlaceholder()
         }
     }
     
+    /**
+     This value specifies the scale of which to calculate the placeholder font size.
+     Defaults to 0.65
+     
+     - returns: Nothing
+     */
     var placeholderFontScale: CGFloat = 0.65 {
         didSet {
             updatePlaceholder()
@@ -78,6 +115,7 @@ final class ELTextField: UITextField {
     
     override var textColor: UIColor? {
         didSet {
+            tintColor = textColor
             updatePlaceholder()
         }
     }
@@ -95,26 +133,31 @@ final class ELTextField: UITextField {
         }
     }
     
-    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+    override internal func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         let widthInset: CGFloat = 5.0
         let xInset = (icon != nil ? leftViewRect(forBounds: bounds).maxX: 0) + widthInset
         let yInset = hasPlaceholder == true ? (placeholderLabel.frame.maxY + backgroundViewTopAnchor.constant): 0.0
         return CGRect(x: xInset, y: yInset, width: bounds.width - xInset - widthInset, height: bounds.height - yInset)
     }
     
-    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    override internal func editingRect(forBounds bounds: CGRect) -> CGRect {
         let widthInset: CGFloat = 5.0
         let xInset = (icon != nil ? leftViewRect(forBounds: bounds).maxX: 0) + widthInset
         let yInset = hasPlaceholder == true ? (((placeholderLabel.frame.maxY + backgroundViewTopAnchor.constant) + (((bounds.height - placeholderLabel.frame.maxY - backgroundViewTopAnchor.constant) / 2) - font!.pointSize / 2)) - 2): 0.0
         return CGRect(x: xInset, y: yInset, width: bounds.width - xInset, height: bounds.height)
     }
     
-    override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+    override internal func leftViewRect(forBounds bounds: CGRect) -> CGRect {
         let yInset = hasPlaceholder == true ? (placeholderLabel.frame.maxY + backgroundViewTopAnchor.constant): 0.0
         return CGRect(x: 5, y: yInset + ((bounds.height - yInset) / 2) - iconImageView.frame.height / 2, width: iconImageView.frame.width, height: iconImageView.frame.height)
     }
     
-    override func textRect(forBounds bounds: CGRect) -> CGRect {
+    override internal func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        let yInset = hasPlaceholder == true ? (placeholderLabel.frame.maxY + backgroundViewTopAnchor.constant): 0.0
+        return CGRect(x: bounds.width - 10 - 3, y: yInset, width: 3, height: 3)
+    }
+    
+    override internal func textRect(forBounds bounds: CGRect) -> CGRect {
         let widthInset: CGFloat = 5.0
         let xInset = (icon != nil ? leftViewRect(forBounds: bounds).maxX: 0) + widthInset
         let yInset = hasPlaceholder == true ? (((placeholderLabel.frame.maxY + backgroundViewTopAnchor.constant) + (((bounds.height - placeholderLabel.frame.maxY - backgroundViewTopAnchor.constant) / 2) - font!.pointSize / 2)) - 2): 0.0
@@ -155,6 +198,16 @@ final class ELTextField: UITextField {
         fatalError()
     }
     
+    private func setupView() {
+        contentVerticalAlignment = .center
+        insertSubview(backgroundView, at: 0)
+        backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        backgroundViewHeightAnchor.isActive = true
+        addTarget(self, action: #selector(editingChanged), for: UIControl.Event.editingChanged)
+    }
+    
     private func setState(hasText: Bool) {
         if hasText {
             leftView?.alpha = 1
@@ -168,15 +221,6 @@ final class ELTextField: UITextField {
                 placeholderLabel.alpha = 0
             }
         }
-    }
-    
-    private func setupView() {
-        contentVerticalAlignment = .center
-        insertSubview(backgroundView, at: 0)
-        backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        backgroundViewHeightAnchor.isActive = true
     }
     
     private func expand(completion: @escaping (Bool) -> ()) {
@@ -200,13 +244,16 @@ final class ELTextField: UITextField {
             self.layoutIfNeeded()
         }, completion: nil)
     }
-
+    
     private func updatePlaceholder() {
-        guard let placeholder = placeholder, let font = font, let textColor = textColor, hasPlaceholder == true else {return}
+        guard let placeholder = placeholder, let font = font, let textColor = textColor else {return}
         
-        let attributedString = NSMutableAttributedString(string: placeholder, attributes: [NSAttributedString.Key.font : UIFont(name: font.fontName, size: font.pointSize * 0.8) ?? font, NSAttributedString.Key.foregroundColor: placeholderColor ?? textColor])
+       let attributedString = NSMutableAttributedString(string: placeholder, attributes: [NSAttributedString.Key.font : UIFont(name: font.fontName, size: font.pointSize * 0.8) ?? font, NSAttributedString.Key.foregroundColor: placeholderColor ?? textColor])
         attributedPlaceholder = attributedString
+        
+        if hasPlaceholder {
         placeholderLabel.attributedText = attributedString
+        }
     }
     
     private func updateIcon() {
@@ -226,4 +273,51 @@ final class ELTextField: UITextField {
         backgroundViewTopAnchor = backgroundView.topAnchor.constraint(equalTo: placeholderLabel.bottomAnchor, constant: 5)
         hasPlaceholder = true
     }
+    
+    @objc private func editingChanged() {
+        if showsError {
+            backgroundView.backgroundColor = originalBackgroundColor
+            placeholder = originalPlaceholder
+        }
+    }
+}
+
+extension ELTextField {
+    func showError(message: String?) {
+        showsError = true
+        backgroundView.backgroundColor = #colorLiteral(red: 0.9667708278, green: 0.3270001709, blue: 0.3416224122, alpha: 1)
+        shake(duration: 0.6)
+    
+        if hasPlaceholder {
+            placeholder = message
+            
+            if isExpanded {
+                placeholder = nil
+            }
+        } else {
+            hasPlaceholder = true
+            placeholder = message
+            hasPlaceholder = false
+        }
+    }
+}
+
+fileprivate extension UIView {
+    func shake(duration: CFTimeInterval) {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
+        animation.duration = duration
+        animation.values = [-10, 10, -10, 10, -5, 5, -2, 2, 0]
+        layer.add(animation, forKey: "shake")
+    }
+    
+    func animateBorder(duration: CFTimeInterval) {
+        let borderWidth:CABasicAnimation = CABasicAnimation(keyPath: "borderWidth")
+        borderWidth.fromValue = 0
+        borderWidth.toValue = 1
+        borderWidth.duration = duration
+        self.layer.add(borderWidth, forKey: "Width")
+        self.layer.borderWidth = 1.0
+    }
+    
 }

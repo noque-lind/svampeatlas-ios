@@ -22,6 +22,7 @@ class LoginVC: UIViewController {
         textField.textColor = UIColor.appWhite()
         textField.autocapitalizationType = .none
         textField.placeholder = "Initialer"
+        textField.backgroundColor = UIColor.appSecondaryColour()
         textField.textContentType = .username
         textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         textField.icon = #imageLiteral(resourceName: "Profile")
@@ -34,6 +35,7 @@ class LoginVC: UIViewController {
         textField.textColor = UIColor.appWhite()
         textField.placeholder = "Kodeord"
         textField.textContentType = .password
+        textField.backgroundColor = UIColor.appSecondaryColour()
         textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         textField.isSecureTextEntry = true
         textField.icon = #imageLiteral(resourceName: "Glyphs_Lock")
@@ -52,6 +54,10 @@ class LoginVC: UIViewController {
         button.addTarget(self, action: #selector(logInButtonPressed), for: .touchUpInside)
         return button
     }()
+    
+    deinit {
+        print("LoginVC deinited")
+    }
     
     
     
@@ -96,7 +102,10 @@ class LoginVC: UIViewController {
     }
     
     @objc private func logInButtonPressed() {
-        guard let initials = initialsTextField.text, let password = passwordTextField.text else {return}
+        guard let initials = initialsTextField.text, initials != "" else {initialsTextField.showError(message: "Du skal udfylde dit brugernavn"); return}
+        
+        
+        guard let password = passwordTextField.text, password != "" else {passwordTextField.showError(message: "Du skal skrive dit kodeord"); return}
         
         view.controlActivityIndicator(wantRunning: true)
         UserService.instance.login(initials: initials, password: password) { (appError) in
@@ -104,7 +113,7 @@ class LoginVC: UIViewController {
             if let appError = appError {
                 DispatchQueue.main.async {
                     self.view.controlActivityIndicator(wantRunning: false)
-                     self.present(UIAlertController(title: appError.title, message: appError.message), animated: true, completion: nil)
+                     self.passwordTextField.showError(message: appError.message)
                 }
                
             } else {

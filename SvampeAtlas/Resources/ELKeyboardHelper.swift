@@ -8,7 +8,11 @@ class ELKeyboardHelper {
     
     static let instance = ELKeyboardHelper()
     
-    private weak var registeredObject: UIView?
+    private weak var registeredObject: UIView? {
+        didSet {
+            debugPrint("Keyboardhelper registeredObject changed into \(String(describing: registeredObject))")
+        }
+    }
     
     public func registerObject(view: UIView) {
         registeredObject = view
@@ -25,9 +29,7 @@ class ELKeyboardHelper {
     @objc private func keyboardWillChange(_ notification : NSNotification) {
         let duration = notification.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
         let curve = notification.userInfo![UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt
-        let startingFrame = (notification.userInfo![UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         let endingFrame = (notification.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        //        let deltaY = endingFrame.origin.y - startingFrame.origin.y
         
         guard let registeredObject = registeredObject else {return}
         let parentView = findParentView(forView: registeredObject)
@@ -42,10 +44,7 @@ class ELKeyboardHelper {
             },completion: nil)
         }
     }
-    
-    
-    
-    
+
 }
 
 private func findParentView(forView view: UIView) -> UIView {

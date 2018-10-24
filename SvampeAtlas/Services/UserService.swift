@@ -11,10 +11,31 @@ import Foundation
 class UserService {
     static let instance = UserService()
     
-    private init() {}
+    private init() {
+        getUser(completion: nil)
+    }
     
     public private(set) var isLoggedIn = true
-    private var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOjI3MDYsImlhdCI6MTUzOTc3Nzg1Mn0.J0FKieI-ABCv8q5k05eAyKwuH_CX7pI9a_RsEYU-FxU"
+    private var user: User?
+    
+    func getUser(completion: ((User?) -> ())? = nil) {
+        if let user = user {
+            completion?(user)
+        } else {
+            guard let token = UserDefaults.standard.string(forKey: "token") else {completion?(nil); return}
+            getUserDetails(token: token) { (appError, user) in
+                if let user = user {
+                    self.user = user
+                    completion?(user)
+                }
+            }
+        }
+    }
+    
+    func logOut() {
+        user = nil
+        UserDefaults.standard.removeObject(forKey: "token")
+    }
     
     
     func login(initials: String, password: String, completion: @escaping (AppError?) -> ()) {
@@ -41,14 +62,19 @@ class UserService {
         task.resume()
     }
     
+    
+    
+    
+    
+    
     private func handleLoginJSON(json: Any) {
         guard let json = json as? [String: Any] else {return}
         guard let token = json["token"] as? String else {return}
-        print(token)
+        UserDefaults.standard.set(token, forKey: "token")
     }
     
     
-    func getUserDetails(completion: @escaping (AppError?, User?) -> ()) {
+    private func getUserDetails(token: String, completion: @escaping (AppError?, User?) -> ()) {
         var urlRequest = URLRequest(url: URL(string: ME_URL)!)
         urlRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         

@@ -38,7 +38,7 @@ class LoginVC: UIViewController {
         textField.backgroundColor = UIColor.appSecondaryColour()
         textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         textField.isSecureTextEntry = true
-        textField.icon = #imageLiteral(resourceName: "Glyphs_Lock")
+        textField.icon = #imageLiteral(resourceName: "Glyphs_lock")
         ELKeyboardHelper.instance.registerObject(view: textField)
         return textField
     }()
@@ -118,7 +118,7 @@ class LoginVC: UIViewController {
                
             } else {
                 DispatchQueue.main.async {
-                    self.eLRevealViewController()?.pushNewViewController(viewController: UIViewController())
+                    self.eLRevealViewController()?.pushNewViewController(viewController: MyPageVC())
                 }
             }
             }

@@ -34,17 +34,41 @@ class NavigationVC: UIViewController {
        let view = UserView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.autoresizingMask = []
-        view.heightAnchor.constraint(equalToConstant: 180).isActive = true
+        view.heightAnchor.constraint(equalToConstant: 200).isActive = true
         return view
     }()
     
     private var firstLoad = true
-    private let navigationItems = [[NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Exit"), viewControllerIdentifier: "LoginVC")], [NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
+    private var navigationItems = [[NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Icons_Login"), viewControllerIdentifier: "LoginVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if firstLoad {
+            tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: false, scrollPosition: .top)
+            firstLoad = false
+        }
+        
+        UserService.instance.getUser { (user) in
+            DispatchQueue.main.async {
+                if let user = user {
+                    self.userView.configure(user: user)
+                    self.navigationItems.remove(at: 0)
+                    self.navigationItems.insert([NavigationItem.init(title: "Min side", icon: #imageLiteral(resourceName: "Icons_Profile"), viewControllerIdentifier: "MyPageVC"), NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], at: 0)
+                    self.tableView.reloadData()
+                } else {
+                    self.userView.configureAsGuest()
+                    self.navigationItems.remove(at: 0)
+                    self.navigationItems.insert([NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Icons_Login"), viewControllerIdentifier: "LoginVC")], at: 0)
+                    self.tableView.reloadData()
+                }
+               
+            }
+        }
+        super.viewWillAppear(animated)
     }
     
     private func setupView() {
@@ -68,22 +92,6 @@ class NavigationVC: UIViewController {
         userView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
         userView.setNeedsLayout()
         userView.layoutIfNeeded()
-        
-        UserService.instance.getUserDetails { (appError, user) in
-            if let user = user {
-                DispatchQueue.main.async {
-                    self.userView.configure(user: user)
-                }
-            }
-        }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        if firstLoad {
-            tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: false, scrollPosition: .top)
-            firstLoad = false
-        }
-        super.viewWillAppear(animated)
     }
 }
 
@@ -103,18 +111,17 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
                 return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-
-                        return 50
-
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
     }
     
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-                        let view = UIView()
-                        view.backgroundColor = UIColor.clear
-                        return view
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = UIColor.clear
+        return view
     }
-    
+  
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 40
     }
@@ -132,6 +139,8 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
                     vc = FieldWalkVC()
                 case "LoginVC":
                     vc = LoginVC()
+                case "MyPageVC":
+                    vc = MyPageVC()
                 default:
                     vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier)
                 }

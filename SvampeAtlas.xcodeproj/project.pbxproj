@@ -75,6 +75,7 @@
 		DB2EC90C216D285F00B980A0 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2EC90B216D285F00B980A0 /* Double+Extension.swift */; };
 		DB42E37221776EB8003C3585 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37121776EB8003C3585 /* UserService.swift */; };
 		DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37321777811003C3585 /* ProfileImageView.swift */; };
+		DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C42180DFA9001874A6 /* MyPageVC.swift */; };
 		DB679392214CF659003B34B2 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679391214CF659003B34B2 /* String+Extension.swift */; };
 		DB679394214CF7EA003B34B2 /* MushroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679393214CF7EA003B34B2 /* MushroomView.swift */; };
 		DB679396214D00DA003B34B2 /* ObservationsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679395214D00DA003B34B2 /* ObservationsTableView.swift */; };
@@ -183,6 +184,7 @@
 		DB2EC90B216D285F00B980A0 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		DB42E37121776EB8003C3585 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		DB42E37321777811003C3585 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
+		DB4F53C42180DFA9001874A6 /* MyPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageVC.swift; sourceTree = "<group>"; };
 		DB679391214CF659003B34B2 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		DB679393214CF7EA003B34B2 /* MushroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomView.swift; sourceTree = "<group>"; };
 		DB679395214D00DA003B34B2 /* ObservationsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationsTableView.swift; sourceTree = "<group>"; };
@@ -324,6 +326,7 @@
 				4A4E4CFE20AE00AD00B3F898 /* CustomNavigationControllerViewController.swift */,
 				4A70A5DA20D78CC4007B6214 /* NewObservationVC.swift */,
 				DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */,
+				DB4F53C42180DFA9001874A6 /* MyPageVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -658,6 +661,7 @@
 				4A80756E20BD50EE00F958AC /* CustomNavigationBar.swift in Sources */,
 				4A28AB8D20444B0300F21EEE /* AppProperties.swift in Sources */,
 				4A8A18B320A186710063C83B /* NavigationCell.swift in Sources */,
+				DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */,
 				4AB6FA15207112F500870A46 /* CustomSearchBar.swift in Sources */,
 				4A40CD722093325100F58F25 /* ClusterPinView.swift in Sources */,
 				DB8CC0DC2158288E00C958F0 /* NavigationDelegate.swift in Sources */,

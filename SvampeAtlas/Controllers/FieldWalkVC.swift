@@ -30,5 +30,7 @@ class FieldWalkVC: UIViewController {
         label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
         // Do any additional setup after loading the view.
+        
+        UserService.instance.logOut()
     }
 }

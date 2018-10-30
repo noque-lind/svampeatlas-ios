@@ -76,6 +76,7 @@
 		DB42E37221776EB8003C3585 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37121776EB8003C3585 /* UserService.swift */; };
 		DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37321777811003C3585 /* ProfileImageView.swift */; };
 		DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C42180DFA9001874A6 /* MyPageVC.swift */; };
+		DB4F53C72181F569001874A6 /* MyPageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C62181F569001874A6 /* MyPageScrollView.swift */; };
 		DB679392214CF659003B34B2 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679391214CF659003B34B2 /* String+Extension.swift */; };
 		DB679394214CF7EA003B34B2 /* MushroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679393214CF7EA003B34B2 /* MushroomView.swift */; };
 		DB679396214D00DA003B34B2 /* ObservationsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679395214D00DA003B34B2 /* ObservationsTableView.swift */; };
@@ -185,6 +186,7 @@
 		DB42E37121776EB8003C3585 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		DB42E37321777811003C3585 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
 		DB4F53C42180DFA9001874A6 /* MyPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageVC.swift; sourceTree = "<group>"; };
+		DB4F53C62181F569001874A6 /* MyPageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageScrollView.swift; sourceTree = "<group>"; };
 		DB679391214CF659003B34B2 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		DB679393214CF7EA003B34B2 /* MushroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomView.swift; sourceTree = "<group>"; };
 		DB679395214D00DA003B34B2 /* ObservationsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationsTableView.swift; sourceTree = "<group>"; };
@@ -233,12 +235,15 @@
 				DB8D172D211AE70D00C38D2C /* MushroomTableView */,
 				4A530268209856930043C1D3 /* Annotations */,
 				4A0775CB20443D5600DD5AF0 /* Cells */,
+				DB12BC27213551FD00FFA037 /* UserView.swift */,
+				DB42E37321777811003C3585 /* ProfileImageView.swift */,
 				4A28AB8A2044454200F21EEE /* GradientView.swift */,
 				DB679393214CF7EA003B34B2 /* MushroomView.swift */,
 				4AD107BC20976C6000BA04D0 /* ObservationView.swift */,
 				DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */,
 				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
 				4A80756F20BD717100F958AC /* DetailsScrollView.swift */,
+				DB4F53C62181F569001874A6 /* MyPageScrollView.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 				4AD43A0320529BDF001F6541 /* CategoryView.swift */,
 				4A1F7608207A31150082B873 /* RecognizeView.swift */,
@@ -254,7 +259,6 @@
 				4A53026A209888E50043C1D3 /* CustomMapView.swift */,
 				4AB6FA14207112F500870A46 /* CustomSearchBar.swift */,
 				DB679395214D00DA003B34B2 /* ObservationsTableView.swift */,
-				DB42E37321777811003C3585 /* ProfileImageView.swift */,
 				DB8CF0A8217BAA3800ADAFB0 /* GradientImageView.swift */,
 			);
 			path = View;
@@ -270,7 +274,6 @@
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
 				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
 				4A8A18B220A186710063C83B /* NavigationCell.swift */,
-				DB12BC27213551FD00FFA037 /* UserView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -607,6 +610,7 @@
 				DB8CF0A9217BAA3800ADAFB0 /* GradientImageView.swift in Sources */,
 				4A1B178120C3F6E200E1F1B2 /* ToxicityView.swift in Sources */,
 				DB9F59972176249F007790D3 /* FieldWalkVC.swift in Sources */,
+				DB4F53C72181F569001874A6 /* MyPageScrollView.swift in Sources */,
 				DB679394214CF7EA003B34B2 /* MushroomView.swift in Sources */,
 				DB679396214D00DA003B34B2 /* ObservationsTableView.swift in Sources */,
 				4A3061E12053F4840061E98F /* MushroomTableView.swift in Sources */,

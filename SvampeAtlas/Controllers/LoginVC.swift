@@ -10,6 +10,12 @@ import UIKit
 
 class LoginVC: UIViewController {
 
+    private lazy var menuButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "MenuButton"), style: UIBarButtonItem.Style.plain, target: self, action: #selector(menuButtonPressed))
+        return button
+    }()
+    
+    
     private var gradientImageView: GradientImageView = {
         let view = GradientImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -123,6 +129,9 @@ class LoginVC: UIViewController {
             }
             }
     }
-
+    
+    @objc private func menuButtonPressed() {
+        self.eLRevealViewController()?.toggleSideMenu()
+    }
 }
 

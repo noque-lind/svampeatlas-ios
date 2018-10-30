@@ -49,7 +49,8 @@ class ProfileImageView: UIView {
     private func setupView() {
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        layer.shadowRadius = 4.0
+        layer.shadowRadius = 2.0
+        
         backgroundColor = UIColor.clear
         
         addSubview(imageView)
@@ -77,5 +78,12 @@ class ProfileImageView: UIView {
                 self.imageView.image = image
             }
         }
+    }
+    
+    func reset() {
+        label.text = ""
+        imageView.image = #imageLiteral(resourceName: "f1a9d2f0.LogoSmallest")
+        imageView.alpha = 1
+        backgroundColor = UIColor.clear
     }
 }

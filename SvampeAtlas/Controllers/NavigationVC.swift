@@ -140,7 +140,7 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
                 case "LoginVC":
                     vc = LoginVC()
                 case "MyPageVC":
-                    vc = MyPageVC()
+                    vc = UINavigationController(rootViewController: MyPageVC())
                 default:
                     vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier)
                 }

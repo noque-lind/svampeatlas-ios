@@ -127,6 +127,26 @@ class DataService {
         task.resume()
     }
     
+    func getObservationsForUser(withID id: Int, completion: @escaping (AppError?, [Observation]?) -> ()) {
+        var request = URLRequest(url: URL.init(string: OBSERVATIONSFOR_USER(withID: id))!)
+        request.timeoutInterval = 5
+        print(request.url)
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            do {
+                let data = try self.handleURLSession(data: data, response: response, error: error)
+                let observations = try JSONDecoder().decode([Observation].self, from: data)
+                completion(nil, observations)
+            } catch let error as AppError {
+                completion(error, nil)
+            } catch {
+                debugPrint(error.localizedDescription)
+                completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"), nil)
+                
+            }
+        }
+        task.resume()
+    }
+    
     enum imageSize: String {
         case full = ""
         case mini = "https://svampe.databasen.org/unsafe/175x175/"

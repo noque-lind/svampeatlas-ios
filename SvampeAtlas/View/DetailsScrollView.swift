@@ -338,7 +338,6 @@ class DetailsScrollView: UIScrollView {
                 self.contentStackView.addArrangedSubview(self.observationsTableViewStackView)
                 observationsTableView.configure(observations: observations)
             }
-            
         }
     }
 }

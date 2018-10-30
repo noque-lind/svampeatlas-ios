@@ -23,6 +23,8 @@ class UserView: UIView {
         label.textColor = UIColor.appWhite()
         label.textAlignment = .center
         label.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         label.isHidden = true
         return label
     }()
@@ -102,5 +104,6 @@ class UserView: UIView {
         secondaryLabel.text = "Log ind for at dele dine svampefund med andre, og få ekspertvalidering af Danmarks førende svampeeksperter"
         primaryLabel.isHidden = false
         secondaryLabel.isHidden = false
+        profileImageView.reset()
     }
 }

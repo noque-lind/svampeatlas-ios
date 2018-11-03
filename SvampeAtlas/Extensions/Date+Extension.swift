@@ -40,11 +40,17 @@ extension Date {
         dateFormatter.dateFormat = dateStyle
         return dateFormatter.string(from: self)
     }
-    
+
     func checkIfDateIsRecent(date: Date) -> String?  {
-        let components = NSCalendar.current.dateComponents([Calendar.Component.day], from: date, to: self)
+        let components = NSCalendar.current.dateComponents([Calendar.Component.day, Calendar.Component.hour], from: date, to: self)
         if let days = components.day, days < 30 {
-            if days == 1 {
+            if days == 0 {
+                if let hours = components.hour {
+                    return "\(hours) timer siden"
+                } else {
+                    return "I dag"
+                }
+            } else if days == 1 {
                 return "1 dag siden"
             } else {
                 return "\(days) dage siden"

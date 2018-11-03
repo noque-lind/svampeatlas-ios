@@ -8,6 +8,22 @@
 
 import Foundation
 
+struct API {
+    static func userNotificationsURL(userID id: Int) -> String {
+        return BASE_URL_API + "users/me/feed?limit=25"
+    }
+    
+    static func observationWithID(observationID id: Int) -> String {
+        return BASE_URL_API + "observations/\(id)"
+    }
+    
+    static func userNotificationsCountURL() -> String {
+        return BASE_URL_API + "users/me/feed/count"
+    }
+}
+
+
+
 let BASE_URL = "svampe.databasen.org"
 fileprivate let BASE_URL_API = "https://" + BASE_URL + "/api/"
 

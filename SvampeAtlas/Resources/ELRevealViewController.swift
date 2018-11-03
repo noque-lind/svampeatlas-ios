@@ -844,7 +844,7 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
                 fromVC.sideMenuShowing = true
                 transitionContext.completeTransition(didTransitionComplete)
             } else {
-                self.removeSafeInsets(forVC: fromVC, onlyBottom: true)
+//                self.removeSafeInsets(forVC: fromVC, onlyBottom: true)
                 modalView.removeFromSuperview()
                 transitionContext.completeTransition(false)
                 UIApplication.shared.keyWindow?.addSubview(fromVC.view)
@@ -864,22 +864,11 @@ fileprivate class ELAnimator:NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     private func removeSafeInsets(forVC vc: UIViewController, onlyBottom: Bool = false) {
-        if onlyBottom {
-            if #available(iOS 11.0, *) {
-                _safeAreaLayoutGuideExtendedEdges = UIEdgeInsets(top: (_safeAreaLayoutGuideExtendedEdges?.top)!, left: 0.0, bottom: 0.0, right: 0.0)
-                 vc.tabBarController?.tabBar.invalidateIntrinsicContentSize()
-                vc.additionalSafeAreaInsets = _safeAreaLayoutGuideExtendedEdges!
-            } else {
-               
-                // Fallback on earlier versions
-            }
-        } else {
         if #available(iOS 11.0, *) {
             _safeAreaLayoutGuideExtendedEdges = nil
             vc.additionalSafeAreaInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
         } else {
             // Fallback on earlier versions
-        }
         }
     }
     

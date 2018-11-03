@@ -14,7 +14,8 @@ fileprivate struct PrivateObservation: Decodable {
     var ecologyNote: String?
     var note: String?
     var geom: PrivateGeom
-    var determinationView: PrivateDeterminationView
+    var determinationView: PrivateDeterminationView?
+    var primaryDetermination: PrivateDeterminationView?
     var images: [PrivateImages]?
     var primaryUser: PrivatePrimaryUser?
     var locality: PrivateLocality?
@@ -29,6 +30,7 @@ fileprivate struct PrivateObservation: Decodable {
         case primaryUser = "PrimaryUser"
         case locality = "Locality"
         case note
+        case primaryDetermination = "PrivateDetermination"
     }
 }
 
@@ -96,7 +98,16 @@ struct Observation: Decodable, Equatable {
         note = privateObservation.note
         ecologyNote = privateObservation.ecologyNote
         location = privateObservation.locality?.name
-        speciesProperties = SpeciesProperties(id: privateObservation.determinationView.taxon_id, name: privateObservation.determinationView.taxon_vernacularname_dk ?? privateObservation.determinationView.taxon_FullName ?? "")
+        
+        if let determinationView = privateObservation.determinationView {
+            speciesProperties = SpeciesProperties(id: determinationView.taxon_id, name: determinationView.taxon_vernacularname_dk ?? determinationView.taxon_FullName ?? "")
+        } else if let primaryDeterminationView = privateObservation.primaryDetermination {
+            speciesProperties = SpeciesProperties(id: primaryDeterminationView.taxon_id, name: primaryDeterminationView.taxon_vernacularname_dk ?? primaryDeterminationView.taxon_FullName ?? "")
+        } else {
+            speciesProperties = SpeciesProperties(id: id, name: "")
+        }
+        
+        
         
         
         if let privateObservationImages = privateObservation.images {

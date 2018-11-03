@@ -88,6 +88,23 @@ class DataService {
         task.resume()
     }
     
+    func getObservation(withID id: Int, completion: @escaping (AppError?, Observation?) -> Void) {
+        var request = URLRequest(url: URL.init(string: API.observationWithID(observationID: id))!)
+        request.timeoutInterval = 5
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            do {
+                let data = try self.handleURLSession(data: data, response: response, error: error)
+                let observation = try JSONDecoder().decode(Observation.self, from: data) 
+                completion(nil, observation)
+            } catch let error as AppError {
+                completion(error, nil)
+            } catch {
+                completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"), nil)
+            }
+        }
+        task.resume()
+    }
+    
     func getMushroomsThatFitSearch(searchString: String, completion: @escaping (AppError?, [Mushroom]?) -> Void) {
         var request = URLRequest(url: URL.init(string: SEARCHFORMUSHROOM_URL(searchTerm: searchString))!)
         request.timeoutInterval = 5
@@ -147,6 +164,29 @@ class DataService {
         task.resume()
     }
     
+    func getNotificationsForUser(withID id: Int, completion: @escaping (AppError?, [UserNotification]?) -> ()) {
+        var request = URLRequest(url: URL.init(string: API.userNotificationsURL(userID: id))!)
+        request.timeoutInterval = 5
+        guard let token = UserDefaults.standard.string(forKey: "token") else {completion(nil, nil); return}
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        print(request.url)
+        print(token)
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            do {
+                let data = try self.handleURLSession(data: data, response: response, error: error)
+                let userNotificationJSON = try JSONDecoder().decode(UserNotificationJSON.self, from: data)
+                completion(nil, userNotificationJSON.results)
+            } catch let error as AppError {
+                completion(error, nil)
+            } catch {
+                debugPrint(error.localizedDescription)
+                completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"), nil)
+            }
+        }
+        task.resume()
+    }
+    
     enum imageSize: String {
         case full = ""
         case mini = "https://svampe.databasen.org/unsafe/175x175/"
@@ -180,7 +220,7 @@ class DataService {
         task.resume()
     }
     
-    private func handleURLSession(data: Data?, response: URLResponse?, error: Error?) throws -> Data  {
+    internal func handleURLSession(data: Data?, response: URLResponse?, error: Error?) throws -> Data  {
         guard error == nil, let response = response as? HTTPURLResponse else {
             throw handleURLSessionError(error: error)
         }
@@ -194,7 +234,7 @@ class DataService {
     }
     
     
-    private func handleURLSessionError(error: Error?) -> AppError {
+    internal func handleURLSessionError(error: Error?) -> AppError {
         let error = error! as NSError
         switch error.code {
         case NSURLErrorNotConnectedToInternet:
@@ -206,7 +246,7 @@ class DataService {
         }
     }
     
-    private func handleURLResponse(response: HTTPURLResponse) -> AppError {
+    internal func handleURLResponse(response: HTTPURLResponse) -> AppError {
         return AppError(title: "test", message: "test")
     }
 }

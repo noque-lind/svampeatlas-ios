@@ -21,9 +21,17 @@
         <attribute name="ecology" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="mushroom" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDMushroom" inverseName="attributes" inverseEntity="CDMushroom" syncable="YES"/>
     </entity>
+    <entity name="CDUser" representedClassName="CDUser" syncable="YES" codeGenerationType="class">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="facebookID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="initials" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="CDMushroomAttribute" positionX="-180" positionY="72" width="128" height="90"/>
         <element name="CDImage" positionX="-54" positionY="9" width="128" height="118"/>
         <element name="CDMushroom" positionX="-299" positionY="27" width="128" height="150"/>
+        <element name="CDMushroomAttribute" positionX="-180" positionY="72" width="128" height="90"/>
+        <element name="CDUser" positionX="-180" positionY="81" width="128" height="120"/>
     </elements>
 </model>

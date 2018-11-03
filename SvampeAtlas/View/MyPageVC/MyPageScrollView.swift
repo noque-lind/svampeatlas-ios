@@ -23,9 +23,8 @@ class MyPageScrollView: UIScrollView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.appPrimaryColour()
-        
         view.layer.cornerRadius = 20
-        
+        view.layer.maskedCorners = [CACornerMask.layerMinXMinYCorner, CACornerMask.layerMaxXMinYCorner]
         view.addSubview(contentStackView)
         contentStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
         contentStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
@@ -33,6 +32,20 @@ class MyPageScrollView: UIScrollView {
         contentStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
         return view
     }()
+    
+    private lazy var notificationsCountLabel: UILabel = {
+            let label = UILabel()
+            label.backgroundColor = UIColor.appRed()
+            label.textAlignment = .center
+        label.font = UIFont.appPrimaryHightlighed()
+        label.adjustsFontSizeToFitWidth = true
+        label.textColor = UIColor.appWhite()
+            label.widthAnchor.constraint(equalTo: label.heightAnchor).isActive = true
+            label.clipsToBounds = true
+            label.layer.cornerRadius = 10
+        return label
+    }()
+    
     
     weak var customDelegate: NavigationDelegate?
     
@@ -56,6 +69,7 @@ class MyPageScrollView: UIScrollView {
     }
     
     func configure(user: User) {
+        setupNotifications(userID: user.id)
         setupObservations(userID: user.id)
     }
     
@@ -87,6 +101,54 @@ class MyPageScrollView: UIScrollView {
     
             stackView.addArrangedSubview(label)
             stackView.addArrangedSubview(observationsTableView)
+            return stackView
+        }()
+        
+        contentStackView.addArrangedSubview(stackView)
+    }
+    
+    private func setupNotifications(userID: Int) {
+        let stackView: UIStackView = {
+            let stackView = UIStackView()
+            stackView.axis = .vertical
+            stackView.spacing = 0
+            
+            let labelStackView: UIStackView = {
+                let stackView = UIStackView()
+                stackView.axis = .horizontal
+                stackView.spacing = 5
+                
+                let label: UILabel = {
+                    let label = UILabel()
+                    label.text = "Notifikationer"
+                    label.font = UIFont.appPrimaryHightlighed()
+                    label.textColor = UIColor.appWhite()
+                    return label
+                }()
+                
+                stackView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+                stackView.addArrangedSubview(notificationsCountLabel)
+                stackView.addArrangedSubview(label)
+                return stackView
+            }()
+            
+            
+            
+            let notificationsTableView: NotificationsTableView = {
+                let tableView = NotificationsTableView()
+                tableView.delegate = self.customDelegate
+                DataService.instance.getNotificationsForUser(withID: userID, completion: { (appError, userNotifications) in
+                    DispatchQueue.main.async {
+                        guard let userNotifications = userNotifications else {return}
+                        self.notificationsCountLabel.text = "\(userNotifications.count)"
+                        tableView.configure(notifications: userNotifications)
+                    }
+                })
+                return tableView
+            }()
+            
+            stackView.addArrangedSubview(labelStackView)
+            stackView.addArrangedSubview(notificationsTableView)
             return stackView
         }()
         

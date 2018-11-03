@@ -8,17 +8,17 @@
 
 import Foundation
 
-struct User: Decodable {
+struct User: Decodable, Equatable {
     public private(set) var id: Int
     public private(set) var name: String
     public private(set) var initials: String
     public private(set) var email: String
-    public private(set) var facebookID: String?
+    public private(set)  var facebookID: String?
    
     public var imageURL: String? {
         get {
             if let facebookID = facebookID {
-                return "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=\(facebookID)&height=200&width=200&ext=1543004373&hash=AeTELec4XBoSPCBU"
+                return "https://graph.facebook.com/\(facebookID)/picture?width=250&height=250"
             } else {
                 return nil
             }
@@ -31,5 +31,13 @@ struct User: Decodable {
         case email
         case name
         case facebookID = "facebook"
+    }
+    
+    init(from cdUser: CDUser) {
+        id = Int(cdUser.id)
+        name = cdUser.name ?? ""
+        initials = cdUser.initials ?? ""
+        email = cdUser.email ?? ""
+        facebookID = cdUser.facebookID
     }
 }

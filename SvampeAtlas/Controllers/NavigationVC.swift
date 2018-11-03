@@ -25,7 +25,6 @@ class NavigationVC: UIViewController {
         tableView.register(NavigationCell.self, forCellReuseIdentifier: "navigationCell")
         tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         tableView.separatorStyle = .none
-//        tableView.clearsSelectionOnViewWillAppear = false
         tableView.tableHeaderView = userView
         return tableView
     }()
@@ -38,9 +37,17 @@ class NavigationVC: UIViewController {
         return view
     }()
     
-    private var firstLoad = true
-    private var navigationItems = [[NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Icons_Login"), viewControllerIdentifier: "LoginVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
     
+    private var firstLoad = true
+    
+    private var navigationItems: Array<Array<NavigationItem>> {
+        if UserService.instance.isLoggedIn {
+            return [[NavigationItem.init(title: "Min side", icon: #imageLiteral(resourceName: "Icons_Profile"), viewControllerIdentifier: "MyPageVC"), NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
+        } else {
+            return [[NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Icons_Login"), viewControllerIdentifier: "LoginVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -52,20 +59,19 @@ class NavigationVC: UIViewController {
             firstLoad = false
         }
         
-        UserService.instance.getUser { (user) in
+        UserService.instance.getUserDetails { (user) in
             DispatchQueue.main.async {
                 if let user = user {
                     self.userView.configure(user: user)
-                    self.navigationItems.remove(at: 0)
-                    self.navigationItems.insert([NavigationItem.init(title: "Min side", icon: #imageLiteral(resourceName: "Icons_Profile"), viewControllerIdentifier: "MyPageVC"), NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], at: 0)
-                    self.tableView.reloadData()
                 } else {
                     self.userView.configureAsGuest()
-                    self.navigationItems.remove(at: 0)
-                    self.navigationItems.insert([NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Icons_Login"), viewControllerIdentifier: "LoginVC")], at: 0)
-                    self.tableView.reloadData()
                 }
-               
+            }
+        }
+    
+        if self.tableView.numberOfRows(inSection: 0) != navigationItems[0].count {
+            UIView.performWithoutAnimation {
+                self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .none)
             }
         }
         super.viewWillAppear(animated)

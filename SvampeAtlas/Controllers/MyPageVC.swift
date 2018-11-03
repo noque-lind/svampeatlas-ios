@@ -25,7 +25,8 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
        let view = UserView()
         view.translatesAutoresizingMaskIntoConstraints = false
          view.heightAnchor.constraint(equalToConstant: 180).isActive = true
-        UserService.instance.getUser(completion: { (user) in
+        
+        UserService.instance.getUserDetails(completion: { (user) in
             DispatchQueue.main.async {
                 if let user = user {
                     view.configure(user: user)
@@ -95,7 +96,7 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         gradientView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
+    
         view.addSubview(scrollView)
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true

@@ -11,6 +11,7 @@ import UIKit
 enum DetailsContent {
     case mushroom(mushroom : Mushroom)
     case observation(observation: Observation, showSpeciesView: Bool)
+    case observationWithID(observationID: Int, showSpeciesView: Bool)
 }
 
 class DetailsViewController: UIViewController {
@@ -106,6 +107,15 @@ class DetailsViewController: UIViewController {
             customNavigationBar.configureTitle("Fund af: \(observation.speciesProperties.name)")
             images = observation.images
             scrollView.configureScrollView(withObservation: observation, showSpeciesView: showSpeciesView)
+        case .observationWithID(let observationID, let showSpeciesView):
+            DataService.instance.getObservation(withID: observationID) { (appError, observation) in
+                DispatchQueue.main.async {
+                    guard let observation = observation else {return}
+                    self.customNavigationBar.configureTitle("Fund af: \(observation.speciesProperties.name)")
+                    self.images = observation.images
+                    self.scrollView.configureScrollView(withObservation: observation, showSpeciesView: showSpeciesView)
+                }
+            }
         }
         
         view.backgroundColor = UIColor.appSecondaryColour()

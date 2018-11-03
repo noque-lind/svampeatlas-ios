@@ -90,9 +90,14 @@ class CustomSearchBar: UITextField {
     
     private func round() {
         let radius = frame.height / 2
+
+        
+        layer.cornerRadius = radius
+        layer.maskedCorners = [CACornerMask.layerMinXMinYCorner, CACornerMask.layerMinXMaxYCorner]
         iconView.layer.cornerRadius = radius
-        shapeLayer.path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.topLeft, .bottomLeft], cornerRadii: CGSize(width: radius, height: radius)).cgPath
-        layer.mask = shapeLayer
+//        iconView.layer.cornerRadius = radius
+//        shapeLayer.path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.topLeft, .bottomLeft], cornerRadii: CGSize(width: radius, height: radius)).cgPath
+//        layer.mask = shapeLayer
     }
 }
 
@@ -132,7 +137,7 @@ extension CustomSearchBar {
             leadingConstraint.isActive = true
             
             iconView.layer.shadowOpacity = 0.0
-            self.layer.mask = self.shapeLayer
+//            self.layer.mask = self.shapeLayer
             
             
             UIView.animate(withDuration: 0.2) {

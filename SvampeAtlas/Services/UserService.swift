@@ -12,120 +12,130 @@ class UserService {
     static let instance = UserService()
     
     private init() {
-        getUser(completion: nil)
+        if let token = UserDefaults.standard.string(forKey: "token") {
+            self.token = token
+            self.isLoggedIn = true
+        } else {
+            self.isLoggedIn = false
+        }
     }
     
-    public private(set) var isLoggedIn = true
+    public private(set) var isLoggedIn: Bool
+    private var token: String?
     private var user: User?
     
-    func getUser(completion: ((User?) -> ())? = nil) {
+    func getUserDetails(completion: @escaping (User?) -> ()) {
         if let user = user {
-            completion?(user)
+            completion(user)
         } else {
-            guard let token = UserDefaults.standard.string(forKey: "token") else {completion?(nil); return}
-            getUserDetails(token: token) { (appError, user) in
-                if let user = user {
-                    self.user = user
-                    completion?(user)
-                }
+            CoreDataHelper.fetchUser { (user) in
+            guard let user = user else {return}
+            self.user = user
+            completion(user)
             }
+        }
+        
+        guard let token = token else {return}
+        DataService.instance.getUserDetails(token: token) { (appError, user) in
+            guard let user = user, self.user != user else {return}
+            self.user = user
+            CoreDataHelper.saveUser(user: user, completion: {
+                print("User succesfully saved")
+            })
+            completion(user)
         }
     }
     
     func logOut() {
+        isLoggedIn = false
         user = nil
         UserDefaults.standard.removeObject(forKey: "token")
     }
     
-    
     func login(initials: String, password: String, completion: @escaping (AppError?) -> ()) {
-        var urlRequest = URLRequest(url: URL(string: LOGIN_URL)!)
-        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.httpMethod = "POST"
-        
-        let json = try? JSONSerialization.data(withJSONObject: ["Initialer": initials, "password": password])
-        urlRequest.httpBody = json
-        
-        let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            do {
-                let data = try self.handleURLSession(data: data, response: response, error: error)
-                let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
-                self.handleLoginJSON(json: json)
-                completion(nil)
-            } catch let error as AppError {
-                completion(error)
-            } catch {
-                completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"))
-            }
-        }
-        
-        task.resume()
-    }
-    
-    
-    
-    
-    
-    
-    private func handleLoginJSON(json: Any) {
-        guard let json = json as? [String: Any] else {return}
-        guard let token = json["token"] as? String else {return}
-        UserDefaults.standard.set(token, forKey: "token")
-    }
-    
-    
-    private func getUserDetails(token: String, completion: @escaping (AppError?, User?) -> ()) {
-        var urlRequest = URLRequest(url: URL(string: ME_URL)!)
-        urlRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
-        let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-            do {
-                let data = try self.handleURLSession(data: data, response: response, error: error)
-                let user = try JSONDecoder().decode(User.self, from: data)
-                completion(nil, user)
-            } catch let error as AppError {
-                completion(error, nil)
-            } catch {
-                completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"), nil)
-            }
-        }
-        
-        task.resume()
-    }
-    
-    private func handleURLSession(data: Data?, response: URLResponse?, error: Error?) throws -> Data  {
-        guard error == nil, let response = response as? HTTPURLResponse else {
-            throw handleURLSessionError(error: error)
-        }
-        
-        guard response.statusCode < 300 else {
-            throw handleURLResponse(response: response)
-        }
-        
-        guard let data = data else {throw AppError(title: "Ukendt fejl", message: "Prøv venligst igen")}
-        return data
-    }
-    
-    
-    private func handleURLSessionError(error: Error?) -> AppError {
-        let error = error! as NSError
-        switch error.code {
-        case NSURLErrorNotConnectedToInternet:
-            return AppError(title: "Ingen internetforbindelse", message: "Forbind til internettet for at hente data")
-        case NSURLErrorTimedOut:
-            return AppError(title: "Time-out", message: "Andmodningen udløb, der kunne ikke fås noget svar fra databasen lige nu. Prøv igen senere")
-        default:
-            return AppError(title: "Test", message: "test")
+        DataService.instance.login(initials: initials, password: password) { (appError, token) in
+            guard let token = token else {completion(appError); return}
+            UserDefaults.standard.set(token, forKey: "token")
+            self.token = token
+            self.isLoggedIn = true
+            completion(nil)
         }
     }
     
-    private func handleURLResponse(response: HTTPURLResponse) -> AppError {
-        switch response.statusCode {
-        case 401:
-            return AppError(title: "Forkert kodeord", message: "Du har indtastet et forkert kodeord, prøv igen.")
-        default:
-            return AppError(title: "Uventet fejl", message: "Åh nej, det skete noget der ikke skulle ske. Prøv hvad du gjorde igen.")
-        }
+    func getNotificationsCount(completion: @escaping (Int) -> ()) {
+        
     }
 }
+
+
+    extension DataService {
+        fileprivate func login(initials: String, password: String, completion: @escaping (AppError?, String?) -> ()) {
+            var urlRequest = URLRequest(url: URL(string: LOGIN_URL)!)
+            urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.httpMethod = "POST"
+            
+            let json = try? JSONSerialization.data(withJSONObject: ["Initialer": initials, "password": password])
+            urlRequest.httpBody = json
+            
+            let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+                do {
+                    let data = try self.handleURLSession(data: data, response: response, error: error)
+                    let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+                    let token = try self.extractTokenFromJSON(json: json)
+                    completion(nil, token)
+                } catch let error as AppError {
+                    completion(error, nil)
+                } catch {
+                    completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"), nil)
+                }
+            }
+            task.resume()
+        }
+
+//        fileprivate func getUserNotificationCount(token: String, completion: @escaping (Int?) -> ()) {
+//            var urlRequest = URLRequest(url: URL(string: API.userNotificationsCountURL())!)
+//            urlRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+//            
+//            let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+//                do {
+//                    let data = try self.handleURLSession(data: data, response: response, error: error)
+//                    let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+//                    let count = try self.extractTokenFromJSON(json: json)
+//                    completion(nil, count)
+//                } catch let error as AppError {
+//                    completion(error, nil)
+//                } catch {
+//                    completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"), nil)
+//                }
+//            }
+//            task.resume()
+//        }
+        
+        fileprivate func getUserDetails(token: String, completion: @escaping (AppError?, User?) -> ()) {
+            var urlRequest = URLRequest(url: URL(string: ME_URL)!)
+            urlRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            
+            let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+                do {
+                    let data = try self.handleURLSession(data: data, response: response, error: error)
+                    let user = try JSONDecoder().decode(User.self, from: data)
+                    completion(nil, user)
+                } catch let error as AppError {
+                    completion(error, nil)
+                } catch {
+                    completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"), nil)
+                }
+            }
+            task.resume()
+        }
+        
+        
+        
+        private func extractTokenFromJSON(json: Any) throws -> String?  {
+        guard let json = json as? [String: Any] else {throw AppError.init(title: "Fejl", message: "Ikke et validt svar fra serveren")}
+        guard let token = json["token"] as? String else {throw AppError.init(title: "Fejl", message: "Kunne ikke hente sikkerhedstoken") }
+        return token
+    }
+}
+
 

@@ -80,6 +80,9 @@
 		DB679392214CF659003B34B2 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679391214CF659003B34B2 /* String+Extension.swift */; };
 		DB679394214CF7EA003B34B2 /* MushroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679393214CF7EA003B34B2 /* MushroomView.swift */; };
 		DB679396214D00DA003B34B2 /* ObservationsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB679395214D00DA003B34B2 /* ObservationsTableView.swift */; };
+		DB6E9E2D218A4D5E00A6FB1C /* NotificationsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E9E2C218A4D5E00A6FB1C /* NotificationsTableView.swift */; };
+		DB6E9E2F218A4ED500A6FB1C /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E9E2E218A4ED500A6FB1C /* NotificationCell.swift */; };
+		DB6E9E31218A529700A6FB1C /* UserNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E9E30218A529700A6FB1C /* UserNotification.swift */; };
 		DB8CC0DC2158288E00C958F0 /* NavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */; };
 		DB8CF0A3217B486700ADAFB0 /* ELTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0A2217B486700ADAFB0 /* ELTextField.swift */; };
 		DB8CF0A7217BA99200ADAFB0 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */; };
@@ -190,6 +193,9 @@
 		DB679391214CF659003B34B2 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		DB679393214CF7EA003B34B2 /* MushroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomView.swift; sourceTree = "<group>"; };
 		DB679395214D00DA003B34B2 /* ObservationsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationsTableView.swift; sourceTree = "<group>"; };
+		DB6E9E2C218A4D5E00A6FB1C /* NotificationsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsTableView.swift; sourceTree = "<group>"; };
+		DB6E9E2E218A4ED500A6FB1C /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
+		DB6E9E30218A529700A6FB1C /* UserNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotification.swift; sourceTree = "<group>"; };
 		DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDelegate.swift; sourceTree = "<group>"; };
 		DB8CF0A2217B486700ADAFB0 /* ELTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELTextField.swift; sourceTree = "<group>"; };
 		DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -231,6 +237,7 @@
 		4A0775CA20443D5200DD5AF0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				DB6E9E2B218A4CD700A6FB1C /* MyPageVC */,
 				DB2BE63B2120C62700C8BF6C /* RecognizeVC */,
 				DB8D172D211AE70D00C38D2C /* MushroomTableView */,
 				4A530268209856930043C1D3 /* Annotations */,
@@ -243,7 +250,6 @@
 				DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */,
 				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
 				4A80756F20BD717100F958AC /* DetailsScrollView.swift */,
-				DB4F53C62181F569001874A6 /* MyPageScrollView.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 				4AD43A0320529BDF001F6541 /* CategoryView.swift */,
 				4A1F7608207A31150082B873 /* RecognizeView.swift */,
@@ -259,6 +265,7 @@
 				4A53026A209888E50043C1D3 /* CustomMapView.swift */,
 				4AB6FA14207112F500870A46 /* CustomSearchBar.swift */,
 				DB679395214D00DA003B34B2 /* ObservationsTableView.swift */,
+				DB6E9E2C218A4D5E00A6FB1C /* NotificationsTableView.swift */,
 				DB8CF0A8217BAA3800ADAFB0 /* GradientImageView.swift */,
 			);
 			path = View;
@@ -274,6 +281,7 @@
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
 				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
 				4A8A18B220A186710063C83B /* NavigationCell.swift */,
+				DB6E9E2E218A4ED500A6FB1C /* NotificationCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -398,6 +406,7 @@
 				4A40CD6F209217B500F58F25 /* Observation.swift */,
 				4A54F67320AB413B001C8EC8 /* NavigationItem.swift */,
 				DB12BC252135507F00FFA037 /* User.swift */,
+				DB6E9E30218A529700A6FB1C /* UserNotification.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -434,6 +443,14 @@
 				4A70A5DC20D8E61E007B6214 /* CameraControlsView.swift */,
 			);
 			path = RecognizeVC;
+			sourceTree = "<group>";
+		};
+		DB6E9E2B218A4CD700A6FB1C /* MyPageVC */ = {
+			isa = PBXGroup;
+			children = (
+				DB4F53C62181F569001874A6 /* MyPageScrollView.swift */,
+			);
+			path = MyPageVC;
 			sourceTree = "<group>";
 		};
 		DB8D172D211AE70D00C38D2C /* MushroomTableView */ = {
@@ -601,6 +618,7 @@
 				4A6052D8208C95730078AF66 /* FavoritesBackground.swift in Sources */,
 				DB8CF0A3217B486700ADAFB0 /* ELTextField.swift in Sources */,
 				4A95D5482057DFCE00EBB2C5 /* OfflineBackground.swift in Sources */,
+				DB6E9E2D218A4D5E00A6FB1C /* NotificationsTableView.swift in Sources */,
 				4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */,
 				4AD107BD20976C6000BA04D0 /* ObservationView.swift in Sources */,
 				4A702E00209F266900CE648B /* ELRevealViewController.swift in Sources */,
@@ -627,6 +645,7 @@
 				4A69BC7A2038D96500D3B88B /* AppDelegate.swift in Sources */,
 				4A1F7605207966180082B873 /* ImageVC.swift in Sources */,
 				DBEE2858212441DB0017817A /* AppError.swift in Sources */,
+				DB6E9E31218A529700A6FB1C /* UserNotification.swift in Sources */,
 				4A53026B209888E50043C1D3 /* CustomMapView.swift in Sources */,
 				4A1F76012079606B0082B873 /* RecognizeVC.swift in Sources */,
 				4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */,
@@ -660,6 +679,7 @@
 				4A54F67220AB2C2F001C8EC8 /* ListView.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
 				DB8CF0A7217BA99200ADAFB0 /* LoginVC.swift in Sources */,
+				DB6E9E2F218A4ED500A6FB1C /* NotificationCell.swift in Sources */,
 				4A69457620456C010041824E /* NavigationVC.swift in Sources */,
 				4A1F760720796A510082B873 /* PhotoCell.swift in Sources */,
 				4A80756E20BD50EE00F958AC /* CustomNavigationBar.swift in Sources */,

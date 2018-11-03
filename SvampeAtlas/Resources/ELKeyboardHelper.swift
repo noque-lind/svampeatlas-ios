@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 
 class ELKeyboardHelper {
+    
     private init() {
         bindToKeyboard()
     }

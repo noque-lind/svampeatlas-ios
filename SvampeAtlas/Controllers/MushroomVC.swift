@@ -55,7 +55,7 @@ class MushroomVC: UIViewController {
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         if !hasAppeared {
-            categoryView.firstSelect(index: 0)
+            categoryView.firstSelect(index: 1)
             hasAppeared = true
         }
     }

@@ -159,8 +159,19 @@ class DetailsScrollView: UIScrollView {
         if showSpeciesView {
          configureSpeciesView(taxonID: observation.speciesProperties.id)
         }
+        
+        configureComments(comments: observation.comments)
     }
     
+    private func configureComments(comments: [Comment]) {
+        let commentsTableView: CommentsTableView = {
+            let tableView = CommentsTableView()
+            tableView.configure(comments: comments)
+            return tableView
+        }()
+        
+        contentStackView.addArrangedSubview(commentsTableView)
+    }
     
     private func configureUpperStackView(isObservation: Bool, first: String?, second: String?, third: String?, fouth: String?) {
         if let first = first, first != "" {

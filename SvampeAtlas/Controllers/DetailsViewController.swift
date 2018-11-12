@@ -114,6 +114,8 @@ class DetailsViewController: UIViewController {
                     self.customNavigationBar.configureTitle("Fund af: \(observation.speciesProperties.name)")
                     self.images = observation.images
                     self.scrollView.configureScrollView(withObservation: observation, showSpeciesView: showSpeciesView)
+                    
+                    print(observation.comments)
                 }
             }
         }

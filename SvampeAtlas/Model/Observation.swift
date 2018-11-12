@@ -19,6 +19,7 @@ fileprivate struct PrivateObservation: Decodable {
     var images: [PrivateImages]?
     var primaryUser: PrivatePrimaryUser?
     var locality: PrivateLocality?
+    var forum: [PrivateForum]?
     
     private enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -31,6 +32,7 @@ fileprivate struct PrivateObservation: Decodable {
         case locality = "Locality"
         case note
         case primaryDetermination = "PrivateDetermination"
+        case forum = "Forum"
     }
 }
 
@@ -39,7 +41,7 @@ fileprivate struct PrivateGeom: Decodable {
 }
 
 fileprivate struct PrivateDeterminationView: Decodable {
-    public private(set) var taxon_id: Int
+    public private(set) var taxon_id: Int?
     public private(set) var taxon_FullName: String?
     public private(set) var taxon_vernacularname_dk: String?
     public private(set) var redlistStatus: String?
@@ -53,7 +55,7 @@ fileprivate struct PrivateDeterminationView: Decodable {
 }
 
 fileprivate struct PrivateImages: Decodable {
-    private var name: String
+    var name: String
     var createdAt: String
     var url: String {
         get {
@@ -69,11 +71,19 @@ fileprivate struct PrivatePrimaryUser: Decodable {
 fileprivate struct PrivateProfile: Decodable {
     var name: String?
     var Initialer: String?
+    var facebook: String?
 }
 
 fileprivate struct PrivateLocality: Decodable {
     var name: String?
     var kommune: String?
+}
+
+fileprivate struct PrivateForum: Decodable {
+    var _id: Int?
+    var createdAt: String?
+    var content: String?
+    var User: PrivateProfile?
 }
 
 // Front
@@ -88,6 +98,7 @@ struct Observation: Decodable, Equatable {
     public private(set) var ecologyNote: String?
     public private(set) var location: String?
     public private(set) var images: [Image]?
+    public private(set) var comments = [Comment]()
     
     init(from decoder: Decoder) throws {
         let privateObservation = try PrivateObservation(from: decoder)
@@ -100,9 +111,9 @@ struct Observation: Decodable, Equatable {
         location = privateObservation.locality?.name
         
         if let determinationView = privateObservation.determinationView {
-            speciesProperties = SpeciesProperties(id: determinationView.taxon_id, name: determinationView.taxon_vernacularname_dk ?? determinationView.taxon_FullName ?? "")
+            speciesProperties = SpeciesProperties(id: determinationView.taxon_id ?? 0, name: determinationView.taxon_vernacularname_dk ?? determinationView.taxon_FullName ?? "")
         } else if let primaryDeterminationView = privateObservation.primaryDetermination {
-            speciesProperties = SpeciesProperties(id: primaryDeterminationView.taxon_id, name: primaryDeterminationView.taxon_vernacularname_dk ?? primaryDeterminationView.taxon_FullName ?? "")
+            speciesProperties = SpeciesProperties(id: primaryDeterminationView.taxon_id ?? 0, name: primaryDeterminationView.taxon_vernacularname_dk ?? primaryDeterminationView.taxon_FullName ?? "")
         } else {
             speciesProperties = SpeciesProperties(id: id, name: "")
         }
@@ -117,7 +128,13 @@ struct Observation: Decodable, Equatable {
                 }
                 images?.append(Image(thumbURL: nil, url: privateImage.url, photographer: observedBy))
             }
-            
+        }
+        
+        if let privateForums = privateObservation.forum {
+            for privateForum in privateForums {
+                guard let id = privateForum._id, let createdAt = privateForum.createdAt, let content = privateForum.content else {continue}
+                comments.append(Comment(id: id, date: createdAt, content: content))
+            }
         }
     }
 }
@@ -130,6 +147,12 @@ struct SpeciesProperties: Decodable {
         self.id = id
         self.name = name.capitalizeFirst()
     }
+}
+
+struct Comment: Decodable {
+    public private(set) var id: Int
+    public private(set) var date: String
+    public private(set) var content: String
 }
 
 func == (lhs: Observation, rhs: Observation) -> Bool {

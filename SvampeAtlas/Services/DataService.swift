@@ -23,7 +23,7 @@ class DataService {
         components.host = BASE_URL
         components.path = "/api/observations"
         
-        let encodedQuery = "&include=%5B%22%7B%5C%22model%5C%22:%5C%22DeterminationView%5C%22,%5C%22as%5C%22:%5C%22DeterminationView%5C%22,%5C%22attributes%5C%22:%5B%5C%22Taxon_id%5C%22,%5C%22Recorded_as_id%5C%22,%5C%22Taxon_FullName%5C%22,%5C%22Taxon_vernacularname_dk%5C%22,%5C%22Taxon_RankID%5C%22,%5C%22Determination_validation%5C%22,%5C%22Taxon_redlist_status%5C%22,%5C%22Taxon_path%5C%22,%5C%22Recorded_as_FullName%5C%22,%5C%22Determination_user_id%5C%22,%5C%22Determination_score%5C%22,%5C%22Determination_validator_id%5C%22%5D,%5C%22where%5C%22:%7B%5C%22$and%5C%22:%7B%5C%22$or%5C%22:%7B%7D%7D%7D%7D%22,%22%7B%5C%22model%5C%22:%5C%22User%5C%22,%5C%22as%5C%22:%5C%22PrimaryUser%5C%22,%5C%22required%5C%22:false,%5C%22where%5C%22:%7B%7D%7D%22,%22%7B%5C%22model%5C%22:%5C%22Locality%5C%22,%5C%22as%5C%22:%5C%22Locality%5C%22,%5C%22attributes%5C%22:%5B%5C%22_id%5C%22,%5C%22name%5C%22%5D,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22GeoNames%5C%22,%5C%22as%5C%22:%5C%22GeoNames%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationUser%5C%22,%5C%22as%5C%22:%5C%22userIds%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationImage%5C%22,%5C%22as%5C%22:%5C%22Images%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationForum%5C%22,%5C%22as%5C%22:%5C%22Forum%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationArea%5C%22,%5C%22as%5C%22:%5C%22areaIds%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22Determination%5C%22,%5C%22as%5C%22:%5C%22Determinations%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22attributes%5C%22:%5B%5C%22_id%5C%22,%5C%22score%5C%22%5D,%5C%22required%5C%22:false%7D%22%5D"
+        let encodedQuery = "&include=%5B%22%7B%5C%22model%5C%22%3A%5C%22DeterminationView%5C%22%2C%5C%22as%5C%22%3A%5C%22DeterminationView%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22Taxon_id%5C%22%2C%5C%22Recorded_as_id%5C%22%2C%5C%22Taxon_FullName%5C%22%2C%5C%22Taxon_vernacularname_dk%5C%22%2C%5C%22Determination_validation%5C%22%2C%5C%22Determination_user_id%5C%22%2C%5C%22Determination_score%5C%22%2C%5C%22Determination_validator_id%5C%22%5D%7D%22%2C%22%7B%5C%22model%5C%22%3A%5C%22User%5C%22%2C%5C%22as%5C%22%3A%5C%22PrimaryUser%5C%22%2C%5C%22required%5C%22%3Afalse%7D%22%2C%22%7B%5C%22model%5C%22%3A%5C%22Locality%5C%22%2C%5C%22as%5C%22%3A%5C%22Locality%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22_id%5C%22%2C%5C%22name%5C%22%5D%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D%22%2C%22%7B%5C%22model%5C%22%3A%5C%22ObservationUser%5C%22%2C%5C%22as%5C%22%3A%5C%22userIds%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D%22%2C%22%7B%5C%22model%5C%22%3A%5C%22ObservationImage%5C%22%2C%5C%22as%5C%22%3A%5C%22Images%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D%22%2C%22%7B%5C%22model%5C%22%3A%5C%22ObservationForum%5C%22%2C%5C%22as%5C%22%3A%5C%22Forum%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D%22%2C%22%7B%5C%22model%5C%22%3A%5C%22Determination%5C%22%2C%5C%22as%5C%22%3A%5C%22Determinations%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22attributes%5C%22%3A%5B%5C%22_id%5C%22%2C%5C%22score%5C%22%5D%2C%5C%22required%5C%22%3Afalse%7D%22%5D"
         
         
         
@@ -74,6 +74,7 @@ class DataService {
     func getMushroom(withID id: Int, completion: @escaping (AppError?, Mushroom?) -> Void) {
         var request = URLRequest(url: URL.init(string: MUSHROOM_URL(taxonID: id))!)
         request.timeoutInterval = 5
+        print(request.url)
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             do {
                 let data = try self.handleURLSession(data: data, response: response, error: error)
@@ -247,6 +248,11 @@ class DataService {
     }
     
     internal func handleURLResponse(response: HTTPURLResponse) -> AppError {
-        return AppError(title: "test", message: "test")
+        switch response.statusCode {
+        case 401:
+            return AppError(title: "Forkert kodeord", message: "Forkert kodeord")
+        default:
+        return AppError(title: "Uventet Fejl", message: "Uventet Fejl, Prøv igen")
     }
+}
 }

@@ -138,6 +138,21 @@ extension CoreDataHelper {
         }
     }
     
+    static func deleteUser(completion: () -> ()) {
+        guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {return}
+        
+        do {
+            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CDUser")
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+            try managedContext.execute(deleteRequest)
+            try managedContext.save()
+            completion()
+        } catch {
+            debugPrint(error)
+            completion()
+        }
+    }
+    
     
 
 }

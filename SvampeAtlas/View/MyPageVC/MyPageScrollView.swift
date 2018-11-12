@@ -132,7 +132,13 @@ class MyPageScrollView: UIScrollView {
                 return stackView
             }()
             
-            
+
+            UserService.instance.getUserNotificationCount(completion: { (count) in
+                    DispatchQueue.main.async {
+                        guard let count = count else {return}
+                    self.notificationsCountLabel.text = "\(count)"
+                    }
+                })
             
             let notificationsTableView: NotificationsTableView = {
                 let tableView = NotificationsTableView()
@@ -140,7 +146,6 @@ class MyPageScrollView: UIScrollView {
                 DataService.instance.getNotificationsForUser(withID: userID, completion: { (appError, userNotifications) in
                     DispatchQueue.main.async {
                         guard let userNotifications = userNotifications else {return}
-                        self.notificationsCountLabel.text = "\(userNotifications.count)"
                         tableView.configure(notifications: userNotifications)
                     }
                 })

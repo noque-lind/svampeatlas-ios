@@ -23,6 +23,7 @@ class UserService {
     public private(set) var isLoggedIn: Bool
     private var token: String?
     private var user: User?
+    private var userNotificationCount: Int?
     
     func getUserDetails(completion: @escaping (User?) -> ()) {
         if let user = user {
@@ -35,7 +36,7 @@ class UserService {
             }
         }
         
-        guard let token = token else {return}
+        guard let token = token else {completion(nil); return}
         DataService.instance.getUserDetails(token: token) { (appError, user) in
             guard let user = user, self.user != user else {return}
             self.user = user
@@ -46,10 +47,26 @@ class UserService {
         }
     }
     
+    func getUserNotificationCount(completion: @escaping (Int?) -> ()) {
+        guard let token = token else {completion(nil); return}
+        if let count = userNotificationCount {
+            completion(count)
+        }
+        
+        DataService.instance.getUserNotificationCount(token: token) { (count) in
+            self.userNotificationCount = count
+            completion(count)
+        }
+    }
+    
     func logOut() {
         isLoggedIn = false
         user = nil
+        token = nil
         UserDefaults.standard.removeObject(forKey: "token")
+        CoreDataHelper.deleteUser {
+            
+        }
     }
     
     func login(initials: String, password: String, completion: @escaping (AppError?) -> ()) {
@@ -60,10 +77,6 @@ class UserService {
             self.isLoggedIn = true
             completion(nil)
         }
-    }
-    
-    func getNotificationsCount(completion: @escaping (Int) -> ()) {
-        
     }
 }
 
@@ -92,24 +105,24 @@ class UserService {
             task.resume()
         }
 
-//        fileprivate func getUserNotificationCount(token: String, completion: @escaping (Int?) -> ()) {
-//            var urlRequest = URLRequest(url: URL(string: API.userNotificationsCountURL())!)
-//            urlRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-//            
-//            let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-//                do {
-//                    let data = try self.handleURLSession(data: data, response: response, error: error)
-//                    let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
-//                    let count = try self.extractTokenFromJSON(json: json)
-//                    completion(nil, count)
-//                } catch let error as AppError {
-//                    completion(error, nil)
-//                } catch {
-//                    completion(AppError(title: "Uventet fejl", message: "Prøv venligst igen"), nil)
-//                }
-//            }
-//            task.resume()
-//        }
+        fileprivate func getUserNotificationCount(token: String, completion: @escaping (Int?) -> ()) {
+            var urlRequest = URLRequest(url: URL(string: API.userNotificationsCountURL())!)
+            urlRequest.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            
+            let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+                do {
+                    let data = try self.handleURLSession(data: data, response: response, error: error)
+                    let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+                    let count = try self.extractCountFromJSON(json: json)
+                    completion(count)
+                } catch let error as AppError {
+                    completion(nil)
+                } catch {
+                    completion(nil)
+                }
+            }
+            task.resume()
+        }
         
         fileprivate func getUserDetails(token: String, completion: @escaping (AppError?, User?) -> ()) {
             var urlRequest = URLRequest(url: URL(string: ME_URL)!)
@@ -129,13 +142,17 @@ class UserService {
             task.resume()
         }
         
-        
-        
         private func extractTokenFromJSON(json: Any) throws -> String?  {
         guard let json = json as? [String: Any] else {throw AppError.init(title: "Fejl", message: "Ikke et validt svar fra serveren")}
-        guard let token = json["token"] as? String else {throw AppError.init(title: "Fejl", message: "Kunne ikke hente sikkerhedstoken") }
+        guard let token = json["token"] as? String else {throw AppError.init(title: "Fejl", message: "Kunne ikke hente sikkerhedstoken")}
         return token
     }
+        
+        private func extractCountFromJSON(json: Any) throws -> Int? {
+            guard let json = json as? [String: Any] else {throw AppError.init(title: "Fejl", message: "Ikke et validt svar fra serveren")}
+            guard let count = json["count"] as? Int else {throw AppError.init(title: "Fejl", message: "Kunne ikke extracte count")}
+            return count
+        }
 }
 
 

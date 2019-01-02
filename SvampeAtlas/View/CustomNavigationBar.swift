@@ -34,6 +34,14 @@ class CustomNavigationBar: UIView {
         }
     }
     
+    var heightConstraint: NSLayoutConstraint? {
+        willSet {
+            heightConstraint?.isActive = false
+        } didSet {
+            heightConstraint?.isActive = true
+        }
+    }
+    
     init() {
         super.init(frame: CGRect.zero)
         setupView()
@@ -45,7 +53,7 @@ class CustomNavigationBar: UIView {
     
     private func setupView() {
         self.alpha = 0
-        
+        heightConstraint = self.heightAnchor.constraint(equalToConstant: 30)
         
         addSubview(backgroundView)
         backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true

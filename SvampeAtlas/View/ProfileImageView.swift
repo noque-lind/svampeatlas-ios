@@ -30,6 +30,7 @@ class ProfileImageView: UIView {
         return label
     }()
     
+    private var imageURL: String?
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -67,15 +68,18 @@ class ProfileImageView: UIView {
     }
     
     func configure(initials: String, imageURL: String?) {
-        label.text = initials
+        self.imageURL = imageURL
+        imageView.image = nil
+        label.text = initials.uppercased()
         imageView.alpha = 0.7
         backgroundColor = UIColor.appPrimaryColour()
-        imageView.image = nil
         
         guard let imageURL = imageURL else {return}
-        DataService.instance.getImage(forUrl: imageURL) { (image) in
+        DataService.instance.getImage(forUrl: imageURL) { (image, imageURL) in
             DispatchQueue.main.async {
-                self.imageView.image = image
+                if self.imageURL == imageURL {
+                    self.imageView.image = image
+                }
             }
         }
     }

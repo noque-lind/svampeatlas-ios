@@ -10,10 +10,14 @@ import UIKit
 
 class MushroomVC: UIViewController {
     
-    @IBOutlet weak var categoryView: CategoryView!
-    
     private var gradientView: GradientView = {
        let view = GradientView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private var categoryView: CategoryView = {
+        var view = CategoryView(categories: [Category.init(title: "Mine favoritter"), Category.init(title: "Svampearter"), Category.init(title: "Sjældne"), Category.init(title: "Årstidens"), Category.init(title: "Spiselige")], firstIndex: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -53,15 +57,12 @@ class MushroomVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        
-        if !hasAppeared {
-            categoryView.firstSelect(index: 1)
-            hasAppeared = true
-        }
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
+        super.viewWillAppear(animated)
     }
     
     private func setupView() {
@@ -71,8 +72,13 @@ class MushroomVC: UIViewController {
         gradientView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
+        view.addSubview(categoryView)
+        categoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        categoryView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        categoryView.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        categoryView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         
-        view.addSubview(mushroomDataView)
+        view.insertSubview(mushroomDataView, belowSubview: categoryView)
         mushroomDataView.topAnchor.constraint(equalTo: categoryView.bottomAnchor).isActive = true
         mushroomDataView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         mushroomDataView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -83,10 +89,8 @@ class MushroomVC: UIViewController {
         searchBar.topAnchor.constraint(equalTo: categoryView.bottomAnchor, constant: 8).isActive = true
         searchBar.leadingConstraint = searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8)
         searchBar.widthConstraint = searchBar.widthAnchor.constraint(equalToConstant: 58)
-        
         setupNavigationController()
     }
-    
     
     private func setupNavigationController() {
         self.navigationController?.view.backgroundColor = UIColor.appPrimaryColour()
@@ -106,7 +110,7 @@ class MushroomVC: UIViewController {
 }
 
 extension MushroomVC: CategoryViewDelegate {
-    func newCategorySelected(category: Category) {
+    func categorySelected(category: Category) {
         mushroomDataView.categorySelected(category: category)
     }
 }
@@ -137,7 +141,6 @@ extension MushroomVC: MushroomDataViewDelegate {
     func pushVC(_ vc: UIViewController) {
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
     
     func showSearchBar(_ shouldShow: Bool) {
         searchBar.isHidden = shouldShow ? false: true

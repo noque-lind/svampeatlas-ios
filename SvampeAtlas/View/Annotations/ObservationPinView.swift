@@ -109,7 +109,7 @@ class ObservationPinView: MKAnnotationView {
     private func configure() {
         imageView.image = nil
         guard let imageURL = observationPin.observation.images?.first?.url else {return}
-        DataService.instance.getImage(forUrl: imageURL, size: .mini) { (image) in
+        DataService.instance.getImage(forUrl: imageURL, size: .mini) { (image, imageURL) in
             DispatchQueue.main.async {
                 self.imageView.image = image
             }

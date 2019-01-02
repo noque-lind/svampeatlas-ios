@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nbd-0V-aQq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="nbd-0V-aQq">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,10 +13,25 @@
         <!--LoginVC-->
         <scene sceneID="ORS-gP-Kun">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="v0t-SH-t9k" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="39R-Cn-d23" customClass="LoginVC" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="v0t-SH-t9k" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1697" y="-548"/>
+            <point key="canvasLocation" x="-1860" y="-598"/>
+        </scene>
+        <!--Test Controller-->
+        <scene sceneID="H3Y-z8-hVv">
+            <objects>
+                <viewController id="ai4-W9-COZ" customClass="TestController" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Bn0-pv-6NX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Q5A-rK-xuE"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MdF-i4-SE8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2989" y="299"/>
         </scene>
         <!--Reveal View Controller-->
         <scene sceneID="QaE-HU-sKn">
@@ -102,64 +117,6 @@
             </objects>
             <point key="canvasLocation" x="1487" y="728"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="cQM-BH-A6c">
-            <objects>
-                <viewController id="Ofc-zQ-Ha6" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hGf-38-k6h">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="qfw-CZ-APg"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Zll-2v-HBb" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1902" y="-652"/>
-        </scene>
-        <!--MapVC-->
-        <scene sceneID="dVk-rx-qov">
-            <objects>
-                <viewController id="wcn-PA-u4d" customClass="MapVC" customModule="SvampeAtlas" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="aMg-Aw-vZX">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TY9-6V-ghT">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                            </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3iI-x4-gUX">
-                                <rect key="frame" x="309" y="712" width="50" height="50"/>
-                                <color key="backgroundColor" red="0.91339951750000004" green="0.66528296470000003" blue="0.26258087159999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="BaF-hD-9kp"/>
-                                    <constraint firstAttribute="height" constant="50" id="EhC-fw-heX"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="userLocationButtonPressed:" destination="wcn-PA-u4d" eventType="touchUpInside" id="xLS-e6-43M"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <constraints>
-                            <constraint firstItem="TY9-6V-ghT" firstAttribute="leading" secondItem="kas-ds-K7l" secondAttribute="leading" id="9N8-Mh-QtO"/>
-                            <constraint firstItem="TY9-6V-ghT" firstAttribute="trailing" secondItem="kas-ds-K7l" secondAttribute="trailing" id="Pe2-Ml-fhs"/>
-                            <constraint firstAttribute="bottom" secondItem="TY9-6V-ghT" secondAttribute="bottom" id="blj-N8-QG6"/>
-                            <constraint firstItem="kas-ds-K7l" firstAttribute="bottom" secondItem="3iI-x4-gUX" secondAttribute="bottom" constant="16" id="fH9-Ax-E9P"/>
-                            <constraint firstItem="TY9-6V-ghT" firstAttribute="top" secondItem="aMg-Aw-vZX" secondAttribute="top" id="jAA-x9-YBU"/>
-                            <constraint firstItem="kas-ds-K7l" firstAttribute="trailing" secondItem="3iI-x4-gUX" secondAttribute="trailing" constant="16" id="oSC-09-RHH"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="kas-ds-K7l"/>
-                    </view>
-                    <connections>
-                        <outlet property="mapView" destination="TY9-6V-ghT" id="m2v-g6-Fa7"/>
-                        <outlet property="userLocationButton" destination="3iI-x4-gUX" id="WC1-q6-Me1"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="G7e-h4-7fO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="264.80000000000001" y="1557.6354679802957"/>
-        </scene>
         <!--Svampe atlas-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -167,73 +124,11 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="724"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7J-6a-8XL" customClass="CategoryView" customModule="SvampeAtlas" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
-                                <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2yQ-pK-KrM">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="45"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="jKH-Mj-dIy">
-                                            <size key="itemSize" width="50" height="45"/>
-                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        </collectionViewFlowLayout>
-                                        <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="categoryCell" id="bER-9W-Dqy" customClass="CategoryCell" customModule="SvampeAtlas" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="45"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="45"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="838-Y0-G0T">
-                                                            <rect key="frame" x="4" y="12" width="42" height="21"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </view>
-                                                <constraints>
-                                                    <constraint firstItem="838-Y0-G0T" firstAttribute="centerY" secondItem="bER-9W-Dqy" secondAttribute="centerY" id="29v-Gd-5Km"/>
-                                                    <constraint firstAttribute="trailing" secondItem="838-Y0-G0T" secondAttribute="trailing" constant="4" id="LfK-70-koi"/>
-                                                    <constraint firstItem="838-Y0-G0T" firstAttribute="leading" secondItem="bER-9W-Dqy" secondAttribute="leading" constant="4" id="liJ-iQ-eVU"/>
-                                                </constraints>
-                                                <connections>
-                                                    <outlet property="label" destination="838-Y0-G0T" id="GKn-k1-A60"/>
-                                                </connections>
-                                            </collectionViewCell>
-                                        </cells>
-                                    </collectionView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="2yQ-pK-KrM" firstAttribute="top" secondItem="d7J-6a-8XL" secondAttribute="top" id="8HI-aE-mTE"/>
-                                    <constraint firstItem="2yQ-pK-KrM" firstAttribute="leading" secondItem="d7J-6a-8XL" secondAttribute="leading" id="Gs9-L8-0na"/>
-                                    <constraint firstAttribute="trailing" secondItem="2yQ-pK-KrM" secondAttribute="trailing" id="Rch-Ij-Ff0"/>
-                                    <constraint firstAttribute="bottom" secondItem="2yQ-pK-KrM" secondAttribute="bottom" id="mna-YT-rSw"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="collectionView" destination="2yQ-pK-KrM" id="6qO-mn-d4k"/>
-                                </connections>
-                            </view>
-                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="d7J-6a-8XL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="7y7-8A-7uZ"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="d7J-6a-8XL" secondAttribute="bottom" constant="-45" id="BiY-wj-ZOD"/>
-                            <constraint firstItem="d7J-6a-8XL" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="BuB-NZ-Gmc"/>
-                            <constraint firstItem="d7J-6a-8XL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="HMg-87-aVG"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="Svampe atlas" largeTitleDisplayMode="never" id="8db-Kb-sIf"/>
-                    <connections>
-                        <outlet property="categoryView" destination="d7J-6a-8XL" id="yFe-Gm-DTv"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

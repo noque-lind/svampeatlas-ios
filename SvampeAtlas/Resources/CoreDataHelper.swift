@@ -73,7 +73,7 @@ struct CoreDataHelper {
                     if !FileManager.default.fileExists(atPath: (FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: .userDomainMask).first!.appendingPathComponent(image.url).absoluteString)) {
                         let filePath = (FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)[0]).appendingPathComponent(image.url)
                         
-                        DataService.instance.getImage(forUrl: image.url) { (image) in
+                        DataService.instance.getImage(forUrl: image.url) { (image, imageURL) in
                             let data = image.pngData()
                             try? data?.write(to: filePath)
                         }
@@ -110,7 +110,7 @@ extension CoreDataHelper {
                     if !FileManager.default.fileExists(atPath: (FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: .userDomainMask).first!.appendingPathComponent(imageURL).absoluteString)) {
                         let filePath = (FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask)[0]).appendingPathComponent(imageURL)
                         
-                        DataService.instance.getImage(forUrl: imageURL) { (image) in
+                        DataService.instance.getImage(forUrl: imageURL) { (image, imageURL) in
                             let data = image.pngData()
                             try? data?.write(to: filePath)
                         }
@@ -155,6 +155,36 @@ extension CoreDataHelper {
     
     
 
+}
+
+extension CoreDataHelper {
+    static func fetchSubstrateGroups(completion: ([SubstrateGroup]) -> ()) {
+        guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {return}
+        
+        let fetchRequest = NSFetchRequest<CDSubstrateGroup>(entityName: "CDSubstrateGroup")
+        
+        do {
+            let cdSubstrateGroups = try managedContext.fetch(fetchRequest)
+            let substrateGroups = cdSubstrateGroups.compactMap({SubstrateGroup(from: $0)})
+            completion(substrateGroups)
+        } catch {
+            print(error)
+        }
+    }
+    
+    /*
+    static func fetchUser(completion: (_ user: User?) -> ()) {
+        guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {return}
+        
+        let fetchRequest = NSFetchRequest<CDUser>(entityName: "CDUser")
+        do {
+            let cdUser = try managedContext.fetch(fetchRequest).first
+            guard let user = cdUser else {completion(nil); return}
+            completion(User(from: user))
+        } catch {
+            completion(nil)
+        }
+    }*/
 }
 
 

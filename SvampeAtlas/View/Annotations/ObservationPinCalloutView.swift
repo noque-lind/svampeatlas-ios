@@ -100,7 +100,7 @@ class ObservationPinCalloutView: UIView {
         observationView.configure(observation: observation)
         
         if let imageURL = observation.images?.first?.url, withImage == true {
-            DataService.instance.getImage(forUrl: imageURL) { (image) in
+            DataService.instance.getImage(forUrl: imageURL) { (image, imageURL) in
                 DispatchQueue.main.async {
                     self.imageView.image = image
                 }

@@ -9,7 +9,6 @@
 import UIKit
 
 class CommentCell: UITableViewCell {
-    
     private var profileImageView: ProfileImageView = {
         let view = ProfileImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -55,7 +54,6 @@ class CommentCell: UITableViewCell {
     private func setupView() {
         backgroundColor = UIColor.clear
         selectionStyle = .none
-        accessoryType = .disclosureIndicator
         
         let upperStackView: UIStackView = {
             let stackView = UIStackView()
@@ -82,9 +80,10 @@ class CommentCell: UITableViewCell {
     }
     
     func configureCell(comment: Comment) {
-        nameLabel.text = "Thorbjørn"
+        nameLabel.text = comment.commenterName
         contentLabel.text = comment.content
         dateLabel.text = Date(ISO8601String: comment.date)?.convert(into: DateFormatter.Style.full)
+        profileImageView.configure(initials: "", imageURL: comment.commenterProfileImageURL)
         
         
         //        guard let imageURL = notification.imageURL else {return}

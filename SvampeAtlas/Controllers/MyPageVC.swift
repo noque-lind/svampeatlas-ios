@@ -42,6 +42,7 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         let view = MyPageScrollView()
         view.delegate = self
         view.customDelegate = self
+        view.delegate = self
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -68,13 +69,12 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
             setupView()
             hasBeenSetup = true
         }
-//        self.eLRevealViewController()?.delegate = self
-        
+        self.eLRevealViewController()?.delegate = self
         super.viewWillAppear(animated)
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         super.viewDidAppear(animated)
@@ -82,7 +82,7 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
 
     
     override func viewDidLayoutSubviews() {
-        customNavigationBar.heightAnchor.constraint(equalToConstant: (self.navigationController?.navigationBar.frame.maxY)!).isActive = true
+        customNavigationBar.heightConstraint?.constant = (self.navigationController?.navigationBar.frame.maxY)!
         customNavigationBar.navigationBarOffset = self.navigationController?.navigationBar.frame.origin.y
         
         scrollView.contentInset = UIEdgeInsets(top: view.safeAreaInsets.top + 180 + 16 + 16, left: 0.0, bottom: 0.0, right: 0.0)
@@ -112,9 +112,6 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        print(self.navigationController?.navigationBar.frame.maxY)
-        
-        scrollView.delegate = self
     }
     
     @objc private func menuButtonPressed() {
@@ -128,7 +125,7 @@ extension MyPageVC: UIScrollViewDelegate {
         if scrollView == self.scrollView {
             
             userView.transform = CGAffineTransform(translationX: 0, y: -adjustedContentOffset)
-            customNavigationBar.changeAlpha((adjustedContentOffset - 100) / 100)
+            customNavigationBar.changeAlpha((adjustedContentOffset - 80) / 100)
             
             
 //            let minValue = (max(adjustedContentOffset, 0))
@@ -148,6 +145,12 @@ extension MyPageVC: NavigationDelegate {
     
     func pushVC(_ vc: UIViewController) {
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension MyPageVC: ELRevealViewControllerDelegate {
+    func isAllowedToPushMenu() -> Bool? {
+        return true
     }
 }
 

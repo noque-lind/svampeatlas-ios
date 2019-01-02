@@ -59,7 +59,7 @@ class RoundedImageView: UIView {
     func configureImage(url: String?) {
             imageView.image = nil
         guard let url = url else {return}
-        DataService.instance.getImage(forUrl: url, size: .mini) { [weak self] (image) in
+        DataService.instance.getImage(forUrl: url, size: .mini) { [weak self] (image, imageURL) in
                         self?.imageView.image = image
                 }
             }

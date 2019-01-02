@@ -60,7 +60,7 @@ class ImageCell: UICollectionViewCell {
     func configureCell(contentMode: UIView.ContentMode, url: String, photoAuthor: String?) {
         imageView.contentMode = contentMode
         
-        DataService.instance.getImage(forUrl: url) { (image) in
+        DataService.instance.getImage(forUrl: url) { (image, imageURL) in
             if self.imageView.image == nil {
                 self.imageView.image = image
             } else {

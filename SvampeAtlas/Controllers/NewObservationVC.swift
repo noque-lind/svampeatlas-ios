@@ -161,7 +161,7 @@ class NewObservationVC: UIViewController {
                 case 0:
                     self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: RecognizeVC(isObservation: true)))
                 case 1:
-                    return
+                    self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: NewObservationVC2()))
                 default: return
                 }
             }

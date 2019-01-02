@@ -8,17 +8,114 @@
 
 import Foundation
 
+
+/*
+ POST FUND: https://svampe.databasen.org/api/observations
+ 
+ "createdAt": "2018-12-06T20:49:29.000Z",
+ "observationDateAccuracy": "day",
+ "atlasUUID": "6d0e2970-f998-11e8-9609-e76ff0de5fb8",
+ "_id": 9353834,
+ "observationDate": "2018-12-06",
+ "substrate_id": "29",
+ "vegetationtype_id": "10",
+ "ecologynote": "Økologi test",
+ "accuracy": 2500,
+ "os": "MacOS",
+ "browser": "Safari",
+ "locality_id": 10465,
+ "decimalLatitude": 55.67372,
+ "decimalLongitude": 12.56844,
+ "primaryuser_id": 5,
+ "geom": {
+ "fn": "GeomFromText",
+ "args": [
+ "POINT (12.56844 55.67372)"
+ ]
+ },
+ "updatedAt": "2018-12-06T20:49:29.000Z",
+ "primarydetermination_id": 5739287
+ }
+ 
+ 
+ */
+
+
 struct API {
-    static func userNotificationsURL(userID id: Int) -> String {
-        return BASE_URL_API + "users/me/feed?limit=25"
+    enum ObservationIncludeQueries {
+        case images
+        case comments
+        case determinationView(taxonID: Int?)
+        case user(responseFilteredByUserID: Int?)
+        case locality
+        
+        var encodedQuery: String {
+            switch self {
+            case .determinationView(taxonID: let taxonID):
+                if let taxonID = taxonID {
+                    return "%7B%5C%22model%5C%22%3A%5C%22DeterminationView%5C%22%2C%5C%22as%5C%22%3A%5C%22DeterminationView%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22taxon_id%5C%22%2C%5C%22recorded_as_id%5C%22%2C%5C%22taxon_FullName%5C%22%2C%5C%22taxon_vernacularname_dk%5C%22%2C%5C%22determination_validation%5C%22%2C%5C%22recorded_as_FullName%5C%22%2C%5C%22determination_user_id%5C%22%2C%5C%22determination_score%5C%22%2C%5C%22determination_validator_id%5C%22%2C%5C%22determination_species_hypothesis%5C%22%5D%2C%5C%22where%5C%22%3A%7B%5C%22Taxon_id%5C%22%3A\(taxonID)%7D%7D"
+                } else {
+                    return "%7B%5C%22model%5C%22%3A%5C%22DeterminationView%5C%22%2C%5C%22as%5C%22%3A%5C%22DeterminationView%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22taxon_id%5C%22%2C%5C%22recorded_as_id%5C%22%2C%5C%22taxon_FullName%5C%22%2C%5C%22taxon_vernacularname_dk%5C%22%2C%5C%22determination_validation%5C%22%2C%5C%22recorded_as_FullName%5C%22%2C%5C%22determination_user_id%5C%22%2C%5C%22determination_score%5C%22%2C%5C%22determination_validator_id%5C%22%2C%5C%22determination_species_hypothesis%5C%22%5D%7D"
+                }
+                
+                
+            case .images:
+                return "%7B%5C%22model%5C%22%3A%5C%22ObservationImage%5C%22%2C%5C%22as%5C%22%3A%5C%22Images%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D"
+            case .comments: return "%7B%5C%22model%5C%22%3A%5C%22ObservationForum%5C%22%2C%5C%22as%5C%22%3A%5C%22Forum%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D"
+            case .user(responseFilteredByUserID: let id):
+                if let id = id {
+                     return "%7B%5C%22model%5C%22%3A%5C%22User%5C%22%2C%5C%22as%5C%22%3A%5C%22PrimaryUser%5C%22%2C%5C%22required%5C%22%3Atrue%2C%5C%22where%5C%22%3A%7B%5C%22_id%5C%22%3A\(id)%7D%7D"
+                } else {
+                    return "%7B%5C%22model%5C%22%3A%5C%22User%5C%22%2C%5C%22as%5C%22%3A%5C%22PrimaryUser%5C%22%2C%5C%22required%5C%22%3Atrue%7D"
+                }
+               
+            case .locality:
+                return "%7B%5C%22model%5C%22%3A%5C%22Locality%5C%22%2C%5C%22as%5C%22%3A%5C%22Locality%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22_id%5C%22%2C%5C%22name%5C%22%5D%7D"
+            }
+        }
+        
     }
     
-    static func observationWithID(observationID id: Int) -> String {
+    private static func parseQueryEnums(observationIncludeQueries: [ObservationIncludeQueries]) -> String {
+        var string = ""
+        for i in 0..<observationIncludeQueries.count {
+            string.append(observationIncludeQueries[i].encodedQuery)
+            
+            if i != observationIncludeQueries.endIndex - 1 {
+                string.append("%22%2C%22")
+            } else {
+                string.append("%22%5D")
+            }
+        }
+        return string
+    }
+    
+    static func userNotificationsURL(userID id: Int, limit: Int, offset: Int) -> String {
+        return BASE_URL_API + "users/me/feed?limit=\(limit)?offset=\(offset)"
+    }
+    
+    static func observationWithIDURL(observationID id: Int) -> String {
         return BASE_URL_API + "observations/\(id)"
     }
     
     static func userNotificationsCountURL() -> String {
         return BASE_URL_API + "users/me/feed/count"
+    }
+    
+    static func observationsURL(includeQueries: [ObservationIncludeQueries], limit: Int = 24, offset: Int = 0) -> String {
+        return BASE_URL_API + "observations?_order=%5B%5B%22observationDate%22,%22DESC%22,%22ASC%22%5D,%5B%22_id%22,%22DESC%22%5D%5D" + includeQuery(includeQueries: includeQueries) + "&limit=\(limit)&offset=\(offset)&where=%7B%7D"
+    }
+    
+    static func includeQuery(includeQueries: [ObservationIncludeQueries]) -> String {
+        return "&include=%5B%22" + parseQueryEnums(observationIncludeQueries: includeQueries)
+    }
+    
+    static func substrateURL() -> String {
+        return BASE_URL_API + "substrate"
+    }
+    
+    static func vegetationTypeURL() -> String {
+        return BASE_URL_API + "vegetationtypes"
     }
 }
 
@@ -40,14 +137,6 @@ func ALLMUSHROOMS_URL(limit: Int, offset: Int) -> String {
 
 func MUSHROOM_URL(taxonID: Int) -> String {
     return BASE_URL_API + "taxa?" + SPECIES_INCLUDE_QUERY(imagesRequired: false) + "&where=%7B%22_id%22%3A\(taxonID)%7D"
-}
-
-func OBSERVATIONSFOR_URL(taxonID: Int, limit: Int) -> String {
-    return BASE_URL_API + "observations?_order=%5B%5B%22observationDate%22,%22DESC%22%5D%5D&include=%5B%22%7B%5C%22model%5C%22:%5C%22DeterminationView%5C%22,%5C%22as%5C%22:%5C%22DeterminationView%5C%22,%5C%22where%5C%22:%7B%5C%22Taxon_id%5C%22:\(taxonID),%5C%22$or%5C%22:%5B%7B%5C%22Determination_validation%5C%22:%5C%22Godkendt%5C%22%7D,%7B%5C%22Determination_score%5C%22:%7B%5C%22$gte%5C%22:80%7D%7D%5D%7D%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationImage%5C%22,%5C%22as%5C%22:%5C%22Images%5C%22,%5C%22required%5C%22:true,%5C%22where%5C%22:%7B%5C%22hide%5C%22:0%7D%7D%22,%22%7B%5C%22model%5C%22:%5C%22User%5C%22,%5C%22as%5C%22:%5C%22PrimaryUser%5C%22,%5C%22attributes%5C%22:%5B%5C%22_id%5C%22,%5C%22email%5C%22,%5C%22Initialer%5C%22,%5C%22name%5C%22%5D,%5C%22where%5C%22:%7B%7D%7D%22,%22%7B%5C%22model%5C%22:%5C%22Locality%5C%22,%5C%22as%5C%22:%5C%22Locality%5C%22,%5C%22where%5C%22:%7B%7D%7D%22%5D&limit=\(limit)&offset=0"
-}
-
-func OBSERVATIONSFOR_USER(withID id: Int) -> String {
-    return "https://svampe.databasen.org/api/observations?_order=%5B%5B%22observationDate%22,%22DESC%22,%22ASC%22%5D,%5B%22_id%22,%22DESC%22%5D%5D&include=%5B%22%7B%5C%22model%5C%22:%5C%22DeterminationView%5C%22,%5C%22as%5C%22:%5C%22DeterminationView%5C%22,%5C%22attributes%5C%22:%5B%5C%22Taxon_id%5C%22,%5C%22Recorded_as_id%5C%22,%5C%22Taxon_FullName%5C%22,%5C%22Taxon_vernacularname_dk%5C%22,%5C%22Taxon_RankID%5C%22,%5C%22Determination_validation%5C%22,%5C%22Taxon_redlist_status%5C%22,%5C%22Taxon_path%5C%22,%5C%22Recorded_as_FullName%5C%22,%5C%22Determination_user_id%5C%22,%5C%22Determination_score%5C%22,%5C%22Determination_validator_id%5C%22,%5C%22Determination_species_hypothesis%5C%22%5D,%5C%22where%5C%22:%7B%5C%22$and%5C%22:%7B%5C%22$or%5C%22:%7B%7D%7D%7D%7D%22,%22%7B%5C%22model%5C%22:%5C%22User%5C%22,%5C%22as%5C%22:%5C%22PrimaryUser%5C%22,%5C%22required%5C%22:true,%5C%22where%5C%22:%7B%5C%22_id%5C%22:\(id)%7D%7D%22,%22%7B%5C%22model%5C%22:%5C%22Locality%5C%22,%5C%22as%5C%22:%5C%22Locality%5C%22,%5C%22attributes%5C%22:%5B%5C%22_id%5C%22,%5C%22name%5C%22%5D,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:true%7D%22,%22%7B%5C%22model%5C%22:%5C%22GeoNames%5C%22,%5C%22as%5C%22:%5C%22GeoNames%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationUser%5C%22,%5C%22as%5C%22:%5C%22userIds%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationImage%5C%22,%5C%22as%5C%22:%5C%22Images%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationForum%5C%22,%5C%22as%5C%22:%5C%22Forum%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22ObservationArea%5C%22,%5C%22as%5C%22:%5C%22areaIds%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22Determination%5C%22,%5C%22as%5C%22:%5C%22Determinations%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22attributes%5C%22:%5B%5C%22_id%5C%22,%5C%22score%5C%22%5D,%5C%22required%5C%22:false%7D%22,%22%7B%5C%22model%5C%22:%5C%22DnaSequence%5C%22,%5C%22as%5C%22:%5C%22DnaSequence%5C%22,%5C%22where%5C%22:%7B%7D,%5C%22attributes%5C%22:%5B%5C%22_id%5C%22,%5C%22marker%5C%22,%5C%22geneticAccessionNumber%5C%22%5D,%5C%22required%5C%22:false%7D%22%5D&limit=100&offset=0&where=%7B%7D"
 }
 
 func SEARCHFORMUSHROOM_URL(searchTerm: String) -> String {

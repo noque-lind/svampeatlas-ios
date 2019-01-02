@@ -43,6 +43,11 @@ class NotificationCell: UITableViewCell {
         fatalError()
     }
     
+    override func prepareForReuse() {
+        profileImageView.configure(initials: "", imageURL: nil)
+        super.prepareForReuse()
+    }
+    
     private func setupView() {
         backgroundColor = UIColor.clear
         selectionStyle = .none
@@ -71,23 +76,38 @@ class NotificationCell: UITableViewCell {
         
         switch notification.eventType {
         case "COMMENT_ADDED":
-            primaryText.append(NSAttributedString(string: " har kommenteret på dit fund af: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            profileImageView.configure(initials: notification.triggerInitials, imageURL: notification.triggerImageURL)
+            
+            primaryText.append(NSAttributedString(string: " har kommenteret på et fund af: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont(name: "AvenirNext-UltraLightItalic", size: 12)!]))
+            primaryText.append(NSAttributedString(string: " som du følger.", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            
         case "DETERMINATION_ADDED":
-            primaryText.append(NSAttributedString(string: " har tilføjet en bestemmelse til dit fund af: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            profileImageView.configure(initials: notification.triggerInitials, imageURL: notification.triggerImageURL)
+            
+            primaryText.append(NSAttributedString(string: " har tilføjet bestemmelsen: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont(name: "AvenirNext-UltraLightItalic", size: 12)!]))
+            primaryText.append(NSAttributedString(string: " til et fund som du følger.", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            
         case "DETERMINATION_APPROVED":
-            primaryText.append(NSAttributedString(string: " har godkendt dit fund af : ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            profileImageView.configure(initials: "", imageURL: notification.imageURL)
+            
+            primaryText.deleteCharacters(in: NSRange(location: 0, length: primaryText.length))
+            primaryText.append(NSAttributedString(string: "Et fund du følger er blevet valideret og godkendt som: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed()]))
+        
+        case "DETERMINATION_EXPERT_APPROVED":
+            profileImageView.configure(initials: "", imageURL: notification.imageURL)
+            
+            primaryText.deleteCharacters(in: NSRange(location: 0, length: primaryText.length))
+            primaryText.append(NSAttributedString(string: "Fundet af: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
+            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed()]))
+            primaryText.append(NSAttributedString(string: " er blevet ekspertgodkendt", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
         default:
             print(notification.eventType)
         }
         
-        primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont(name: "AvenirNext-UltraLightItalic", size: 12)]))
-        
         primaryLabel.attributedText = primaryText
-        
         dateLabel.text = Date(ISO8601String: notification.date)?.convert(into: DateFormatter.Style.medium)
-        
-        guard let imageURL = notification.imageURL else {return}
-        profileImageView.configure(initials: "", imageURL: imageURL)
-        }
-    
+    }
 }

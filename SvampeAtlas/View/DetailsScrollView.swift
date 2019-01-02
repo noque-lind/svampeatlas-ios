@@ -95,6 +95,24 @@ class DetailsScrollView: UIScrollView {
         return similarSpeciesView
     }()
     
+    private lazy var commentsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 5
+        
+        let label: UILabel = {
+            let label = UILabel()
+            label.font = UIFont.appPrimaryHightlighed()
+            label.textColor = UIColor.appWhite()
+            label.text = "Kommentarer"
+            return label
+        }()
+        
+        stackView.addArrangedSubview(label)
+        return stackView
+    }()
+    
+    
     weak var customDelegate: NavigationDelegate?
     
     init() {
@@ -164,13 +182,14 @@ class DetailsScrollView: UIScrollView {
     }
     
     private func configureComments(comments: [Comment]) {
+        guard comments.count > 0 else {return}
         let commentsTableView: CommentsTableView = {
             let tableView = CommentsTableView()
             tableView.configure(comments: comments)
             return tableView
         }()
-        
-        contentStackView.addArrangedSubview(commentsTableView)
+        commentsStackView.addArrangedSubview(commentsTableView)
+        contentStackView.addArrangedSubview(commentsStackView)
     }
     
     private func configureUpperStackView(isObservation: Bool, first: String?, second: String?, third: String?, fouth: String?) {

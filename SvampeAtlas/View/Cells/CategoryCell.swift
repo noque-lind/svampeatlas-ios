@@ -10,7 +10,14 @@ import UIKit
 
 class CategoryCell: UICollectionViewCell {
     
-    @IBOutlet weak var label: UILabel!
+    private var label: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.appSecondaryColour()
+        label.font = UIFont.appHeaderDetails()
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     override var isSelected: Bool {
         didSet {
@@ -22,14 +29,23 @@ class CategoryCell: UICollectionViewCell {
         }
     }
     
-    override func awakeFromNib() {
-        label.textColor = UIColor.appSecondaryColour()
-        label.font = UIFont.appHeaderDetails()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
     
+    private func setupView() {
+        contentView.addSubview(label)
+        label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        label.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+    }
     
-
     func configureCell(title: String) {
         label.text = title
     }

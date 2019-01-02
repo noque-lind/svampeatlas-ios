@@ -23,10 +23,16 @@ class UserNotification: Decodable {
     public private(set) var triggerInitials: String
     private(set) var triggerFacebookID: String?
     private(set) var observationImage: String?
-    public var imageURL: String? {
+    
+    public var triggerImageURL: String? {
         if let triggerFacebookID = triggerFacebookID {
             return "https://graph.facebook.com/\(triggerFacebookID)/picture?width=70&height=70"
-        } else if let observationImage = observationImage {
+        } else {
+            return nil
+        }
+    }
+    public var imageURL: String? {
+        if let observationImage = observationImage {
             return "https://svampe.databasen.org/uploads/" + observationImage + ".JPG"
         } else {
             return nil

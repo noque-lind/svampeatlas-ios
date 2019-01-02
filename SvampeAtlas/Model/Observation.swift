@@ -15,7 +15,7 @@ fileprivate struct PrivateObservation: Decodable {
     var note: String?
     var geom: PrivateGeom
     var determinationView: PrivateDeterminationView?
-    var primaryDetermination: PrivateDeterminationView?
+    var primaryDetermination: PrivatePrimaryDeterminationView?
     var images: [PrivateImages]?
     var primaryUser: PrivatePrimaryUser?
     var locality: PrivateLocality?
@@ -31,7 +31,7 @@ fileprivate struct PrivateObservation: Decodable {
         case primaryUser = "PrimaryUser"
         case locality = "Locality"
         case note
-        case primaryDetermination = "PrivateDetermination"
+        case primaryDetermination = "PrimaryDetermination"
         case forum = "Forum"
     }
 }
@@ -48,10 +48,30 @@ fileprivate struct PrivateDeterminationView: Decodable {
     public private(set) var determinationValidation: String?
     
     private enum CodingKeys: String, CodingKey {
-        case taxon_id = "Taxon_id"
-        case taxon_vernacularname_dk = "Taxon_vernacularname_dk"
-        case taxon_FullName = "Taxon_FullName"
+        case taxon_id
+        case taxon_vernacularname_dk
+        case taxon_FullName
+        case redlistStatus
+        case determinationValidation
     }
+}
+
+fileprivate struct PrivatePrimaryDeterminationView: Decodable {
+    public private(set) var validation: String?
+    public private(set) var Taxon: PrivateTaxon
+}
+fileprivate struct PrivateTaxon: Decodable {
+    public private(set) var acceptedTaxon: PrivateAcceptedTaxon
+}
+
+fileprivate struct PrivateAcceptedTaxon: Decodable {
+    public private(set) var _id: Int?
+    public private(set) var FullName: String?
+    public private(set) var vernacularname_dk: String?
+}
+
+fileprivate struct Vernacularname_DK: Decodable {
+    public private(set) var vernacularname_dk: String
 }
 
 fileprivate struct PrivateImages: Decodable {
@@ -99,6 +119,7 @@ struct Observation: Decodable, Equatable {
     public private(set) var location: String?
     public private(set) var images: [Image]?
     public private(set) var comments = [Comment]()
+    public private(set) var validationStatus: String?
     
     init(from decoder: Decoder) throws {
         let privateObservation = try PrivateObservation(from: decoder)
@@ -109,17 +130,17 @@ struct Observation: Decodable, Equatable {
         note = privateObservation.note
         ecologyNote = privateObservation.ecologyNote
         location = privateObservation.locality?.name
-        
+    
         if let determinationView = privateObservation.determinationView {
+            validationStatus = determinationView.determinationValidation
+            
             speciesProperties = SpeciesProperties(id: determinationView.taxon_id ?? 0, name: determinationView.taxon_vernacularname_dk ?? determinationView.taxon_FullName ?? "")
+        
         } else if let primaryDeterminationView = privateObservation.primaryDetermination {
-            speciesProperties = SpeciesProperties(id: primaryDeterminationView.taxon_id ?? 0, name: primaryDeterminationView.taxon_vernacularname_dk ?? primaryDeterminationView.taxon_FullName ?? "")
+            speciesProperties = SpeciesProperties(id: primaryDeterminationView.Taxon.acceptedTaxon._id ?? 0, name: primaryDeterminationView.Taxon.acceptedTaxon.vernacularname_dk ?? primaryDeterminationView.Taxon.acceptedTaxon.FullName ?? "")
         } else {
             speciesProperties = SpeciesProperties(id: id, name: "")
         }
-        
-        
-        
         
         if let privateObservationImages = privateObservation.images {
             for privateImage in privateObservationImages {
@@ -132,8 +153,8 @@ struct Observation: Decodable, Equatable {
         
         if let privateForums = privateObservation.forum {
             for privateForum in privateForums {
-                guard let id = privateForum._id, let createdAt = privateForum.createdAt, let content = privateForum.content else {continue}
-                comments.append(Comment(id: id, date: createdAt, content: content))
+                guard let id = privateForum._id, let createdAt = privateForum.createdAt, let content = privateForum.content, let commenterName = privateForum.User?.name else {continue}
+                comments.append(Comment(id: id, date: createdAt, content: content, commenterName: commenterName, commenterFacebookID: privateForum.User?.facebook))
             }
         }
     }
@@ -153,6 +174,16 @@ struct Comment: Decodable {
     public private(set) var id: Int
     public private(set) var date: String
     public private(set) var content: String
+    public private(set) var commenterName: String
+    private(set) var commenterFacebookID: String?
+    
+    public var commenterProfileImageURL: String? {
+        if let commenterFacebookID = commenterFacebookID {
+            return "https://graph.facebook.com/\(commenterFacebookID)/picture?width=70&height=70"
+        } else {
+            return nil
+        }
+    }
 }
 
 func == (lhs: Observation, rhs: Observation) -> Bool {

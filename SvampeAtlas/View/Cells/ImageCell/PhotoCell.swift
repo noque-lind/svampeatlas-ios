@@ -18,7 +18,7 @@ class PhotoCell: UICollectionViewCell {
     }
     
     func configureCell(url: String) {
-        DataService.instance.getImage(forUrl: url) { (image) in
+        DataService.instance.getImage(forUrl: url) { (image, imageURL)  in
             DispatchQueue.main.async {
                 self.imageView.image = image
             }

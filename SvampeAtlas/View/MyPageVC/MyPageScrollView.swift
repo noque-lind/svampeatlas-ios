@@ -131,24 +131,29 @@ class MyPageScrollView: UIScrollView {
                 stackView.addArrangedSubview(label)
                 return stackView
             }()
-            
-
-            UserService.instance.getUserNotificationCount(completion: { (count) in
-                    DispatchQueue.main.async {
-                        guard let count = count else {return}
-                    self.notificationsCountLabel.text = "\(count)"
-                    }
-                })
-            
+        
             let notificationsTableView: NotificationsTableView = {
                 let tableView = NotificationsTableView()
                 tableView.delegate = self.customDelegate
-                DataService.instance.getNotificationsForUser(withID: userID, completion: { (appError, userNotifications) in
+                
+                UserService.instance.getUserNotificationCount(completion: { (count) in
+                    guard let count = count else {return}
                     DispatchQueue.main.async {
-                        guard let userNotifications = userNotifications else {return}
-                        tableView.configure(notifications: userNotifications)
+                        self.notificationsCountLabel.text = "\(count)"
                     }
+                    
+                    let limit = count >= 3 ? 3: count
+                    
+                    DataService.instance.getNotificationsForUser(withID: userID, limit: limit, offset: 0, completion: { (appError, userNotifications) in
+                        DispatchQueue.main.async {
+                            guard let userNotifications = userNotifications else {return}
+                            tableView.configure(notifications: userNotifications, totalNumberOfNotifications: count, userID: userID)
+                        }
+                    })
+                    
                 })
+                
+                
                 return tableView
             }()
             

@@ -21,6 +21,17 @@
         <attribute name="ecology" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="mushroom" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDMushroom" inverseName="attributes" inverseEntity="CDMushroom" syncable="YES"/>
     </entity>
+    <entity name="CDSubstrate" representedClassName="CDSubstrate" syncable="YES" codeGenerationType="class">
+        <attribute name="dkName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="enName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="cdSubstrateGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDSubstrateGroup" inverseName="cdSubstrate" inverseEntity="CDSubstrateGroup" syncable="YES"/>
+    </entity>
+    <entity name="CDSubstrateGroup" representedClassName="CDSubstrateGroup" syncable="YES" codeGenerationType="class">
+        <attribute name="dkName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="enName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="cdSubstrate" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDSubstrate" inverseName="cdSubstrateGroup" inverseEntity="CDSubstrate" syncable="YES"/>
+    </entity>
     <entity name="CDUser" representedClassName="CDUser" syncable="YES" codeGenerationType="class">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facebookID" optional="YES" attributeType="String" syncable="YES"/>
@@ -33,5 +44,7 @@
         <element name="CDMushroom" positionX="-299" positionY="27" width="128" height="150"/>
         <element name="CDMushroomAttribute" positionX="-180" positionY="72" width="128" height="90"/>
         <element name="CDUser" positionX="-180" positionY="81" width="128" height="120"/>
+        <element name="CDSubstrateGroup" positionX="-396.953125" positionY="378.44921875" width="128" height="88"/>
+        <element name="CDSubstrate" positionX="-68.4296875" positionY="363.34375" width="128" height="103"/>
     </elements>
 </model>

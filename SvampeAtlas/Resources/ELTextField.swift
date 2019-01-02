@@ -8,6 +8,170 @@
 
 import UIKit
 
+protocol ELTextViewDelegate: class {
+    func shouldChangeHeight()
+}
+
+final class ELTextView: UIView, UITextViewDelegate {
+    
+    private lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var backgroundView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        view.layer.shadowRadius = 2.0
+        return view
+    }()
+    
+    private lazy var textView: UITextView = {
+       let view = UITextView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.textAlignment = .justified
+        view.isScrollEnabled = false
+        view.heightAnchor.constraint(greaterThanOrEqualToConstant: 75).isActive = true
+        view.backgroundColor = UIColor.clear
+        view.delegate = self
+        return view
+    }()
+    
+    
+    private var originalPlaceholder: String?
+    private var originalBackgroundColor: UIColor?
+    weak var delegate: ELTextViewDelegate?
+    
+    override var backgroundColor: UIColor? {
+        didSet {
+            if let backgroundColor = backgroundColor, backgroundColor != UIColor.clear {
+                backgroundView.backgroundColor = backgroundColor
+                originalBackgroundColor = backgroundColor
+                self.backgroundColor = nil
+            }
+        }
+    }
+    
+    var textColor: UIColor = UIColor.white {
+        didSet {
+            tintColor = textColor
+            textView.textColor = textColor
+        }
+    }
+    
+    var font: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize) {
+        didSet {
+            descriptionLabel.font = font
+            textView.font = font
+        }
+    }
+    
+    var descriptionText: String? {
+        didSet {
+            descriptionLabel.text = descriptionText
+        }
+    }
+    
+    /**
+     When ELTextField is given an placeholder, it automatically ensures it adjusts its layout.
+     - important: Must not change the value after it has been set initially
+     
+     - returns: Nothing
+     */
+    var placeholder: String? {
+        didSet {
+            setPlaceholder()
+        }
+    }
+    
+    /**
+     If no value is set, the placeholder color is defaults to the textColor property
+     
+     - returns: Nothing
+     */
+    var descriptionTextColor: UIColor? {
+        didSet {
+            descriptionLabel.textColor = descriptionTextColor
+        }
+    }
+    
+    var text: String? {
+        didSet {
+            guard let text = text, text != "" else {return}
+            textView.text = text
+        }
+    }
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        setupView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    private func setupView() {
+        backgroundColor = UIColor.clear
+        
+        addSubview(descriptionLabel)
+        descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+//        placeholderLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        addSubview(backgroundView)
+        backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        backgroundView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 2).isActive = true
+        
+        addSubview(textView)
+        textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4).isActive = true
+        textView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4).isActive = true
+        textView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: -4).isActive = true
+        textView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2).isActive = true
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.intrinsicContentSize.height > textView.contentSize.height {
+            delegate?.shouldChangeHeight()
+        }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == placeholder {
+            textView.attributedText = nil
+            textView.font = font
+            textView.textColor = textColor
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text == nil || textView.text == "" {
+            setPlaceholder()
+        }
+    }
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        ELKeyboardHelper.instance.registerObject(view: self)
+         textView.inputAccessoryView = InputAccessoryView(frame: CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 50), withTitle: "Færdig", itemToResign: textView)
+        return true
+    }
+    
+    
+    
+    private func setPlaceholder() {
+        guard let placeholder = placeholder else {return}
+        let attributedText = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.foregroundColor : textColor.withAlphaComponent(0.4)])
+        textView.attributedText = attributedText
+    }
+}
+
+
 final class ELTextField: UITextField {
     private lazy var backgroundView: UIView = {
         let view = UIView()

@@ -93,10 +93,11 @@ class MushroomDataView: UIView {
         mushroomBackgroundView = nil
         mushrooms.removeAll()
     
-        switch category {
-        case .mushrooms:
-            tableView.showLoader()
-            DataService.instance.getMushrooms(offset: 0) { (appError, mushrooms)  in
+        switch category.title {
+        
+        case "Svampearter":
+             tableView.showLoader()
+             DataService.instance.getMushrooms(offset: 0) { (appError, mushrooms) in
                 DispatchQueue.main.async {
                     guard appError == nil, let mushrooms = mushrooms else {
                         self.delegate?.presentVC(UIAlertController(title: appError!.title, message: appError!.message))
@@ -104,30 +105,29 @@ class MushroomDataView: UIView {
                         return
                     }
                     
-                    if self.category == .mushrooms {
+                    if self.category.title == "Svampearter" {
                         self.mushrooms = mushrooms
                     }
                 }
             }
-       
-        case .favorites:
-            CoreDataHelper.fetchAll { (cdMushrooms) in
-                if cdMushrooms.count == 0 {
+            
+        case "Mine favoritter":
+            CoreDataHelper.fetchAll { (mushrooms) in
+                if mushrooms.count == 0 {
                     mushroomBackgroundView = FavoritesBackground()
                 } else {
                     DispatchQueue.main.async {
-                        if self.category == .favorites {
-                            self.mushrooms = cdMushrooms
+                        if self.category.title == "Mine favoritter" {
+                            self.mushrooms = mushrooms
                         }
                     }
                 }
             }
-           
-        case .nearby:
-            mushroomBackgroundView = LocationBackground()
+            
         default:
             return
-        }
+    }
+        
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -140,15 +140,15 @@ class MushroomDataView: UIView {
     
     
     private func handleFavoritingOfMushroom(mushroom: Mushroom) {
-        if category == .favorites {
-            CoreDataHelper.deleteMushroom(mushroom: mushroom) {
-                print("Successfully deleted object")
-            }
-        } else {
-            CoreDataHelper.saveMushroom(mushroom: mushroom) {
-                print("Succesfully saved object")
-            }
-        }
+//        if category == .favorites {
+//            CoreDataHelper.deleteMushroom(mushroom: mushroom) {
+//                print("Successfully deleted object")
+//            }
+//        } else {
+//            CoreDataHelper.saveMushroom(mushroom: mushroom) {
+//                print("Succesfully saved object")
+//            }
+//        }
     }
     
 }

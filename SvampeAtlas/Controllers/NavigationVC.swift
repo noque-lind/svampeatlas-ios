@@ -42,9 +42,9 @@ class NavigationVC: UIViewController {
     
     private var navigationItems: Array<Array<NavigationItem>> {
         if UserService.instance.isLoggedIn {
-            return [[NavigationItem.init(title: "Min side", icon: #imageLiteral(resourceName: "Icons_Profile"), viewControllerIdentifier: "MyPageVC"), NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
+            return [[NavigationItem.init(title: "Min side", icon: #imageLiteral(resourceName: "Icons_Profile"), viewControllerIdentifier: "MyPageVC"), NavigationItem.init(title: "Nyt fund", icon: #imageLiteral(resourceName: "Plus"), viewControllerIdentifier: "NewObservationVC"), NavigationItem.init(title: "Start felttur", icon: #imageLiteral(resourceName: "Walk"), viewControllerIdentifier: "FieldWalkVC")], [NavigationItem.init(title: "I nærheden", icon: #imageLiteral(resourceName: "Icons_Location"), viewControllerIdentifier: "NearbyVC"),  NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
         } else {
-            return [[NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Icons_Login"), viewControllerIdentifier: "LoginVC")], [NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
+            return [[NavigationItem.init(title: "Login", icon: #imageLiteral(resourceName: "Icons_Login"), viewControllerIdentifier: "LoginVC")], [NavigationItem.init(title: "I nærheden", icon: #imageLiteral(resourceName: "Icons_Location"), viewControllerIdentifier: "NearbyVC"), NavigationItem.init(title: "Svampe-bog", icon: #imageLiteral(resourceName: "Book"), viewControllerIdentifier: "MainVC"), NavigationItem.init(title: "Artsbestemmelse", icon: #imageLiteral(resourceName: "Camera"), viewControllerIdentifier: "RecognizeVC")]]
         }
     }
 
@@ -55,7 +55,7 @@ class NavigationVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if firstLoad {
-            tableView.selectRow(at: IndexPath(row: 0, section: 1), animated: false, scrollPosition: .top)
+            tableView.selectRow(at: IndexPath(row: 1, section: 1), animated: false, scrollPosition: .top)
             firstLoad = false
         }
         
@@ -147,6 +147,8 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
                     vc = LoginVC()
                 case "MyPageVC":
                     vc = UINavigationController(rootViewController: MyPageVC())
+                case "NearbyVC":
+                    vc = UINavigationController(rootViewController: NearbyVC())
                 default:
                     vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: navigationItems[indexPath.section][indexPath.row].viewControllerIdentifier)
                 }

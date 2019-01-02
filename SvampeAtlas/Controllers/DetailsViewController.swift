@@ -11,7 +11,7 @@ import UIKit
 enum DetailsContent {
     case mushroom(mushroom : Mushroom)
     case observation(observation: Observation, showSpeciesView: Bool)
-    case observationWithID(observationID: Int, showSpeciesView: Bool)
+//    case observationWithID(observationID: Int, showSpeciesView: Bool)
 }
 
 class DetailsViewController: UIViewController {
@@ -59,8 +59,13 @@ class DetailsViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        scrollView.contentInset = UIEdgeInsets.init(top: scrollView.contentInset.top, left: 0.0, bottom: view.safeAreaInsets.bottom, right: 0.0)
+        super.viewDidLayoutSubviews()
+        customNavigationBar.heightConstraint?.constant = (self.navigationController?.navigationBar.frame.maxY)!
+        customNavigationBar.navigationBarOffset = self.navigationController?.navigationBar.frame.origin.y
+        
+        scrollView.contentInset = UIEdgeInsets(top: scrollView.contentInset.top, left: 0.0, bottom: view.safeAreaInsets.bottom, right: 0.0)
         scrollView.scrollIndicatorInsets = UIEdgeInsets(top: scrollView.contentInset.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,17 +112,17 @@ class DetailsViewController: UIViewController {
             customNavigationBar.configureTitle("Fund af: \(observation.speciesProperties.name)")
             images = observation.images
             scrollView.configureScrollView(withObservation: observation, showSpeciesView: showSpeciesView)
-        case .observationWithID(let observationID, let showSpeciesView):
-            DataService.instance.getObservation(withID: observationID) { (appError, observation) in
-                DispatchQueue.main.async {
-                    guard let observation = observation else {return}
-                    self.customNavigationBar.configureTitle("Fund af: \(observation.speciesProperties.name)")
-                    self.images = observation.images
-                    self.scrollView.configureScrollView(withObservation: observation, showSpeciesView: showSpeciesView)
-                    
-                    print(observation.comments)
-                }
-            }
+//        case .observationWithID(let observationID, let showSpeciesView):
+//            DataService.instance.getObservation(withID: observationID) { (appError, observation) in
+//                DispatchQueue.main.async {
+//                    guard let observation = observation else {return}
+//                    self.customNavigationBar.configureTitle("Fund af: \(observation.speciesProperties.name)")
+//                    self.images = observation.images
+//                    self.scrollView.configureScrollView(withObservation: observation, showSpeciesView: showSpeciesView)
+//
+//                    print(observation.comments)
+//                }
+//            }
         }
         
         view.backgroundColor = UIColor.appSecondaryColour()
@@ -140,8 +145,8 @@ class DetailsViewController: UIViewController {
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        customNavigationBar.heightAnchor.constraint(equalToConstant: (self.navigationController?.navigationBar.frame.maxY)!).isActive = true
-        customNavigationBar.navigationBarOffset = self.navigationController?.navigationBar.frame.origin.y
+//        customNavigationBar.heightAnchor.constraint(equalToConstant: (self.navigationController?.navigationBar.frame.maxY)!).isActive = true
+//        customNavigationBar.navigationBarOffset = self.navigationController?.navigationBar.frame.origin.y
         scrollView.delegate = self
     }
 }

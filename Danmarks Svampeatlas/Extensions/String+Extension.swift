@@ -13,13 +13,8 @@ extension String {
         return String(self.prefix(1).uppercased() + self.dropFirst())
     }
     
-    func italizedWithAuthor(_ author: String?, font: UIFont) -> NSMutableAttributedString {
+    func italized(font: UIFont) -> NSMutableAttributedString {
         let s = NSMutableAttributedString(string: self, attributes: [NSAttributedString.Key.font: font.italized()])
-        
-        if let author = author {
-            s.append(NSMutableAttributedString(string: ", \(author)", attributes: [NSAttributedString.Key.font: font]))
-        }
-        
         return s
     }
     

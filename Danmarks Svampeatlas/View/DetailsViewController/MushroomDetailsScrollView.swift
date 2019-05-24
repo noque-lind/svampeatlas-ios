@@ -51,7 +51,7 @@ class MushroomDetailsScrollView: AppScrollView {
     
     func configureScrollView(withMushroom mushroom: Mushroom) {
         self.mushroom = mushroom
-        configureHeader(title: mushroom.danishName != nil ? NSAttributedString(string: mushroom.danishName!, attributes: [NSAttributedString.Key.font: UIFont.appHeader()]): mushroom.fullName.italizedWithAuthor(mushroom.fullNameAuthor, font: UIFont.appTitle()), subtitle: mushroom.danishName != nil ? mushroom.fullName.italizedWithAuthor(mushroom.fullNameAuthor, font: UIFont.appPrimary()): nil, user: nil)
+        configureHeader(title: mushroom.danishName != nil ? NSAttributedString(string: mushroom.danishName!, attributes: [NSAttributedString.Key.font: UIFont.appHeader()]): mushroom.fullName.italized(font: UIFont.appTitle()), subtitle: mushroom.danishName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil, user: nil)
         configureText(title: "Om", text: mushroom.attributes?.diagnosis)
         configureText(title: "Økologi", text: mushroom.attributes?.ecology)
         

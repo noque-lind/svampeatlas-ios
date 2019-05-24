@@ -214,10 +214,10 @@ class MushroomView: UIView {
         if let danishName =  mushroom.danishName {
             titleLabel.text = danishName
         } else {
-            titleLabel.attributedText = mushroom.fullName.italizedWithAuthor(mushroom.fullNameAuthor, font: UIFont.appTitle())
+            titleLabel.attributedText = mushroom.fullName.italized(font: UIFont.appTitle())
         }
         
-        secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italizedWithAuthor(mushroom.fullNameAuthor, font: UIFont.appPrimary()): nil
+        secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil
         secondaryLabel.isHidden = mushroom.danishName != nil ? false: true
         
         var informationArray = [(String, String)]()

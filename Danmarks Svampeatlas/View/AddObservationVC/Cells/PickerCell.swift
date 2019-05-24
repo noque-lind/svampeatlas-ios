@@ -249,7 +249,7 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             view.label.text = title
             view.label.textColor = UIColor.appPrimaryColour()
             view.backgroundView?.backgroundColor = UIColor.appWhite()
-            view.layer.shadowOpacity = 0.7
+            view.layer.shadowOpacity = 0.3
             view.layer.shadowOffset = CGSize(width: 0.0, height: 2.5)
             view.layer.shadowRadius = 1.5
             return view

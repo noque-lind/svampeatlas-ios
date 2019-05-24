@@ -74,6 +74,7 @@ class CustomSearchBar: UITextField {
     
     private func setupView() {
         isHidden = true
+        autocorrectionType = .no
         
         
         self.backgroundColor = UIColor.clear

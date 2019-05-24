@@ -177,6 +177,8 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
             default:
                 addedRow = nil
             }
+            
+            tableView.scrollToRow(at: indexPath, at: .top, animated: true)
         }
     }
     
@@ -185,7 +187,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
         var adjustedIndexPathRow = indexPath.row
         
         if let addedRow = addedRow, addedRow.indexPath == indexPath {
-            return 250
+            return 300
         } else if let addedRow = addedRow, addedRow.indexPath.row < indexPath.row {
             adjustedIndexPathRow -= 1
         }
@@ -238,7 +240,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 cell.tableViewState = .Error(error, nil)
             case .Success(let hosts):
                 let cells = hosts.compactMap({TableViewPickerCell.Section.CellType.hostCell($0)})
-                cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell], alpha: 0.3), .init(title: "Forslag", cells: cells)])
+                cell.tableViewState = .Items([.init(title: "Forslag", cells: cells)])
             }
         }
         
@@ -336,9 +338,9 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 
                 switch rows[realIndexPathRow] {
                 case .Notes:
-                    cell.configureCell(titleText: "Andre noter", placeholder: "Svampen havde store porer ...", content: newObservation?.note, delegate: self)
+                    cell.configureCell(titleText: "Andre noter", placeholder: "Lugt melagtig ...", content: newObservation?.note, delegate: self)
                 case .EcologyNotes:
-                    cell.configureCell(titleText: "Kommentarer om økologi", placeholder: "Fundet i en meget sjov skov ...", content: newObservation?.ecologyNote, delegate: self)
+                    cell.configureCell(titleText: "Kommentarer om voksested", placeholder: "På sandjord blandt mos ...", content: newObservation?.ecologyNote, delegate: self)
                 default: break
                 }
                 

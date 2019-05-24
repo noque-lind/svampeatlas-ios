@@ -196,7 +196,7 @@ class TableViewPickerCell: UITableViewCell {
     
     private func setupView() {
         selectionStyle = .none
-        backgroundColor = UIColor.appPrimaryColour()
+        backgroundColor = UIColor.appWhite()
         contentView.addSubview(tableView)
         tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
@@ -247,7 +247,8 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
         } else {
             let view = HeaderView(reuseIdentifier: "tableViewHeaderView")
             view.label.text = title
-            view.backgroundView?.backgroundColor = UIColor.appPrimaryColour()
+            view.label.textColor = UIColor.appPrimaryColour()
+            view.backgroundView?.backgroundColor = UIColor.appWhite()
             view.layer.shadowOpacity = 0.7
             view.layer.shadowOffset = CGSize(width: 0.0, height: 2.5)
             view.layer.shadowRadius = 1.5
@@ -269,7 +270,7 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             }()
             cell.selectedBackgroundView = selectionView
             cell.backgroundColor = UIColor.clear
-            cell.textLabel?.textColor = UIColor.appWhite()
+            cell.textLabel?.textColor = UIColor.appPrimaryColour()
             cell.textLabel?.font = UIFont.appPrimaryHightlighed()
             
             switch section.cells[indexPath.row] {

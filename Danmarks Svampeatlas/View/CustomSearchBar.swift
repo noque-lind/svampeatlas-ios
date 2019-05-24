@@ -53,11 +53,6 @@ class CustomSearchBar: UITextField {
         fatalError()
     }
     
-    override func layoutSubviews() {
-        round()
-        super.layoutSubviews()
-    }
-    
     override func textRect(forBounds bounds: CGRect) -> CGRect {
         guard let leftViewWidth = leftView?.frame.size.width else {return bounds}
         let rect = CGRect(x: leftViewWidth + 8, y: 0, width: bounds.width - leftViewWidth - 8, height: bounds.height)
@@ -86,8 +81,8 @@ class CustomSearchBar: UITextField {
         
         font = UIFont.appPrimaryHightlighed()
         textColor = UIColor.appWhite()
-        attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
-        placeholder = "Søg efter en art her..."
+        attributedPlaceholder = NSAttributedString(string: "Søg efter en art her ...", attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
+        placeholder = "Søg efter en art her ..."
         
         clearButtonMode = .whileEditing
         tintColor = UIColor.appWhite()
@@ -96,11 +91,7 @@ class CustomSearchBar: UITextField {
         self.addTarget(self, action: #selector(editingChanged(sender:)), for: UIControl.Event.editingChanged)
     }
     
-    
-    private func round() {
-        let radius = frame.height / 2
-        
-    }
+  
     
     func setHidden(_ hidden: Bool) {
         DispatchQueue.main.async {

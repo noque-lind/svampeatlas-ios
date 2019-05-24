@@ -1,0 +1,59 @@
+//
+//  ELMultipartFormData.swift
+//  SvampeAtlas
+//
+//  Created by Emil Lind on 07/02/2019.
+//  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
+//
+
+import UIKit
+
+struct ELMultipartFormData {
+    
+    private init() {}
+    
+    struct Media {
+        let key: String
+        let filename: String
+        let data: Data
+        let mimeType: String
+        
+        init?(withImage image: UIImage, forKey key: String) {
+            self.key = key
+            self.mimeType = "image/jpeg"
+            self.filename = "photo-\(Date().convert(into: DateFormatter.Style.short)).jpg"
+            guard let data = image.jpegData(sizeInMB: 0.7,deltaInMB: 0.3) else {return nil}
+            self.data = data
+        }
+    }
+    
+    static func createDataBody(withParameters params: [String: String]?, media: [Media]?, boundary: String) -> Data {
+        
+        let lineBreak = "\r\n"
+        var body = Data()
+        
+        if let parameters = params {
+            for (key, value) in parameters {
+                body.append("--\(boundary + lineBreak)".data(using: String.Encoding.utf8)!)
+                body.append("Content-Disposition: form-data; name=\"\(key)\"\(lineBreak + lineBreak)".data(using: String.Encoding.utf8)!)
+                body.append("\(value + lineBreak)".data(using: String.Encoding.utf8)!)
+            }
+        }
+        
+        if let media = media {
+            for photo in media {
+                body.append("--\(boundary + lineBreak)".data(using: String.Encoding.utf8)!)
+                body.append("Content-Disposition: form-data; name=\"\(photo.key)\"; filename=\"\(photo.filename)\"\(lineBreak)".data(using: String.Encoding.utf8)!)
+                body.append("Content-Type: \(photo.mimeType + lineBreak + lineBreak)".data(using: .utf8)!)
+                body.append(photo.data)
+                body.append(lineBreak.data(using: .utf8)!)
+            }
+        }
+        
+        body.append("--\(boundary)--\(lineBreak)".data(using: .utf8)!)
+        
+        return body
+    }
+    
+    
+}

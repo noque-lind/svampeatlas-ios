@@ -1,0 +1,9 @@
+//
+//  UIImage+Extension.swift
+//  SvampeAtlas
+//
+//  Created by Emil Lind on 24/01/2019.
+//  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
+//
+
+import Foundation

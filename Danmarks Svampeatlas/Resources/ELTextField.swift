@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 protocol ELTextViewDelegate: class {
     func shouldChangeHeight()
@@ -19,9 +20,9 @@ final class ELTextView: UIView, UITextViewDelegate {
     private lazy var backgroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        view.layer.shadowRadius = 2.0
+        view.layer.shadowOpacity = shadowOpacity
+        view.layer.shadowOffset = shadowOffset
+        view.layer.shadowRadius = shadowRadius
         return view
     }()
     
@@ -54,6 +55,24 @@ final class ELTextView: UIView, UITextViewDelegate {
                 originalBackgroundColor = backgroundColor
                 self.backgroundColor = nil
             }
+        }
+    }
+    
+    var shadowOpacity: Float = 0.5 {
+        didSet {
+            backgroundView.layer.shadowOpacity = shadowOpacity
+        }
+    }
+    
+    var shadowOffset: CGSize = CGSize(width: 0.0, height: 2.0) {
+        didSet {
+            backgroundView.layer.shadowOffset = shadowOffset
+        }
+    }
+    
+    var shadowRadius: CGFloat = 2.0 {
+        didSet {
+            backgroundView.layer.shadowRadius = shadowRadius
         }
     }
     
@@ -147,8 +166,8 @@ final class ELTextView: UIView, UITextViewDelegate {
         addSubview(textView)
         textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4).isActive = true
         textView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4).isActive = true
-        textView.topAnchor.constraint(equalTo: titelLabel.bottomAnchor, constant: -4).isActive = true
-        textView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2).isActive = true
+        textView.topAnchor.constraint(equalTo: backgroundView.topAnchor).isActive = true
+        textView.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor).isActive = true
     }
     
     func textViewDidChange(_ textView: UITextView) {

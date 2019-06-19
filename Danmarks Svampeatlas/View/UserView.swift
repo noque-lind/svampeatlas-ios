@@ -11,7 +11,7 @@ import UIKit
 class UserView: UIView {
 
     private var profileImageView: ProfileImageView = {
-       let view = ProfileImageView()
+       let view = ProfileImageView(defaultImage: #imageLiteral(resourceName: "LogoSmall"))
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         return view
@@ -19,7 +19,7 @@ class UserView: UIView {
     
     private var primaryLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.appHeader()
+        label.font = UIFont.appTitle()
         label.textColor = UIColor.appWhite()
         label.textAlignment = .center
         label.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
@@ -104,6 +104,6 @@ class UserView: UIView {
         secondaryLabel.text = "Log ind for at dele dine svampefund med andre, og få ekspertvalidering af Danmarks førende svampeeksperter"
         primaryLabel.isHidden = false
         secondaryLabel.isHidden = false
-        profileImageView.reset()
+        profileImageView.configure(initials: "", imageURL: nil)
     }
 }

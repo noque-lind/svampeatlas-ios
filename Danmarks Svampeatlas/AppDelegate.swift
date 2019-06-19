@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = OnboardingVC()
         self.window?.makeKeyAndVisible()
-        
+        _ = CoreDataHelper.managedContext
         return true
     }
 

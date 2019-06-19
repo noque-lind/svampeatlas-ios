@@ -11,29 +11,16 @@ import UIKit
 
 
 fileprivate struct PrivateMushroom: Decodable {
-    var id: Int?
-    var fullName: String?
-    var author: String?
+    var _id: Int?
+    var FullName: String?
+    var Author: String?
     var updatedAt: String?
     var probability: Int?
-    var vernacularnameDK: PrivateVernacularNameDK?
+    var Vernacularname_DK: PrivateVernacularNameDK?
     var redlistdata: [PrivateRedlistData]?
     var images: [PrivateImage]?
     var attributes: PrivateAttributes?
-    var statistics: PrivateStatistics?
-    
-    enum CodingKeys: String, CodingKey {
-        case id = "_id"
-        case fullName = "FullName"
-        case author = "Author"
-        case updatedAt
-        case probability
-        case vernacularnameDK = "Vernacularname_DK"
-        case redlistdata
-        case images
-        case attributes
-        case statistics = "Statistics"
-    }
+    var Statistics: PrivateStatistics?
 }
 
 fileprivate struct PrivateVernacularNameDK: Decodable {
@@ -44,25 +31,13 @@ fileprivate struct PrivateVernacularNameDK: Decodable {
 fileprivate struct PrivateRedlistData: Decodable {
     var status: String?
     var year: Int?
-    var udbredelse: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case status
-        case year
-        case udbredelse = "Udbredelse"
-    }
+    var Udbredelse: String?
 }
 
 fileprivate struct PrivateImage: Decodable {
-    var thumbURL: String?
-    var url: String?
+    var thumburi: String?
+    var uri: String?
     var photographer: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case thumbURL = "thumburi"
-        case url = "uri"
-        case photographer
-    }
 }
 
 fileprivate struct PrivateAttributes: Decodable {
@@ -73,13 +48,8 @@ fileprivate struct PrivateAttributes: Decodable {
 }
 
 fileprivate struct PrivateStatistics: Decodable {
-    var totalObservations: Int?
-    var lastAcceptedRecord: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case totalObservations = "total_count"
-        case lastAcceptedRecord = "last_accepted_record"
-    }
+    var total_count: Int?
+    var last_accepted_record: String?
 }
 
 struct Mushroom: Decodable {
@@ -97,27 +67,27 @@ struct Mushroom: Decodable {
 
     init(from decoder: Decoder) throws {
         let privateMushroom = try PrivateMushroom(from: decoder)
-        id = privateMushroom.id ?? 0
-        fullName = privateMushroom.fullName?.capitalizeFirst() ?? ""
-        fullNameAuthor = privateMushroom.author?.capitalizeFirst()
+        id = privateMushroom._id ?? 0
+        fullName = privateMushroom.FullName?.capitalizeFirst() ?? ""
+        fullNameAuthor = privateMushroom.Author?.capitalizeFirst()
         updatedAt = privateMushroom.updatedAt
-        danishName = privateMushroom.vernacularnameDK?.vernacularname_dk?.capitalizeFirst()
-        totalObservations = privateMushroom.statistics?.totalObservations
-        lastAcceptedObservation = privateMushroom.statistics?.lastAcceptedRecord
+        danishName = privateMushroom.Vernacularname_DK?.vernacularname_dk?.capitalizeFirst()
+        totalObservations = privateMushroom.Statistics?.total_count
+        lastAcceptedObservation = privateMushroom.Statistics?.last_accepted_record
         
         if let privateRedlistData = privateMushroom.redlistdata?.first, let status = privateRedlistData.status {
-            redlistData = RedlistData(status: status, year: privateRedlistData.year, spread: privateRedlistData.udbredelse)
+            redlistData = RedlistData(status: status, year: privateRedlistData.year, spread: privateRedlistData.Udbredelse)
         }
         
         if let privateAttributes = privateMushroom.attributes {
-            attributes = Attributes(ecology: privateAttributes.oekologi?.capitalizeFirst(), diagnosis: privateAttributes.diagnose?.capitalizeFirst(), toxicityLevel: nil)
+            attributes = Attributes(ecology: privateAttributes.oekologi?.capitalizeFirst(), diagnosis: privateAttributes.diagnose?.capitalizeFirst(), similarities: privateAttributes.forvekslingsmuligheder?.capitalizeFirst())
         }
         
         if let privateImages = privateMushroom.images, privateImages.count != 0 {
             images = [Image]()
             for privateImage in privateImages {
-                guard let url = privateImage.url else {break}
-                images?.append(Image(thumbURL: privateImage.thumbURL, url: url, photographer: privateImage.photographer))
+                guard let url = privateImage.uri else {break}
+                images?.append(Image(thumbURL: privateImage.thumburi, url: url, photographer: privateImage.photographer))
             }
         }
     }
@@ -134,7 +104,7 @@ struct Mushroom: Decodable {
         
         
         if let attributes = cdMushroom.attributes {
-            self.attributes = Attributes(ecology: attributes.ecology, diagnosis: attributes.diagnosis, toxicityLevel: nil)
+            self.attributes = Attributes(ecology: attributes.ecology, diagnosis: attributes.diagnosis, similarities: nil)
         }
         
         if let cdImages = cdMushroom.images?.allObjects as? [CDImage], cdImages.count != 0 {
@@ -144,7 +114,6 @@ struct Mushroom: Decodable {
                 images?.append(Image(thumbURL: nil, url: url, photographer: cdImage.photographer))
             }
         }
-        
     }
 }
 
@@ -164,12 +133,8 @@ struct RedlistData: Decodable {
 struct Attributes: Decodable {
     public private(set) var ecology: String?
     public private(set) var diagnosis: String?
-    public private(set) var toxicityLevel: ToxicityLevel? = ToxicityLevel.createRandom()
-    
-    private enum CodingKeys: String, CodingKey {
-        case ecology
-        case diagnosis
-    }
+//    public private(set) var toxicityLevel: ToxicityLevel? = ToxicityLevel.createRandom()
+    public private(set) var similarities: String?
 }
 
 enum ToxicityLevel: String {

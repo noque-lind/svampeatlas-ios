@@ -19,8 +19,8 @@ class PickerViewCell: UITableViewCell {
     private lazy var datePicker: UIDatePicker = {
         let view = UIDatePicker()
         view.datePickerMode = .date
-        view.tintColor = UIColor.appWhite()
-        view.setValue(UIColor.appWhite(), forKeyPath: "textColor")
+        view.tintColor = UIColor.appPrimaryColour()
+        view.setValue(UIColor.appPrimaryColour(), forKeyPath: "textColor")
         view.maximumDate = Date()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.addTarget(self, action: #selector(handleDatePickerValueChanged), for: UIControl.Event.valueChanged)
@@ -40,7 +40,7 @@ class PickerViewCell: UITableViewCell {
     var didPickDate: ((_ date: Date) -> ())?
     
     private func setupView() {
-        backgroundColor = UIColor.appPrimaryColour()
+        backgroundColor = UIColor.appWhite()
         contentView.addSubview(datePicker)
         datePicker.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         datePicker.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
@@ -62,7 +62,7 @@ class SwitchHeaderView: UIView {
     private var switcher: UISwitch = {
        let view = UISwitch()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.onTintColor = UIColor.appThirdColour()
+        view.onTintColor = UIColor.appThird()
         view.tintColor = UIColor.appPrimaryColour()
         return view
     }()
@@ -121,17 +121,19 @@ class TableViewPickerCell: UITableViewCell {
             case substrateCell(Substrate)
             case vegetationTypeCell(VegetationType)
             case searchCell
-            case hostCell(Host)
+            case hostCell(Host, Bool)
         }
         
         let title: String?
         let cells: [CellType]
         let alpha: CGFloat
+        let selected: Bool
         
-        init(title: String?, cells: [CellType], alpha: CGFloat = 1.0) {
+        init(title: String?, cells: [CellType], selected: Bool = false, alpha: CGFloat = 1.0) {
             self.title = title
             self.cells = cells
             self.alpha = alpha
+            self.selected = true
         }
     }
     
@@ -196,7 +198,7 @@ class TableViewPickerCell: UITableViewCell {
     
     private func setupView() {
         selectionStyle = .none
-        backgroundColor = UIColor.appWhite()
+        backgroundColor = UIColor.white
         contentView.addSubview(tableView)
         tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
@@ -248,8 +250,8 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             let view = HeaderView(reuseIdentifier: "tableViewHeaderView")
             view.label.text = title
             view.label.textColor = UIColor.appPrimaryColour()
-            view.backgroundView?.backgroundColor = UIColor.appWhite()
-            view.layer.shadowOpacity = 0.3
+            view.backgroundView?.backgroundColor = UIColor.lightGray
+            view.layer.shadowOpacity = 0.0
             view.layer.shadowOffset = CGSize(width: 0.0, height: 2.5)
             view.layer.shadowRadius = 1.5
             return view
@@ -265,7 +267,7 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
             let selectionView: UIView = {
                 let view = UIView()
-                view.backgroundColor = UIColor.appThirdColour()
+                view.backgroundColor = UIColor.appThird()
                 return view
             }()
             cell.selectedBackgroundView = selectionView
@@ -274,9 +276,14 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             cell.textLabel?.font = UIFont.appPrimaryHightlighed()
             
             switch section.cells[indexPath.row] {
-            case .hostCell(let host):
+            case .hostCell(let host, let selected):
                 cell.textLabel?.text = "- \(host.dkName?.capitalizeFirst() ?? "") (\(host.latinName ?? ""))"
+                if selected {
+                    tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+                }
                 return cell
+                
+               
             case .substrateCell(let substrate):
                 cell.textLabel?.text = "   - \(substrate.dkName)"
                 return cell
@@ -295,7 +302,8 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
         guard let section = tableViewState.value(row: indexPath.section) else {return}
     
         let cell = section.cells[indexPath.row]
-        if case .hostCell = cell {
+        if case .hostCell(_, var selected) = cell {
+            selected = !selected
             tableView.allowsMultipleSelection = true
         }  else {
             tableView.allowsMultipleSelection = false

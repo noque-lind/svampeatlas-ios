@@ -10,8 +10,8 @@ import UIKit
 
 class ProfileImageView: UIView {
     
-    private var imageView: UIImageView = {
-       let imageView = UIImageView()
+    private var imageView: DownloadableImageView = {
+       let imageView = DownloadableImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
         imageView.image = #imageLiteral(resourceName: "f1a9d2f0.LogoSmallest")
@@ -31,7 +31,7 @@ class ProfileImageView: UIView {
         return label
     }()
     
-    private var imageURL: String?
+    private var defaultImage: UIImage?
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -39,7 +39,8 @@ class ProfileImageView: UIView {
         imageView.layer.cornerRadius = frame.height / 2
     }
     
-    init() {
+    init(defaultImage: UIImage?) {
+        self.defaultImage = defaultImage
         super.init(frame: CGRect.zero)
         setupView()
     }
@@ -55,7 +56,7 @@ class ProfileImageView: UIView {
         layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         layer.shadowRadius = 2.0
         
-        backgroundColor = UIColor.clear
+        backgroundColor = UIColor.appPrimaryColour()
         
         addSubview(imageView)
         imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -70,27 +71,20 @@ class ProfileImageView: UIView {
         label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
     }
     
-    func configure(initials: String, imageURL: String?) {
-        self.imageURL = imageURL
-        imageView.image = nil
-        label.text = initials.uppercased()
-        imageView.alpha = 0.7
-        backgroundColor = UIColor.appPrimaryColour()
-        
-        guard let imageURL = imageURL else {return}
-        DataService.instance.getImage(forUrl: imageURL) { (image, imageURL) in
-            DispatchQueue.main.async {
-                if self.imageURL == imageURL {
-                    self.imageView.image = image
-                }
+        func configure(initials: String?, imageURL: String?) {
+            if let imageURL = imageURL {
+                imageView.image = nil
+                imageView.alpha = 0.7
+                imageView.downloadImage(size: .full, urlString: imageURL)
+            } else {
+                imageView.image = defaultImage
+                imageView.alpha = 1.0
+            }
+            
+            if let initials = initials, initials != "" {
+                label.text = initials.uppercased()
+            } else {
+                imageView.alpha = 1.0
             }
         }
-    }
-    
-    func reset() {
-        label.text = ""
-        imageView.image = #imageLiteral(resourceName: "f1a9d2f0.LogoSmallest")
-        imageView.alpha = 1
-        backgroundColor = UIColor.clear
-    }
 }

@@ -8,6 +8,7 @@
 
 import Foundation
 import MapKit
+import ELKit
 
 class ObservationDetailsScrollView: AppScrollView {
     
@@ -25,7 +26,7 @@ class ObservationDetailsScrollView: AppScrollView {
         let view = MushroomView(fullyRounded: true)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.onTap = { [weak self] mushroom in
-            self?.customDelegate?.pushVC(DetailsViewController(detailsContent: .mushroom(mushroom: mushroom, takesSelection: nil)))
+            self?.customDelegate?.pushVC(DetailsViewController(detailsContent: .mushroom(mushroom: mushroom, session: self?.session, takesSelection: nil)))
         }
         return view
     }()
@@ -37,7 +38,59 @@ class ObservationDetailsScrollView: AppScrollView {
         return view
     }()
     
+    @objc private func reportContentButtonPressed() {
+        let alertVC = UIAlertController(title: "Rapporter stødende indhold", message: "Finder du en kommentar, eller brugergeneret indhold stødende? Giv en begrundelse her, så kikker vi på det.", preferredStyle: .alert)
+        alertVC.addTextField { (textField) in
+            textField.placeholder = "Eg. stødende billeder"
+        }
+        
+        alertVC.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak self, weak session] (action) in
+            let comment = alertVC.textFields?.first?.text
+            guard let observationID = self?.observation?.id else {return}
+            session?.reportOffensiveContent(observationID: observationID, comment: comment, completion: {
+                DispatchQueue.main.async {
+                    let notification = ELNotificationView.appNotification(style: .success, primaryText: "Mange tak", secondaryText: "Din rapportering er med til at gøre Svampeatlas et sikkert sted", location: .bottom)
+                    notification.show(animationType: .zoom)
+                }
+            })
+        }))
+        
+        alertVC.addAction(UIAlertAction(title: "Afbryd", style: .cancel, handler: nil))
+        customDelegate?.presentVC(alertVC)
+    }
+    
+    private lazy var reportContentView: UIView = {
+        let view: UIView = {
+           let view = UIView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.backgroundColor = UIColor.clear
+            view.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            
+            let button: UIButton = {
+                let button = UIButton()
+                button.setTitle("Rapporter stødende indhold", for: [])
+                button.setTitleColor(UIColor.red, for: [])
+                button.titleLabel?.font = UIFont.appPrimary(customSize: 12)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
+                button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
+            button.addTarget(self, action: #selector(reportContentButtonPressed), for: .touchUpInside)
+            return button
+            }()
+            
+            view.addSubview(button)
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            button.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            
+            return view
+        }()
+        
+        return view
+    }()
+    
     private var session: Session?
+    private var observation: Observation?
+    
     
     init(session: Session?) {
         self.session = session
@@ -49,19 +102,34 @@ class ObservationDetailsScrollView: AppScrollView {
     }
     
     func configure(withObservation observation: Observation, showSpeciesView: Bool) {
+        self.observation = observation
+        
         configureHeader(title: observation.speciesProperties.name, subtitle: nil, user: observation.observedBy)
-        configureText(title: "Noter", text: observation.note)
-        configureText(title: "Økologi noter", text: observation.ecologyNote)
+        configureText(title: "Kommentarer om voksested", text: observation.ecologyNote)
+        configureText(title: "Andre noter", text: observation.note)
         
         var informationArray = [(String, String)]()
         
-        if let locality = observation.location, locality != "" {
-            informationArray.append(("Lokalitet:", locality))
+        if let validationStatus = observation.validationStatus {
+            informationArray.append(("Valideringsstatus:", validationStatus))
         }
         
         if let observationDate = observation.date, observationDate != "" {
             informationArray.append(("Fundets dato:", Date(ISO8601String: observationDate)?.convert(into: DateFormatter.Style.long) ?? ""))
         }
+        
+        if let substrate = observation.substrate {
+            informationArray.append(("Substrat:", substrate.dkName))
+        }
+        
+        if let vegetationType = observation.vegetationType {
+            informationArray.append(("Vegetationstype:", vegetationType.dkName))
+        }
+        
+        if let locality = observation.location, locality != "" {
+            informationArray.append(("Lokalitet:", locality))
+        }
+        
         
         configureInformation(information: informationArray)
         configureMapView(observation: observation)
@@ -71,15 +139,24 @@ class ObservationDetailsScrollView: AppScrollView {
         }
         
         configureComments(observationID: observation.id)
+        
+        if session != nil {
+            contentStackView.addArrangedSubview(reportContentView)
+        }
     }
-    
-    
     
     private func configureMapView(observation: Observation) {
         contentStackView.addArrangedSubview(mapView)
         mapView.addObservationAnnotations(observations: [observation])
         let coordinate = CLLocationCoordinate2D.init(latitude: observation.coordinates.last!, longitude: observation.coordinates.first!)
         mapView.setRegion(center: coordinate, zoomMetres: 50000)
+        
+        mapView.wasTapped = { [unowned self] in
+            let mapVC = MapVC()
+            mapVC.mapView.addObservationAnnotations(observations: [observation])
+            mapVC.mapView.setRegion(center: coordinate, zoomMetres: 50000)
+            self.customDelegate?.pushVC(mapVC)
+        }
     }
     
     private func configureSpeciesView(taxonID: Int?) {

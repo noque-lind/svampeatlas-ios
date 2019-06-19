@@ -332,66 +332,6 @@ extension DataService {
 extension DataService {
     
     // POST and UPLOAD FUNCTIONS
-
-    private func uploadImages(observationID: Int, images: [UIImage], completion: @escaping (AppError?) -> ()) {
-        guard let token = UserDefaults.standard.string(forKey: "token") else {completion(nil); return}
-        
-        var medias = [ELMultipartFormData.Media]()
-        
-        //        guard let testImage = ELMultipartFormData.Media(withImage: #imageLiteral(resourceName: "softwareTest"), forKey: "file") else {return}
-        //
-        //        medias.append(testImage)
-        guard images.count > 0 else {completion(nil); return}
-        for image in images {
-            guard let media = ELMultipartFormData.Media(withImage: image, forKey: "file") else {continue}
-            medias.append(media)
-        }
-        
-        let boundary = "Boundary-\(NSUUID().uuidString)"
-        let dataBody = ELMultipartFormData.createDataBody(withParameters: nil, media: medias, boundary: boundary)
-        
-        createDataTaskRequest(url: API.postImageURL(observationID: observationID), method: "POST", data: dataBody, contentType: "multipart/form-data; boundary=\(boundary)", contentLenght: nil, token: token) { (result) in
-            switch result {
-            case .Error(let error):
-                completion(error)
-            case .Success(_):
-                completion(nil)
-            }
-        }
-    }
-    
-    
-    func postObservation(newObservation: NewObservation, completion: @escaping (Result<Int, AppError>) -> ()) {
-        guard let token = UserDefaults.standard.string(forKey: "token") else {completion(Result.Error(DataServiceError.unhandled)); return}
-        
-        do {
-            let data = try JSONSerialization.data(withJSONObject: newObservation.returnAsDictionary(), options: [])
-            createDataTaskRequest(url: API.postObservationURL(), method: "POST", data: data, contentType: "application/json", token: token) { (result) in
-                
-                switch result {
-                case .Error(let error):
-                    completion(Result.Error(error))
-                case .Success(let data):
-                    let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                    guard let dict = json as? Dictionary<String, Any> else {return}
-                    
-                    let observationID = (dict["_id"] as? Int)!
-                    
-                    self.uploadImages(observationID: observationID, images: newObservation.images, completion: { (error) in
-                        if let error = error {
-                            completion(Result.Error(error))
-                        } else {
-                            completion(Result.Success(observationID))
-                        }
-                    })
-                    
-                }
-            }
-            
-        } catch {
-            debugPrint(error)
-        }
-    }
 }
 
 extension DataService {
@@ -481,8 +421,8 @@ extension DataService {
                 for object in JSON {
                     guard let hide = object["hide"] as? Bool, let id = object["_id"] as? Int, let name = object["name"] as? String, let name_uk = object["name_uk"] as? String, let group_dk = object["group_dk"] as? String, let group_uk = object["group_uk"] as? String, hide == false else {continue}
                     
-                    if var substrateGroup = substrateGroups.first(where: {$0.dkName == group_dk}) {
-                        substrateGroup.appendSubstrate(substrate: Substrate(id: id, dkName: name, enName: name_uk))
+                    if let index = substrateGroups.firstIndex(where: {$0.dkName == group_dk}) {
+                        substrateGroups[index].appendSubstrate(substrate: Substrate(id: id, dkName: name, enName: name_uk))
                     } else {
                         substrateGroups.append(SubstrateGroup(dkName: group_dk, enName: group_uk, substrates: [Substrate(id: id, dkName: name, enName: name_uk)]))
                     }

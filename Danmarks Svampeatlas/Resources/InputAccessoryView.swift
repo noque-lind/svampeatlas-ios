@@ -27,7 +27,7 @@ class InputAccessoryView: UIView {
         let button = UIButton(frame: self.frame)
         self.addSubview(button)
         button.setTitle(withTitle, for: [])
-        button.titleLabel?.font = UIFont.appHeader()
+        button.titleLabel?.font = UIFont.appTitle()
         button.setTitleColor(UIColor.appWhite(), for: [])
         button.contentVerticalAlignment = .center
         button.addTarget(self, action: #selector(resign), for: .touchUpInside)

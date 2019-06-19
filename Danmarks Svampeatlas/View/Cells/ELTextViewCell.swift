@@ -15,7 +15,7 @@ class TextViewCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.appSecondaryColour()
         view.textColor = UIColor.appWhite()
-        view.font = UIFont.appPrimaryHightlighed()
+        view.font = UIFont.appPrimary()
         view.titleTextColor = UIColor.appWhite()
         return view
     }()
@@ -51,7 +51,7 @@ class TextViewCell: UITableViewCell {
 }
 
 class AddCommentCell: UITableViewCell {
-    private var textView: ELTextView = {
+    private lazy var textView: ELTextView = {
         let view = ELTextView(defaultHeight: 90)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.appSecondaryColour()
@@ -66,10 +66,11 @@ class AddCommentCell: UITableViewCell {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.appGreen()
-        button.layer.cornerRadius = 5
         button.setImage(#imageLiteral(resourceName: "DisclosureButton"), for: [])
         button.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        button.layer.shadowOpacity = textView.shadowOpacity
+        button.layer.shadowOffset = textView.shadowOffset
+        button.layer.shadowRadius = textView.shadowRadius
         button.addTarget(self, action: #selector(buttonpressed), for: .touchUpInside)
         return button
     }()
@@ -103,8 +104,8 @@ class AddCommentCell: UITableViewCell {
         textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
         textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -8).isActive = true
-        sendButton.centerYAnchor.constraint(equalTo: textView.textView.centerYAnchor).isActive = true
-        
+        sendButton.topAnchor.constraint(equalTo: textView.textView.topAnchor).isActive = true
+        sendButton.bottomAnchor.constraint(equalTo: textView.textView.bottomAnchor).isActive = true
         sendButton.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     

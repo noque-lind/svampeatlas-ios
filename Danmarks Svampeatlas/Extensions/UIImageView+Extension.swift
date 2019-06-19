@@ -11,7 +11,7 @@ import UIKit
 extension UIImageView {
     func fadeToNewImage(image: UIImage) {
         let crossFade: CABasicAnimation = CABasicAnimation(keyPath: "contents")
-        crossFade.duration = 0.3
+        crossFade.duration = 0.2
         crossFade.fromValue = self.image
         crossFade.toValue = image
         self.image = image

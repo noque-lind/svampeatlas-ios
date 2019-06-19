@@ -14,14 +14,12 @@ class MushroomView: UIView {
         let view = RoundedImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: 115).isActive = true
-        view.contentMode = .scaleAspectFill
-        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         return view
     }()
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.appTitle()
+        label.font = UIFont.appPrimaryHightlighed()
         label.textColor = UIColor.appPrimaryColour()
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -86,7 +84,7 @@ class MushroomView: UIView {
             stackView.spacing = 20
             stackView.addArrangedSubview(upperStackView)
             stackView.addArrangedSubview(lowerStackView)
-            stackView.addArrangedSubview(redlistStackView)
+//            stackView.addArrangedSubview(redlistStackView)
             return stackView
         }()
         
@@ -96,8 +94,8 @@ class MushroomView: UIView {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = UIColor.clear
             view.addSubview(informationStackView)
-            informationStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
-            informationStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8).isActive = true
+            informationStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
+            informationStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
             informationStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 6).isActive = true
             informationStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -6).isActive = true
             return view
@@ -131,7 +129,7 @@ class MushroomView: UIView {
 
     
     override func layoutSubviews() {
-        thumbImage.layer.cornerRadius = bounds.height / 2
+        thumbImage.layer.cornerRadius = thumbImage.frame.width / 2
         super.layoutSubviews()
     }
     
@@ -175,7 +173,7 @@ class MushroomView: UIView {
             
             let rightLabel: UILabel = {
                 let label = UILabel()
-                label.font = UIFont.appPrimaryHightlighed()
+                label.font = UIFont.appPrimary()
                 label.textColor = UIColor.appPrimaryColour()
                 label.text = withInfo.1
                 label.textAlignment = .right
@@ -209,12 +207,15 @@ class MushroomView: UIView {
     
     func configure(mushroom: Mushroom) {
         self.mushroom = mushroom
-        
+//        thumbImage.downloadImage(size: .mini, urlString: mushroom.images?.first?.url)
         thumbImage.configureImage(url: mushroom.images?.first?.url)
+        
         if let danishName =  mushroom.danishName {
+            titleLabel.attributedText = nil
+            titleLabel.font = UIFont.appPrimaryHightlighed()
             titleLabel.text = danishName
         } else {
-            titleLabel.attributedText = mushroom.fullName.italized(font: UIFont.appTitle())
+            titleLabel.attributedText = mushroom.fullName.italized(font: UIFont.appPrimaryHightlighed())
         }
         
         secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil

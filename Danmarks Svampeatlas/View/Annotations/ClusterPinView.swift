@@ -14,7 +14,7 @@ class ClusterPinView: MKAnnotationView {
     
     private lazy var countLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.appHeader()
+        label.font = UIFont.appPrimaryHightlighed()
         label.textColor = UIColor.appWhite()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center

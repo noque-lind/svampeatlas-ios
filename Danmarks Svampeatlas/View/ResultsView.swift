@@ -17,7 +17,7 @@ class ResultsView: UIView {
 
     lazy var headerLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.appHeader()
+        label.font = UIFont.appPrimaryHightlighed()
         label.textColor = UIColor.appWhite()
         label.textAlignment = .center
         return label

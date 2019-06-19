@@ -45,7 +45,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 3).isActive = true
-        view.backgroundColor = UIColor.appThirdColour()
+        view.backgroundColor = UIColor.appThird()
         view.alpha = 0
         view.layer.maskedCorners = [CACornerMask.layerMinXMinYCorner, CACornerMask.layerMaxXMinYCorner]
         view.layer.cornerRadius = 3
@@ -53,17 +53,18 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
     }()
     
     private var items: [Category<T>]
-    var selectedItem: Category<T>?
-    private var firstIndex: Int? = 0
+    var selectedItem: Category<T>
+    private var firstIndex: Int?
     private var cellsWidth: CGFloat
     weak var delegate: CategoryViewDelegate?
     
     private var selectorViewWidthConstraint = NSLayoutConstraint()
     private var selectorViewCenterXConstraint = NSLayoutConstraint()
     
-    init(categories: [Category<T>], firstIndex: Int?) {
+    init(categories: [Category<T>], firstIndex: Int = 0) {
         self.items = categories
         self.firstIndex = firstIndex
+        self.selectedItem = categories[firstIndex]
         self.cellsWidth = categories.reduce(0, {(($1.title as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.appTitle()]).width) + 16 + $0})
         super.init(frame: CGRect.zero)
         setupView()
@@ -137,7 +138,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if cellsWidth > collectionView.frame.width {
-            let labelWidth = (items[indexPath.row].title as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.appTitle()])
+            let labelWidth = (items[indexPath.row].title as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.appPrimary()])
             return CGSize(width: labelWidth.width + 16, height: collectionView.frame.size.height)
         } else {
             return CGSize(width: collectionView.frame.width / CGFloat(items.count), height: collectionView.frame.size.height)
@@ -145,7 +146,6 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        guard let selectedItem = selectedItem else {return true}
         if selectedItem != items[indexPath.row] {
             return true
         } else {

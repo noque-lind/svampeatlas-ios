@@ -7,84 +7,7 @@
 //
 
 import UIKit
-
-class MushroomTableView: GenericTableView<Mushroom> {
-    
-    var contentInset: UIEdgeInsets = UIEdgeInsets.zero {
-        didSet {
-            tableView.contentInset = self.contentInset
-        }
-    }
-    
-    var scrollIndicatorInsets: UIEdgeInsets = UIEdgeInsets.zero {
-        didSet {
-            tableView.scrollIndicatorInsets = self.scrollIndicatorInsets
-        }
-    }
-    
-    var mushroomSwiped: ((Mushroom) -> ())?
-    var isAtTop: ((Bool) -> ())?
-    
-    override func setupView() {
-        register(MushroomCell.self, forCellReuseIdentifier: "mushroomCell")
-        tableView.separatorStyle = .none
-        tableView.alwaysBounceVertical = false
-        tableView.estimatedRowHeight = 150
-        tableView.rowHeight = UITableView.automaticDimension
-        super.setupView()
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let mushroom = tableViewState.value(row: indexPath.row), let cell = tableView.dequeueReusableCell(withIdentifier: "mushroomCell", for: indexPath) as? MushroomCell {
-            cell.configureCell(mushroom: mushroom)
-            return cell
-        } else {
-            let reloadCell = tableView.dequeueReusableCell(withIdentifier: "reloadCell", for: indexPath) as! ReloadCell
-            reloadCell.configureCell(text: "Vis flere")
-            return reloadCell
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == tableViewState.itemsCount() {
-            return 200
-        } else {
-            return UITableView.automaticDimension
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let mushroom = self.tableViewState.value(row: indexPath.row) else {return nil}
-        
-            let action = UIContextualAction(style: .normal, title: nil) { (action, view, completion) in
-                self.mushroomSwiped?(mushroom)
-                completion(true)
-            }
-        
-        if CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) {
-            action.backgroundColor = UIColor.white.withAlphaComponent(0.0)
-            action.image = #imageLiteral(resourceName: "Icon_DeFavorite")
-            return UISwipeActionsConfiguration(actions: [action])
-        } else {
-            action.backgroundColor = UIColor.white.withAlphaComponent(0.0)
-            action.image = #imageLiteral(resourceName: "Favorite")
-            return UISwipeActionsConfiguration(actions: [action])
-        }
-    }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= -scrollView.contentInset.top {
-            isAtTop?(true)
-        } else {
-            isAtTop?(false)
-        }
-    }
-}
-
+import ELKit
 
 class MushroomVC: UIViewController {
     
@@ -115,6 +38,7 @@ class MushroomVC: UIViewController {
     private lazy var tableView: MushroomTableView = {
         let tableView = MushroomTableView(animating: true, automaticallyAdjustHeight: false)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.clipsToBounds = true
         
         tableView.isAtTop = { [unowned self] isAtTop in
             if isAtTop {
@@ -125,22 +49,35 @@ class MushroomVC: UIViewController {
         }
         
         tableView.didSelectItem = { [unowned self] mushroom in
-            self.navigationController?.pushViewController(DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, takesSelection: nil)), animated: true)
+            self.navigationController?.pushViewController(DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: self.session, takesSelection: nil)), animated: true)
         }
-        
+       
+        tableView.didRequestAdditionalDataAtOffset = { (tableView, offset, max) in
+            var currentItems = tableView.tableViewState.currentItems()
+            DataService.instance.getMushrooms(offset: offset, completion: { (result) in
+                switch result {
+                case .Error(let error):
+                    tableView.tableViewState = .Error(error, nil)
+                case .Success(let mushrooms):
+                    currentItems.append(contentsOf: mushrooms)
+                    tableView.tableViewState = .Paging(items: currentItems, max: nil)
+                }
+            })
+        }
+
         tableView.mushroomSwiped = { [unowned self] mushroom in
             if CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) {
-                CoreDataHelper.deleteMushroom(mushroom: mushroom, completion: {
-                    guard case Categories.favorites = self.categoryView.selectedItem!.type else {
+                CoreDataHelper.deleteMushroom(mushroom: mushroom, completion: { [weak self] in
+                    guard let selectedItemType = self?.categoryView.selectedItem.type, case Categories.favorites = selectedItemType else {
                         return
                     }
 
-                    CoreDataHelper.fetchAllFavoritedMushrooms(completion: { (result) in
+                    CoreDataHelper.fetchAllFavoritedMushrooms(completion: { [weak self] (result) in
                         switch result {
                         case .Success(let mushrooms):
-                            self.tableView.tableViewState = .Items(mushrooms)
+                            self?.tableView.tableViewState = .Items(mushrooms)
                         case .Error(let error):
-                            self.tableView.tableViewState = .Error(error, nil)
+                            self?.tableView.tableViewState = .Error(error, nil)
                         }
                     })
                 })
@@ -174,6 +111,20 @@ class MushroomVC: UIViewController {
     }()
     
     private var defaultTableViewState: TableViewState<Mushroom>?
+    private var session: Session?
+    
+    init(session: Session?) {
+        self.session = session
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    deinit {
+        print("MushroomVC Deinit")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -186,18 +137,29 @@ class MushroomVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationController?.navigationBar.isTranslucent = false
-        super.viewWillAppear(animated)
+        
+           self.navigationItem.setLeftBarButton(menuButton, animated: false)
+            self.title = "Nyt fund"
+            self.navigationController?.navigationBar.shadowImage = UIImage()
+            self.navigationController?.view.backgroundColor = nil
+            self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
+            self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
+            self.navigationController?.navigationBar.isTranslucent = true
+            self.navigationController?.navigationBar.backgroundColor = nil
+            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
+            self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+            super.viewWillAppear(animated)
     }
     
     private func setupView() {
+        view.backgroundColor = UIColor.appPrimaryColour()
         title = "Svampebog"
         
         view.insertSubview(gradientView, at: 0)
         gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        gradientView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        gradientView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         view.addSubview(categoryView)
@@ -218,16 +180,16 @@ class MushroomVC: UIViewController {
         searchBar.leadingConstraint = searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8)
         
         
-        self.navigationController?.view.backgroundColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
-        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appHeader()]
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
-        self.navigationItem.setLeftBarButton(menuButton, animated: false)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+//        self.navigationController?.view.backgroundColor = UIColor.appPrimaryColour()
+//        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
+//        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
+//        self.navigationController?.navigationBar.isTranslucent = false
+//        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
+//        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+//        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+
+//        navigationController?.navigationBar.shadowImage = UIImage()
+//        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     private func showSearchBar() {
@@ -240,31 +202,14 @@ class MushroomVC: UIViewController {
     }
     
     private func hideSearchBar() {
-        DispatchQueue.main.async {
-            self.tableView.contentInset = UIEdgeInsets(top: 4, left: 0.0, bottom: 0.0, right: 0.0)
-            self.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 4, left: 0.0, bottom: 0.0, right: 0.0)
-            self.searchBar.isHidden = true
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.contentInset = UIEdgeInsets(top: 4, left: 0.0, bottom: 0.0, right: 0.0)
+            self?.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 4, left: 0.0, bottom: 0.0, right: 0.0)
+            self?.searchBar.isHidden = true
         }
     }
 }
 
-extension MushroomVC {
-    
-        /*
-     
-        
-        func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-            let action = UITableViewRowAction(style: .normal, title: "Gem som favorit") { (action, indexPath) in
-            }
-            action.backgroundColor = UIColor.white.withAlphaComponent(0.0)
-            return [action]
-        }
-        
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-     
-        }
- */
-}
 
 
 extension MushroomVC: CategoryViewDelegate {
@@ -292,10 +237,8 @@ extension MushroomVC: CategoryViewDelegate {
                 switch result {
                 case .Success(let mushrooms):
                         self?.tableView.tableViewState = .Items(mushrooms)
-//                    self.tableViewState = TableViewState.Items(mushrooms)
                 case .Error(let error):
                     self?.tableView.tableViewState = .Error(error, nil)
-//                    self.tableViewState = TableViewState.Error(error, nil)
                 }
             }
         }
@@ -308,12 +251,12 @@ extension MushroomVC: CustomSearchBarDelegate {
         defaultTableViewState = tableView.tableViewState
         tableView.tableViewState = .Loading
         
-        DataService.instance.getMushroomsThatFitSearch(searchString: entry) { (result) in
+        DataService.instance.getMushroomsThatFitSearch(searchString: entry) { [weak self] (result) in
             switch result {
             case .Success(let mushrooms):
-                self.tableView.tableViewState = TableViewState.Items(mushrooms)
+                self?.tableView.tableViewState = TableViewState.Items(mushrooms)
             case .Error(let appError):
-                self.tableView.tableViewState = TableViewState.Error(appError, nil)
+                self?.tableView.tableViewState = TableViewState.Error(appError, nil)
             }
         }
     }

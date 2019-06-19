@@ -8,6 +8,7 @@
 
 import UIKit
 import Photos
+import ELKit
 
 
 protocol CameraControlsViewDelegate: class {
@@ -37,7 +38,6 @@ class CameraControlsView: UIView {
         button.layer.cornerRadius = 5.0
         button.clipsToBounds = true
         button.contentMode = .scaleAspectFill
-        button.isHidden = true
         button.layer.shadowOpacity = 0.5
         button.addTarget(self, action: #selector(photoLibraryButtonPressed), for: .touchUpInside)
         button.widthAnchor.constraint(equalToConstant: 40).isActive = true
@@ -134,10 +134,30 @@ class CameraControlsView: UIView {
     }
     
     @objc private func photoLibraryButtonPressed() {
-        let picker = UIImagePickerController()
-        picker.sourceType = .photoLibrary
-        picker.delegate = self
-        delegate?.presentVC(picker)
+        PHPhotoLibrary.requestAuthorization { (authorization) in
+            switch authorization {
+            case .denied, .notDetermined, .restricted:
+                DispatchQueue.main.async {
+                    let notif = ELNotificationView.appNotification(style: .error, primaryText: "Manglende tilladelser", secondaryText: "Du har ikke givet appen tilladelse til at se dit photobibliotek. Du kan ændre det i indstillinger", location: .center)
+                    notif.onTap = {
+                        DispatchQueue.main.async {
+                            if let bundleId = Bundle.main.bundleIdentifier,
+                                let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
+                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                            }
+                        }
+                    }
+                    notif.show(animationType: .zoom)
+                }
+            case .authorized:
+                DispatchQueue.main.async { [weak self] in
+                     let picker = UIImagePickerController()
+                    picker.sourceType = .photoLibrary
+                    picker.delegate = self
+                    self?.delegate?.presentVC(picker)
+                }
+            }
+        }
     }
     
     @objc private func noPhotoButtonPressed() {
@@ -150,20 +170,28 @@ class CameraControlsView: UIView {
     }
     
     private func getPhotoLibraryThumbnail() {
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
-        fetchOptions.fetchLimit = 0
-        
-        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        
-        guard let phAsset = fetchResult.firstObject else {return}
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        
-        PHImageManager.default().requestImage(for: phAsset, targetSize: CGSize(width: 40, height: 40), contentMode: .aspectFill, options: requestOptions) { (image, _) in
-            guard let image = image else {return}
-            self.photoLibraryButton.setImage(image, for: [])
-            self.photoLibraryButton.isHidden = false
+        switch PHPhotoLibrary.authorizationStatus() {
+        case .authorized:
+            
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+            fetchOptions.fetchLimit = 1
+            
+            let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+            
+            guard let phAsset = fetchResult.firstObject else {return}
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.isSynchronous = false
+            
+            
+            PHImageManager.default().requestImage(for: phAsset, targetSize: CGSize(width: 40, height: 40), contentMode: .aspectFill, options: requestOptions) { [weak photoLibraryButton] (image, _) in
+                guard let image = image else {return}
+                DispatchQueue.main.async {
+                    photoLibraryButton?.setImage(image, for: [])
+                }
+            }
+        case .denied, .restricted, .notDetermined:
+            photoLibraryButton.setImage(#imageLiteral(resourceName: "Icons_PhotoLibrary"), for: [])
         }
     }
 }

@@ -45,9 +45,20 @@ enum CoreDataError: AppError {
     case saveError
 }
 
+fileprivate class CoreDataService {
+    
+    static let instance = CoreDataService()
+    var managedContext: NSManagedObjectContext?
+    
+    private init() {
+            self.managedContext = ((UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext)!
+    }
+}
+
 struct CoreDataHelper {
     
-    static var managedContext: NSManagedObjectContext = ((UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext)!
+    
+    static var managedContext = CoreDataService.instance.managedContext!
     
     static func deleteMushroom(mushroom: Mushroom, completion: () -> ()) {
         

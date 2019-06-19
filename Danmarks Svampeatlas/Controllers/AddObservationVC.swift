@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import ELKit
 
 class AddObservationVC: UIViewController {
     
@@ -117,7 +118,7 @@ class AddObservationVC: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
         self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
         self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appHeader()]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         super.viewWillAppear(animated)
@@ -177,7 +178,7 @@ class AddObservationVC: UIViewController {
             
             newObservation.user = session.user
             
-            DataService.instance.postObservation(newObservation: newObservation) { (result) in
+            session.uploadObservation(newObservation: newObservation) { (result) in
                 Spinner.stop()
                 switch result {
                 case .Success(let observationID):
@@ -194,7 +195,6 @@ class AddObservationVC: UIViewController {
                     }
                 }
             }
-    
         case .Error(let error):
             self.handleUncompleteObservation(newObservationError: error)
         }
@@ -228,8 +228,6 @@ class AddObservationVC: UIViewController {
         categoryView.moveSelector(toCellAtIndexPath: indexPath)
         collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
     }
-    
-    
 }
 
 
@@ -237,7 +235,6 @@ extension AddObservationVC: LocationManagerDelegate {
     func locationRetrieved(location: CLLocation) {
         newObservation.observationCoordinate = location
         
-
         DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { (result) in
             switch result {
             case .Success(let localities):
@@ -261,7 +258,7 @@ extension AddObservationVC: LocationManagerDelegate {
                 
             case .Error(let error):
                 DispatchQueue.main.async {
-                    let notificationView = ELNotificationView.appNotification(style: .error, primaryText: "Nærmeste lokalitet kunne ikke findes, prøv igen", secondaryText: error.errorDescription, location: .bottom)
+                    let notificationView = ELNotificationView.appNotification(style: .error, primaryText: "Nærmeste lokalitet kunne ikke findes, prøv igen.", secondaryText: error.errorDescription, location: .bottom)
                     notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
                 }
             }
@@ -274,7 +271,7 @@ extension AddObservationVC: LocationManagerDelegate {
     
     func userDeniedPermissions() {
         DispatchQueue.main.async {
-            let notificationView = ELNotificationView.appNotification(style: .error, primaryText: "Kunne ikke hente din lokation", secondaryText: "Giv appen tilladelse i indstillinger. Bemærk, lokation er nødvendigt for upload af fund", location: .bottom)
+            let notificationView = ELNotificationView.appNotification(style: .error, primaryText: "Kunne ikke hente din lokation", secondaryText: "Giv appen tilladelse i indstillinger.", location: .bottom)
             
             notificationView.onTap = {
                 if let bundleId = Bundle.main.bundleIdentifier,
@@ -325,8 +322,6 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
   
     }
     
-    
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }
@@ -334,8 +329,6 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         categoryView.moveSelector(toCellAtIndexPath: IndexPath(row: Int(ceil(collectionView.contentOffset.x/collectionView.bounds.size.width)), section: 0))
     }
-    
-    
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         view.endEditing(true)
@@ -360,5 +353,3 @@ extension AddObservationVC: ObservationImagesViewDelegate, NavigationDelegate {
         present(vc, animated: true, completion: nil)
     }
 }
-
-

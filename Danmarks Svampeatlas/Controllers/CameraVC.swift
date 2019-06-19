@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import CoreML
 import Vision
+import ELKit
 
 protocol CameraVCDelegate: class {
     func imageReady(image: UIImage)
@@ -147,40 +148,12 @@ class CameraVC: UIViewController {
         }
 //
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        
-        
-//        view.addSubview(appMenuBar)
-//        appMenuBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-//        appMenuBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-//        appMenuBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//        appMenuBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80).isActive = true
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         return
     }
     
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        switch UIDevice.current.orientation {
-//        case .landscapeLeft:
-//            self.previewLayer.connection?.videoOrientation = .landscapeRight
-//        case .landscapeRight:
-//            self.previewLayer.connection?.videoOrientation = .landscapeLeft
-//        case .portrait:
-//            self.previewLayer.connection?.videoOrientation = .portrait
-//        case .portraitUpsideDown:
-//            self.previewLayer.connection?.videoOrientation = .portraitUpsideDown
-//        default:
-//            break
-//        }
-//        coordinator.animate(alongsideTransition: { (context) in
-//            self.previewLayer.frame = self.cameraView.frame
-//        }) { (_) in
-//
-//        }
-//    }
-
     
     private func reset() {
         cameraView.reset()

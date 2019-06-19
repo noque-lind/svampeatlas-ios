@@ -9,13 +9,6 @@
 import UIKit
 import MapKit
 
-struct Coordinates {
-    public private(set) var latitude: Double
-    public private(set) var longitude: Double
-    public private(set) var accuracy: Double
-}
-
-
 class NewObservation {
     
     enum Error {
@@ -263,48 +256,12 @@ struct API {
             string.append("]]}}")
             print(string)
             return string
-            
-            
-            
-////            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: radius.rawValue, longitudinalMeters: radius.rawValue)
-//            let region = MKMapRect(origin: MKMapPoint.init(coordinate), size: MKMapSize.init(width: radius.rawValue, height: radius.rawValue))
-//            let region = MKP
-//
-//
-//            let coordinate1 = MKMapPoint.init(x: rect.origin.x, y: rect.origin.y).coordinate
-//            let coordinate2 = MKMapPoint.init(x: rect.origin.x + rect.size.width, y: rect.origin.y).coordinate
-//            let coordinate3 = MKMapPoint.init(x: rect.origin.x + rect.size.width, y: rect.origin.y + rect.size.height).coordinate
-//            let coordinate4 = MKMapPoint.init(x: rect.origin.x, y: rect.origin.y + rect.size.height).coordinate
-//
-//            let geoJSON = "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[\(coordinate1.longitude),\(coordinate1.latitude)],[\(coordinate2.longitude),\(coordinate2.latitude)],[\(coordinate3.longitude),\(coordinate3.latitude)],[\(coordinate4.longitude),\(coordinate4.latitude)],[\(coordinate1.longitude),\(coordinate1.latitude)]]]}}"
-//
-//            var whereJSON: String?
-//
-//            if let dateString = Date(age: mapViewConfiguration.filteringSettings.age * 12)?.convert(into: "yyyy-MM-dd") {
-//                whereJSON = "{\"observationDate\":{\"$gte\":\"\(dateString)\"}}"
-//            }
-//
-//
-//
-//            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: radius.rawValue, longitudinalMeters: radius.rawValue)
-//
-//            let cord1 = CLLocationCoordinate2D(latitude: coordinate.latitude + region.span.latitudeDelta, longitude: coordinate.longitude + region.span.longitudeDelta)
-//            let cord2 = CLLocationCoordinate2D(latitude: coordinate.latitude - region.span.latitudeDelta, longitude: coordinate.longitude - region.span.longitudeDelta)
-//
-//            let result = BASE_URL_API + "localities?where=%7B%22decimalLongitude%22:%7B%22$between%22:%5B\(cord2.longitude),\(cord1.longitude)%5D%7D,%22decimalLatitude%22:%7B%22$between%22:%5B\(cord2.latitude),\(cord1.latitude)%5D%7D%7D"
-//            print(result)
-//            return result
-//
-//
-//
-//
-//            return "?geometry=" + " {\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[12.37884521484375,55.397831459360326],[12.04925537109375,55.40251032740405],[12.057495117187498,55.24468366349731],[12.389831542968748,55.250946179197335],[12.37884521484375,55.397831459360326]]]}}
         }
     }
     
     enum Request {
         case Observation(geometry: Geometry, ageInYear: Int?, include: [ObservationIncludeQueries], limit: Int?, offset: Int?)
-        
+        case Mushroom(searchString: String?, requirePictures: Bool)
         
         var encodedURL: String {
             switch self {
@@ -330,6 +287,8 @@ struct API {
                 
                print(url)
                return url
+            case .Mushroom(searchString: let searchString, requirePictures: let requirePictures):
+                return ""
             default:
                 return ""
             }
@@ -338,11 +297,14 @@ struct API {
     
     enum Post {
         case comment(taxonID: Int)
+        case offensiveContentComment(taxonID: Int)
         
         var encodedURL: String {
             switch self {
             case .comment(taxonID: let taxonID):
                 return BASE_URL_API + "observations/\(taxonID)/forum"
+            case .offensiveContentComment(taxonID: let taxonID):
+                return BASE_URL_API + "observations/\(taxonID)/notifications"
             default:
                 return ""
             }
@@ -495,7 +457,9 @@ func SPECIES_INCLUDE_QUERY(imagesRequired: Bool) -> String {
 }
 
 func ALLMUSHROOMS_URL(limit: Int, offset: Int) -> String {
-    return BASE_URL_API + "taxa?_order=%5B%5B%22FullName%22%5D%5D&acceptedTaxaOnly=true" + SPECIES_INCLUDE_QUERY(imagesRequired: true) + "&limit=\(limit)" + "&offset=\(offset)"
+    let string = BASE_URL_API + "taxa?_order=%5B%5B%22FullName%22%5D%5D&acceptedTaxaOnly=true" + SPECIES_INCLUDE_QUERY(imagesRequired: true) + "&limit=\(limit)" + "&offset=\(offset)"
+    print(string)
+    return string
 }
 
 
@@ -521,7 +485,8 @@ func SEARCHFORMUSHROOM_URL(searchTerm: String) -> String {
     }
     
     
-    let returned = BASE_URL_API + "taxa?" + SPECIES_INCLUDE_QUERY(imagesRequired: false) + "&nocount=true&where=%7B%22%24or%22%3A%5B%7B%22FullName%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22%24Vernacularname_DK.vernacularname_dk%24%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22FullName%22%3A%7B%22like%22%3A%22\(genus)%25%22%7D%2C%22TaxonName%22%3A%7B%22like%22%3A%22\(taxonName)%25%22%7D%7D%5D%7D"
+    let returned = BASE_URL_API + "taxa?" + "include=%5B%7B%22model%22%3A%22TaxonRedListData%22%2C%22as%22%3A%22redlistdata%22%2C%22required%22%3Afalse%2C%22attributes%22%3A%5B%22status%22%5D%2C%22where%22%3A%22%7B%5C%22year%5C%22%3A2009%7D%22%7D%2C%7B%22model%22%3A%22Taxon%22%2C%22as%22%3A%22acceptedTaxon%22%7D%2C%7B%22model%22%3A%22TaxonAttributes%22%2C%22as%22%3A%22attributes%22%2C%22attributes%22%3A%5B%22PresentInDK%22%2C%20%22forvekslingsmuligheder%22%2C%20%22oekologi%22%2C%20%22diagnose%22%5D%2C%22where%22%3A%22%7B%7D%22%7D%2C%7B%22model%22%3A%22TaxonDKnames%22%2C%22as%22%3A%22Vernacularname_DK%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonStatistics%22%2C%22as%22%3A%22Statistics%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonImages%22%2C%22as%22%3A%22images%22%2C%22required%22%3Afalse%7D%5D" + "&nocount=true&where=%7B%22%24or%22%3A%5B%7B%22FullName%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22%24Vernacularname_DK.vernacularname_dk%24%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22FullName%22%3A%7B%22like%22%3A%22\(genus)%25%22%7D%2C%22TaxonName%22%3A%7B%22like%22%3A%22\(taxonName)%25%22%7D%7D%5D%7D"
+    print(returned)
     return returned
 }
 

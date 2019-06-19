@@ -40,7 +40,7 @@ class ObservationDetailsCell: UICollectionViewCell {
         return view
     }()
     
-    private let rows: [Categories] = [.Date, .Substrate, .VegetationType, .Host, .EcologyNotes, .Notes]
+    private let rows: [Categories] = Categories.allCases
     private var newObservation: NewObservation?
     private var shouldClearObservationHost = false
     private var addedRow: (parent: IndexPath, indexPath: IndexPath, selectors: Selectors)? {
@@ -52,7 +52,6 @@ class ObservationDetailsCell: UICollectionViewCell {
             
             guard let addedRow = addedRow else {return}
                 tableView.insertRows(at: [addedRow.indexPath], with: .fade)
-            // add the new addedrow to the tableView
         }
     }
     
@@ -81,11 +80,11 @@ class ObservationDetailsCell: UICollectionViewCell {
     
     func didSelectCell(cellType: TableViewPickerCell.Section.CellType, isLocked: Bool) {
         switch cellType {
-        case .hostCell(let host):
-            if shouldClearObservationHost {
-                newObservation?.hosts.removeAll()
-                shouldClearObservationHost = false
-            }
+        case .hostCell(let host, let selected):
+//            if shouldClearObservationHost {
+//                newObservation?.hosts.removeAll()
+//                shouldClearObservationHost = false
+//            }
             
             if let indexPath = newObservation?.hosts.firstIndex(where: {$0.id == host.id}) {
                 newObservation?.hosts.remove(at: indexPath)
@@ -239,17 +238,12 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
             case .Error(let error):
                 cell.tableViewState = .Error(error, nil)
             case .Success(let hosts):
-                let cells = hosts.compactMap({TableViewPickerCell.Section.CellType.hostCell($0)})
-                cell.tableViewState = .Items([.init(title: "Forslag", cells: cells)])
+                 let selectedHosts = self.newObservation?.hosts ?? []
+                
+                let cells = hosts.compactMap({TableViewPickerCell.Section.CellType.hostCell($0, selectedHosts.contains($0))})
+                cell.tableViewState = .Items([.init(title: nil, cells: cells)])
             }
         }
-        
-//        switch CoreDataHelper.getFavoriteHosts() {
-//        case .Error(let error):
-//            cell.configureCell(tableViewPickerCellType: .Hosts(.Error(error, nil)))
-//        case .Success(let hosts):
-//            cell.configureCell(tableViewPickerCellType: .Hosts(.Items(hosts)))
-//        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

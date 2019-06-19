@@ -150,7 +150,7 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
         case .loginVC:
             vc =  LoginVC()
         case .mushroomsVC:
-            vc = MushroomVC()
+            vc = MushroomVC(session: session)
         case .myPageVC:
             guard let session = session else {return}
             vc = MyPageVC(session: session)

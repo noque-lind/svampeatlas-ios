@@ -21,7 +21,7 @@ class SettingCell: UITableViewCell {
     
     private var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.appPrimaryHightlighed()
+        label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -39,9 +39,8 @@ class SettingCell: UITableViewCell {
     }()
     
     override func setSelected(_ selected: Bool, animated: Bool) {
-        contentLabel.textColor = selected ? UIColor.appThirdColour(): UIColor.appWhite()
+        contentLabel.textColor = selected ? UIColor.appThird(): UIColor.appWhite()
     }
-    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

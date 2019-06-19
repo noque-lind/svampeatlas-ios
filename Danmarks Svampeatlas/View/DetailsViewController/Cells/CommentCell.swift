@@ -10,7 +10,7 @@ import UIKit
 
 class CommentCell: UITableViewCell {
     private var profileImageView: ProfileImageView = {
-        let view = ProfileImageView()
+        let view = ProfileImageView(defaultImage: nil)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         return view

@@ -102,6 +102,21 @@ class AppNavigationBar: UIView {
 class CustomNavigationBar: UIView {
 
     private var contentViewTopAnchor = NSLayoutConstraint()
+    private var contentViewLeadingAnchor: NSLayoutConstraint? {
+        willSet {
+            contentViewLeadingAnchor?.isActive = false
+        } didSet {
+            contentViewLeadingAnchor?.isActive = true
+        }
+    }
+    
+    private var contentViewTrailingAnchor: NSLayoutConstraint? {
+        willSet {
+            contentViewTrailingAnchor?.isActive = false
+        } didSet {
+            contentViewTrailingAnchor?.isActive = true
+        }
+    }
     
     private lazy var backgroundView: UIView = {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect.init(style: UIBlurEffect.Style.light))
@@ -148,13 +163,10 @@ class CustomNavigationBar: UIView {
         backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         addSubview(contentView)
-        contentView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4).isActive = true
+        contentViewLeadingAnchor = contentView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30)
+        contentViewTrailingAnchor = contentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30)
         contentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4).isActive = true
-        contentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4).isActive = true
         contentView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 4).isActive = true
-        
-//        contentViewTopAnchor = contentView.topAnchor.constraint(equalTo: topAnchor, constant: navigationBarOffset != nil ? navigationBarOffset! + 4: 0 + 4)
-//        contentViewTopAnchor.isActive = true
     }
     
     func changeAlpha(_ alpha: CGFloat) {
@@ -170,17 +182,19 @@ class CustomNavigationBar: UIView {
         guard let string = string else {return}
         let label: UILabel = {
            let label = UILabel()
-            label.font = UIFont.appHeader()
+            label.font = UIFont.appTitle()
             label.textColor = UIColor.appWhite()
             label.textAlignment = .center
             label.text = string
+            label.adjustsFontSizeToFitWidth = true
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
         
         contentView.addSubview(label)
-        label.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         label.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     

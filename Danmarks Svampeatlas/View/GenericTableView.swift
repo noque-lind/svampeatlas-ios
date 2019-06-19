@@ -72,6 +72,14 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     private var animating: Bool
 //    weak var delegate: Delegate?
     
+    /**
+    Assign a closure to this variable that takes the following parameters:
+     
+     - Parameters:
+        - genericTableView<T>: The tableview it is called from.
+        - int: The current tableView offset
+        - int: The maximum number of items in the model.
+    */
     var didRequestAdditionalDataAtOffset: ((_ tableView: GenericTableView<T>, _ offset: Int, _ max: Int?) -> ())?
     var didSelectItem: ((_ item: T) -> ())?
     
@@ -93,8 +101,8 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
                 return
             }
             
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
             }
         }
     }

@@ -17,7 +17,7 @@ class ProgressBarView: UIView {
     private var loaderView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.appThirdColour()
+        view.backgroundColor = UIColor.appThird()
         view.alpha = 0
         return view
     }()

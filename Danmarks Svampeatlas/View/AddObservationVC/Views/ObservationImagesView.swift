@@ -23,6 +23,7 @@ class ObservationImagesView: UIView {
         view.backgroundColor = UIColor.clear
         view.delegate = self
         view.dataSource = self
+        view.contentInset = UIEdgeInsets(top: 0.0, left: 8, bottom: 0.0, right: 8.0)
         view.clipsToBounds = false
         view.showsHorizontalScrollIndicator = false
         view.register(ObservationImageCell.self, forCellWithReuseIdentifier: "observationImageCell")
@@ -132,9 +133,12 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if images.count == 0 {
-            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+            return CGSize(width: collectionView.frame.width - collectionView.contentInset.left - collectionView.contentInset.right, height: collectionView.frame.height)
+        } else if indexPath.row == images.endIndex {
+            return CGSize(width: 100, height: collectionView.frame.height)
+        } else {
+            return CGSize(width: 180, height: collectionView.frame.height)
         }
-        return CGSize(width: 180, height: collectionView.frame.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -228,8 +232,8 @@ class ObservationImageCellAdd: UICollectionViewCell {
         }()
         
         contentView.addSubview(imageViewContainerView)
-        imageViewContainerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-        imageViewContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
+        imageViewContainerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        imageViewContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         imageViewContainerView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         imageViewContainerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }

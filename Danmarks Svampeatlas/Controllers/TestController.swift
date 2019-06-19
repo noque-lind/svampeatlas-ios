@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 class TestController: UIViewController {
 

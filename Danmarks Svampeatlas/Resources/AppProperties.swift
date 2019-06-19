@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 extension UIColor {
    class func appWhite() -> UIColor {
@@ -25,7 +26,7 @@ extension UIColor {
        return #colorLiteral(red: 0.3772668242, green: 0.4889609814, blue: 0.5432303548, alpha: 1)
     }
 
-    class func appThirdColour() -> UIColor {
+    class func appThird() -> UIColor {
        return #colorLiteral(red: 1, green: 0.2509803922, blue: 0.5058823529, alpha: 1)
     }
     
@@ -44,31 +45,26 @@ extension UIColor {
 }
 
 extension UIFont {
-    class func appHeader(customSize size: CGFloat = 20) -> UIFont {
-        return UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "AvenirNext-Medium", size: size)!)
-    }
-    
-    class func appTitle(customSize size: CGFloat = 15) -> UIFont {
+    class func appTitle(customSize size: CGFloat = 20) -> UIFont {
         return UIFontMetrics(forTextStyle: .title1).scaledFont(for: UIFont(name: "AvenirNext-Regular", size: size)!)
     }
     
-    class func appPrimary(customSize size: CGFloat = 13) -> UIFont {
+    class func appPrimary(customSize size: CGFloat = 15) -> UIFont {
         return UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "AvenirNext-Regular", size: size)!)
     }
     
-    class func appPrimaryHightlighed(customSize size: CGFloat = 13) -> UIFont {
+    class func appPrimaryHightlighed(customSize size: CGFloat = 15) -> UIFont {
         return UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "AvenirNext-Medium", size: size)!)
     }
     
     class func appDivider() -> UIFont {
-        return UIFontMetrics(forTextStyle: .title1).scaledFont(for: UIFont(name: "Silom", size: 12)!, maximumPointSize: 17)
+        return UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "CaviarDreams-Bold", size: 15)!)
     }
     
     private func withTraits(_ traits: UIFontDescriptor.SymbolicTraits) -> UIFont {
-        
         // create a new font descriptor with the given traits
         if let fd = fontDescriptor.withSymbolicTraits(traits) {
-            // return a new font with the created font descriptor
+            // return a new  font with the created font descriptor
             return UIFont(descriptor: fd, size: pointSize)
         }
         
@@ -77,7 +73,13 @@ extension UIFont {
     }
     
     func italized() -> UIFont {
-        return withTraits(.traitItalic)
+        if self === UIFont.appPrimaryHightlighed() {
+            return UIFont(name: "AvenirNext-MediumItalic", size: pointSize)!
+        } else if self === UIFont.appPrimary() {
+            return UIFont(name: "AvenirNext-Italic", size: pointSize)!
+        } else {
+            return self
+        }
     }
     
     

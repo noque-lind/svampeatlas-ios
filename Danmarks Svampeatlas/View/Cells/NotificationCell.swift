@@ -11,7 +11,7 @@ import UIKit
 class NotificationCell: UITableViewCell {
 
     private var profileImageView: ProfileImageView = {
-       let view = ProfileImageView()
+       let view = ProfileImageView(defaultImage: nil)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         return view
@@ -79,14 +79,14 @@ class NotificationCell: UITableViewCell {
             profileImageView.configure(initials: notification.triggerInitials, imageURL: notification.triggerImageURL)
             
             primaryText.append(NSAttributedString(string: " har kommenteret på et fund af: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
-            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont(name: "AvenirNext-UltraLightItalic", size: 12)!]))
+            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed().italized()]))
             primaryText.append(NSAttributedString(string: " som du følger.", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
             
         case "DETERMINATION_ADDED":
             profileImageView.configure(initials: notification.triggerInitials, imageURL: notification.triggerImageURL)
             
             primaryText.append(NSAttributedString(string: " har tilføjet bestemmelsen: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
-            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont(name: "AvenirNext-UltraLightItalic", size: 12)!]))
+            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed().italized()]))
             primaryText.append(NSAttributedString(string: " til et fund som du følger.", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
             
         case "DETERMINATION_APPROVED":
@@ -94,14 +94,14 @@ class NotificationCell: UITableViewCell {
             
             primaryText.deleteCharacters(in: NSRange(location: 0, length: primaryText.length))
             primaryText.append(NSAttributedString(string: "Et fund du følger er blevet valideret og godkendt som: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
-            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed()]))
+            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed().italized()]))
         
         case "DETERMINATION_EXPERT_APPROVED":
             profileImageView.configure(initials: "", imageURL: notification.imageURL)
             
             primaryText.deleteCharacters(in: NSRange(location: 0, length: primaryText.length))
             primaryText.append(NSAttributedString(string: "Fundet af: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
-            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed()]))
+            primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed().italized()]))
             primaryText.append(NSAttributedString(string: " er blevet ekspertgodkendt", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
         default:
             print(notification.eventType)

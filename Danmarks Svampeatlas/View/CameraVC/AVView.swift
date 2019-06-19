@@ -32,9 +32,7 @@ class AVView: UIView {
     var orientation: CameraVC.CameraRotation = .portrait
     private var cameraOutput: AVCapturePhotoOutput?
     
-    
-    
-    
+
     override func layoutSubviews() {
         previewLayer.frame = self.bounds
         super.layoutSubviews()

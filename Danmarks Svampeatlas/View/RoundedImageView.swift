@@ -8,14 +8,32 @@
 
 import UIKit
 
+class DownloadableImageView: UIImageView {
+    private var urlString: String?
+    
+    func downloadImage(size: DataService.imageSize, urlString: String?) {
+        self.urlString = urlString
+        guard let urlString = urlString else {return}
+        DataService.instance.getImage(forUrl: urlString, size: size) { (image, url) in
+            if self.urlString == urlString {
+                DispatchQueue.main.async { [weak self] in
+                    self?.fadeToNewImage(image: image)
+                    self?.image = image
+                }
+            }
+        }
+    }
+}
+
+
 class RoundedImageView: UIView {
 
-    private lazy var imageView: UIImageView = {
-       let imageView = UIImageView()
+    private lazy var imageView: DownloadableImageView = {
+       let imageView = DownloadableImageView()
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.mask = shapeLayer
+//        imageView.layer.mask = shapeLayer
         return imageView
     }()
     
@@ -41,11 +59,12 @@ class RoundedImageView: UIView {
     }
     
     private func setupView() {
+        layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         layer.shadowOpacity = 0.4
         layer.shadowRadius = 2.5
         layer.shadowOffset = CGSize(width: 0, height: 0)
-        layer.shadowPath = shapeLayer.path
-        clipsToBounds = false
+//        layer.shadowPath = shapeLayer.path
+        clipsToBounds = true
         
         addSubview(imageView)
         imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -56,18 +75,17 @@ class RoundedImageView: UIView {
     
     
     private func round() {
+        layer.cornerRadius = frame.height / 2 - 7
         let radius = frame.height / 2 - 7
+        
         shapeLayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: [.topRight, .bottomRight], cornerRadii: CGSize(width: radius, height: radius)).cgPath
         }
         
 
     func configureImage(url: String?) {
             imageView.image = nil
-        guard let url = url else {return}
-        DataService.instance.getImage(forUrl: url, size: .mini) { [weak self] (image, imageURL) in
-                        self?.imageView.image = image
-                }
-            }
+        imageView.downloadImage(size: .mini, urlString: url)
+        }
     
     func configureImage(image: UIImage) {
         self.imageView.image = image

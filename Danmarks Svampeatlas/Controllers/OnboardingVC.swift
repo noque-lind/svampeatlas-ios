@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import ELKit
 
 class OnboardingVC: UIViewController {
 
     private var actionLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.appHeader()
+        label.font = UIFont.appPrimaryHightlighed()
         label.textColor = UIColor.appWhite()
         label.textAlignment = .center
         return label
@@ -84,7 +85,7 @@ class OnboardingVC: UIViewController {
             case .Error:
                 DispatchQueue.main.async {
                     self.actionLabel.text = "Fortsætter som gæst"
-                    self.pushVC(vc: UINavigationController(rootViewController: MushroomVC()), session: nil)
+                    self.pushVC(vc: UINavigationController(rootViewController: MushroomVC(session: nil)), session: nil)
                 }
             case .Success(let session):
                 DispatchQueue.main.async {

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit.UIImage
 
 
 
@@ -112,6 +113,14 @@ class Session {
     func uploadComment(observationID: Int, comment: String, completion: @escaping (Result<Comment, AppError>) -> ()) {
         DataService.instance.postComment(taxonID: observationID, comment: comment, token: token, completion: completion)
     }
+    
+    func uploadObservation(newObservation: NewObservation, completion: @escaping (Result<Int, AppError>) -> ()) {
+        DataService.instance.postObservation(newObservation: newObservation, token: token, completion: completion)
+    }
+    
+    func reportOffensiveContent(observationID: Int, comment: String?, completion: @escaping () -> ()) {
+        DataService.instance.postOffensiveContentComment(observationID: observationID, comment: comment, token: token, completion: completion)
+    }
 }
 
 //MARK: Static functions
@@ -178,8 +187,8 @@ extension Session: SessionDelegate {
     }
 }
 
-    extension DataService {
-        fileprivate func login(initials: String, password: String, completion: @escaping (Result<String, AppError>) -> ()) {
+    fileprivate extension DataService {
+        func login(initials: String, password: String, completion: @escaping (Result<String, AppError>) -> ()) {
             
             guard let data = try? JSONSerialization.data(withJSONObject: ["Initialer": initials, "password": password]) else {completion(Result.Error(DataServiceError.encodingError)); return}
             
@@ -199,7 +208,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        fileprivate func getNotifications(userID: Int, token: String, limit: Int, offset: Int, completion: @escaping (Result<[UserNotification], AppError>) -> ()) {
+        func getNotifications(userID: Int, token: String, limit: Int, offset: Int, completion: @escaping (Result<[UserNotification], AppError>) -> ()) {
             createDataTaskRequest(url: API.userNotificationsURL(userID:  userID, limit: limit, offset: offset), token: token) { (result) in
                 switch result {
                 case .Error(let error):
@@ -216,7 +225,7 @@ extension Session: SessionDelegate {
         }
     
 
-        fileprivate func getUserNotificationCount(token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
+        func getUserNotificationCount(token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
             createDataTaskRequest(url: API.userNotificationsCountURL(), token: token) { (result) in
                 switch result {
                 case .Success(let data):
@@ -229,7 +238,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        fileprivate func downloadUserDetails(token: String, completion: @escaping (Result<User, AppError>) -> ()) {
+        func downloadUserDetails(token: String, completion: @escaping (Result<User, AppError>) -> ()) {
             createDataTaskRequest(url: API.userURL(), token: token) { (result) in
                 switch result {
                 case .Error(let error):
@@ -245,7 +254,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        fileprivate func getUserObservationsCount(userID: Int, completion: @escaping (Result<Int, AppError>) -> ()) {
+        func getUserObservationsCount(userID: Int, completion: @escaping (Result<Int, AppError>) -> ()) {
             createDataTaskRequest(url: API.userObservationsCountURL(userID: userID)) { (result) in
                 switch result {
                 case .Error(let error):
@@ -258,7 +267,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        fileprivate func downloadUserObservations(limit: Int, offset: Int, userID: Int, completion: @escaping (Result<[Observation], AppError>) -> ()) {
+        func downloadUserObservations(limit: Int, offset: Int, userID: Int, completion: @escaping (Result<[Observation], AppError>) -> ()) {
             createDataTaskRequest(url: API.observationsURL(includeQueries: [.locality, .determinationView(taxonID: nil), .comments, .images, .user(responseFilteredByUserID: userID)], limit: limit, offset: offset)) { (result) in
                 switch result {
                 case .Error(let error):
@@ -274,7 +283,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        fileprivate func postComment(taxonID: Int, comment: String, token: String, completion: @escaping (Result<Comment, AppError>) -> ()) {
+        func postComment(taxonID: Int, comment: String, token: String, completion: @escaping (Result<Comment, AppError>) -> ()) {
             
             let dictionary = ["content": comment]
             
@@ -302,11 +311,86 @@ extension Session: SessionDelegate {
             } catch {
                 completion(Result.Error(DataServiceError.encodingError))
             }
-            
-            
-            
                     }
-     
+        
+        func postObservation(newObservation: NewObservation, token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
+        
+            do {
+                let data = try JSONSerialization.data(withJSONObject: newObservation.returnAsDictionary(), options: [])
+                createDataTaskRequest(url: API.postObservationURL(), method: "POST", data: data, contentType: "application/json", token: token) { (result) in
+                    
+                    switch result {
+                    case .Error(let error):
+                        completion(Result.Error(error))
+                    case .Success(let data):
+                        let json = try? JSONSerialization.jsonObject(with: data, options: [])
+                        guard let dict = json as? Dictionary<String, Any> else {return}
+                        
+                        let observationID = (dict["_id"] as? Int)!
+                        
+                        self.uploadImages(observationID: observationID, images: newObservation.images, completion: { (error) in
+                            if let error = error {
+                                completion(Result.Error(error))
+                            } else {
+                                completion(Result.Success(observationID))
+                            }
+                        })
+                        
+                    }
+                }
+                
+            } catch {
+                debugPrint(error)
+            }
+        }
+        
+        
+        private func uploadImages(observationID: Int, images: [UIImage], completion: @escaping (AppError?) -> ()) {
+            guard let token = UserDefaults.standard.string(forKey: "token") else {completion(nil); return}
+            
+            var medias = [ELMultipartFormData.Media]()
+            
+            //        guard let testImage = ELMultipartFormData.Media(withImage: #imageLiteral(resourceName: "softwareTest"), forKey: "file") else {return}
+            //
+            //        medias.append(testImage)
+            guard images.count > 0 else {completion(nil); return}
+            for image in images {
+                guard let media = ELMultipartFormData.Media(withImage: image, forKey: "file") else {continue}
+                medias.append(media)
+            }
+            
+            let boundary = "Boundary-\(NSUUID().uuidString)"
+            let dataBody = ELMultipartFormData.createDataBody(withParameters: nil, media: medias, boundary: boundary)
+            
+            createDataTaskRequest(url: API.postImageURL(observationID: observationID), method: "POST", data: dataBody, contentType: "multipart/form-data; boundary=\(boundary)", contentLenght: nil, token: token) { (result) in
+                switch result {
+                case .Error(let error):
+                    completion(error)
+                case .Success(_):
+                    completion(nil)
+                }
+            }
+        }
+        
+        func postOffensiveContentComment(observationID: Int, comment: String?, token: String, completion: @escaping () -> ()) {
+            
+            do {
+                let data = try JSONSerialization.data(withJSONObject: ["message": comment ?? ""], options: [])
+                
+                createDataTaskRequest(url: API.Post.offensiveContentComment(taxonID: observationID).encodedURL, method: "POST", data: data, contentType: "application/json", token: token) { (result) in
+                    
+                    switch result {
+                    case .Error(_):
+                        completion()
+                    case .Success(_):
+                        completion()
+                    }
+                }
+                
+            } catch {
+                debugPrint(error)
+            }
+        }
 }
 
 

@@ -41,7 +41,7 @@ class ImagesCollectionView: UIView {
        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = UIColor.appPrimaryColour()
+        collectionView.backgroundColor = UIColor.black
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.isPagingEnabled = true
         collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "imageCell")
@@ -93,7 +93,7 @@ class ImagesCollectionView: UIView {
         addSubview(pageControl)
         pageControl.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         pageControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
-        pageControl.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2).isActive = true
+        pageControl.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -2).isActive = true
         pageControl.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
@@ -129,6 +129,15 @@ class ImagesCollectionView: UIView {
         imageScrollTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
     }
     
+    func setSelectedImage(atIndexPath indexPath: IndexPath) {
+        DispatchQueue.main.async {
+            self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+            self.pageControl.currentPage = indexPath.row
+        }
+        
+       
+    }
+    
     func invalidate() {
         imageScrollTimer?.invalidate()
         imageScrollTimer = nil
@@ -157,8 +166,8 @@ extension ImagesCollectionView: UICollectionViewDelegate, UICollectionViewDataSo
 
 extension ImagesCollectionView: ELPageControlDelegate, ELPageControlDataSource {
     func didChangePage(toPage page: Int) {
-        let indexPath = IndexPath(row: page, section: 0)
-        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            let indexPath = IndexPath(row: page, section: 0)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
     
     func numberOfPages() -> Int {

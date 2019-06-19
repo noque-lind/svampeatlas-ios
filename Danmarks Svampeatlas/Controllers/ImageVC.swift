@@ -18,20 +18,27 @@ class ImageVC: UIViewController {
     }()
     
     var images: [Image]
+    var selectedIndexPath: IndexPath
     
     var interactor: showImageAnimationInteractor?
     var panGestureRecognizer: UIPanGestureRecognizer!
     var currentlyShownCell: UICollectionViewCell!
     var currentlyShownCellOriginFrame: CGRect!
     
-    init(images: [Image]) {
+    init(images: [Image], selectedIndexPath: IndexPath) {
         self.images = images
+        self.selectedIndexPath = selectedIndexPath
         super.init(nibName: nil, bundle: nil)
         setupView()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("aDecoder not implemented inside ImageVC")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        imagesCollectionView.setSelectedImage(atIndexPath: selectedIndexPath)
+        super.viewWillAppear(animated)
     }
     
     private func setupView() {
@@ -45,41 +52,9 @@ class ImageVC: UIViewController {
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleGesture(sender:)))
         panGestureRecognizer.delegate = self
         imagesCollectionView.addGestureRecognizer(panGestureRecognizer)
-//        collectionView.addGestureRecognizer(panGestureRecognizer)
-//        collectionView.backgroundColor = UIColor.clear
         view.backgroundColor = UIColor.black
     }
 }
-
-
-//extension PhotoVCViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return images.count
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCell
-//        cell.configureCell(url: images[indexPath.row].uri)
-//        currentlyShownCell = cell
-//        return cell
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
-//    }
-//
-//        func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-//            guard let gesture = gestureRecognizer as? UIPanGestureRecognizer else { return false }
-//
-//            let translation = gesture.translation(in: gesture.view!)
-//            if translation.x != 0 || translation.y != 0 {
-//                let angle = atan2(abs(translation.x), translation.y)
-//                return angle < .pi / 8
-//            }
-//            return false
-//        }
-//
-//}
 
 extension ImageVC: UIGestureRecognizerDelegate {
     @objc func close() {

@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import ELKit
 
 enum DetailsContent {
-    case mushroom(mushroom : Mushroom, takesSelection: (selected: Bool, handler: ((_ selected: Bool) -> ()))?)
+    case mushroom(mushroom : Mushroom, session: Session?, takesSelection: (selected: Bool, handler: ((_ selected: Bool) -> ()))?)
     case observation(observation: Observation, showSpeciesView: Bool, session: Session?)
 }
 
@@ -28,6 +29,10 @@ class DetailsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    @objc private func moreButtonPressed() {
+        print("More button pressed")
+    }
     
     private var scrollView: AppScrollView?
     
@@ -54,7 +59,7 @@ class DetailsViewController: UIViewController {
             }
             
             button.setTitleColor(UIColor.appWhite(), for: [])
-            button.titleLabel?.font = UIFont.appHeader()
+            button.titleLabel?.font = UIFont.appTitle()
             button.addTarget(self, action: #selector(selectButtonPressed), for: .touchUpInside)
             return button
         }()
@@ -130,11 +135,11 @@ class DetailsViewController: UIViewController {
     
     private func setupView() {
         switch detailsContent {
-        case .mushroom(mushroom: let mushroom, let takesSelection):
+        case .mushroom(mushroom: let mushroom, let session, let takesSelection):
             
             let scrollView: MushroomDetailsScrollView = {
-                let view = MushroomDetailsScrollView()
-                view.configureScrollView(withMushroom: mushroom)
+                let view = MushroomDetailsScrollView(session: session)
+                view.configure(mushroom)
                 view.customDelegate = self
                 view.delegate = self
                 view.translatesAutoresizingMaskIntoConstraints = false
@@ -247,7 +252,7 @@ extension DetailsViewController: UIViewControllerTransitioningDelegate {
 
 extension DetailsViewController: ImagesCollectionViewDelegate {
     func didSelectImage(atIndexPath indexPath: IndexPath) {
-        let photoVC = ImageVC(images: images!)
+        let photoVC = ImageVC(images: images!, selectedIndexPath: indexPath)
         photoVC.transitioningDelegate = self
         photoVC.interactor = interactor
         present(photoVC, animated: true, completion: nil)
@@ -260,7 +265,7 @@ extension DetailsViewController: ImagesCollectionViewDelegate {
 
 extension DetailsViewController: NavigationDelegate {
     func presentVC(_ vc: UIViewController) {
-        
+        self.present(vc, animated: true, completion: nil)
     }
     
     func pushVC(_ vc: UIViewController) {

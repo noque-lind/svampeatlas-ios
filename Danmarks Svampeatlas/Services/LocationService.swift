@@ -51,6 +51,14 @@ class LocationManager: NSObject {
     private var previousAccuracy: Double = 0.0
     private var latestLocation: CLLocation?
     
+    var permissionsNotDetermined: Bool {
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            return true
+        default:
+            return false
+        }
+    }
 
     func start() {
         locationManager = CLLocationManager()

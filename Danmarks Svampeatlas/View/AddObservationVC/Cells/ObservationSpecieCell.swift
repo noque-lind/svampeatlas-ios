@@ -11,6 +11,7 @@ import UIKit
 class ObservationSpecieCell: UICollectionViewCell {
     
     private struct Section {
+        
         enum CellType {
             case selectedMushroom(Mushroom)
             case selectableMushroom(Mushroom)
@@ -130,12 +131,12 @@ class ObservationSpecieCell: UICollectionViewCell {
         self.newObservation?.mushroom = nil
         self.showSearchBar()
         searchBar.text = ""
-        var sections = [Section(title: "Art af Svamp (Fungi sp.)", cells: [.unknownSpecie])]
+        var sections = [Section(title: "Valgt art", cells: [.unknownSpecie])]
         
         CoreDataHelper.fetchAllFavoritedMushrooms { (result) in
             switch result {
             case .Error(_):
-                return
+                break
             case .Success(let mushrooms):
                 let cells = mushrooms.compactMap({Section.CellType.selectableMushroom($0)})
                 sections.append(Section(title: "Mine favoritter", cells: cells, alpha: 0.2))
@@ -227,7 +228,7 @@ extension ObservationSpecieCell: UITableViewDelegate, UITableViewDataSource {
         switch section[indexPath.row] {
         case .selectableMushroom(let mushroom):
             
-            let vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, takesSelection: (selected: false, handler: { (selected) in
+            let vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: false, handler: { (selected) in
                 self.tableViewState = TableViewState.Items([Section.init(title: "Valgt art", cells: [ObservationSpecieCell.Section.CellType.selectedMushroom(mushroom)])])
                 self.newObservation?.mushroom = mushroom
                 self.hideSearchBar()
@@ -236,7 +237,7 @@ extension ObservationSpecieCell: UITableViewDelegate, UITableViewDataSource {
             self.delegate?.pushVC(vc)
             
         case .selectedMushroom(let mushroom):
-            let vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, takesSelection: (selected: true, handler: { (selected) in
+            let vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: true, handler: { (selected) in
                 self.defaultState()
             })))
             self.delegate?.pushVC(vc)

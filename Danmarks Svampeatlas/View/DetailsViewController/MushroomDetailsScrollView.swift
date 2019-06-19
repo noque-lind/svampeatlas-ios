@@ -22,6 +22,7 @@ class MushroomDetailsScrollView: AppScrollView {
     
     private lazy var observationsTableView: ObservationsTableView = {
         let tableView = ObservationsTableView(automaticallyAdjustHeight: true)
+        tableView.tableView.separatorColor = UIColor.appPrimaryColour()
         return tableView
     }()
     
@@ -42,6 +43,8 @@ class MushroomDetailsScrollView: AppScrollView {
     }()
     
     private var mushroom: Mushroom?
+    private var session: Session?
+    
     
     override var customDelegate: NavigationDelegate? {
         didSet {
@@ -49,11 +52,20 @@ class MushroomDetailsScrollView: AppScrollView {
         }
     }
     
-    func configureScrollView(withMushroom mushroom: Mushroom) {
+    init(session: Session?) {
+        self.session = session
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    func configure(_ mushroom: Mushroom) {
         self.mushroom = mushroom
-        configureHeader(title: mushroom.danishName != nil ? NSAttributedString(string: mushroom.danishName!, attributes: [NSAttributedString.Key.font: UIFont.appHeader()]): mushroom.fullName.italized(font: UIFont.appTitle()), subtitle: mushroom.danishName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil, user: nil)
-        configureText(title: "Om", text: mushroom.attributes?.diagnosis)
-        configureText(title: "Økologi", text: mushroom.attributes?.ecology)
+        configureHeader(title: mushroom.danishName != nil ? NSAttributedString(string: mushroom.danishName!, attributes: [NSAttributedString.Key.font: UIFont.appTitle()]): mushroom.fullName.italized(font: UIFont.appTitle()), subtitle: mushroom.danishName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil, user: nil)
+        configureText(title: "Beskrivelse", text: mushroom.attributes?.diagnosis)
+        configureText(title: "Forvekslingsmuligheder", text: mushroom.attributes?.similarities)
         
         var informationArray = [(String, String)]()
         if let totalObservations = mushroom.totalObservations {
@@ -69,7 +81,7 @@ class MushroomDetailsScrollView: AppScrollView {
         configureInformation(information: informationArray)
         
         configureRedlistInformation(redlistStatus: mushroom.redlistData?.status)
-        configureToxicityInformation(toxicityLevel: mushroom.attributes?.toxicityLevel)
+//        configureToxicityInformation(toxicityLevel: mushroom.attributes?.toxicityLevel)
         configureHeatMap(taxonID: mushroom.id)
         configureLatestObservationsView(taxonID: mushroom.id)
     }
@@ -96,11 +108,17 @@ class MushroomDetailsScrollView: AppScrollView {
     }
     
     private func configureHeatMap(taxonID: Int) {
-        _ = addContent(title: "Heatmap", content: heatMap)
+        _ = addContent(title: "Fund i nærheden", content: heatMap)
         heatMap.shouldLoad = true
-        locationManager.start()
+        
+        if locationManager.permissionsNotDetermined {
+            heatMap.showError(error: LocationManagerError.permissionDenied) { [unowned locationManager] in
+                locationManager.start()
+            }
+        } else {
+            locationManager.start()
+        }
     }
-    
     
     private func configureLatestObservationsView(taxonID: Int) {
         _ = addContent(title: "Seneste observationer", content: observationsTableView)
@@ -137,12 +155,9 @@ class MushroomDetailsScrollView: AppScrollView {
         }
         
         observationsTableView.didSelectItem = { [weak self] item in
-            self?.customDelegate?.pushVC(DetailsViewController(detailsContent: .observation(observation: item, showSpeciesView: false, session: nil)))
+            self?.customDelegate?.pushVC(DetailsViewController(detailsContent: .observation(observation: item, showSpeciesView: false, session: self?.session)))
         }
-        
-//        observationsTableView.configure(type: .speciesObservations(mushroomID: taxonID))
     }
-    
 }
 
 extension MushroomDetailsScrollView: LocationManagerDelegate {
@@ -159,9 +174,12 @@ extension MushroomDetailsScrollView: LocationManagerDelegate {
             
             switch result {
             case .Success(let observations):
+                DispatchQueue.main.async {
                 heatMap?.addObservationAnnotations(observations: observations)
+                }
+               
             case .Error(let error):
-                print(error)
+                heatMap?.showError(error: error)
             }
     }
     }

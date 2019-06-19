@@ -20,6 +20,8 @@ fileprivate struct PrivateObservation: Decodable {
     var primaryUser: PrivatePrimaryUser?
     var locality: PrivateLocality?
     var forum: [PrivateForum]?
+    var vegetationtype_id: Int?
+    var substrate_id: Int?
     
     private enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -33,6 +35,8 @@ fileprivate struct PrivateObservation: Decodable {
         case note
         case primaryDetermination = "PrimaryDetermination"
         case forum = "Forum"
+        case vegetationtype_id
+        case substrate_id
     }
 }
 
@@ -45,14 +49,14 @@ fileprivate struct PrivateDeterminationView: Decodable {
     public private(set) var taxon_FullName: String?
     public private(set) var taxon_vernacularname_dk: String?
     public private(set) var redlistStatus: String?
-    public private(set) var determinationValidation: String?
+    public private(set) var determination_validation: String?
     
     private enum CodingKeys: String, CodingKey {
         case taxon_id
         case taxon_vernacularname_dk
         case taxon_FullName
         case redlistStatus
-        case determinationValidation
+        case determination_validation
     }
 }
 
@@ -120,6 +124,8 @@ struct Observation: Decodable, Equatable {
     public private(set) var images: [Image]?
     public private(set) var comments = [Comment]()
     public private(set) var validationStatus: String?
+    public private(set) var substrate: Substrate?
+    public private(set) var vegetationType: VegetationType?
     
     init(from decoder: Decoder) throws {
         let privateObservation = try PrivateObservation(from: decoder)
@@ -131,8 +137,16 @@ struct Observation: Decodable, Equatable {
         ecologyNote = privateObservation.ecologyNote
         location = privateObservation.locality?.name
     
+        if let vegetationTypeID = privateObservation.vegetationtype_id {
+            vegetationType = CoreDataHelper.fetchVegetationType(withID: vegetationTypeID)
+        }
+        
+        if let substrateID = privateObservation.substrate_id {
+            substrate = CoreDataHelper.fetchSubstrateGroup(withID: substrateID)
+        }
+        
         if let determinationView = privateObservation.determinationView {
-            validationStatus = determinationView.determinationValidation
+            validationStatus = determinationView.determination_validation
             
             speciesProperties = SpeciesProperties(id: determinationView.taxon_id ?? 0, name: determinationView.taxon_vernacularname_dk ?? determinationView.taxon_FullName ?? "")
         

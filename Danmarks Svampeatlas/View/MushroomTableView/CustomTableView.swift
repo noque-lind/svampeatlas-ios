@@ -28,7 +28,7 @@ class BackgroundView: UIView {
     
     private let actionButton: UIButton = {
         let button = UIButton(type: UIButton.ButtonType.system)
-        button.setTitleColor(UIColor.appThirdColour(), for: [])
+        button.setTitleColor(UIColor.appThird(), for: [])
         button.isHidden = true
         button.addTarget(self, action: #selector(actionButtonPressed), for: UIControl.Event.touchUpInside)
         return button

@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>13</string>
+	<string>17</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -42,9 +42,10 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>"Vi skal bruge din lokation for at finde svampearterne nær dig, samt til at finde din lokation når du uploader fund."</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>"Vil du bruge billeder fra dit fotobibliotek, skal du gide appen tilladelse"</string>
+	<string>"Vil du bruge billeder fra dit fotobibliotek, skal du give appen tilladelse"</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>CaviarDreams_Bold.ttf</string>
 		<string>Silom.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

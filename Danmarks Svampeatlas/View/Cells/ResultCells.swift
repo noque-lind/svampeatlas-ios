@@ -62,6 +62,13 @@ class BaseCell: UITableViewCell {
     
     fileprivate var containerViewBottomConstraint: NSLayoutConstraint?
     
+    override var tintColor: UIColor! {
+        didSet {
+            titleLabel.textColor = tintColor
+            secondaryLabel.textColor = tintColor
+            disclosureButton.tintColor = tintColor
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -89,8 +96,10 @@ class UnknownSpecieCell: BaseCell {
     
     override func setupView(leadingConstant: CGFloat, trailingConstant: CGFloat) {
         roundedImageView.isMasked = false
-        containerView.backgroundColor = UIColor.appPrimaryColour()
-        tintColor = UIColor.appWhite()
+        containerView.backgroundColor = UIColor.appWhite()
+        tintColor = UIColor.appPrimaryColour()
+        roundedImageView.tintColor = UIColor.appPrimaryColour()
+        roundedImageView.layer.shadowOpacity = 0.0
         selectionStyle = .none
         
         containerView.addSubview(roundedImageView)
@@ -100,6 +109,7 @@ class UnknownSpecieCell: BaseCell {
         roundedImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
         secondaryLabel.numberOfLines = 0
+        secondaryLabel.adjustsFontSizeToFitWidth = true
         textStackView.distribution = .fillProportionally
         containerView.addSubview(textStackView)
         textStackView.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 10).isActive = true
@@ -117,19 +127,11 @@ class UnknownSpecieCell: BaseCell {
         titleLabel.text = "Ubestemt svampeart"
         secondaryLabel.text = "Når du uploader uden en artsindentifikering, vil fælleskabet prøve at hjælpe dig."
         roundedImageView.isMasked = false
-        roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Missing"))
+        roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Missing").withRenderingMode(.alwaysTemplate))
     }
 }
 
 class ContainedResultCell: BaseCell {
-    
-    override var tintColor: UIColor! {
-        didSet {
-            titleLabel.textColor = tintColor
-            secondaryLabel.textColor = tintColor
-            disclosureButton.tintColor = tintColor
-        }
-    }
     
     override func setupView(leadingConstant: CGFloat, trailingConstant: CGFloat) {
         tintColor = UIColor.appPrimaryColour()
@@ -150,7 +152,7 @@ class ContainedResultCell: BaseCell {
     
     func configureCell(mushroom: Mushroom) {
         titleLabel.text = mushroom.danishName ?? mushroom.fullName
-        secondaryLabel.text = mushroom.danishName != nil ? mushroom.fullName: nil
+        secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
         roundedImageView.configureImage(url: mushroom.images?.first?.url)
     }
 }

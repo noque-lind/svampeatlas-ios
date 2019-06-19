@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 class LoginVC: UIViewController {
     
@@ -20,7 +21,6 @@ class LoginVC: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 10
-        stackView.widthAnchor.constraint(equalToConstant: 220).isActive = true
         
         let upperStackView: UIStackView = {
             let stackView = UIStackView()
@@ -29,16 +29,19 @@ class LoginVC: UIViewController {
             
             let upperLabel: UILabel = {
                 let label = UILabel()
-                label.font = UIFont.appTitle()
+                label.font = UIFont.appPrimaryHightlighed()
                 label.textColor = UIColor.appWhite()
                 label.text = "Log ind på"
                 return label
             }()
             
+            
+
             let lowerLabel: UILabel = {
                 let label = UILabel()
-                label.font = UIFont.appHeader()
+                label.font = UIFont.appTitle()
                 label.textColor = UIColor.appWhite()
+                label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
                 label.text = "Danmarks svampeatlas"
                 return label
             }()
@@ -53,8 +56,13 @@ class LoginVC: UIViewController {
             label.font = UIFont.appPrimary()
             label.textColor = UIColor.appWhite()
             label.numberOfLines = 0
-            label.text = "Bidrag til viden om Danske svampe, ved at dele dine fund med andre samt modtage valideringer af Danmarks førende svampeeksperter."
-            label.textAlignment = .center
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = NSTextAlignment.justified
+            paragraphStyle.hyphenationFactor = 1
+            
+            // Swift 4.2++
+            let attributedString = NSMutableAttributedString(string: "Bidrag til viden om danske svampe ved at dele dine fund med andre, samt modtage valideringer af dine fund fra danmarks førende svampeeksperter.", attributes: [NSAttributedString.Key.paragraphStyle:paragraphStyle])
+            label.attributedText = attributedString
             return label
         }()
         
@@ -71,7 +79,7 @@ class LoginVC: UIViewController {
         textField.placeholder = "Initialer"
         textField.backgroundColor = UIColor.appSecondaryColour()
         textField.textContentType = .username
-        textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        textField.heightAnchor.constraint(equalToConstant: 60).isActive = true
         textField.icon = #imageLiteral(resourceName: "Profile")
         return textField
     }()
@@ -83,7 +91,7 @@ class LoginVC: UIViewController {
         textField.placeholder = "Kodeord"
         textField.textContentType = .password
         textField.backgroundColor = UIColor.appSecondaryColour()
-        textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        textField.heightAnchor.constraint(equalToConstant: 60).isActive = true
         textField.isSecureTextEntry = true
         textField.icon = #imageLiteral(resourceName: "Glyphs_lock")
         return textField
@@ -94,7 +102,7 @@ class LoginVC: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.appGreen()
         button.setTitle("Log ind", for: [])
-        button.titleLabel?.font = UIFont.appHeader()
+        button.titleLabel?.font = UIFont.appTitle()
         button.setTitleColor(UIColor.appWhite(), for: [])
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         button.addTarget(self, action: #selector(logInButtonPressed), for: .touchUpInside)
@@ -125,7 +133,6 @@ class LoginVC: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
         self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
         self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appHeader()]
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         super.viewWillAppear(animated)
@@ -143,8 +150,9 @@ class LoginVC: UIViewController {
     
     
     private func setupView() {
+
         view.backgroundColor = UIColor.appPrimaryColour()
-        
+    
         let gradientImageView: GradientImageView = {
             let view = GradientImageView()
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -172,7 +180,7 @@ class LoginVC: UIViewController {
             stackView.addArrangedSubview(initialsTextField)
             stackView.addArrangedSubview(passwordTextField)
             stackView.addArrangedSubview(loginButton)
-            stackView.addArrangedSubview(forgotPasswordButton)
+//            stackView.addArrangedSubview(forgotPasswordButton)
             return stackView
         }()
         
@@ -183,7 +191,7 @@ class LoginVC: UIViewController {
         
         
         ELKeyboardHelper.instance.registerObject(view: passwordTextField)
-        gradientImageView.setImage(image: #imageLiteral(resourceName: "agaricus-arvensis1"), fade: true)
+        gradientImageView.setImage(image: #imageLiteral(resourceName: "BomuldsSloerhat"), fade: true)
     }
     
     @objc private func logInButtonPressed() {

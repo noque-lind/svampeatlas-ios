@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Host: Decodable {
+struct Host: Decodable, Equatable {
     public private(set) var id: Int
     public private(set) var dkName: String?
     public private(set) var latinName: String?

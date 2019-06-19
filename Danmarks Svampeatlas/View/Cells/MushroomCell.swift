@@ -31,7 +31,7 @@ class MushroomCell: UITableViewCell {
         backgroundColor = UIColor.clear
         selectionStyle = .none
         contentView.addSubview(mushroomView)
-        mushroomView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
+        mushroomView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
         mushroomView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         mushroomView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         mushroomView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true

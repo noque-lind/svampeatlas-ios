@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 class MyPageScrollView: UIScrollView {
     
@@ -35,14 +36,9 @@ class MyPageScrollView: UIScrollView {
     
     private lazy var notificationsCountLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = UIColor.appRed()
-        label.textAlignment = .center
-        label.font = UIFont.appPrimaryHightlighed()
+        label.font = UIFont.appDivider()
         label.adjustsFontSizeToFitWidth = true
         label.textColor = UIColor.appWhite()
-        label.widthAnchor.constraint(equalTo: label.heightAnchor).isActive = true
-        label.clipsToBounds = true
-        label.layer.cornerRadius = 10
         label.isHidden = true
         return label
     }()
@@ -59,7 +55,7 @@ class MyPageScrollView: UIScrollView {
     
     private lazy var observationsCountLabel: UILabel = {
        let label = UILabel()
-        label.font = UIFont.appPrimaryHightlighed()
+        label.font = UIFont.appDivider()
         label.textColor = UIColor.appWhite()
         label.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .horizontal)
         label.isHidden = true

@@ -13,7 +13,7 @@ class CategoryCell: UICollectionViewCell {
     private var label: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.appWhite()
-        label.font = UIFont.appPrimaryHightlighed()
+        label.font = UIFont.appPrimary()
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -22,7 +22,7 @@ class CategoryCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                label.textColor = UIColor.appThirdColour()
+                label.textColor = UIColor.appThird()
             } else {
                 label.textColor = UIColor.appWhite()
             }

@@ -99,6 +99,21 @@ class NewMapView: UIView {
     
     var observationPicked: ((_ observation: Observation) -> ())?
     var localityPicked: ((_ locality: Locality) -> ())?
+    var wasTapped: (() -> ())? {
+        didSet {
+            if wasTapped != nil {
+                isUserInteractionEnabled = true
+                mapView.isUserInteractionEnabled = false
+                let gesture = UITapGestureRecognizer(target: self, action: #selector(gestureWasTapped))
+                self.addGestureRecognizer(gesture)
+        }
+    }
+    }
+        
+        @objc private func gestureWasTapped() {
+        wasTapped?()
+        }
+        
     
     var showsUserLocation: Bool = true {
         didSet {
@@ -376,7 +391,7 @@ extension NewMapView: MKMapViewDelegate {
         if overlay is MKCircle {
             let circle = MKCircleRenderer(overlay: overlay)
             circle.strokeColor = UIColor.clear
-            circle.fillColor = UIColor.appSecondaryColour().withAlphaComponent(0.1)
+            circle.fillColor = UIColor.appSecondaryColour().withAlphaComponent(0.2)
             circle.lineWidth = 0
             return circle
         } else if let tileOverlay = overlay as? MKTileOverlay {

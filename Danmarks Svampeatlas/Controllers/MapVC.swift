@@ -10,7 +10,15 @@ import UIKit
 
 class MapVC: UIViewController {
 
-    var mapView: NewMapView = {
+    private lazy var categoryView: CategoryView<NewMapView.Categories> = {
+        let items = NewMapView.Categories.allCases.compactMap({Category<NewMapView.Categories>(type: $0, title: $0.rawValue)})
+        let view = CategoryView<NewMapView.Categories>.init(categories: items, firstIndex: 0)
+        view.delegate = self
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+   var mapView: NewMapView = {
        let view = NewMapView(type: .observations(detailed: false))
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -31,12 +39,25 @@ class MapVC: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.appPrimaryColour()
         
+        view.addSubview(categoryView)
+        categoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        categoryView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        categoryView.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        categoryView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        
         view.addSubview(mapView)
         mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        mapView.topAnchor.constraint(equalTo: categoryView.bottomAnchor).isActive = true
         mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         mapView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         self.title = "Fundets lokation"
+    }
+}
+
+extension MapVC: CategoryViewDelegate {
+    func categorySelected(category: Any) {
+        guard let category = category as? NewMapView.Categories else {return}
+        mapView.filterByCategory(category: category)
     }
 }

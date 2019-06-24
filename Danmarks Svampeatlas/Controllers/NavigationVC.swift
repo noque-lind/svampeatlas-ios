@@ -19,7 +19,36 @@ class NavigationVC: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         tableView.separatorStyle = .none
         tableView.tableHeaderView = userView
+        tableView.tableFooterView = footerView
         return tableView
+    }()
+    
+    private lazy var footerView: UIView = {
+       let view = UIView()
+        view.frame = CGRect(x: 0.0, y: 0.0, width: 0.0, height: 100)
+        view.backgroundColor = UIColor.clear
+        view.autoresizingMask = []
+//        view.heightAnchor.constraint(equalToConstant: 70).isActive = true
+//        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        let label: UILabel = {
+           let label = UILabel()
+            label.font = UIFont.appPrimary(customSize: 12)
+            label.textColor = UIColor.appWhite().withAlphaComponent(0.5)
+            label.textAlignment = .center
+            label.translatesAutoresizingMaskIntoConstraints = false
+            
+            if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                label.text = "Build \(version)"
+            }
+            
+            return label
+        }()
+        
+        view.addSubview(label)
+        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        return view
     }()
     
     private lazy var userView: UserView = {
@@ -139,6 +168,7 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
         return view
     }
     
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 40
     }

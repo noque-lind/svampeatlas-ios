@@ -210,17 +210,17 @@ extension ObservationSpecieCell: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let section = tableViewState.value(row: indexPath.section)?.cells else {fatalError()}
-        
+
         switch section[indexPath.row] {
         case .selectedMushroom(_):
             return 300
         case .unknownSpecie:
-            return 90
+            return UITableView.automaticDimension
         default:
             return 75
         }
     }
-    
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let section = tableViewState.value(row: indexPath.section)?.cells else {fatalError()}

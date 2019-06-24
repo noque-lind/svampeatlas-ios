@@ -68,15 +68,17 @@ class ObservationDetailsScrollView: AppScrollView {
             
             let button: UIButton = {
                 let button = UIButton()
+                button.backgroundColor = UIColor.appPrimaryColour().withAlphaComponent(0.4)
+                button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+                button.layer.cornerRadius = 5
                 button.setTitle("Rapporter stødende indhold", for: [])
-                button.setTitleColor(UIColor.red, for: [])
-                button.titleLabel?.font = UIFont.appPrimary(customSize: 12)
+                button.setTitleColor(UIColor.appRed(), for: [])
+                button.titleLabel?.font = UIFont.appPrimaryHightlighed(customSize: 12)
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
-                button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
             button.addTarget(self, action: #selector(reportContentButtonPressed), for: .touchUpInside)
             return button
             }()
+            
             
             view.addSubview(button)
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -103,6 +105,8 @@ class ObservationDetailsScrollView: AppScrollView {
     
     func configure(withObservation observation: Observation, showSpeciesView: Bool) {
         self.observation = observation
+        
+        
         
         configureHeader(title: observation.speciesProperties.name, subtitle: nil, user: observation.observedBy)
         configureText(title: "Kommentarer om voksested", text: observation.ecologyNote)

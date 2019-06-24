@@ -30,10 +30,6 @@ class DetailsViewController: UIViewController {
         return view
     }()
     
-    @objc private func moreButtonPressed() {
-        print("More button pressed")
-    }
-    
     private var scrollView: AppScrollView?
     
     private lazy var selectButton: UIView = {
@@ -73,6 +69,7 @@ class DetailsViewController: UIViewController {
     }()
     
     private let detailsContent: DetailsContent
+    private var viewDidLayout: Bool = false
     
     let interactor = showImageAnimationInteractor()
     
@@ -91,15 +88,23 @@ class DetailsViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         if let navigationBarFrame = self.navigationController?.navigationBar.frame {
             additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
-            print(navigationBarFrame.maxY)
             customNavigationBar.heightConstraint?.constant = navigationBarFrame.maxY
-            scrollView?.contentInset = UIEdgeInsets(top: images != nil ? (300): navigationBarFrame.maxY, left: 0.0, bottom: view.safeAreaInsets.bottom, right: 0.0)
-            scrollView?.scrollIndicatorInsets = UIEdgeInsets(top: images?.count != 0 ? (300 + 8): 8, left: 0.0, bottom: view.safeAreaInsets.bottom + 8, right: 0.0)
-            
         }
         super.viewWillLayoutSubviews()
     }
-
+    
+    override func viewDidLayoutSubviews() {
+        if !viewDidLayout {
+            viewDidLayout = true
+            
+            if let navigationBarFrame = self.navigationController?.navigationBar.frame {
+                additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
+                scrollView?.contentInset = UIEdgeInsets(top: images != nil ? (300): navigationBarFrame.maxY, left: 0.0, bottom: view.safeAreaInsets.bottom, right: 0.0)
+                scrollView?.scrollIndicatorInsets = UIEdgeInsets(top: images?.count != 0 ? (300 + 8): 8, left: 0.0, bottom: view.safeAreaInsets.bottom + 8, right: 0.0)
+            }
+            super.viewDidLayoutSubviews()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

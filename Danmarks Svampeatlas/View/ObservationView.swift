@@ -109,7 +109,7 @@ class ObservationView: UIView {
     func configure(observation: Observation) {
         titleLabel.text = observation.speciesProperties.name
         subtitleLabel.text = nil
-        if let dateString = Date(ISO8601String: observation.date!)?.convert(into: DateFormatter.Style.short) {
+        if let dateString = Date(ISO8601String: observation.date!)?.convert(into: .short, ignoreRecentFormatting: false, ignoreTime: true) {
             subtitleLabel.text = dateString
         }
         

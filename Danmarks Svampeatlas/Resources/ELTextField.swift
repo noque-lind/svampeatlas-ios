@@ -48,6 +48,9 @@ final class ELTextView: UIView, UITextViewDelegate {
     private var defaultHeight: CGFloat
     weak var delegate: ELTextViewDelegate?
     
+    var didBeginEditing: (() -> ())?
+    var didUpdateEntry: ((String) -> ())?
+    
     override var backgroundColor: UIColor? {
         didSet {
             if let backgroundColor = backgroundColor, backgroundColor != UIColor.clear {
@@ -171,10 +174,9 @@ final class ELTextView: UIView, UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        delegate?.didUpdateTextEntry(title: titelLabel.text ?? "", textView.text)
+        didUpdateEntry?(textView.text)
         
         if textView.intrinsicContentSize.height > textView.contentSize.height {
-            ELKeyboardHelper.instance.reCalculate()
             delegate?.shouldChangeHeight()
         } else if textView.intrinsicContentSize.height < textView.contentSize.height && frame.height != defaultHeight {
             delegate?.shouldChangeHeight()
@@ -182,6 +184,8 @@ final class ELTextView: UIView, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        didBeginEditing?()
+        
         if textView.text == placeholder {
             textView.attributedText = nil
             textView.font = font

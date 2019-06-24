@@ -7,6 +7,40 @@
 //
 
 import UIKit
+
+fileprivate class UnscrollTableView: UITableView {
+    
+    init() {
+        super.init(frame: .zero, style: .plain)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    
+    override func setContentOffset(_ contentOffset: CGPoint, animated: Bool) {
+        if disableAutomaticScrolling {
+            // Does nothing, in order to not screw up managed configuration
+        } else {
+            super.setContentOffset(contentOffset, animated: animated)
+        }
+    }
+    
+    private var disableAutomaticScrolling = false
+    
+    @objc private func keyboardWillHide() {
+        debugPrint("Disabling automatic tableView scrolling")
+        disableAutomaticScrolling = true
+    }
+    
+    @objc private func keyboardDidHide() {
+        disableAutomaticScrolling = false
+    }
+}
+
 class ObservationDetailsCell: UICollectionViewCell {
     
     private enum Categories: CaseIterable {
@@ -25,12 +59,14 @@ class ObservationDetailsCell: UICollectionViewCell {
         case HostSelector
     }
     
-    private lazy var tableView: UITableView = {
-        let view = UITableView()
+    private lazy var tableView: UnscrollTableView = {
+        let view = UnscrollTableView()
         view.delegate = self
         view.dataSource = self
         view.separatorInset = UIEdgeInsets.zero
         view.backgroundColor = UIColor.clear
+        view.contentInsetAdjustmentBehavior = .never
+        view.contentInset.bottom = self.safeAreaInsets.bottom
         view.estimatedRowHeight = 200
         view.translatesAutoresizingMaskIntoConstraints = false
         view.register(SettingCell.self, forCellReuseIdentifier: "selectorCell")
@@ -41,6 +77,7 @@ class ObservationDetailsCell: UICollectionViewCell {
     }()
     
     private let rows: [Categories] = Categories.allCases
+    private var navigationDelegate: NavigationDelegate?
     private var newObservation: NewObservation?
     private var shouldClearObservationHost = false
     private var addedRow: (parent: IndexPath, indexPath: IndexPath, selectors: Selectors)? {
@@ -64,9 +101,17 @@ class ObservationDetailsCell: UICollectionViewCell {
         fatalError()
     }
 
-    func configure(newObservation: NewObservation) {
+    func configure(newObservation: NewObservation, delegate: NavigationDelegate) {
+        self.navigationDelegate = delegate
         self.newObservation = newObservation
         tableView.reloadData()
+    }
+    
+    override func layoutSubviews() {
+        print(safeAreaInsets.bottom)
+//        if table
+//        tableView.contentInset.bottom = safeAreaInsets.bottom
+        super.layoutSubviews()
     }
     
 
@@ -80,16 +125,12 @@ class ObservationDetailsCell: UICollectionViewCell {
     
     func didSelectCell(cellType: TableViewPickerCell.Section.CellType, isLocked: Bool) {
         switch cellType {
-        case .hostCell(let host, let selected):
-//            if shouldClearObservationHost {
-//                newObservation?.hosts.removeAll()
-//                shouldClearObservationHost = false
-//            }
             
-            if let indexPath = newObservation?.hosts.firstIndex(where: {$0.id == host.id}) {
-                newObservation?.hosts.remove(at: indexPath)
-            } else {
+        case .hostCell(let host, let selected):
+            if selected {
                 newObservation?.hosts.append(host)
+            } else if let indexPath = newObservation?.hosts.firstIndex(where: {$0.id == host.id}) {
+                newObservation?.hosts.remove(at: indexPath)
             }
             
             if isLocked == true, let hosts = newObservation?.hosts {
@@ -233,15 +274,24 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
     }
     
     fileprivate func getHosts(forCell cell: TableViewPickerCell) {
-        DataService.instance.getHosts { (result) in
+        DataService.instance.getPopularHosts { (result) in
             switch result {
-            case .Error(let error):
-                cell.tableViewState = .Error(error, nil)
-            case .Success(let hosts):
-                 let selectedHosts = self.newObservation?.hosts ?? []
+            case .Error(_):
+                cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell])])
+            case .Success(var hosts):
+                let selectedHosts = self.newObservation?.hosts ?? []
                 
-                let cells = hosts.compactMap({TableViewPickerCell.Section.CellType.hostCell($0, selectedHosts.contains($0))})
-                cell.tableViewState = .Items([.init(title: nil, cells: cells)])
+                let userHosts = hosts.filter({$0.userFound})
+                print(userHosts)
+                
+                let favoriteCells = hosts.compactMap({TableViewPickerCell.Section.CellType.hostCell($0, selectedHosts.contains($0))})
+                
+                if userHosts.count != 0 {
+                    let userCells = userHosts.compactMap({TableViewPickerCell.Section.CellType.hostCell($0, selectedHosts.contains($0))})
+                    cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell]), .init(title: nil, cells: userCells), .init(title: "Mest brugt", cells: favoriteCells)])
+                } else {
+                    cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell]), .init(title: "Mest brugt", cells: favoriteCells)])
+                }
             }
         }
     }
@@ -279,6 +329,11 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectCell = { [unowned self] cellType, isLocked in
                     self.didSelectCell(cellType: cellType, isLocked: isLocked)
                 }
+                
+                cell.presentVC = { [unowned self] vc in
+                    self.navigationDelegate?.presentVC(vc)
+                }
+                
                 getHosts(forCell: cell)
                 return cell
             }
@@ -293,7 +348,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
             case .Date, .Substrate, .VegetationType, .Host:
                 
                 let cell = tableView.dequeueReusableCell(withIdentifier: "selectorCell", for: indexPath) as! SettingCell
-                switch rows[indexPath.row] {
+                switch rows[realIndexPathRow] {
                 case .Date:
                     cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Date"), description: "Dato:", content: newObservation!.observationDate.convert(into: DateFormatter.Style.medium, ignoreRecentFormatting: true))
                     
@@ -319,7 +374,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                         string = "-"
                     }
                     
-                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_VegetationType"), description: "Vært", content: string)
+                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_VegetationType"), description: "Vært:", content: string)
                     
                 default: break
                 }
@@ -333,8 +388,18 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 switch rows[realIndexPathRow] {
                 case .Notes:
                     cell.configureCell(titleText: "Andre noter", placeholder: "Lugt melagtig ...", content: newObservation?.note, delegate: self)
+                    
+                    cell.textView.didUpdateEntry = { [weak newObservation] entry in
+                        newObservation?.note = entry
+                    }
+                    
+                    
                 case .EcologyNotes:
                     cell.configureCell(titleText: "Kommentarer om voksested", placeholder: "På sandjord blandt mos ...", content: newObservation?.ecologyNote, delegate: self)
+                    
+                    cell.textView.didUpdateEntry = { [weak newObservation] entry in
+                        newObservation?.ecologyNote = entry
+                    }
                 default: break
                 }
                 
@@ -348,6 +413,8 @@ extension ObservationDetailsCell: ELTextViewDelegate {
     func shouldChangeHeight() {
         UIView.setAnimationsEnabled(false)
         self.tableView.beginUpdates()
+//        self.tableView.invalidateIntrinsicContentSize()
+//        self.tableView.contentInset = UIEdgeInsets.zero
         self.tableView.endUpdates()
         UIView.setAnimationsEnabled(true)
     }

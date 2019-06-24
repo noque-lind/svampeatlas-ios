@@ -86,6 +86,7 @@
 		DB3C4929219AEF11001894B5 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C4928219AEF11001894B5 /* ReloadCell.swift */; };
 		DB42E37221776EB8003C3585 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37121776EB8003C3585 /* UserService.swift */; };
 		DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37321777811003C3585 /* ProfileImageView.swift */; };
+		DB4AE10B22BE89DA006F6516 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4AE10A22BE89DA006F6516 /* SearchVC.swift */; };
 		DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C42180DFA9001874A6 /* MyPageVC.swift */; };
 		DB4F53C72181F569001874A6 /* MyPageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C62181F569001874A6 /* MyPageScrollView.swift */; };
 		DB5E160A21AC452300F8C3FD /* NearbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E160921AC452300F8C3FD /* NearbyVC.swift */; };
@@ -269,6 +270,7 @@
 		DB3C4928219AEF11001894B5 /* ReloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadCell.swift; sourceTree = "<group>"; };
 		DB42E37121776EB8003C3585 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		DB42E37321777811003C3585 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
+		DB4AE10A22BE89DA006F6516 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		DB4F53C42180DFA9001874A6 /* MyPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageVC.swift; sourceTree = "<group>"; };
 		DB4F53C62181F569001874A6 /* MyPageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageScrollView.swift; sourceTree = "<group>"; };
 		DB5E160921AC452300F8C3FD /* NearbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyVC.swift; sourceTree = "<group>"; };
@@ -446,12 +448,12 @@
 				4AD107BE20976E2D00BA04D0 /* ObservationCell.swift */,
 				4ADF2B07207A5D9700C76276 /* ResultCells.swift */,
 				4AD43A0520529CF5001F6541 /* CategoryCell.swift */,
-				DB6E9E2E218A4ED500A6FB1C /* NotificationCell.swift */,
 				DB3C4928219AEF11001894B5 /* ReloadCell.swift */,
 				4A69457720456CD60041824E /* SideMenuStaticCell.swift */,
 				DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */,
 				DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */,
 				4AC5CA1C204E889E003ED3BE /* ImageCell.swift */,
+				DBDEE48A219601DB0047C788 /* CommentCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -518,6 +520,7 @@
 				4A4E4CFE20AE00AD00B3F898 /* AppNavigationController.swift */,
 				DBB33A4621CEA80800BCED22 /* TestController.swift */,
 				DB7F04F122AAB19D00785AF8 /* MapVC.swift */,
+				DB4AE10A22BE89DA006F6516 /* SearchVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -602,7 +605,6 @@
 		DB0C5A0D22764C310071B15C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				DBDEE48A219601DB0047C788 /* CommentCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -647,6 +649,7 @@
 			children = (
 				DB4F53C62181F569001874A6 /* MyPageScrollView.swift */,
 				DB6E9E2C218A4D5E00A6FB1C /* NotificationsTableView.swift */,
+				DB6E9E2E218A4ED500A6FB1C /* NotificationCell.swift */,
 			);
 			path = MyPageVC;
 			sourceTree = "<group>";
@@ -920,6 +923,7 @@
 				4AA1CC682085DFCB00254EBB /* MapView.swift in Sources */,
 				4A300A92208388C3003CB2A5 /* ObservationPinCalloutView.swift in Sources */,
 				4A70A5DD20D8E61E007B6214 /* CameraControlsView.swift in Sources */,
+				DB4AE10B22BE89DA006F6516 /* SearchVC.swift in Sources */,
 				DB9F59952175F4D9007790D3 /* MapViewSettingsView.swift in Sources */,
 				DB2EC90C216D285F00B980A0 /* Double+Extension.swift in Sources */,
 				DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */,

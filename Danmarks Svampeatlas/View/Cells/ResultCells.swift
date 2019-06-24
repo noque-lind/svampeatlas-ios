@@ -86,8 +86,8 @@ class BaseCell: UITableViewCell {
         contentView.addSubview(containerView)
         containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: trailingConstant).isActive = true
         containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: leadingConstant).isActive = true
-        containerView.topAnchor.constraint(equalTo: topAnchor, constant: 4).isActive = true
-        containerViewBottomConstraint = containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4)
+        containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4).isActive = true
+        containerViewBottomConstraint = containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4)
         containerViewBottomConstraint?.isActive = true
     }
 }
@@ -108,9 +108,10 @@ class UnknownSpecieCell: BaseCell {
         roundedImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         roundedImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
+//        secondaryLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         secondaryLabel.numberOfLines = 0
-        secondaryLabel.adjustsFontSizeToFitWidth = true
-        textStackView.distribution = .fillProportionally
+        textStackView.distribution = .fill
+//        textStackView.setContentCompressionResistancePriority(.required, for: .vertical)
         containerView.addSubview(textStackView)
         textStackView.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 10).isActive = true
         textStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 4).isActive = true

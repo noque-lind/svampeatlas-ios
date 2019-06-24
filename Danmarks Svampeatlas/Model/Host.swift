@@ -13,6 +13,7 @@ struct Host: Decodable, Equatable {
     public private(set) var dkName: String?
     public private(set) var latinName: String?
     public private(set) var probability: Int = 0
+    public private(set) var userFound: Bool = false
     
     private enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -26,6 +27,14 @@ struct Host: Decodable, Equatable {
         self.dkName = cdHost.dkName ?? ""
         self.latinName = cdHost.latinName ?? ""
         self.probability = Int(cdHost.probability)
+        self.userFound = cdHost.userFound
     }
-
+    
+    init(id: Int, dkName: String?, latinName: String?, probability: Int, userFound: Bool) {
+        self.id = id
+        self.dkName = dkName
+        self.latinName = latinName
+        self.probability = probability
+        self.userFound = userFound
+    }
 }

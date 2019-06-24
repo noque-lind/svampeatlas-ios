@@ -13,6 +13,7 @@ class NotificationCell: UITableViewCell {
     private var profileImageView: ProfileImageView = {
        let view = ProfileImageView(defaultImage: nil)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.heightAnchor.constraint(equalToConstant: 70).isActive = true
         view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         return view
     }()
@@ -21,8 +22,7 @@ class NotificationCell: UITableViewCell {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.appWhite()
-        label.numberOfLines = 2
-        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 0
         return label
     }()
     
@@ -49,6 +49,7 @@ class NotificationCell: UITableViewCell {
     }
     
     private func setupView() {
+        contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 70 + (8*2)).isActive = true
         backgroundColor = UIColor.clear
         selectionStyle = .none
         accessoryType = .disclosureIndicator
@@ -56,7 +57,8 @@ class NotificationCell: UITableViewCell {
         contentView.addSubview(profileImageView)
         profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        profileImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+        
+        
         
         contentView.addSubview(primaryLabel)
         primaryLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true

@@ -328,14 +328,14 @@ extension Session: SessionDelegate {
                         
                         let observationID = (dict["_id"] as? Int)!
                         
-                        self.uploadImages(observationID: observationID, images: newObservation.images, completion: { (error) in
-                            if let error = error {
+                        self.uploadImages(observationID: observationID, images: newObservation.images, token: token, completion: { (result) in
+                            switch result {
+                            case .Error(let error):
                                 completion(Result.Error(error))
-                            } else {
+                            case .Success(_):
                                 completion(Result.Success(observationID))
                             }
                         })
-                        
                     }
                 }
                 
@@ -344,30 +344,37 @@ extension Session: SessionDelegate {
             }
         }
         
-        
-        private func uploadImages(observationID: Int, images: [UIImage], completion: @escaping (AppError?) -> ()) {
-            guard let token = UserDefaults.standard.string(forKey: "token") else {completion(nil); return}
+        private func uploadImages(observationID: Int, images: [UIImage], token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
+           
+            let dispatchGroup = DispatchGroup()
             
-            var medias = [ELMultipartFormData.Media]()
-            
-            //        guard let testImage = ELMultipartFormData.Media(withImage: #imageLiteral(resourceName: "softwareTest"), forKey: "file") else {return}
-            //
-            //        medias.append(testImage)
-            guard images.count > 0 else {completion(nil); return}
             for image in images {
-                guard let media = ELMultipartFormData.Media(withImage: image, forKey: "file") else {continue}
-                medias.append(media)
+                dispatchGroup.enter()
+                
+                uploadImage(observationID: observationID, image: image, token: token) { (result) in
+                    print("Image upload completed")
+                    dispatchGroup.leave()
+                }
             }
             
-            let boundary = "Boundary-\(NSUUID().uuidString)"
-            let dataBody = ELMultipartFormData.createDataBody(withParameters: nil, media: medias, boundary: boundary)
+            dispatchGroup.notify(queue: DispatchQueue.global(qos: .background)) {
+                completion(Result.Success(()))
+            }
+        }
+        
+        private func uploadImage(observationID: Int, image: UIImage, token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
+           
+            guard let media = ELMultipartFormData.Media(withImage: image, forKey: "file") else {completion(Result.Error(DataServiceError.encodingError)); return}
             
-            createDataTaskRequest(url: API.postImageURL(observationID: observationID), method: "POST", data: dataBody, contentType: "multipart/form-data; boundary=\(boundary)", contentLenght: nil, token: token) { (result) in
+            let boundary = "Boundary-\(NSUUID().uuidString)"
+            let data = ELMultipartFormData.createDataBody(withParameters: nil, media: media, boundary: boundary)
+            
+            createDataTaskRequest(url: API.postImageURL(observationID: observationID), method: "POST", data: data, contentType: "multipart/form-data; boundary=\(boundary)", contentLenght: nil, token: token) { (result) in
                 switch result {
                 case .Error(let error):
-                    completion(error)
+                    completion(Result.Error(error))
                 case .Success(_):
-                    completion(nil)
+                    completion(Result.Success(()))
                 }
             }
         }

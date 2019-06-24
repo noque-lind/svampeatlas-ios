@@ -73,7 +73,7 @@ class MushroomTableView: GenericTableView<Mushroom> {
         action.image = CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) ? #imageLiteral(resourceName: "Icon_DeFavorite"): #imageLiteral(resourceName: "Favorite")
          return UISwipeActionsConfiguration(actions: [action])
     }
-    
+
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y <= -scrollView.contentInset.top {
             isAtTop?(true)

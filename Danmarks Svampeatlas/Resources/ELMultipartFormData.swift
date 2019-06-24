@@ -27,6 +27,31 @@ struct ELMultipartFormData {
         }
     }
     
+    static func createDataBody(withParameters params: [String: String]?, media: Media?, boundary: String) -> Data {
+        let lineBreak = "\r\n"
+        var body = Data()
+        
+        if let parameters = params {
+            for (key, value) in parameters {
+                body.append("--\(boundary + lineBreak)".data(using: String.Encoding.utf8)!)
+                body.append("Content-Disposition: form-data; name=\"\(key)\"\(lineBreak + lineBreak)".data(using: String.Encoding.utf8)!)
+                body.append("\(value + lineBreak)".data(using: String.Encoding.utf8)!)
+            }
+        }
+        
+        if let media = media {
+            body.append("--\(boundary + lineBreak)".data(using: String.Encoding.utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(media.key)\"; filename=\"\(media.filename)\"\(lineBreak)".data(using: String.Encoding.utf8)!)
+            body.append("Content-Type: \(media.mimeType + lineBreak + lineBreak)".data(using: .utf8)!)
+            body.append(media.data)
+            body.append(lineBreak.data(using: .utf8)!)
+        }
+        
+        body.append("--\(boundary)--\(lineBreak)".data(using: .utf8)!)
+        
+        return body
+    }
+    
     static func createDataBody(withParameters params: [String: String]?, media: [Media]?, boundary: String) -> Data {
         
         let lineBreak = "\r\n"

@@ -66,7 +66,6 @@ class NewObservation {
     
     func returnAsDictionary() -> [String: Any] {
         var dict: [String: Any] = ["observationDate": observationDate.convert(into: "yyyy-MM-dd")]
-        
         dict["os"] = "iOS"
         dict["browser"] = "Native App"
         
@@ -254,7 +253,6 @@ struct API {
             
             _ = string.popLast()
             string.append("]]}}")
-            print(string)
             return string
         }
     }
@@ -262,6 +260,7 @@ struct API {
     enum Request {
         case Observation(geometry: Geometry, ageInYear: Int?, include: [ObservationIncludeQueries], limit: Int?, offset: Int?)
         case Mushroom(searchString: String?, requirePictures: Bool)
+        case Hosts(searchString: String?)
         
         var encodedURL: String {
             switch self {
@@ -285,10 +284,20 @@ struct API {
                     url += "&offset=\(offset)"
                 }
                 
-               print(url)
                return url
             case .Mushroom(searchString: let searchString, requirePictures: let requirePictures):
                 return ""
+            case .Hosts(searchString: let searchString):
+                
+                var url = BASE_URL_API + "planttaxa?limit=30&order=probability+DESC"
+                
+                if let searchString = searchString, searchString != "" {
+                    url.append("""
+                        &where={"$or":[{"DKname":{"like":"\(searchString)%"}},{"LatinName":{"like":"\(searchString)%"}}]}
+                        """.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                
+                }
+                return url
             default:
                 return ""
             }
@@ -379,7 +388,6 @@ struct API {
     
     static func observationsURL(includeQueries: [ObservationIncludeQueries], limit: Int, offset: Int) -> String {
         let url = BASE_URL_API + "observations?_order=%5B%5B%22observationDate%22,%22DESC%22,%22ASC%22%5D,%5B%22_id%22,%22DESC%22%5D%5D" + includeQuery(includeQueries: includeQueries) + "&limit=\(limit)&offset=\(offset)&where=%7B%7D"
-        print(url)
         return url
     }
     
@@ -427,7 +435,6 @@ struct API {
         let cord2 = CLLocationCoordinate2D(latitude: coordinate.latitude - region.span.latitudeDelta, longitude: coordinate.longitude - region.span.longitudeDelta)
     
             let result = BASE_URL_API + "localities?where=%7B%22decimalLongitude%22:%7B%22$between%22:%5B\(cord2.longitude),\(cord1.longitude)%5D%7D,%22decimalLatitude%22:%7B%22$between%22:%5B\(cord2.latitude),\(cord1.latitude)%5D%7D%7D"
-        print(result)
         return result
     }
     
@@ -458,7 +465,6 @@ func SPECIES_INCLUDE_QUERY(imagesRequired: Bool) -> String {
 
 func ALLMUSHROOMS_URL(limit: Int, offset: Int) -> String {
     let string = BASE_URL_API + "taxa?_order=%5B%5B%22FullName%22%5D%5D&acceptedTaxaOnly=true" + SPECIES_INCLUDE_QUERY(imagesRequired: true) + "&limit=\(limit)" + "&offset=\(offset)"
-    print(string)
     return string
 }
 
@@ -486,7 +492,6 @@ func SEARCHFORMUSHROOM_URL(searchTerm: String) -> String {
     
     
     let returned = BASE_URL_API + "taxa?" + "include=%5B%7B%22model%22%3A%22TaxonRedListData%22%2C%22as%22%3A%22redlistdata%22%2C%22required%22%3Afalse%2C%22attributes%22%3A%5B%22status%22%5D%2C%22where%22%3A%22%7B%5C%22year%5C%22%3A2009%7D%22%7D%2C%7B%22model%22%3A%22Taxon%22%2C%22as%22%3A%22acceptedTaxon%22%7D%2C%7B%22model%22%3A%22TaxonAttributes%22%2C%22as%22%3A%22attributes%22%2C%22attributes%22%3A%5B%22PresentInDK%22%2C%20%22forvekslingsmuligheder%22%2C%20%22oekologi%22%2C%20%22diagnose%22%5D%2C%22where%22%3A%22%7B%7D%22%7D%2C%7B%22model%22%3A%22TaxonDKnames%22%2C%22as%22%3A%22Vernacularname_DK%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonStatistics%22%2C%22as%22%3A%22Statistics%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonImages%22%2C%22as%22%3A%22images%22%2C%22required%22%3Afalse%7D%5D" + "&nocount=true&where=%7B%22%24or%22%3A%5B%7B%22FullName%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22%24Vernacularname_DK.vernacularname_dk%24%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22FullName%22%3A%7B%22like%22%3A%22\(genus)%25%22%7D%2C%22TaxonName%22%3A%7B%22like%22%3A%22\(taxonName)%25%22%7D%7D%5D%7D"
-    print(returned)
     return returned
 }
 

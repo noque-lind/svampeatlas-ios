@@ -210,15 +210,15 @@ class AddObservationVC: UIViewController {
         case .noMushroom:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Species)! , section: 0)
             
-            notificationView.configure(primaryText: "Mangler enten en art, eller billeder", secondaryText: "For at uploade en observation, skal du enten tilføje billeder, eller identificere en art.")
+            notificationView.configure(primaryText: "Manglende information", secondaryText: "For at uploade en observation, skal du enten tilføje billeder, eller identificere en art.")
             
         case .noSubstrateGroup:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Details)! , section: 0)
-            notificationView.configure(primaryText: "Du mangler nogle detaljer", secondaryText: "Du skal både opgive substrat og vegetationstype for din observation")
+            notificationView.configure(primaryText: "Manglende information", secondaryText: "Du skal både opgive substrat og vegetationstype for din observation")
         case .noVegetationType:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Details)! , section: 0)
             
-            notificationView.configure(primaryText: "Du mangler nogle detaljer", secondaryText: "Du skal både opgive substrat og vegetationstype for din observation")
+            notificationView.configure(primaryText: "Manglende information", secondaryText: "Du skal både opgive substrat og vegetationstype for din observation")
         case .noLocality:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)! , section: 0)
             notificationView.configure(primaryText: "Hvor er du?", secondaryText: "Du skal hjælpe med at fortælle hvad du er i nærheden af.")
@@ -310,7 +310,7 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
             return cell
         case .Details:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationDetailsCell", for: indexPath) as? ObservationDetailsCell else {fatalError()}
-            cell.configure(newObservation: newObservation)
+            cell.configure(newObservation: newObservation, delegate: self)
             return cell
         }
     }

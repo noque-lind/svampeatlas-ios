@@ -81,14 +81,18 @@ class CustomSearchBar: UITextField {
         
         font = UIFont.appPrimaryHightlighed()
         textColor = UIColor.appWhite()
-        attributedPlaceholder = NSAttributedString(string: "Søg efter en art her ...", attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
-        placeholder = "Søg efter en art her ..."
+        configurePlaceholder("Søg efter en art her ...")
         
         clearButtonMode = .whileEditing
         tintColor = UIColor.appWhite()
         
         self.addTarget(self, action: #selector(returnButtonPressed(sender:)), for: UIControl.Event.editingDidEndOnExit)
         self.addTarget(self, action: #selector(editingChanged(sender:)), for: UIControl.Event.editingChanged)
+    }
+    
+    func configurePlaceholder(_ placeholder: String) {
+        self.placeholder = nil
+          attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
     }
     
   

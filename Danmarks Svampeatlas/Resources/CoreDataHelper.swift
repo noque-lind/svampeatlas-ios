@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import ELKit
 
 enum CoreDataError: AppError {
     
@@ -47,18 +48,33 @@ enum CoreDataError: AppError {
 
 fileprivate class CoreDataService {
     
-    static let instance = CoreDataService()
-    var managedContext: NSManagedObjectContext?
+    private lazy var persistentContainer: NSPersistentContainer = {
+       let container = NSPersistentContainer(name: "SvampeAtlas")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                let notification = ELNotificationView.appNotification(style: .error, primaryText: "Database fejl", secondaryText: "Der skete desværre en fejl med at indlæse appen's lokale database.", location: .bottom)
+                notification.show(animationType: .fromBottom, queuePosition: .back, onViewController: nil)
+                debugPrint(error)
+            } else {
+                debugPrint("CoreData store loaded")
+            }
+        })
+        return container
+    }()
     
-    private init() {
-            self.managedContext = ((UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext)!
+    
+    static let instance = CoreDataService()
+    var managedContext: NSManagedObjectContext {
+        return persistentContainer.viewContext
     }
+    
+    private init() {}
 }
 
 struct CoreDataHelper {
     
     
-    static var managedContext = CoreDataService.instance.managedContext!
+    static var managedContext = CoreDataService.instance.managedContext
     
     static func deleteMushroom(mushroom: Mushroom, completion: () -> ()) {
         
@@ -210,7 +226,6 @@ extension CoreDataHelper {
 
 extension CoreDataHelper {
     static func fetchVegetationTypes(overrideOutdateWarning: Bool? = false, completion: (Result<[VegetationType], CoreDataError>) -> ()) {
-        
         if UserDefaultsHelper.shouldUpdateDatabase && overrideOutdateWarning == false {
             completion(Result.Error(CoreDataError.contentOutdated))
         } else {
@@ -282,6 +297,7 @@ extension CoreDataHelper {
         } else {
             let fetchRequest = NSFetchRequest<CDHost>(entityName: "CDHost")
             
+            
             do {
                 let cdHosts = try managedContext.fetch(fetchRequest)
                 let hosts = cdHosts.compactMap({Host(from: $0)})
@@ -309,10 +325,8 @@ extension CoreDataHelper {
     
     static func saveVegetationTypes(vegetationTypes: [VegetationType]) {
             do {
-                let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CDVegetationType")
-                let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: CDVegetationType.fetchRequest())
                 try managedContext.execute(deleteRequest)
-                try managedContext.save()
                 
                 for vegetationType in vegetationTypes {
                     let cdVegetationType = CDVegetationType(context: managedContext)
@@ -330,10 +344,10 @@ extension CoreDataHelper {
     
     static func saveSubstrateGroups(substrateGroups: [SubstrateGroup]) {
             do {
-                let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CDSubstrateGroup")
-                let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-                try managedContext.execute(deleteRequest)
-                try managedContext.save()
+                let deleteRequest1 = NSBatchDeleteRequest(fetchRequest: CDSubstrateGroup.fetchRequest())
+                let deleteRequest2 = NSBatchDeleteRequest(fetchRequest: CDSubstrate.fetchRequest())
+                try managedContext.execute(deleteRequest1)
+                try managedContext.execute(deleteRequest2)
                 
                 for substrateGroup in substrateGroups {
                     let cdSubstrateGroup = CDSubstrateGroup(context: managedContext)
@@ -356,12 +370,14 @@ extension CoreDataHelper {
             }
     }
     
-    static func saveHost(hosts: [Host]) {
+    static func saveHost(userFound: Bool = false, hosts: [Host]) {
         do {
-            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CDHost")
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-            try managedContext.execute(deleteRequest)
-            try managedContext.save()
+            if !userFound {
+                let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CDHost")
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+                deleteFetch.predicate = NSPredicate(format: "userFound = %@", NSNumber(booleanLiteral: false));
+                try managedContext.execute(deleteRequest)
+            }
             
             for host in hosts {
                 let cdHost = CDHost(context: managedContext)
@@ -369,6 +385,7 @@ extension CoreDataHelper {
                 cdHost.dkName = host.dkName
                 cdHost.latinName = host.latinName
                 cdHost.probability = Int64(host.probability)
+                cdHost.userFound = userFound
             }
             
             try managedContext.save()

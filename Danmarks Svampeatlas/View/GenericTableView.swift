@@ -70,7 +70,7 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     private var heightConstraint = NSLayoutConstraint()
     private var automaticallyAdjustHeight: Bool
     private var animating: Bool
-//    weak var delegate: Delegate?
+//    weak var delegate: GenericTableViewDelegate?
     
     /**
     Assign a closure to this variable that takes the following parameters:
@@ -177,7 +177,7 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

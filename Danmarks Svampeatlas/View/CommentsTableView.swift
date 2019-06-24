@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 class CommentsTableView: GenericTableView<Comment> {
 
@@ -24,6 +25,7 @@ class CommentsTableView: GenericTableView<Comment> {
     }
     
     override func setupView() {
+        tableView.separatorStyle = .singleLine
         register(CommentCell.self, forCellReuseIdentifier: "commentCell")
         register(AddCommentCell.self, forCellReuseIdentifier: "addCommentCell")
         super.setupView()
@@ -54,13 +56,13 @@ class CommentsTableView: GenericTableView<Comment> {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
-    
     }
 
 extension CommentsTableView: ELTextViewDelegate {
     func shouldChangeHeight() {
         UIView.setAnimationsEnabled(false)
         self.tableView.beginUpdates()
+        ELKeyboardHelper.instance.reFocus()
         self.tableView.endUpdates()
         UIView.setAnimationsEnabled(true)
     }

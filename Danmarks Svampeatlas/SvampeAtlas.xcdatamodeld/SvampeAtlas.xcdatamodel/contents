@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.98" systemVersion="18E226" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.99" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CDHost" representedClassName="CDHost" syncable="YES" codeGenerationType="class">
         <attribute name="dkName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="latinName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="probability" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="userFound" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="CDImage" representedClassName="CDImage" syncable="YES" codeGenerationType="class">
         <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
@@ -51,6 +52,7 @@
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <elements>
+        <element name="CDHost" positionX="-225" positionY="162" width="128" height="120"/>
         <element name="CDImage" positionX="-54" positionY="9" width="128" height="118"/>
         <element name="CDMushroom" positionX="-299" positionY="27" width="128" height="150"/>
         <element name="CDMushroomAttribute" positionX="-180" positionY="72" width="128" height="90"/>
@@ -58,6 +60,5 @@
         <element name="CDSubstrateGroup" positionX="-396.953125" positionY="378.44921875" width="128" height="88"/>
         <element name="CDUser" positionX="-180" positionY="81" width="128" height="120"/>
         <element name="CDVegetationType" positionX="-225" positionY="162" width="128" height="90"/>
-        <element name="CDHost" positionX="-225" positionY="162" width="128" height="105"/>
     </elements>
 </model>

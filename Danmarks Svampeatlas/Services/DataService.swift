@@ -427,6 +427,8 @@ extension DataService {
                         substrateGroups.append(SubstrateGroup(dkName: group_dk, enName: group_uk, substrates: [Substrate(id: id, dkName: name, enName: name_uk)]))
                     }
                 }
+                
+        
                 CoreDataHelper.saveSubstrateGroups(substrateGroups: substrateGroups)
                 completion(Result.Success(substrateGroups))
                 
@@ -492,7 +494,8 @@ extension DataService {
         })
     }
     
-    func getHosts(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[Host], AppError>) -> ()) {
+    
+    func getPopularHosts(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[Host], AppError>) -> ()) {
         CoreDataHelper.fetchHosts(overrideOutdateWarning: overrideOutdateWarning) { (result) in
             switch result {
             case .Success(let hosts):
@@ -501,7 +504,7 @@ extension DataService {
             case .Error(let coreDataError):
                 switch coreDataError {
                 case .noEntries, .readError:
-                    downloadHosts(completion: { (result) in
+                    downloadHosts(shouldSave: true, completion: { (result) in
                         switch result {
                         case .Error(let error):
                             completion(Result.Error(error))
@@ -511,10 +514,10 @@ extension DataService {
                         }
                     })
                 case .contentOutdated:
-                    downloadHosts(completion: { (result) in
+                    downloadHosts(shouldSave: true, completion: { (result) in
                         switch result {
                         case .Error(_):
-                            self.getHosts(overrideOutdateWarning: true, completion: completion)
+                            self.getPopularHosts(overrideOutdateWarning: true, completion: completion)
                         case .Success(let hosts):
                             let sortedHosts = hosts.sorted(by: {$0.probability > $1.probability})
                             completion(Result.Success(sortedHosts))
@@ -526,14 +529,17 @@ extension DataService {
         }
     }
     
-    private func downloadHosts(completion: @escaping (Result<[Host], AppError>) -> ()) {
-        createDataTaskRequest(url: API.hostsURL(), completion: { (result) in
+    func downloadHosts(shouldSave: Bool, searchString: String? = nil, completion: @escaping (Result<[Host], AppError>) -> ()) {
+        createDataTaskRequest(url: API.Request.Hosts(searchString: searchString).encodedURL, completion: { (result) in
             switch result {
             case .Success(let data):
                 do {
                     let hosts = try JSONDecoder().decode([Host].self, from: data)
                     completion(Result.Success(hosts))
-                    CoreDataHelper.saveHost(hosts: hosts)
+                    
+                    if shouldSave {
+                        CoreDataHelper.saveHost(hosts: hosts)
+                    }
                 } catch {
                     completion(Result.Error(DataServiceError.decodingError(error)))
                 }

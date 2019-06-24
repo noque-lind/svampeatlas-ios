@@ -8,13 +8,6 @@
 
 import UIKit
 
-protocol PickerCellDelegate: class {
-    func substrateSelected(substrateGroup: Substrate)
-    func dateSelected(date: Date)
-    func vegetationTypeSelected(vegetationType: VegetationType)
-}
-
-
 class PickerViewCell: UITableViewCell {
     private lazy var datePicker: UIDatePicker = {
         let view = UIDatePicker()
@@ -36,7 +29,6 @@ class PickerViewCell: UITableViewCell {
         fatalError()
     }
     
-    weak var delegate: PickerCellDelegate?
     var didPickDate: ((_ date: Date) -> ())?
     
     private func setupView() {
@@ -113,27 +105,37 @@ class SwitchHeaderView: UIView {
     }
 }
 
-
 class TableViewPickerCell: UITableViewCell {
     
-    struct Section {
+    class Section {
         enum CellType {
             case substrateCell(Substrate)
             case vegetationTypeCell(VegetationType)
             case searchCell
+            
+            /**
+            - parameters:
+             - Host: The host associated with the cell
+             - Bool: Whether, or whether not the host is selected already.
+            */
             case hostCell(Host, Bool)
+            
+            mutating func toggleSelected() {
+                switch self {
+                case .hostCell(let host, let selected):
+                    self = .hostCell(host, !selected)
+                default:
+                    return
+                }
+            }
         }
         
         let title: String?
-        let cells: [CellType]
-        let alpha: CGFloat
-        let selected: Bool
+        var cells: [CellType]
         
-        init(title: String?, cells: [CellType], selected: Bool = false, alpha: CGFloat = 1.0) {
+        init(title: String?, cells: [CellType]) {
             self.title = title
             self.cells = cells
-            self.alpha = alpha
-            self.selected = true
         }
     }
     
@@ -151,15 +153,12 @@ class TableViewPickerCell: UITableViewCell {
         tableView.allowsSelection = true
         tableView.delegate = self
         tableView.dataSource = self
-//        tableView.estimatedRowHeight = 100
-//        tableView.rowHeight = UITableView.automaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(SearchCell.self, forCellReuseIdentifier: "searchCell")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "tableViewCell")
         return tableView
     }()
-    
-    weak var delegate: PickerCellDelegate?
     
     var tableViewState: TableViewState<Section> = .None {
         didSet {
@@ -178,6 +177,7 @@ class TableViewPickerCell: UITableViewCell {
     }
     
     var didSelectCell: ((_ cellType: Section.CellType, _ isLocked: Bool) -> ())?
+    var presentVC: ((UIViewController) -> ())?
     
     override func prepareForReuse() {
         tableView.setContentOffset(CGPoint.zero, animated: false)
@@ -204,8 +204,6 @@ class TableViewPickerCell: UITableViewCell {
         tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         tableView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        
-    
         tableView.tableHeaderView = switchHeaderView
         switchHeaderView.centerXAnchor.constraint(equalTo: tableView.centerXAnchor).isActive = true
         switchHeaderView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
@@ -231,14 +229,6 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
         guard let section = tableViewState.value(row: section), section.title != nil, section.title != "" else {return 0}
         return 30
     }
-//    
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if let _ = tableView.cellForRow(at: indexPath) as? SearchCell {
-//            return 48
-//        } else {
-//            return 100
-//        }
-//    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let section = tableViewState.value(row: section), let title = section.title else {return nil}
@@ -262,9 +252,26 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
         guard let section = tableViewState.value(row: indexPath.section) else {fatalError()}
         
         if case .searchCell = section.cells[indexPath.row] {
-            return tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as! SearchCell
+            cell.searchButtonPressed = {
+                let searchVC = SearchVC()
+                searchVC.modalPresentationStyle = .overCurrentContext
+                searchVC.modalTransitionStyle = .coverVertical
+                searchVC.didSelectItem = { [unowned self] host in
+                    var currentItems = self.tableViewState.currentItems()
+                    currentItems.insert(Section(title: nil, cells: [.hostCell(host, true)]), at: 1)
+                    
+                    self.didSelectCell?(.hostCell(host, true), self.switchHeaderView.isOn)
+                    self.tableViewState = .Items(currentItems)
+                }
+                
+                self.presentVC?(searchVC)
+            }
+            return cell
+        
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
+            
             let selectionView: UIView = {
                 let view = UIView()
                 view.backgroundColor = UIColor.appThird()
@@ -277,17 +284,20 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             
             switch section.cells[indexPath.row] {
             case .hostCell(let host, let selected):
+                tableView.allowsMultipleSelection = true
                 cell.textLabel?.text = "- \(host.dkName?.capitalizeFirst() ?? "") (\(host.latinName ?? ""))"
+                
                 if selected {
                     tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
                 }
                 return cell
                 
-               
             case .substrateCell(let substrate):
+                tableView.allowsMultipleSelection = false
                 cell.textLabel?.text = "   - \(substrate.dkName)"
                 return cell
             case .vegetationTypeCell(let vegetationType):
+                tableView.allowsMultipleSelection = false
                 cell.textLabel?.text = "- \(vegetationType.dkName)"
                 return cell
             case .searchCell:
@@ -296,24 +306,15 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let section = tableViewState.value(row: indexPath.section) else {return}
-    
-        let cell = section.cells[indexPath.row]
-        if case .hostCell(_, var selected) = cell {
-            selected = !selected
-            tableView.allowsMultipleSelection = true
-        }  else {
-            tableView.allowsMultipleSelection = false
-        }
-        didSelectCell?(cell, switchHeaderView.isOn)
+        section.cells[indexPath.row].toggleSelected()
+        didSelectCell?(section.cells[indexPath.row], switchHeaderView.isOn)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard let section = tableViewState.value(row: indexPath.section) else {return}
-        let cell = section.cells[indexPath.row]
-        didSelectCell?(cell, switchHeaderView.isOn)
+        section.cells[indexPath.row].toggleSelected()
+        didSelectCell?(section.cells[indexPath.row], switchHeaderView.isOn)
     }
 }

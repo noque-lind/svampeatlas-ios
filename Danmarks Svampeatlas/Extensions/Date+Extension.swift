@@ -28,8 +28,8 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
-    func convert(into dateStyle: DateFormatter.Style, ignoreRecentFormatting: Bool = false) -> String {
-        if ignoreRecentFormatting != true, let dateIsRecentString = Date().checkIfDateIsRecent(date: self) {
+    func convert(into dateStyle: DateFormatter.Style, ignoreRecentFormatting: Bool = false, ignoreTime: Bool = false) -> String {
+        if ignoreRecentFormatting != true, let dateIsRecentString = Date().checkIfDateIsRecent(ignoreTime: ignoreTime, date: self) {
             return dateIsRecentString
         } else {
             let dateFormatter = DateFormatter()
@@ -48,11 +48,11 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 
-    func checkIfDateIsRecent(date: Date) -> String?  {
+    func checkIfDateIsRecent(ignoreTime: Bool, date: Date) -> String?  {
         let components = NSCalendar.current.dateComponents([Calendar.Component.day, Calendar.Component.hour], from: date, to: self)
         if let days = components.day, days < 30 {
             if days == 0 {
-                if let hours = components.hour {
+                if let hours = components.hour, ignoreTime == false {
                     if hours == 0 {
                         return "Lige nu"
                     } else {

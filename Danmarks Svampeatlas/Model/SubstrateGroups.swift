@@ -36,18 +36,21 @@ struct SubstrateGroup {
     
     mutating private func assignID() {
         switch dkName {
-        case "ved":
+        case "jord":
             id = 0
-        case "plantemateriale":
+        case "ved":
             id = 1
-        case "mosser":
+        case "plantemateriale":
             id = 2
-        case "dyr":
+        case "mosser":
             id = 3
-        case "svampe og svampedyr":
+        case "dyr":
             id = 4
-        case "sten":
+        case "svampe og svampedyr":
             id = 5
+        case "sten":
+            id = 6
+        
         default:
             id = 100
         }

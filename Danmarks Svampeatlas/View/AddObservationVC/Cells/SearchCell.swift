@@ -10,14 +10,16 @@ import UIKit
 
 class SearchCell: UITableViewCell {
 
-    private var containerView: UIView = {
+    private lazy var containerView: UIView = {
        let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 40).isActive = true
         view.backgroundColor = UIColor.appSecondaryColour()
         view.layer.shadowOpacity = 0.4
         view.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pressed))
+        view.addGestureRecognizer(tapGesture)
+    
         let searchIcon: UIImageView = {
             let view = UIImageView()
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -33,9 +35,15 @@ class SearchCell: UITableViewCell {
         return view
     }()
 
+    var searchButtonPressed: (() -> ())?
+    
     override func layoutSubviews() {
         containerView.layer.cornerRadius = containerView.frame.height / 2
         super.layoutSubviews()
+    }
+    
+    @objc private func pressed() {
+        searchButtonPressed?()
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -49,16 +57,15 @@ class SearchCell: UITableViewCell {
     
     
     private func setupView() {
-        backgroundColor = UIColor.clear
+        backgroundColor = UIColor.white
         selectionStyle = .none
         
         let label: UILabel = {
            let label = UILabel()
             label.font = UIFont.appPrimaryHightlighed()
-            label.textColor = UIColor.appWhite()
+            label.textColor = UIColor.appPrimaryColour()
             label.translatesAutoresizingMaskIntoConstraints = false
             label.textAlignment = .center
-            label.heightAnchor.constraint(equalToConstant: 25).isActive = true
             label.text = "Søg på en vært her 👇"
             return label
         }()

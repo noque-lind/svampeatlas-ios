@@ -10,7 +10,7 @@ import UIKit
 
 class TextViewCell: UITableViewCell {
     
-    private var textView: ELTextView = {
+    lazy var textView: ELTextView = {
        let view = ELTextView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.appSecondaryColour()

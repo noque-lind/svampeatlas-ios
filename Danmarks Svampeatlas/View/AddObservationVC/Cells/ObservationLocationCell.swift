@@ -107,8 +107,6 @@ class ObservationLocationCell: UICollectionViewCell {
         switch gesture.state {
         case .began:
             let location = gesture.location(in: self)
-            print(location.x)
-            print(annotationButton.center.x)
             annotationButton.transform = annotationButton.transform.translatedBy(x: location.x - annotationButton.center.x, y: location.y - annotationButton.center.y)
             gesture.setTranslation(CGPoint(x: 0, y: -17), in: superview)
             let translation = gesture.translation(in: superview)

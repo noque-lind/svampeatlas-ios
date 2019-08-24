@@ -112,8 +112,15 @@ class NewObservation {
         }
         
         if let locality = locality {
-            dict["locality_id"] = locality.id
+            if let geoName = locality.geoName {
+                dict["geonameId"] = geoName.geonameId
+                dict["geoname"] = ["geonameId": geoName.geonameId, "name": geoName.name, "adminName1": geoName.adminName1, "lat": geoName.lat, "lng": geoName.lng, "countryName": geoName.countryName, "countryCode": geoName.countryCode, "fcodeName": geoName.fcodeName, "fclName": geoName.fclName]
+            } else {
+                dict["locality_id"] = locality.id
+            }
         }
+        
+        print(dict)
        return dict
     }
 }
@@ -225,6 +232,9 @@ class NewObservation {
  */
 
 
+
+
+
 struct API {
     
     struct Geometry {
@@ -327,6 +337,7 @@ struct API {
         case determinationView(taxonID: Int?)
         case user(responseFilteredByUserID: Int?)
         case locality
+        case geomNames
         
         var encodedQuery: String {
             switch self {
@@ -351,6 +362,9 @@ struct API {
                
             case .locality:
                 return "%7B%5C%22model%5C%22%3A%5C%22Locality%5C%22%2C%5C%22as%5C%22%3A%5C%22Locality%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22_id%5C%22%2C%5C%22name%5C%22%5D%7D"
+            
+            case .geomNames:
+                return "%7B%5C%22model%5C%22%3A%5C%22GeoNames%5C%22%2C%5C%22as%5C%22%3A%5C%22GeoNames%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D"
             }
         }
         
@@ -388,6 +402,7 @@ struct API {
     
     static func observationsURL(includeQueries: [ObservationIncludeQueries], limit: Int, offset: Int) -> String {
         let url = BASE_URL_API + "observations?_order=%5B%5B%22observationDate%22,%22DESC%22,%22ASC%22%5D,%5B%22_id%22,%22DESC%22%5D%5D" + includeQuery(includeQueries: includeQueries) + "&limit=\(limit)&offset=\(offset)&where=%7B%7D"
+        print(url)
         return url
     }
     
@@ -422,20 +437,28 @@ struct API {
         case huge = 2500
         case huger = 5000
         case hugest = 10000
+        case country = 0
     }
     
     
     static func localitiesURL(coordinates: CLLocationCoordinate2D, radius: Radius) -> String {
         let coordinate = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
         
-        
+        if radius != Radius.country {
         let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: radius.rawValue, longitudinalMeters: radius.rawValue)
         
         let cord1 = CLLocationCoordinate2D(latitude: coordinate.latitude + region.span.latitudeDelta, longitude: coordinate.longitude + region.span.longitudeDelta)
         let cord2 = CLLocationCoordinate2D(latitude: coordinate.latitude - region.span.latitudeDelta, longitude: coordinate.longitude - region.span.longitudeDelta)
     
             let result = BASE_URL_API + "localities?where=%7B%22decimalLongitude%22:%7B%22$between%22:%5B\(cord2.longitude),\(cord1.longitude)%5D%7D,%22decimalLatitude%22:%7B%22$between%22:%5B\(cord2.latitude),\(cord1.latitude)%5D%7D%7D"
+    
         return result
+        } else {
+            let url = BASE_URL_API + "geonames/findnearby?lat=\(coordinates.latitude)&lng=\(coordinates.longitude)"
+            print(url)
+            return url
+        }
+        
     }
     
     static func postImageURL(observationID: Int) -> String {
@@ -492,6 +515,7 @@ func SEARCHFORMUSHROOM_URL(searchTerm: String) -> String {
     
     
     let returned = BASE_URL_API + "taxa?" + "include=%5B%7B%22model%22%3A%22TaxonRedListData%22%2C%22as%22%3A%22redlistdata%22%2C%22required%22%3Afalse%2C%22attributes%22%3A%5B%22status%22%5D%2C%22where%22%3A%22%7B%5C%22year%5C%22%3A2009%7D%22%7D%2C%7B%22model%22%3A%22Taxon%22%2C%22as%22%3A%22acceptedTaxon%22%7D%2C%7B%22model%22%3A%22TaxonAttributes%22%2C%22as%22%3A%22attributes%22%2C%22attributes%22%3A%5B%22PresentInDK%22%2C%20%22forvekslingsmuligheder%22%2C%20%22oekologi%22%2C%20%22diagnose%22%5D%2C%22where%22%3A%22%7B%7D%22%7D%2C%7B%22model%22%3A%22TaxonDKnames%22%2C%22as%22%3A%22Vernacularname_DK%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonStatistics%22%2C%22as%22%3A%22Statistics%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonImages%22%2C%22as%22%3A%22images%22%2C%22required%22%3Afalse%7D%5D" + "&nocount=true&where=%7B%22%24or%22%3A%5B%7B%22FullName%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22%24Vernacularname_DK.vernacularname_dk%24%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22FullName%22%3A%7B%22like%22%3A%22\(genus)%25%22%7D%2C%22TaxonName%22%3A%7B%22like%22%3A%22\(taxonName)%25%22%7D%7D%5D%7D"
+    print(returned)
     return returned
 }
 

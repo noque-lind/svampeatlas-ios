@@ -16,7 +16,7 @@ class MushroomView: UIView {
         view.widthAnchor.constraint(equalToConstant: 115).isActive = true
         return view
     }()
-    
+     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.appPrimaryHightlighed()

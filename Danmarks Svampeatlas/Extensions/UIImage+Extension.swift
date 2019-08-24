@@ -35,7 +35,7 @@ extension UIImage {
         let deltaInBytes = Int(deltaInMB * 1024 * 1024)
         
         guard let fullResImage = self.jpegData(compressionQuality: 1.0) else {return nil}
-        print(Int(deltaInBytes + allowedSizeInBytes))
+        debugPrint(Int(deltaInBytes + allowedSizeInBytes))
         if fullResImage.count < Int(deltaInBytes + allowedSizeInBytes) {
             return fullResImage
         }
@@ -49,19 +49,16 @@ extension UIImage {
         while (true) {
             i += 1
             if (i > 13) {
-                print("Compression ran too many times ") // ideally max should be 7 times as  log(base 2) 100 = 6.6
+                debugPrint("Compression ran too many times ") // ideally max should be 7 times as  log(base 2) 100 = 6.6
                 break
             }
-            
-            
-            print("mid = \(mid)")
+        
             
             if ((newResImage?.count)! < (allowedSizeInBytes - deltaInBytes)) {
                 left = mid
             } else if ((newResImage?.count)! > (allowedSizeInBytes + deltaInBytes)) {
                 right = mid
             } else {
-                print("loop ran \(i) times")
                 return newResImage!
             }
             mid = (left + right) / 2.0

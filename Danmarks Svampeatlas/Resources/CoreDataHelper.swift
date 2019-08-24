@@ -379,6 +379,8 @@ extension CoreDataHelper {
                 try managedContext.execute(deleteRequest)
             }
             
+            
+            
             for host in hosts {
                 let cdHost = CDHost(context: managedContext)
                 cdHost.id = Int16(host.id)

@@ -137,9 +137,10 @@ class MushroomVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        if (self.navigationController != nil) {
+            print("Navigation controller not nil in MushroomVC")
+        }
            self.navigationItem.setLeftBarButton(menuButton, animated: false)
-            self.title = "Nyt fund"
             self.navigationController?.navigationBar.shadowImage = UIImage()
             self.navigationController?.view.backgroundColor = nil
             self.navigationController?.navigationBar.tintColor = UIColor.appWhite()

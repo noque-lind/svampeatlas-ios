@@ -80,27 +80,29 @@ class OnboardingVC: UIViewController {
     }
     
     func onboard() {
-        Session.resumeSession { (result) in
-            switch result {
-            case .Error:
-                DispatchQueue.main.async {
-                    self.actionLabel.text = "Fortsætter som gæst"
-                    self.pushVC(vc: UINavigationController(rootViewController: MushroomVC(session: nil)), session: nil)
-                }
-            case .Success(let session):
-                DispatchQueue.main.async {
-                    self.actionLabel.text = "Logger dig ind"
-                    self.pushVC(vc: UINavigationController(rootViewController: MyPageVC(session: session)), session: session)
-                }
-            }
-        }
+//        Session.resumeSession { (result) in
+//            switch result {
+//            case .Error:
+//                DispatchQueue.main.async {
+//                    self.actionLabel.text = "Fortsætter som gæst"
+//                    self.pushVC(vc: UINavigationController(rootViewController: MushroomVC(session: nil)), session: nil)
+//                }
+//            case .Success(let session):
+//                DispatchQueue.main.async {
+//                    self.actionLabel.text = "Logger dig ind"
+//                    self.pushVC(vc: UINavigationController(rootViewController: MyPageVC(session: session)), session: session)
+//                }
+//            }
+//        }
     }
     
     private func pushVC(vc: UIViewController, session: Session?) {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-            let elReviewViewController = ELRevealViewController(mainVC: vc, revealVC: NavigationVC(session: session), revealVCPosition: .left, configuation: ELConfiguration.init(animationType: .flyerReveal, menuWidthPercentage: 0.7, menuThresholdPercentage: 0.3))
-            UIApplication.shared.keyWindow?.rootViewController = elReviewViewController
-        }
+//        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+//            let elReviewViewController = ELRevealViewController(mainVC: vc, revealVC: NavigationVC(session: session), revealVCPosition: .left, configuation: ELConfiguration.init(animationType: .flyerReveal, menuWidthPercentage: 0.7, menuThresholdPercentage: 0.3))
+//            let delegate = UIApplication.shared.delegate as? AppDelegate
+//            delegate?.elRevealViewController = elReviewViewController
+//            UIApplication.shared.keyWindow?.rootViewController = elReviewViewController
+//        }
     }
     
     deinit {

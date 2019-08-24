@@ -106,7 +106,7 @@ class NotificationCell: UITableViewCell {
             primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed().italized()]))
             primaryText.append(NSAttributedString(string: " er blevet ekspertgodkendt", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
         default:
-            print(notification.eventType)
+            debugPrint(notification.eventType)
         }
         
         primaryLabel.attributedText = primaryText

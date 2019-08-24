@@ -125,7 +125,7 @@ class UnknownSpecieCell: BaseCell {
 
     private func configureCell() {
         
-        titleLabel.text = "Ubestemt svampeart"
+        titleLabel.text = "Ukendt svamp"
         secondaryLabel.text = "Når du uploader uden en artsindentifikering, vil fælleskabet prøve at hjælpe dig."
         roundedImageView.isMasked = false
         roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Missing").withRenderingMode(.alwaysTemplate))

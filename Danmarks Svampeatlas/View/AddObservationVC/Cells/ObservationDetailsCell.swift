@@ -8,38 +8,39 @@
 
 import UIKit
 
-fileprivate class UnscrollTableView: UITableView {
-    
-    init() {
-        super.init(frame: .zero, style: .plain)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-    
-    
-    override func setContentOffset(_ contentOffset: CGPoint, animated: Bool) {
-        if disableAutomaticScrolling {
-            // Does nothing, in order to not screw up managed configuration
-        } else {
-            super.setContentOffset(contentOffset, animated: animated)
-        }
-    }
-    
-    private var disableAutomaticScrolling = false
-    
-    @objc private func keyboardWillHide() {
-        debugPrint("Disabling automatic tableView scrolling")
-        disableAutomaticScrolling = true
-    }
-    
-    @objc private func keyboardDidHide() {
-        disableAutomaticScrolling = false
-    }
-}
+//fileprivate class UnscrollTableView: UITableView {
+//
+//    init() {
+//        super.init(frame: .zero, style: .plain)
+//        NotificationCenter.default.removeObserver(self)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError()
+//    }
+//
+//
+//    override func setContentOffset(_ contentOffset: CGPoint, animated: Bool) {
+//        if disableAutomaticScrolling {
+//             //Does nothing, in order to not screw up managed configuration
+//        } else {
+//            super.setContentOffset(contentOffset, animated: animated)
+//        }
+//    }
+//
+//    private var disableAutomaticScrolling = false
+//
+//    @objc private func keyboardWillHide() {
+//        debugPrint("Disabling automatic tableView scrolling")
+//        disableAutomaticScrolling = true
+//    }
+//
+//    @objc private func keyboardDidHide() {
+//        disableAutomaticScrolling = false
+//    }
+//}
 
 class ObservationDetailsCell: UICollectionViewCell {
     
@@ -59,8 +60,8 @@ class ObservationDetailsCell: UICollectionViewCell {
         case HostSelector
     }
     
-    private lazy var tableView: UnscrollTableView = {
-        let view = UnscrollTableView()
+    private lazy var tableView: UITableView = {
+        let view = UITableView()
         view.delegate = self
         view.dataSource = self
         view.separatorInset = UIEdgeInsets.zero
@@ -76,8 +77,9 @@ class ObservationDetailsCell: UICollectionViewCell {
         return view
     }()
     
+    private var didLayoutSubView = false
     private let rows: [Categories] = Categories.allCases
-    private var navigationDelegate: NavigationDelegate?
+    private weak var navigationDelegate: NavigationDelegate?
     private var newObservation: NewObservation?
     private var shouldClearObservationHost = false
     private var addedRow: (parent: IndexPath, indexPath: IndexPath, selectors: Selectors)? {
@@ -108,9 +110,9 @@ class ObservationDetailsCell: UICollectionViewCell {
     }
     
     override func layoutSubviews() {
-        print(safeAreaInsets.bottom)
-//        if table
-//        tableView.contentInset.bottom = safeAreaInsets.bottom
+        if !didLayoutSubView {
+            tableView.contentInset.bottom = safeAreaInsets.bottom
+        }
         super.layoutSubviews()
     }
     
@@ -282,7 +284,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 let selectedHosts = self.newObservation?.hosts ?? []
                 
                 let userHosts = hosts.filter({$0.userFound})
-                print(userHosts)
+                hosts = hosts.filter({!$0.userFound})
                 
                 let favoriteCells = hosts.compactMap({TableViewPickerCell.Section.CellType.hostCell($0, selectedHosts.contains($0))})
                 
@@ -413,8 +415,6 @@ extension ObservationDetailsCell: ELTextViewDelegate {
     func shouldChangeHeight() {
         UIView.setAnimationsEnabled(false)
         self.tableView.beginUpdates()
-//        self.tableView.invalidateIntrinsicContentSize()
-//        self.tableView.contentInset = UIEdgeInsets.zero
         self.tableView.endUpdates()
         UIView.setAnimationsEnabled(true)
     }

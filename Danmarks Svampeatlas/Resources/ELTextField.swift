@@ -175,7 +175,8 @@ final class ELTextView: UIView, UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         didUpdateEntry?(textView.text)
-        
+            ELKeyboardHelper.instance.focus()
+    
         if textView.intrinsicContentSize.height > textView.contentSize.height {
             delegate?.shouldChangeHeight()
         } else if textView.intrinsicContentSize.height < textView.contentSize.height && frame.height != defaultHeight {
@@ -184,6 +185,7 @@ final class ELTextView: UIView, UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        
         didBeginEditing?()
         
         if textView.text == placeholder {

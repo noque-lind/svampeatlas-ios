@@ -87,12 +87,14 @@ class NearbyVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.view.backgroundColor = UIColor.appPrimaryColour()
         super.viewWillAppear(animated)
     }
     
     private func setupView() {
+        view.backgroundColor = UIColor.appPrimaryColour()
+        
         view.addSubview(categoryView)
         categoryView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         categoryView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true

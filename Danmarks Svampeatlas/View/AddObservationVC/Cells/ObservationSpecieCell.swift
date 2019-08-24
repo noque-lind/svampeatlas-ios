@@ -190,7 +190,6 @@ extension ObservationSpecieCell: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! ContainedResultCell
             cell.configureCell(mushroom: mushroom)
             cell.accessoryType = .disclosureIndicator
-            print(section.alpha)
             cell.alpha = section.alpha
             return cell
             

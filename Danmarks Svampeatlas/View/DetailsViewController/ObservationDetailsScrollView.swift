@@ -90,7 +90,7 @@ class ObservationDetailsScrollView: AppScrollView {
         return view
     }()
     
-    private var session: Session?
+    var session: Session?
     private var observation: Observation?
     
     

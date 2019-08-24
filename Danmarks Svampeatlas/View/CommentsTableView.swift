@@ -62,7 +62,7 @@ extension CommentsTableView: ELTextViewDelegate {
     func shouldChangeHeight() {
         UIView.setAnimationsEnabled(false)
         self.tableView.beginUpdates()
-        ELKeyboardHelper.instance.reFocus()
+        ELKeyboardHelper.instance.focus()
         self.tableView.endUpdates()
         UIView.setAnimationsEnabled(true)
     }

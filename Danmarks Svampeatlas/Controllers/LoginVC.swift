@@ -135,9 +135,11 @@ class LoginVC: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+        self.navigationItem.leftBarButtonItem = menuButton
         super.viewWillAppear(animated)
     }
     
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -206,8 +208,9 @@ class LoginVC: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .Success(let session):
-                    let elReviewViewController = ELRevealViewController(mainVC: UINavigationController(rootViewController: MyPageVC(session: session)), revealVC: NavigationVC(session: session), revealVCPosition: .left, configuation: ELConfiguration.init(animationType: .flyerReveal, menuWidthPercentage: 0.7, menuThresholdPercentage: 0.3))
-                    UIApplication.shared.keyWindow?.rootViewController = elReviewViewController
+                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+                    appDelegate.session = session
+                    
                 case .Error(let error):
                     DispatchQueue.main.async {
                         Spinner.stop()

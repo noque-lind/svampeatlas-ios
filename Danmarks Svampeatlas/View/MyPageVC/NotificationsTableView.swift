@@ -12,6 +12,7 @@ class NotificationsTableView: GenericTableView<UserNotification> {
     
     override func setupView() {
         register(NotificationCell.self, forCellReuseIdentifier: "notificationCell")
+        tableView.separatorColor = UIColor.appPrimaryColour()
         super.setupView()
     }
     

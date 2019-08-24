@@ -63,6 +63,7 @@
 		4ADF2B0A207A5F3900C76276 /* SqueezeNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 4ADF2B09207A5F3900C76276 /* SqueezeNet.mlmodel */; };
 		4AEE2F37204551B600D20C2D /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F36204551B600D20C2D /* RoundedImageView.swift */; };
 		DB06C72221F35A66007E096F /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB06C72121F35A66007E096F /* UserDefaultsHelper.swift */; };
+		DB08065F22FE1BD20018CCD7 /* GeoName.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB08065E22FE1BD20018CCD7 /* GeoName.swift */; };
 		DB0A74D521F8C51700FC0E81 /* Locality.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0A74D421F8C51700FC0E81 /* Locality.swift */; };
 		DB0C5A0822746B140071B15C /* Silom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB0C5A0722746B140071B15C /* Silom.ttf */; };
 		DB0C5A0A2275A6D00071B15C /* HeatAnnotationPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C5A092275A6D00071B15C /* HeatAnnotationPinView.swift */; };
@@ -129,6 +130,7 @@
 		DBC30C8C21EE1F5B00826FC6 /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */; };
 		DBDEE48B219601DB0047C788 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDEE48A219601DB0047C788 /* CommentCell.swift */; };
 		DBEE2858212441DB0017817A /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEE2857212441DB0017817A /* AppError.swift */; };
+		DBF33C6A22FB432300F383D4 /* CALayer+Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF33C6822FB432200F383D4 /* CALayer+Animate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -246,6 +248,7 @@
 		4ADF2B09207A5F3900C76276 /* SqueezeNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = SqueezeNet.mlmodel; sourceTree = "<group>"; };
 		4AEE2F36204551B600D20C2D /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
 		DB06C72121F35A66007E096F /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
+		DB08065E22FE1BD20018CCD7 /* GeoName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoName.swift; sourceTree = "<group>"; };
 		DB0A74D421F8C51700FC0E81 /* Locality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locality.swift; sourceTree = "<group>"; };
 		DB0C5A0722746B140071B15C /* Silom.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Silom.ttf; sourceTree = "<group>"; };
 		DB0C5A092275A6D00071B15C /* HeatAnnotationPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatAnnotationPinView.swift; sourceTree = "<group>"; };
@@ -313,6 +316,8 @@
 		DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		DBDEE48A219601DB0047C788 /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		DBEE2857212441DB0017817A /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		DBF33C6322F436FD00F383D4 /* Danmarks Svampeatlas.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Danmarks Svampeatlas.entitlements"; sourceTree = "<group>"; };
+		DBF33C6822FB432200F383D4 /* CALayer+Animate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Animate.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -423,7 +428,6 @@
 				4AD107BC20976C6000BA04D0 /* ObservationView.swift */,
 				DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */,
 				4AC5CA1E204E8DB0003ED3BE /* ImagesPageControl.swift */,
-				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 				4AD43A0320529BDF001F6541 /* CategoryView.swift */,
 				4A0683D0207A581D00EB06D7 /* ResultsView.swift */,
 				4AA1CC672085DFCB00254EBB /* MapView.swift */,
@@ -550,6 +554,7 @@
 		4A69BC782038D96500D3B88B /* Danmarks Svampeatlas */ = {
 			isa = PBXGroup;
 			children = (
+				DBF33C6322F436FD00F383D4 /* Danmarks Svampeatlas.entitlements */,
 				DB8D172F211B290D00C38D2C /* Extensions */,
 				4A69457420456BCE0041824E /* Controllers */,
 				4A28AB852044412200F21EEE /* Resources */,
@@ -598,15 +603,9 @@
 				DB0A74D421F8C51700FC0E81 /* Locality.swift */,
 				DB24AEA82281D5E40057DF82 /* MapViewFilteringSettings.swift */,
 				DB64374A2296A3F700BE7FF4 /* Host.swift */,
+				DB08065E22FE1BD20018CCD7 /* GeoName.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		DB0C5A0D22764C310071B15C /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Cells;
 			sourceTree = "<group>";
 		};
 		DB24AEAA228340990057DF82 /* NearbyVC */ = {
@@ -636,10 +635,10 @@
 		DB50B0CC2266484A002965C1 /* DetailsViewController */ = {
 			isa = PBXGroup;
 			children = (
-				DB0C5A0D22764C310071B15C /* Cells */,
 				4A80756F20BD717100F958AC /* AppScrollView.swift */,
 				DB0C5A1022785BE30071B15C /* MushroomDetailsScrollView.swift */,
 				DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */,
+				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 			);
 			path = DetailsViewController;
 			sourceTree = "<group>";
@@ -687,6 +686,7 @@
 		DB8D172F211B290D00C38D2C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DBF33C6822FB432200F383D4 /* CALayer+Animate.swift */,
 				DB8D1730211B293E00C38D2C /* Array+MergeElements.swift */,
 				DB8D1732211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift */,
 				DB1F85522122F3ED00658619 /* Date+Extension.swift */,
@@ -771,6 +771,11 @@
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
+						};
 					};
 					4A69BC8C2038D96500D3B88B = {
 						CreatedOnToolsVersion = 9.2;
@@ -919,6 +924,7 @@
 				DB2A52CF216383E20000F483 /* UIImageView+Extension.swift in Sources */,
 				4A40CD70209217B500F58F25 /* Observation.swift in Sources */,
 				4A1F7609207A31150082B873 /* CameraView.swift in Sources */,
+				DBF33C6A22FB432300F383D4 /* CALayer+Animate.swift in Sources */,
 				2083452D22574C4300E86730 /* AVView.swift in Sources */,
 				4AA1CC682085DFCB00254EBB /* MapView.swift in Sources */,
 				4A300A92208388C3003CB2A5 /* ObservationPinCalloutView.swift in Sources */,
@@ -935,6 +941,7 @@
 				4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */,
 				4A80757020BD717100F958AC /* AppScrollView.swift in Sources */,
 				4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */,
+				DB08065F22FE1BD20018CCD7 /* GeoName.swift in Sources */,
 				4A40CD772094CBF000F58F25 /* ClusterPinCalloutView.swift in Sources */,
 				DBB33A4321CC011700BCED22 /* PickerCell.swift in Sources */,
 				4A28AB84204440FB00F21EEE /* DataService.swift in Sources */,
@@ -1152,6 +1159,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Danmarks Svampeatlas/Danmarks Svampeatlas.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
@@ -1169,6 +1177,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Danmarks Svampeatlas/Danmarks Svampeatlas.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";

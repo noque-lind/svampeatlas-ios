@@ -23,9 +23,12 @@ class MyPageScrollView: UIScrollView {
     private lazy var contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.appPrimaryColour()
+        view.backgroundColor = UIColor.appSecondaryColour()
         view.layer.cornerRadius = 20
-        view.layer.maskedCorners = [CACornerMask.layerMinXMinYCorner, CACornerMask.layerMaxXMinYCorner, CACornerMask.layerMaxXMaxYCorner, CACornerMask.layerMinXMaxYCorner]
+        view.layer.shadowOffset = CGSize(width: 0.0, height: -1.5)
+        view.layer.shadowRadius = 5.0
+        view.layer.shadowOpacity = 0.4
+        view.layer.maskedCorners = [CACornerMask.layerMaxXMaxYCorner, CACornerMask.layerMinXMaxYCorner]
         view.addSubview(contentStackView)
         contentStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
         contentStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
@@ -302,6 +305,6 @@ class MyPageScrollView: UIScrollView {
     
     @objc private func logoutButtonPressed() {
         session.logout()
-        self.navigationDelegate?.presentVC(OnboardingVC())
+        (UIApplication.shared.delegate as? AppDelegate)?.session = nil
     }
 }

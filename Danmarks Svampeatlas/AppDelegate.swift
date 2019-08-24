@@ -13,12 +13,80 @@ import ELKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    private lazy var navigationVC: NavigationVC = {
+        return NavigationVC(session: nil)
+    }()
+    
+    lazy var elRevealViewController: ELRevealViewController = {
+        return ELRevealViewController(mainVC: OnboardingVC(), revealVC: navigationVC, revealVCPosition: .left, configuation: ELConfiguration.init(animationType: .flyerReveal, menuWidthPercentage: 0.7, menuThresholdPercentage: 0.3))
+    }()
+    
     var window: UIWindow?
-
-
+    var session: Session? = nil {
+        didSet {
+            navigationVC.session = session
+            
+            if let session = session {
+                elRevealViewController.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: session)))
+            } else {
+                elRevealViewController.pushNewViewController(viewController: UINavigationController(rootViewController: MushroomVC(session: session)))
+            }
+            
+            if let awaitingController = awaitingController { present(vc: awaitingController) }
+            onboarding = false
+        }
+    }
+    
+    private var onboarding = true
+    private var awaitingController: UIViewController? = nil
+    
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        
+        guard let url = userActivity.webpageURL else {return false}
+        
+        
+        if url.host != "svampe.databasen.org" {
+            // THE url is not correct and therefore we want safari to handle it
+            application.open(url, options: [:], completionHandler: nil)
+            return true
+        } else {
+            if url.pathComponents.contains("taxon") {
+                guard let taxonID = Int(url.lastPathComponent) else {return false}
+                let detailsViewController = DetailsViewController(detailsContent: .mushroomWithID(taxonID: Int(taxonID)))
+                
+                if onboarding {
+                    awaitingController = detailsViewController
+                } else {
+                    present(vc: detailsViewController)
+                }
+            }
+            return true
+        }
+    }
+    
+    private func present(vc: UIViewController) {
+        if let navigationController = elRevealViewController.currentViewController as? UINavigationController {
+            navigationController.pushViewController(vc, animated: false)
+            if elRevealViewController.sideMenuShowing { elRevealViewController.toggleSideMenu() }
+        } else {
+            elRevealViewController.pushNewViewController(viewController: vc)
+        }
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+        Session.resumeSession { (result) in
+            switch result {
+            case .Success(let ses):
+                self.session = ses
+            case .Error(_):
+                self.session = nil
+            }
+        }
+        
         window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = OnboardingVC()
+        self.window?.rootViewController = elRevealViewController
         self.window?.makeKeyAndVisible()
         _ = CoreDataHelper.managedContext
         return true

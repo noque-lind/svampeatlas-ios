@@ -19,6 +19,7 @@ fileprivate struct PrivateObservation: Decodable {
     var images: [PrivateImages]?
     var primaryUser: PrivatePrimaryUser?
     var locality: PrivateLocality?
+    var geoNames: PrivateGeoName?
     var forum: [PrivateForum]?
     var vegetationtype_id: Int?
     var substrate_id: Int?
@@ -37,6 +38,7 @@ fileprivate struct PrivateObservation: Decodable {
         case forum = "Forum"
         case vegetationtype_id
         case substrate_id
+        case geoNames = "GeoNames"
     }
 }
 
@@ -71,7 +73,7 @@ fileprivate struct PrivateTaxon: Decodable {
 fileprivate struct PrivateAcceptedTaxon: Decodable {
     public private(set) var _id: Int?
     public private(set) var FullName: String?
-    public private(set) var vernacularname_dk: String?
+    public private(set) var Vernacularname_DK: Vernacularname_DK?
 }
 
 fileprivate struct Vernacularname_DK: Decodable {
@@ -110,6 +112,12 @@ fileprivate struct PrivateForum: Decodable {
     var User: PrivateProfile?
 }
 
+private struct PrivateGeoName: Decodable {
+    var geonameId: Int
+    var name: String
+    var countryName: String
+}
+
 // Front
 
 struct Observation: Decodable, Equatable {
@@ -135,8 +143,13 @@ struct Observation: Decodable, Equatable {
         observedBy = privateObservation.primaryUser?.profile?.name
         note = privateObservation.note
         ecologyNote = privateObservation.ecologyNote
-        location = privateObservation.locality?.name
-    
+        
+        if let geomNames = privateObservation.geoNames {
+            location = "\(geomNames.countryName), \(geomNames.name)"
+        } else {
+            location = privateObservation.locality?.name
+        }
+        
         if let vegetationTypeID = privateObservation.vegetationtype_id {
             vegetationType = CoreDataHelper.fetchVegetationType(withID: vegetationTypeID)
         }
@@ -151,7 +164,7 @@ struct Observation: Decodable, Equatable {
             speciesProperties = SpeciesProperties(id: determinationView.taxon_id ?? 0, name: determinationView.taxon_vernacularname_dk ?? determinationView.taxon_FullName ?? "")
         
         } else if let primaryDeterminationView = privateObservation.primaryDetermination {
-            speciesProperties = SpeciesProperties(id: primaryDeterminationView.Taxon.acceptedTaxon._id ?? 0, name: primaryDeterminationView.Taxon.acceptedTaxon.vernacularname_dk ?? primaryDeterminationView.Taxon.acceptedTaxon.FullName ?? "")
+            speciesProperties = SpeciesProperties(id: primaryDeterminationView.Taxon.acceptedTaxon._id ?? 0, name: primaryDeterminationView.Taxon.acceptedTaxon.Vernacularname_DK?.vernacularname_dk ?? primaryDeterminationView.Taxon.acceptedTaxon.FullName ?? "")
         } else {
             speciesProperties = SpeciesProperties(id: id, name: "")
         }

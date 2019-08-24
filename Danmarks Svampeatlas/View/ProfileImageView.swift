@@ -33,6 +33,13 @@ class ProfileImageView: UIView {
     
     private var defaultImage: UIImage?
     
+    override var clipsToBounds: Bool {
+        didSet {
+            imageView.clipsToBounds = clipsToBounds
+        }
+    }
+    
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = frame.height / 2

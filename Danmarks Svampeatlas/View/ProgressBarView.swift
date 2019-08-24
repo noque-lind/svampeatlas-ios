@@ -51,7 +51,6 @@ class ProgressBarView: UIView {
         if progress > 0.0 {
             loaderView.alpha = 1
             loaderView.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width * progress, height: self.frame.height)
-            print(loaderView.frame)
         } else if progress == 0.0 {
             loaderView.alpha = 0
             loaderView.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width * progress, height: self.frame.height)
@@ -70,7 +69,6 @@ class ProgressBarView: UIView {
     
     @objc private func handleTimer() {
         counter += 0.01
-        print(counter)
         
         setProgress(progress: counter / 1.5)
         

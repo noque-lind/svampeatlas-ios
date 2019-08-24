@@ -23,7 +23,7 @@ extension UIColor {
     }
     
     class func appSecondaryColour() -> UIColor {
-       return #colorLiteral(red: 0.3772668242, green: 0.4889609814, blue: 0.5432303548, alpha: 1)
+       return #colorLiteral(red: 0.2823529412, green: 0.368627451, blue: 0.4117647059, alpha: 1)
     }
 
     class func appThird() -> UIColor {

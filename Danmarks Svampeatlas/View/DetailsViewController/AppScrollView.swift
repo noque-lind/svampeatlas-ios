@@ -152,7 +152,6 @@ class AppScrollView: UIScrollView {
         let stackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
-            stackView.alignment = .center
             stackView.spacing = 4
             
             let titleLabel: UILabel = {

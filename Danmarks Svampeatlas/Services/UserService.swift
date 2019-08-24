@@ -268,7 +268,7 @@ extension Session: SessionDelegate {
         }
         
         func downloadUserObservations(limit: Int, offset: Int, userID: Int, completion: @escaping (Result<[Observation], AppError>) -> ()) {
-            createDataTaskRequest(url: API.observationsURL(includeQueries: [.locality, .determinationView(taxonID: nil), .comments, .images, .user(responseFilteredByUserID: userID)], limit: limit, offset: offset)) { (result) in
+            createDataTaskRequest(url: API.observationsURL(includeQueries: [.locality, .determinationView(taxonID: nil), .comments, .images, .geomNames, .user(responseFilteredByUserID: userID)], limit: limit, offset: offset)) { (result) in
                 switch result {
                 case .Error(let error):
                     completion(Result.Error(error))
@@ -368,10 +368,12 @@ extension Session: SessionDelegate {
             
             let boundary = "Boundary-\(NSUUID().uuidString)"
             let data = ELMultipartFormData.createDataBody(withParameters: nil, media: media, boundary: boundary)
+            print("DATA IS: \(String(decoding: data, as: UTF8.self))")
             
             createDataTaskRequest(url: API.postImageURL(observationID: observationID), method: "POST", data: data, contentType: "multipart/form-data; boundary=\(boundary)", contentLenght: nil, token: token) { (result) in
                 switch result {
                 case .Error(let error):
+                    print(error)
                     completion(Result.Error(error))
                 case .Success(_):
                     completion(Result.Success(()))

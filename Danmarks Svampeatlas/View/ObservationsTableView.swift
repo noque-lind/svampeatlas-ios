@@ -15,6 +15,7 @@ class ObservationsTableView: GenericTableView<Observation> {
     weak var navigationDelegate: NavigationDelegate?
     
     override func setupView() {
+        tableView.separatorColor = UIColor.appPrimaryColour()
         register(ObservationCell.self, forCellReuseIdentifier: "observationCell")
         super.setupView()
     }

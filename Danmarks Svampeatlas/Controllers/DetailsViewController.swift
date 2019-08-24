@@ -10,22 +10,29 @@ import UIKit
 import ELKit
 
 enum DetailsContent {
+    case mushroomWithID(taxonID: Int)
     case mushroom(mushroom : Mushroom, session: Session?, takesSelection: (selected: Bool, handler: ((_ selected: Bool) -> ()))?)
     case observation(observation: Observation, showSpeciesView: Bool, session: Session?)
 }
 
 class DetailsViewController: UIViewController {
     
+    private lazy var spinner: Spinner = {
+       let spinner = Spinner()
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        return spinner
+    }()
+    
     private lazy var imagesCollectionView: ImagesCollectionView = {
-        let collectionView = ImagesCollectionView(imageContentMode: UIView.ContentMode.scaleAspectFill, defaultHeight: 300, navigationBarHeight: (self.navigationController?.navigationBar.frame.maxY))
+        let collectionView = ImagesCollectionView(imageContentMode: UIView.ContentMode.scaleAspectFill)
         collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.configureTimer()
         return collectionView
     }()
     
-    private lazy var customNavigationBar: CustomNavigationBar = {
-        let view = CustomNavigationBar()
+    private lazy var elNavigationBar: ELNavigationBar = {
+       let view = ELNavigationBar()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -85,43 +92,54 @@ class DetailsViewController: UIViewController {
         fatalError()
     }
     
-    override func viewWillLayoutSubviews() {
-        if let navigationBarFrame = self.navigationController?.navigationBar.frame {
-            additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
-            customNavigationBar.heightConstraint?.constant = navigationBarFrame.maxY
-        }
-        super.viewWillLayoutSubviews()
-    }
-    
     override func viewDidLayoutSubviews() {
-        if !viewDidLayout {
-            viewDidLayout = true
+        super.viewDidLayoutSubviews()
+        if let navigationBarFrame = self.navigationController?.navigationBar.frame {
+            elNavigationBar.minHeight = navigationBarFrame.maxY
+            additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
             
-            if let navigationBarFrame = self.navigationController?.navigationBar.frame {
-                additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
-                scrollView?.contentInset = UIEdgeInsets(top: images != nil ? (300): navigationBarFrame.maxY, left: 0.0, bottom: view.safeAreaInsets.bottom, right: 0.0)
-                scrollView?.scrollIndicatorInsets = UIEdgeInsets(top: images?.count != 0 ? (300 + 8): 8, left: 0.0, bottom: view.safeAreaInsets.bottom + 8, right: 0.0)
+            if scrollView?.contentInset.top != elNavigationBar.maxHeight {
+                scrollView?.contentInset.top = elNavigationBar.maxHeight
+                scrollView?.scrollIndicatorInsets.top = elNavigationBar.maxHeight
+                scrollView?.contentInset.bottom = view.safeAreaInsets.bottom
+                scrollView?.scrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
             }
-            super.viewDidLayoutSubviews()
         }
-    }
+        }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
+        prepareView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.eLRevealViewController()?.delegate = self
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.view.backgroundColor = nil
+        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
+        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
         self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.backgroundColor = nil
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         super.viewWillAppear(animated)
     }
     
     override func viewDidAppear(_ animated: Bool) {
+         super.viewDidAppear(animated)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.view.backgroundColor = nil
+        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
+        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.backgroundColor = nil
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+        
+        self.eLRevealViewController()?.delegate = self
+        
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        super.viewDidAppear(animated)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -134,11 +152,19 @@ class DetailsViewController: UIViewController {
         super.viewDidDisappear(animated)
     }
     
+    
     deinit {
         debugPrint("DetailsViewController was deinited correctly")
     }
     
-    private func setupView() {
+    private func prepareView() {
+        spinner.addTo(view: view)
+        spinner.start()
+        
+        
+        view.backgroundColor = UIColor.appSecondaryColour()
+        
+        
         switch detailsContent {
         case .mushroom(mushroom: let mushroom, let session, let takesSelection):
             
@@ -151,11 +177,11 @@ class DetailsViewController: UIViewController {
                 return view
             }()
             
-            
             self.scrollView = scrollView
-            customNavigationBar.configureTitle(mushroom.danishName ?? mushroom.fullName)
-            images = mushroom.images
             self.takesSelection = takesSelection
+            self.images = mushroom.images
+            elNavigationBar.setTitle(title: mushroom.danishName ?? mushroom.fullName)
+            setupView()
             
         case .observation(observation: let observation, let showSpeciesView, let session):
             
@@ -167,20 +193,48 @@ class DetailsViewController: UIViewController {
                 view.translatesAutoresizingMaskIntoConstraints = false
                 return view
             }()
-            
             self.scrollView = scrollView
-            customNavigationBar.configureTitle("Fund af: \(observation.speciesProperties.name)")
-            images = observation.images
+            self.images = observation.images
+            elNavigationBar.setTitle(title: "Fund af: \(observation.speciesProperties.name)")
+            setupView()
+            
+            
+        case .mushroomWithID(taxonID: let taxonID):
+            DataService.instance.getMushroom(withID: taxonID) { [weak self] (result) in
+                DispatchQueue.main.async { [weak self] in
+                    switch result {
+                    case .Error(_):
+                        return
+                    case .Success(let mushroom):
+                        let scrollView: MushroomDetailsScrollView = {
+                            let view = MushroomDetailsScrollView(session: nil)
+                            view.configure(mushroom)
+                            view.customDelegate = self
+                            view.delegate = self
+                            view.translatesAutoresizingMaskIntoConstraints = false
+                            return view
+                        }()
+                        
+                        self?.scrollView = scrollView
+                        self?.images = mushroom.images
+                        self?.elNavigationBar.setTitle(title: mushroom.danishName ?? mushroom.fullName)
+                        self?.setupView()
+                    }
+                }
+            }
         }
-        
+    }
+    
+    private func setupView() {
+        spinner.stop()
         guard let scrollView = scrollView else {return}
         view.backgroundColor = UIColor.appSecondaryColour()
+        scrollView.contentInsetAdjustmentBehavior = .never
         view.addSubview(scrollView)
-        scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        
-        
+       
         if takesSelection != nil {
             view.addSubview(selectButton)
             selectButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -192,22 +246,17 @@ class DetailsViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         }
         
+        view.addSubview(elNavigationBar)
+        elNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        elNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        elNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
         if let images = images {
-            view.addSubview(imagesCollectionView)
-            imagesCollectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-            imagesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-            imagesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            elNavigationBar.setContentView(view: imagesCollectionView, ignoreSafeAreaLayoutGuide: true, maxHeight: 300)
+            scrollView.contentInset.top = elNavigationBar.maxHeight
+            scrollView.scrollIndicatorInsets.top = elNavigationBar.maxHeight
             imagesCollectionView.configure(images: images)
         }
-        
-        
-        view.addSubview(customNavigationBar)
-        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        
-        scrollView.delegate = self
-        
     }
     
     @objc private func selectButtonPressed() {
@@ -215,23 +264,39 @@ class DetailsViewController: UIViewController {
         takesSelection.handler(!takesSelection.selected)
         self.navigationController?.popViewController(animated: true)
     }
-    
-    
 }
 
 extension DetailsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard images != nil else {return}
-        let adjustedContentOffset = scrollView.contentOffset.y + scrollView.adjustedContentInset.top
-        if scrollView == self.scrollView && images != nil {
-            let minValue = (max(adjustedContentOffset, 0))
-            imagesCollectionView.configureTransform(deltaValue: minValue)
-            if minValue <= 0 {
-                imagesCollectionView.configureHeightConstraint(deltaValue: adjustedContentOffset)
-            }
-        }
+        let appBarAdjustedOffset = scrollView.contentOffset.y + elNavigationBar.maxHeight
+        let percent = 1 - (appBarAdjustedOffset / elNavigationBar.maxHeight)
+        
+        print(percent)
+        elNavigationBar.setPercentExpanded(percent)
+    
     }
+    
+//    private func setPosition(scrollView: UIScrollView) {
+//        if scrollView.contentOffset.y > -(elNavigationBar.maxHeight / 2) && scrollView.contentOffset.y < -elNavigationBar.minHeight {
+//            scrollView.setContentOffset(CGPoint(x: 0.0, y: -elNavigationBar.minHeight) , animated: true)
+//        } else if scrollView.contentOffset.y < -(elNavigationBar.maxHeight / 2) && scrollView.contentOffset.y < -elNavigationBar.minHeight {
+//            scrollView.setContentOffset(CGPoint(x: 0.0, y: -elNavigationBar.maxHeight), animated: true)
+//        }
+//        }
+//
+//
+//    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+//        if !decelerate {
+//            setPosition(scrollView: scrollView)
+//        }
+//    }
+//
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        setPosition(scrollView: scrollView)
+//    }
 }
+
+
 
 extension DetailsViewController: ELRevealViewControllerDelegate, UIGestureRecognizerDelegate {
     func isAllowedToPushMenu() -> Bool? {
@@ -261,10 +326,6 @@ extension DetailsViewController: ImagesCollectionViewDelegate {
         photoVC.transitioningDelegate = self
         photoVC.interactor = interactor
         present(photoVC, animated: true, completion: nil)
-    }
-    
-    func changeNavigationbarBackgroundViewAlpha(_ alpha: CGFloat) {
-        customNavigationBar.changeAlpha(alpha)
     }
 }
 

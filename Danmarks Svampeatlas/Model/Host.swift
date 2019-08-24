@@ -15,6 +15,10 @@ struct Host: Decodable, Equatable {
     public private(set) var probability: Int = 0
     public private(set) var userFound: Bool = false
     
+    static func ==(lhs: Host, rhs: Host) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     private enum CodingKeys: String, CodingKey {
         case id = "_id"
         case dkName = "DKname"

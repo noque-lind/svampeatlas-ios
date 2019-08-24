@@ -105,8 +105,8 @@ class ImageCell: UICollectionViewCell {
         addSubview(imageView)
         imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         imageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        imageView.topAnchor.constraint(equalTo: topAnchor, constant: -4).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 4).isActive = true
+        imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         
 //        authorLabel.font = UIFont.appText(customSize: 12)

@@ -96,14 +96,19 @@ class UserView: UIView {
         secondaryLabel.text = " "
         profileImageView.isHidden = false
         primaryLabel.isHidden = false
-        secondaryLabel.isHidden = false
+        secondaryLabel.isHidden = true
+        
+        profileImageView.clipsToBounds = true
+        profileImageView.backgroundColor = UIColor.appPrimaryColour()
     }
     
     func configureAsGuest() {
-        primaryLabel.text = "Svampe atlas"
-        secondaryLabel.text = "Log ind for at dele dine svampefund med andre, og få ekspertvalidering af Danmarks førende svampeeksperter"
+        primaryLabel.text = "Svampeatlas"
+        secondaryLabel.text = "Log ind for at få den bedste oplevelse"
         primaryLabel.isHidden = false
         secondaryLabel.isHidden = false
         profileImageView.configure(initials: "", imageURL: nil)
+        profileImageView.backgroundColor = UIColor.clear
+        profileImageView.clipsToBounds = false
     }
 }

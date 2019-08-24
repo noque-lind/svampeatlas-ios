@@ -60,7 +60,13 @@ class NavigationVC: UIViewController {
     }()
     
     private var firstLoad = true
-    private var session: Session?
+    
+    var session: Session? {
+        didSet {
+            firstLoad = true
+        }
+    }
+    
     private var navigationItems: [[NavigationItem]] {
         if session != nil {
             return [[.myPageVC, .newObservationVC], [.nearbyVC, .mushroomsVC, .cameraVC]]

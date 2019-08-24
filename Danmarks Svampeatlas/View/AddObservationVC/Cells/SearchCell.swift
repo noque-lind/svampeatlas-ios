@@ -15,6 +15,7 @@ class SearchCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 40).isActive = true
         view.backgroundColor = UIColor.appSecondaryColour()
+        view.layer.cornerRadius = 20
         view.layer.shadowOpacity = 0.4
         view.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pressed))
@@ -37,11 +38,7 @@ class SearchCell: UITableViewCell {
 
     var searchButtonPressed: (() -> ())?
     
-    override func layoutSubviews() {
-        containerView.layer.cornerRadius = containerView.frame.height / 2
-        super.layoutSubviews()
-    }
-    
+
     @objc private func pressed() {
         searchButtonPressed?()
     }

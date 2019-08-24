@@ -12,11 +12,10 @@ class Spinner: UIView {
     
     internal static weak var staticSpinnerView: UIView? {
         didSet {
-            print("lol")
+            print("Static spinner set")
         }
     }
     
-
        init() {
             super.init(frame: CGRect.zero)
            setupView()
@@ -104,12 +103,12 @@ extension Spinner {
             stop()
         }
         let spinner = Spinner.createSpinnerView()
+        staticSpinnerView = spinner
         onView.addSubview(spinner)
         spinner.leadingAnchor.constraint(equalTo: onView.leadingAnchor).isActive = true
         spinner.trailingAnchor.constraint(equalTo: onView.trailingAnchor).isActive = true
         spinner.topAnchor.constraint(equalTo: onView.topAnchor).isActive = true
         spinner.bottomAnchor.constraint(equalTo: onView.bottomAnchor).isActive = true
-        staticSpinnerView = spinner
     }
     
     public static func stop() {

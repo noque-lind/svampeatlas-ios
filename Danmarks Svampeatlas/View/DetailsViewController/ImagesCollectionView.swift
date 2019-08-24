@@ -9,19 +9,13 @@
 import UIKit
 
 protocol ImagesCollectionViewDelegate: class {
-    func changeNavigationbarBackgroundViewAlpha(_ alpha: CGFloat)
     func didSelectImage(atIndexPath indexPath: IndexPath)
 }
 
 
 class ImagesCollectionView: UIView {
-
-    private var heightConstraint = NSLayoutConstraint()
-    private var defaultHeight: CGFloat?
-    private var navigationBarHeight: CGFloat = 0
+    
     private var imageContentMode: UIView.ContentMode
-    
-    
     private var images = [Image]()
     
     private lazy var pageControl: ELPageControl = {
@@ -47,6 +41,7 @@ class ImagesCollectionView: UIView {
         collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "imageCell")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.clipsToBounds = false
         return collectionView
     }()
     
@@ -63,19 +58,10 @@ class ImagesCollectionView: UIView {
     private var imageScrollTimer: Timer?
     weak var delegate: ImagesCollectionViewDelegate? = nil
     
-    init(imageContentMode: UIView.ContentMode, defaultHeight: CGFloat? = nil, navigationBarHeight: CGFloat?) {
-        if let defaultHeight = defaultHeight {
-            self.defaultHeight = defaultHeight
-        }
-        
-        self.navigationBarHeight = navigationBarHeight ?? 0
+    init(imageContentMode: UIView.ContentMode) {
         self.imageContentMode = imageContentMode
         super.init(frame: CGRect.zero)
         setupView()
-        
-        guard defaultHeight != nil else {return}
-        heightConstraint = self.heightAnchor.constraint(equalToConstant: defaultHeight!)
-        heightConstraint.isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -107,24 +93,6 @@ class ImagesCollectionView: UIView {
         pageControl.reloadData()
     }
     
-    func setupHeightConstraint(defaultHeight: CGFloat, navigationBarHeight: CGFloat) {
-        heightConstraint = heightAnchor.constraint(equalToConstant: defaultHeight)
-        heightConstraint.isActive = true
-        self.defaultHeight = defaultHeight
-        self.navigationBarHeight = navigationBarHeight
-    }
-    
-    func configureTransform(deltaValue value: CGFloat) {
-        transform = CGAffineTransform(translationX: 0.0, y: -value)
-        let percentValue = 1 - ((frame.maxY - navigationBarHeight) / (defaultHeight! - navigationBarHeight))
-        delegate?.changeNavigationbarBackgroundViewAlpha(percentValue)
-    }
-    
-    func configureHeightConstraint(deltaValue value: CGFloat) {
-        heightConstraint.constant = defaultHeight! - value
-        collectionView.collectionViewLayout.invalidateLayout()
-    }
-    
     func configureTimer() {
         imageScrollTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
     }
@@ -135,7 +103,6 @@ class ImagesCollectionView: UIView {
             self.pageControl.currentPage = indexPath.row
         }
         
-       
     }
     
     func invalidate() {

@@ -28,7 +28,8 @@ class DataService{
         
         var errorDescription: String {
             switch self {
-            case .decodingError:
+            case .decodingError(let error):
+                debugPrint(error)
                 return ""
             case .searchReponseEmpty:
                 return "Det du søgte efter kunne ikke findes, prøv at søg efter noget andet"
@@ -135,8 +136,10 @@ class DataService{
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
+        
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             do {
+    
                 let data = try self.handleURLSession(data: data, response: response, error: error)
                 completion(Result.Success(data))
             } catch let error as URLSessionError {
@@ -339,32 +342,41 @@ extension DataService {
     // UTILITY DOWNLOADS
     
     func getLocalitiesNearby(coordinates: CLLocationCoordinate2D, radius: API.Radius = API.Radius.smallest, completion: @escaping (Result<[Locality], AppError>) -> ()) {
+        
         createDataTaskRequest(url: API.localitiesURL(coordinates: coordinates, radius: radius)) { (result) in
             switch result {
             case .Error(let error):
                 completion(Result.Error(error))
             case .Success(let data):
                 do {
-                    let localities = try JSONDecoder().decode([Locality].self, from: data)
-                    
-                    if localities.count <= 3 {
-                        var newRadius: API.Radius
-                        
-                        switch radius {
-                        case .smallest: newRadius = .smaller
-                        case .smaller: newRadius = .small
-                        case .small: newRadius = .medium
-                        case .medium: newRadius = .large
-                        case .large: newRadius = .larger
-                        case .larger: newRadius = .largest
-                        case .largest: newRadius = .huge
-                        case .huge: newRadius = .huger
-                        case .huger: newRadius = .hugest
-                        case .hugest: completion(Result.Error(DataServiceError.searchReponseEmpty)); return
+                    if radius != API.Radius.country {
+                        let localities = try JSONDecoder().decode([Locality].self, from: data)
+                        if localities.count <= 3 {
+                            var newRadius: API.Radius
+                            
+                            switch radius {
+                            case .smallest: newRadius = .smaller
+                            case .smaller: newRadius = .small
+                            case .small: newRadius = .medium
+                            case .medium: newRadius = .large
+                            case .large: newRadius = .larger
+                            case .larger: newRadius = .largest
+                            case .largest: newRadius = .huge
+                            case .huge: newRadius = .huger
+                            case .huger: newRadius = .hugest
+                            case .hugest: if localities.count != 0 {completion(Result.Success(localities)); return} else { newRadius = .country}
+                            case .country: return
+                            }
+                            
+                            self.getLocalitiesNearby(coordinates: coordinates, radius: newRadius, completion: completion)
+                        } else {
+                            completion(Result.Success(localities))
                         }
-                        self.getLocalitiesNearby(coordinates: coordinates, radius: newRadius, completion: completion)
                     } else {
-                        completion(Result.Success(localities))
+                        guard let geoName = (try JSONDecoder().decode(GeoNames.self, from: data)).geonames.first else {completion(Result.Error(DataServiceError.extractionError)); return}
+                        
+                        
+                        completion(Result.Success([Locality(id: geoName.geonameId, name: "\(geoName.name), \(geoName.countryCode)", latitude: Double(geoName.lat)!, longitude: Double(geoName.lng)!, geoName: geoName)]))
                     }
                 } catch {
                     completion(Result.Error(DataServiceError.decodingError(error)))

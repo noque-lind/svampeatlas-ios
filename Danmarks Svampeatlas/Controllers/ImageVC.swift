@@ -11,7 +11,7 @@ import UIKit
 class ImageVC: UIViewController {
     
     lazy var imagesCollectionView: ImagesCollectionView = {
-        let collectionView = ImagesCollectionView(imageContentMode: UIView.ContentMode.scaleAspectFit, defaultHeight: nil, navigationBarHeight: self.navigationController?.navigationBar.frame.maxY)
+        let collectionView = ImagesCollectionView(imageContentMode: UIView.ContentMode.scaleAspectFit)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.configure(images: images)
         return collectionView

@@ -10,24 +10,27 @@ import UIKit
 
 class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
 
-    private lazy var customNavigationBar: CustomNavigationBar = {
-        let view = CustomNavigationBar()
-        view.configureTitle(session.user.name)
+    private lazy var elNavigationBar: ELNavigationBar = {
+       let view = ELNavigationBar()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.setTitle(title: session.user.name)
+        
+        let userView: UserView = {
+            let view = UserView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.configure(user: session.user)
+            return view
+        }()
+        
+        view.backgroundColor = UIColor.clear
+        view.setContentView(view: userView, ignoreSafeAreaLayoutGuide: false, maxHeight: 180, topPadding: 30.0, bottomPadding: 30.0)
         return view
     }()
+
     
     private lazy var menuButton: UIBarButtonItem = {
         let button = UIBarButtonItem(image: #imageLiteral(resourceName: "MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
         return button
-    }()
-    
-    private lazy var userView: UserView = {
-       let view = UserView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-         view.heightAnchor.constraint(equalToConstant: 180).isActive = true
-        view.configure(user: session.user)
-        return view
     }()
     
     private lazy var scrollView: MyPageScrollView = {
@@ -77,40 +80,31 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
     override func viewWillLayoutSubviews() {
         if let navigationBarFrame = self.navigationController?.navigationBar.frame {
             additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
-            customNavigationBar.heightConstraint?.constant = navigationBarFrame.maxY
-            scrollView.contentInset = UIEdgeInsets(top: (180 + 32) + view.safeAreaInsets.top, left: 0.0, bottom: view.safeAreaInsets.bottom, right: 0.0)
-            scrollView.scrollIndicatorInsets = UIEdgeInsets(top: 180 + 32, left: 0.0, bottom: 0, right: 0.0)
+            elNavigationBar.minHeight = navigationBarFrame.maxY
+            
+            if scrollView.contentInset.top != elNavigationBar.maxHeight {
+                scrollView.contentInset.top = elNavigationBar.maxHeight
+                scrollView.scrollIndicatorInsets.top = elNavigationBar.maxHeight
+                scrollView.contentInset.bottom = view.safeAreaInsets.bottom
+                scrollView.scrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
+            }
         }
         super.viewWillLayoutSubviews()
     }
     
     private func setupView() {
-        let gradientView: GradientView = {
-            let view = GradientView()
-            view.translatesAutoresizingMaskIntoConstraints = false
-            return view
-        }()
+        view.backgroundColor = UIColor.appSecondaryColour()
         
-        view.insertSubview(gradientView, at: 0)
-        gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        gradientView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        gradientView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        gradientView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-    
         view.addSubview(scrollView)
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        view.addSubview(userView)
-        userView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-        userView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        view.addSubview(customNavigationBar)
-        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        view.addSubview(elNavigationBar)
+        elNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        elNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        elNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
     }
     
     deinit {
@@ -120,12 +114,9 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
 
 extension MyPageVC: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let adjustedContentOffset = scrollView.contentOffset.y + scrollView.contentInset.top
-        if scrollView == self.scrollView {
-            
-            userView.transform = CGAffineTransform(translationX: 0, y: -adjustedContentOffset)
-            customNavigationBar.changeAlpha((adjustedContentOffset - 80) / 100)
-            }
+        let appBarAdjustedOffset = scrollView.contentOffset.y + elNavigationBar.maxHeight
+        let percent = 1 - (appBarAdjustedOffset / elNavigationBar.maxHeight)
+        elNavigationBar.setPercentExpanded(percent)
         }
     }
 

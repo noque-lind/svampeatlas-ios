@@ -170,8 +170,8 @@ class TableViewPickerCell: UITableViewCell {
             default: break
             }
             
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.reloadData()
             }
         }
     }
@@ -253,11 +253,11 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
         
         if case .searchCell = section.cells[indexPath.row] {
             let cell = tableView.dequeueReusableCell(withIdentifier: "searchCell", for: indexPath) as! SearchCell
-            cell.searchButtonPressed = {
+            cell.searchButtonPressed = { [unowned self] in
                 let searchVC = SearchVC()
                 searchVC.modalPresentationStyle = .overCurrentContext
                 searchVC.modalTransitionStyle = .coverVertical
-                searchVC.didSelectItem = { [unowned self] host in
+                searchVC.didSelectItem = { host in
                     var currentItems = self.tableViewState.currentItems()
                     currentItems.insert(Section(title: nil, cells: [.hostCell(host, true)]), at: 1)
                     

@@ -9,23 +9,18 @@
 import UIKit
 
 class ObservationCell: UITableViewCell {
-
-   private lazy var button: UIButton = {
-       let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     
-    private lazy var thumbImageView: RoundedImageView = {
+    private lazy var roundedImageView: RoundedImageView = {
        let imageView = RoundedImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         return imageView
     }()
     
     private lazy var observationView: ObservationView = {
        let view = ObservationView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.setPadding(padding: UIEdgeInsets(top: 16, left: 0.0, bottom: 16, right: 0.0))
         return view
     }()
     
@@ -43,20 +38,14 @@ class ObservationCell: UITableViewCell {
     private func setupView() {
         backgroundColor = UIColor.clear
         selectionStyle = .none
-
-        contentView.addSubview(button)
-        button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        button.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        button.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         let stackView: UIStackView = {
            let view = UIStackView()
             view.translatesAutoresizingMaskIntoConstraints = false
             view.axis = .horizontal
-            view.addArrangedSubview(thumbImageView)
+            view.addArrangedSubview(roundedImageView)
             view.addArrangedSubview(observationView)
-            view.spacing = 8
+            view.spacing = 16
             return view
         }()
         
@@ -72,13 +61,13 @@ class ObservationCell: UITableViewCell {
         observationView.configure(observation: observation)
         
         if let imageURL = observation.images?.first?.url {
-                thumbImageView.configureImage(url: imageURL)
-                thumbImageView.isHidden = false
+                roundedImageView.configureImage(url: imageURL)
+                roundedImageView.isHidden = false
                 stackViewLeadingConstraint.isActive = false
                 stackViewLeadingConstraint.constant = 0
                 stackViewLeadingConstraint.isActive = true
         } else {
-                thumbImageView.isHidden = true
+                roundedImageView.isHidden = true
 //                thumbImageView.image = nil
                 stackViewLeadingConstraint.isActive = false
                 stackViewLeadingConstraint.constant = 8

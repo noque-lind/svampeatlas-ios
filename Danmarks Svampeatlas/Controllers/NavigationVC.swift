@@ -18,6 +18,7 @@ class NavigationVC: UIViewController {
         tableView.register(NavigationCell.self, forCellReuseIdentifier: "navigationCell")
         tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
         tableView.tableHeaderView = userView
         tableView.tableFooterView = footerView
         return tableView
@@ -36,10 +37,11 @@ class NavigationVC: UIViewController {
             label.font = UIFont.appPrimary(customSize: 12)
             label.textColor = UIColor.appWhite().withAlphaComponent(0.5)
             label.textAlignment = .center
+            label.numberOfLines = 0
             label.translatesAutoresizingMaskIntoConstraints = false
             
-            if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                label.text = "Build \(version)"
+            if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String    {
+                label.text = "Version: \(version) Build \(build)"
             }
             
             return label
@@ -69,9 +71,9 @@ class NavigationVC: UIViewController {
     
     private var navigationItems: [[NavigationItem]] {
         if session != nil {
-            return [[.myPageVC, .newObservationVC], [.nearbyVC, .mushroomsVC, .cameraVC]]
+            return [[.myPageVC, .newObservationVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .facebook]]
         } else {
-            return [[.loginVC], [.nearbyVC, .mushroomsVC, .cameraVC]]
+            return [[.loginVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .facebook]]
         }
     }
     
@@ -90,6 +92,7 @@ class NavigationVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+
         if firstLoad  {
             if session?.user != nil {
                 tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .top)
@@ -158,6 +161,9 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: false)
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: "navigationCell", for: indexPath) as! NavigationCell
         cell.configureCell(navigationItem: navigationItems[indexPath.section][indexPath.row])
         return cell
@@ -176,11 +182,12 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
     
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
+        return 50
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var vc: UIViewController
+        var overrideTypeCheckIgnore: Bool = false
         
         switch navigationItems[indexPath.section][indexPath.row] {
         case .loginVC:
@@ -193,12 +200,19 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
         case .nearbyVC:
             vc = NearbyVC(session: session)
         case .newObservationVC:
+            overrideTypeCheckIgnore = true
             guard let session = session else {return}
-            vc = CameraVC(cameraVCUsage: .tempNewObservationRecord(session: session))
+            vc = CameraVC(cameraVCUsage: .newObservationRecord(session: session))
         case .cameraVC:
-            vc = CameraVC(cameraVCUsage: .mlPredict)
+            overrideTypeCheckIgnore = true
+            vc = CameraVC(cameraVCUsage: .mlPredict(session: session))
+        case .facebook:
+            UIApplication.tryURL(urls: ["fb://profile/37769823521", "https://www.facebook.com/groups/svampeatlas/"])
+            return
+        case .about:
+            vc = AboutVC()
         }
         
-        self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: vc))
+        self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: vc), overrideTypeCheckIgnore: overrideTypeCheckIgnore)
     }
 }

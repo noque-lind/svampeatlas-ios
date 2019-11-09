@@ -63,6 +63,14 @@ struct UserDefaultsHelper {
         }
     }
     
+    static var hasSeenLocalityHelper: Bool {
+        return UserDefaults.standard.bool(forKey: "hasSeenLocalityHelper")
+    }
+    
+    static var hasAcceptedmagePredictionTerms: Bool {
+        return UserDefaults.standard.bool(forKey: "hasAcceptedImagePredictionTerms")
+    }
+    
     static func databaseWasUpdated() {
         UserDefaults.standard.set(Date(), forKey: "databaseLastUpdatedDate")
     }
@@ -78,5 +86,13 @@ struct UserDefaultsHelper {
     static func setDefaultHosts(hosts: [Host]) {
         let ids = hosts.compactMap({$0.id})
         UserDefaults.standard.set(ids, forKey: "defaultHostsIDS")
+    }
+    
+    static func setHasAcceptedImagePredictionTerms(_ accepted: Bool) {
+        UserDefaults.standard.set(accepted, forKey: "hasAcceptedImagePredictionTerms")
+    }
+    
+    static func setHasSeenLocalityHelper() {
+        UserDefaults.standard.set(true, forKey: "hasSeenLocalityHelper")
     }
 }

@@ -17,10 +17,10 @@ class MapViewSettingsView: UIView {
     private lazy var annotationButton: UIButton = {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(#imageLiteral(resourceName: "MKAnnotationPinSolid"), for: UIControl.State.normal)
+        
+        button.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_Location_Alternative"), for: UIControl.State.normal)
         button.heightAnchor.constraint(equalToConstant: 30).isActive = true
         button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
-        button.imageEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         return button
     }()
     
@@ -43,7 +43,7 @@ class MapViewSettingsView: UIView {
     private lazy var settingsButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(#imageLiteral(resourceName: "Settings"), for: [])
+        button.setImage(#imageLiteral(resourceName: "Glyphs_Settings"), for: [])
         button.backgroundColor = UIColor.appPrimaryColour()
         button.layer.cornerRadius = 20
         button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
@@ -85,7 +85,7 @@ class MapViewSettingsView: UIView {
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.heightAnchor.constraint(equalToConstant: 14).isActive = true
                 view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
-                view.image =  #imageLiteral(resourceName: "Distance")
+                view.image =  #imageLiteral(resourceName: "Glyphs_Distance")
                 return view
             }()
             
@@ -111,7 +111,7 @@ class MapViewSettingsView: UIView {
                 view.heightAnchor.constraint(equalToConstant: 14).isActive = true
                 view.widthAnchor.constraint(equalToConstant: 14).isActive = true
                 view.heightAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-                view.image =  #imageLiteral(resourceName: "Glyphs_age")
+                view.image =  #imageLiteral(resourceName: "Glyphs_Age")
                 return view
             }()
             
@@ -140,7 +140,8 @@ class MapViewSettingsView: UIView {
     private var mapViewFilteringSettings: MapViewFilteringSettings
     private var isCollapsed = true
     var onSearchButtonPressed: (() -> ())?
-    var onAnnotationRelease: ((UIGestureRecognizer) -> ())?
+    var onAnnotationRelease: ((UIButton) -> ())?
+    
     
     init(mapViewFilteringSettings: MapViewFilteringSettings) {
         self.mapViewFilteringSettings = mapViewFilteringSettings
@@ -197,7 +198,7 @@ class MapViewSettingsView: UIView {
             let view = ExpandedSettingsView(mapViewfilteringSettings: mapViewFilteringSettings)
             view.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = UIColor.appPrimaryColour()
-            view.layer.cornerRadius = 20
+            view.layer.cornerRadius = CGFloat.cornerRadius()
             view.onSearchButtonPressed = { [unowned self] in
                 self.onSearchButtonPressed?()
                 self.collapse()
@@ -243,7 +244,7 @@ class MapViewSettingsView: UIView {
             print(location.x)
             print(annotationButton.center.x)
             annotationButton.transform = annotationButton.transform.translatedBy(x: location.x - annotationButton.center.x, y: location.y - annotationButton.center.y)
-            gesture.setTranslation(CGPoint(x: 0, y: -17), in: superview)
+            gesture.setTranslation(CGPoint(x: 0, y: -24), in: superview)
             let translation = gesture.translation(in: superview)
             annotationButton.transform = annotationButton.transform.translatedBy(x: translation.x, y: translation.y)
         case .changed:
@@ -251,7 +252,7 @@ class MapViewSettingsView: UIView {
             annotationButton.transform = annotationButton.transform.translatedBy(x: translation.x, y: translation.y)
             gesture.setTranslation(CGPoint.zero, in: superview)
         case .ended:
-            onAnnotationRelease?(gesture)
+            onAnnotationRelease?(annotationButton)
             annotationButton.transform = CGAffineTransform.identity
         default:
             return

@@ -143,7 +143,7 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == images.count {
-            let vc = CameraVC(cameraVCUsage: CameraVC.CameraVCUsage.imageCapture)
+            let vc = CameraVC(cameraVCUsage: CameraVC.Usage.imageCapture)
             vc.delegate = self
             delegate?.presentVC(vc)
         }
@@ -153,11 +153,10 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
 extension ObservationImagesView: CameraVCDelegate {
     func imageReady(image: UIImage) {
         images.append(image)
-        newObservation?.images.append(image)
+        newObservation?.appendImage(image: image)
         
         let newIndexPath = IndexPath(row: images.count, section: 0)
 
-        
         self.collectionView.performBatchUpdates({
             self.collectionView.insertItems(at: [IndexPath(row: newIndexPath.row - 1, section: 0)])
             
@@ -177,7 +176,7 @@ extension ObservationImagesView: ObservationImageCellDelegate {
         guard let image = image, let index = images.firstIndex(of: image) else {return}
         let indexPath = IndexPath(row: index, section: 0)
         images.remove(at: index)
-        newObservation?.images.remove(at: index)
+        newObservation?.removeImage(at: index)
         
         if images.count == 0 {
             self.collectionView.reloadData()
@@ -200,7 +199,7 @@ class ObservationImageCellAdd: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 39).isActive = true
-        imageView.image = #imageLiteral(resourceName: "AddImage")
+        imageView.image = #imageLiteral(resourceName: "Icons_Utils_AddImage")
         return imageView
     }()
     

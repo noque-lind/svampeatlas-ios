@@ -21,7 +21,6 @@ class ClusterPinCalloutView: UIView {
     
     var heightConstraint: NSLayoutConstraint!
     var widthConstraint: NSLayoutConstraint!
-    private var rowHeight: CGFloat = 120
     var showObservation: ((_ observation: Observation) -> ())?
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -70,14 +69,10 @@ class ClusterPinCalloutView: UIView {
 
     
     func show() {
-        widthConstraint.constant = 300
+        widthConstraint.constant = 310
+        heightConstraint.constant = 500
         
-        if observations.count >= 4 {
-           heightConstraint.constant = rowHeight * 4
-        } else {
-            heightConstraint.constant = rowHeight * CGFloat(observations.count)
-        }
-        
+
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
             self.superview!.layoutIfNeeded()
             self.alpha = 1
@@ -105,9 +100,5 @@ class ClusterPinCalloutView: UIView {
         } else {
             completion()
         }
-    }
-    
-    deinit {
-        print("CluserCalloutViewDeinit")
     }
 }

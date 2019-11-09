@@ -22,6 +22,7 @@ class ObservationPinCalloutView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = CGFloat.cornerRadius()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -37,10 +38,8 @@ class ObservationPinCalloutView: UIView {
     weak var delegate: MapViewDelegate? = nil
     private var withImage: Bool
     
-    
-    private var imageViewWidthConstraint: NSLayoutConstraint?
-    private var imageViewTopConstraint: NSLayoutConstraint?
-    private var imageViewHeightConstraint: NSLayoutConstraint!
+    private var imageViewWidthConstraint = NSLayoutConstraint()
+    private var imageViewTopConstraint = NSLayoutConstraint()
     
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -70,8 +69,9 @@ class ObservationPinCalloutView: UIView {
     
     private func setupView() {
         backgroundColor = UIColor.clear
-        self.clipsToBounds = true
-        self.alpha = 0
+        clipsToBounds = true
+        layer.cornerRadius = CGFloat.cornerRadius()
+        alpha = 0
 
         
         addSubview(button)
@@ -82,8 +82,8 @@ class ObservationPinCalloutView: UIView {
         
         addSubview(observationView)
         observationView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
-        observationView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
-        observationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+        observationView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
+        observationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
         
         if withImage {
             addSubview(imageView)
@@ -91,12 +91,11 @@ class ObservationPinCalloutView: UIView {
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
             imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: self.topAnchor)
             observationView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8).isActive = true
-            self.widthAnchor.constraint(equalToConstant: 300).isActive = true
+            self.widthAnchor.constraint(equalToConstant: 310).isActive = true
         } else {
             observationView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
-            self.widthAnchor.constraint(equalToConstant: 200).isActive = true
+            self.widthAnchor.constraint(equalToConstant: 250).isActive = true
         }
-        self.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
     func configure(imageView: UIImageView?, observation: Observation) {
@@ -104,7 +103,7 @@ class ObservationPinCalloutView: UIView {
         observationView.configure(observation: observation)
         
         if let imageURL = observation.images?.first?.url, withImage == true {
-            DataService.instance.getImage(forUrl: imageURL) { (image, imageURL) in
+            DataService.instance.getImage(forUrl: imageURL, size: .mini) { (image, imageURL) in
                 DispatchQueue.main.async {
                     self.imageView.image = image
                 }
@@ -112,30 +111,31 @@ class ObservationPinCalloutView: UIView {
         }
         
         if let imageView = imageView {
-            self.imageView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
-            self.imageViewHeightConstraint = self.imageView.heightAnchor.constraint(equalTo: imageView.heightAnchor)
-            self.imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalTo: imageView.widthAnchor)
-            self.imageView.layer.cornerRadius = imageView.frame.width / 2
-            self.layer.cornerRadius = imageView.frame.width / 2
-            self.bottomAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
-            self.imageViewWidthConstraint?.isActive = true
-            self.imageViewHeightConstraint.isActive = true
-            self.superview!.layoutIfNeeded()
-        } else {
-            self.layer.cornerRadius = 15
+            self.imageViewTopConstraint.isActive = false
+            self.imageViewTopConstraint = self.imageView.topAnchor.constraint(equalTo: imageView.topAnchor)
+            self.imageViewTopConstraint.isActive = true
             
+            self.imageView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+            
+            self.imageView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor).isActive = true
+            
+            self.imageViewWidthConstraint.isActive = false
+            self.imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalTo: imageView.widthAnchor)
+            self.imageViewWidthConstraint.isActive = true
+        
+            self.superview!.layoutIfNeeded()
         }
     }
     
     func show() {
         if withImage {
-            imageViewWidthConstraint?.isActive = false
+            imageViewWidthConstraint.isActive = false
             imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 100)
-            imageViewWidthConstraint?.isActive = true
-            imageViewHeightConstraint.isActive = false
-            imageViewTopConstraint?.isActive = true
+            imageViewWidthConstraint.isActive = true
+            imageViewTopConstraint.isActive = false
+            imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor)
+            imageViewTopConstraint.isActive = true
         }
-        
         self.alpha = 1
         
         UIView.animate(withDuration: 0.2, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
@@ -150,9 +150,9 @@ class ObservationPinCalloutView: UIView {
     
     func hide(animated: Bool, completion: @escaping () -> ()) {
         if withImage {
-            imageViewWidthConstraint?.isActive = false
+            imageViewWidthConstraint.isActive = false
             imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 120)
-            imageViewWidthConstraint?.isActive = true
+            imageViewWidthConstraint.isActive = true
         }
        
         

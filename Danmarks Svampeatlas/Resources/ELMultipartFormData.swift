@@ -21,8 +21,8 @@ struct ELMultipartFormData {
         init?(withImage image: UIImage, forKey key: String) {
             self.key = key
             self.mimeType = "image/jpeg"
-            self.filename = "photo-\(Date().convert(into: DateFormatter.Style.medium, ignoreRecentFormatting: true, ignoreTime: true)).jpg"
-            guard let data = image.jpegData(sizeInMB: 0.7,deltaInMB: 0.3) else {return nil}
+            self.filename = "photo-\(Date().convert(into: DateFormatter.Style.full)).jpg"
+            guard let data = image.rotate().jpegData(sizeInMB: 0.6) else {return nil}
             self.data = data
         }
     }
@@ -43,7 +43,7 @@ struct ELMultipartFormData {
             body.append("--\(boundary + lineBreak)".data(using: String.Encoding.utf8)!)
             body.append("Content-Disposition: form-data; name=\"\(media.key)\"; filename=\"\(media.filename)\"\(lineBreak)".data(using: String.Encoding.utf8)!)
             body.append("Content-Type: \(media.mimeType + lineBreak + lineBreak)".data(using: .utf8)!)
-//            body.append(media.data)
+            body.append(media.data)
             body.append(lineBreak.data(using: .utf8)!)
         }
         

@@ -90,6 +90,6 @@ class CommentCell: UITableViewCell {
         nameLabel.text = comment.commenterName
         contentLabel.text = comment.content
         dateLabel.text = Date(ISO8601String: comment.date)?.convert(into: DateFormatter.Style.full)
-        profileImageView.configure(initials: comment.initials ?? "", imageURL: comment.commenterProfileImageURL)
+        profileImageView.configure(initials: comment.initials, imageURL: comment.commenterProfileImageURL, imageSize: .full)
     }
 }

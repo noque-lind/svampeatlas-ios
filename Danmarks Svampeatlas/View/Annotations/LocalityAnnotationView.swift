@@ -27,7 +27,7 @@ class LocalityAnnotationView: MKAnnotationView {
     
     override var isSelected: Bool {
         didSet {
-            self.image = isSelected ? #imageLiteral(resourceName: "Selected"): #imageLiteral(resourceName: "DeSelected")
+            self.image = isSelected ? #imageLiteral(resourceName: "Icons_Map_LocalityPin_Selected"): #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal").colorized(color: UIColor.appPrimaryColour())
         }
     }
     
@@ -41,7 +41,8 @@ class LocalityAnnotationView: MKAnnotationView {
     }
     
     private func setupView() {
+        displayPriority = .required
         canShowCallout = false
-        self.image = #imageLiteral(resourceName: "DeSelected")
+        self.image = #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal").colorized(color: UIColor.appPrimaryColour())
 }
 }

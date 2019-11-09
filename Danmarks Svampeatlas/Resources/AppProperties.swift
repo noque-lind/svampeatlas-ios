@@ -101,13 +101,19 @@ extension UIFont {
 
 extension Float {
     static func shadowOpacity() -> Float {
-        return 0.4
+        return 0.3
     }
 }
 
 extension CGFloat {
     static func cornerRadius() -> CGFloat {
-        return 2
+        return 8
+    }
+}
+
+extension CGSize {
+    static func shadowOffset() -> CGSize {
+        return CGSize(width: 0.0, height: 2.0)
     }
 }
 

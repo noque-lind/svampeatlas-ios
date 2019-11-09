@@ -41,12 +41,16 @@ class NewMapView: UIView {
     private lazy var mapView: CustomMapView = {
         let mapView = CustomMapView()
         mapView.delegate = self
+        if #available(iOS 13.0, *) {
+            mapView.overrideUserInterfaceStyle = .light
+        } else {}
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.showsUserLocation = self.showsUserLocation
         mapView.register(HeatAnnotationView.self, forAnnotationViewWithReuseIdentifier: "heatAnnotationView")
         mapView.register(ClusteredHeatAnnotationView.self, forAnnotationViewWithReuseIdentifier: "clusteredHeatAnnotationView")
         mapView.register(ClusterPinView.self, forAnnotationViewWithReuseIdentifier: "clusterPinView")
         mapView.register(LocalityAnnotationView.self, forAnnotationViewWithReuseIdentifier: "localityAnnotationView")
+        mapView.register(LocationAnnotationView.self, forAnnotationViewWithReuseIdentifier: "locationAnnotationView")
         return mapView
     }()
     
@@ -87,7 +91,8 @@ class NewMapView: UIView {
     private let mapViewType: MapViewType
     private var observations: [Observation]?
     private var localities: [Locality]?
-    private var pointAnnotation: MKPointAnnotation? {
+
+    private var locationAnnotation: LocationPIn? {
         didSet {
             if let oldValue = oldValue {
                 mapView.removeAnnotation(oldValue)
@@ -123,6 +128,7 @@ class NewMapView: UIView {
     
     override var layoutMargins: UIEdgeInsets {
         didSet {
+            mapView.insetsLayoutMarginsFromSafeArea = false
             mapView.layoutMargins = self.layoutMargins
         }
     }
@@ -244,11 +250,27 @@ class NewMapView: UIView {
         }
     }
     
+    func addLocationAnnotation(location: CLLocationCoordinate2D) {
+        errorView = nil
+        let annotation = LocationPIn(coordinate: location)
+        mapView.addAnnotation(annotation)
+        locationAnnotation = annotation
+    }
+    
+    func addLocationAnnotation(button: UIButton) -> LocationPIn {
+        errorView = nil
+        let coordinate = mapView.convert(CGPoint(x: button.frame.midX, y: button.frame.maxY), toCoordinateFrom: button.superview)
+        let annotation = LocationPIn(coordinate: coordinate)
+               mapView.addAnnotation(annotation)
+               locationAnnotation = annotation
+               return annotation
+    }
     
     func addObservationAnnotations(observations: [Observation]) {
-        switch mapViewType {
+        DispatchQueue.main.async {
+            switch self.mapViewType {
         case .observations(detailed: let detailed):
-                errorView = nil
+            self.errorView = nil
                 guard let originalElements = self.observations?.returnOriginalElements(newElements: observations), originalElements.count > 0 else {debugPrint("No new items."); return}
                 self.observations?.append(contentsOf: originalElements)
                 
@@ -257,9 +279,14 @@ class NewMapView: UIView {
                     let observationPin = ObservationPin(coordinate: CLLocationCoordinate2D.init(latitude: observation.coordinates.last!, longitude: observation.coordinates.first!), identifier: "observationPin", observation: observation, detailed: detailed)
                     annotations.append(observationPin)
                 }
-               mapView.addAnnotations(annotations)
+                
+                
+                    self.mapView.addAnnotations(annotations)
+              
         case .localities:
             return
+        }
+            
         }
     }
     
@@ -271,21 +298,6 @@ class NewMapView: UIView {
         }
     }
     
-    func addPointAnnotation(gesture: UIGestureRecognizer) -> MKPointAnnotation {
-        let coordinate = mapView.convert(gesture.location(in: mapView), toCoordinateFrom: mapView)
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        mapView.addAnnotation(annotation)
-        pointAnnotation = annotation
-        return annotation
-    }
-    
-    func addPointAnnotation(coordinate: CLLocationCoordinate2D) {
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            pointAnnotation = annotation
-            self.mapView.addAnnotation(annotation)
-    }
     
     func filterByCategory(category: Categories) {
         mapView.removeOverlay(topographicalOverlay)
@@ -344,6 +356,17 @@ extension NewMapView: MKMapViewDelegate {
                 pointAnnotationView?.pinTintColor = UIColor.appPrimaryColour()
             }
             return pointAnnotationView
+        } else if let locationPin = annotation as? LocationPIn {
+            var locationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "locationAnnotationView") as? LocationAnnotationView
+            locationPinView?.annotation = locationPin
+            
+            if locationPinView == nil {
+                locationPinView = LocationAnnotationView(annotation: locationPin, reuseIdentifier: "locationAnnotationView")
+                locationPinView?.canShowCallout = false
+                locationPinView?.isDraggable = false
+            }
+            
+            return locationPinView
         } else {
             return nil
         }

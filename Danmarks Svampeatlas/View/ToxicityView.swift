@@ -10,19 +10,23 @@ import UIKit
 
 class ToxicityView: UIView {
 
-    private lazy var toxicityIcon: UIImageView = {
+    private lazy var imageView: UIImageView = {
        let imageView = UIImageView()
+        imageView.image = #imageLiteral(resourceName: "Glyphs_Poisonous")
+        imageView.widthAnchor.constraint(equalToConstant: 14).isActive = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .center
         return imageView
     }()
     
     private lazy var label: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.appPrimaryHightlighed()
+        label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        label.text = "Giftig"
         label.textAlignment = .center
         return label
     }()
@@ -38,34 +42,29 @@ class ToxicityView: UIView {
     }
     
     private func setupView() {
-        heightAnchor.constraint(equalToConstant: 20).isActive = true
+        setContentHuggingPriority(.required, for: .horizontal)
+        setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        backgroundColor = UIColor.clear
-        addSubview(toxicityIcon)
-        toxicityIcon.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        toxicityIcon.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        toxicityIcon.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        layer.cornerRadius = CGFloat.cornerRadius()
+        backgroundColor = UIColor.red
+        
+        addSubview(imageView)
+        imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
+        imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     
         addSubview(label)
-        label.leadingAnchor.constraint(equalTo: toxicityIcon.trailingAnchor, constant: 4).isActive = true
-        label.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        label.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        label.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 4).isActive = true
+        label.topAnchor.constraint(equalTo: topAnchor, constant: 4).isActive = true
+        label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4).isActive = true
+        label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
     }
     
-    func configure(_ toxicityLevel: ToxicityLevel?) {
-        guard let toxicityLevel = toxicityLevel else {return}
-        
-        label.text = toxicityLevel.rawValue
-        
-        switch toxicityLevel {
-                case .eatable:
-                    label.textColor = UIColor.appGreen()
-                    toxicityIcon.image = #imageLiteral(resourceName: "Edible")
-                case .toxic:
-                    label.textColor = UIColor.appRed()
-                case .cautious:
-                    label.textColor = UIColor.appYellow()
-                }
+    func configure(_ toxicityReport: String?) {
+        if let toxicityReport = toxicityReport, toxicityReport.lowercased().contains("giftig") {
+            self.isHidden = false
+        } else {
+            self.isHidden = true
+        }
 }
 }

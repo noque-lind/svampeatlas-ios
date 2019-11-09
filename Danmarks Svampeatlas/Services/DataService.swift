@@ -114,13 +114,13 @@ class DataService{
     static let instance = DataService()
     weak var sessionDelegate: SessionDelegate?
     private let imagesCache = NSCache<NSString, UIImage>()
-    
+    private var currentlyDownloading = Dictionary<String, URLSessionTask>()
     
     //CLASS FUNCTIONS
     
     internal func createDataTaskRequest(url: String, method: String = "GET", data: Data? = nil, contentType: String? = nil, contentLenght: Int? = nil, token: String? = nil, completion: @escaping (Result<Data, URLSessionError>) -> ()) {
         var request = URLRequest(url: URL.init(string: url)!)
-        request.timeoutInterval = 10
+        request.timeoutInterval = 20
         request.httpMethod = method
         request.httpBody = data
         
@@ -195,15 +195,24 @@ extension DataService {
     
     //FUNCTIONS THAT RETURN MUSHROOM/S
     
-    func getMushrooms(offset: Int, completion: @escaping (Result<[Mushroom], AppError>) -> ()) {
-        createDataTaskRequest(url: ALLMUSHROOMS_URL(limit: 100, offset: offset)) { (result) in
+    func getMushrooms(searchString: String?, speciesQueries: [API.SpeciesQueries] = [API.SpeciesQueries.danishNames, API.SpeciesQueries.attributes(presentInDenmark: nil), API.SpeciesQueries.images(required: false), API.SpeciesQueries.statistics, API.SpeciesQueries.redlistData], limit: Int = 100, offset: Int = 0, completion: @escaping (Result<[Mushroom], AppError>) -> ()) {
+        
+        let api = API.Request.Mushrooms(searchString: searchString, speciesQueries: speciesQueries, limit: limit, offset: offset).encodedURL
+        
+        print(api)
+        createDataTaskRequest(url: API.Request.Mushrooms(searchString: searchString, speciesQueries: speciesQueries, limit: limit, offset: offset).encodedURL) { (result) in
             switch result {
             case .Error(let error):
                 completion(Result.Error(error))
             case .Success(let data):
                 do {
                     let mushrooms = try JSONDecoder().decode([Mushroom].self, from: data)
-                    completion(Result.Success(mushrooms))
+                    
+                    if searchString != nil && mushrooms.count == 0 {
+                        completion(Result.Error(DataServiceError.searchReponseEmpty))
+                    } else {
+                        completion(Result.Success(mushrooms))
+                    }
                 } catch {
                     completion(Result.Error(DataServiceError.decodingError(error)))
                 }
@@ -212,7 +221,7 @@ extension DataService {
     }
     
     func getMushroom(withID id: Int, completion: @escaping (Result<Mushroom, AppError>) -> ()) {
-        createDataTaskRequest(url: API.mushroom(withID: id)) { (result) in
+        createDataTaskRequest(url: API.Request.Mushroom(id: id).encodedURL) { (result) in
             switch result {
             case .Error(let error):
                 completion(Result.Error(error))
@@ -223,24 +232,6 @@ extension DataService {
                 } catch {
                     completion(Result.Error(DataServiceError.decodingError(error)))
                 }
-            }
-        }
-    }
-    
-    func getMushroomsThatFitSearch(searchString: String, completion: @escaping (Result<[Mushroom], AppError>) ->()) {
-        createDataTaskRequest(url: SEARCHFORMUSHROOM_URL(searchTerm: searchString)) { (result) in
-            switch result {
-            case .Success(let data):
-                do {
-                    let mushrooms = try JSONDecoder().decode([Mushroom].self, from: data)
-                    guard mushrooms.count > 0 else {completion(Result.Error(DataServiceError.searchReponseEmpty)); return}
-                    completion(Result.Success(mushrooms))
-                } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
-                }
-                
-            case .Error(let appError):
-                completion(Result.Error(appError))
             }
         }
     }
@@ -267,7 +258,7 @@ extension DataService {
     }
     
     func getObservationsForMushroom(withID id: Int, limit: Int, offset: Int, completion: @escaping (Result<[Observation], AppError>) -> ()) {
-        createDataTaskRequest(url: API.observationsURL(includeQueries: [.determinationView(taxonID: id), .comments, .images, .locality, .user(responseFilteredByUserID: nil)], limit: limit, offset: offset)) { (result) in
+        createDataTaskRequest(url: API.observationsURL(includeQueries: [.comments, .determinationView(taxonID: id), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: limit, offset: offset)) { (result) in
             switch result {
             case .Error(let error):
                 completion(Result.Error(error))
@@ -284,39 +275,7 @@ extension DataService {
     
     
     func getObservationsWithin(geometry: API.Geometry, taxonID: Int? = nil, ageInYear: Int? = nil, completion: @escaping (Result<[Observation], AppError>) -> ()) {
-        createDataTaskRequest(url: API.Request.Observation(geometry: geometry, ageInYear: ageInYear, include: [API.ObservationIncludeQueries.comments, API.ObservationIncludeQueries.images, API.ObservationIncludeQueries.locality, API.ObservationIncludeQueries.user(responseFilteredByUserID: nil), API.ObservationIncludeQueries.determinationView(taxonID: taxonID)], limit: nil, offset: nil).encodedURL) { (result) in
-            switch result {
-            case .Error(let error):
-                completion(Result.Error(error))
-            case .Success(let data):
-                do {
-                    let observations = try JSONDecoder().decode([Observation].self, from: data)
-                    completion(Result.Success(observations))
-                } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
-                }
-            }
-        }
-    }
-    
-    
-    func getObservationsWithin(geoJSON: String, whereQuery: String?, completion: @escaping (Result<[Observation], AppError>) -> ()) {
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = BASE_URL
-        components.path = "/api/observations"
-        
-        let geometry = URLQueryItem(name: "geometry", value: geoJSON)
-        let whereQuery = URLQueryItem(name: "where", value: whereQuery)
-        components.queryItems = [geometry, whereQuery]
-        
-        if let percentEncodedQuery = components.percentEncodedQuery {
-            components.percentEncodedQuery = percentEncodedQuery + API.includeQuery(includeQueries: [.images, .determinationView(taxonID: nil), .user(responseFilteredByUserID: nil), .locality])
-        }
-        
-        guard let url = components.url else {return}
-        
-        createDataTaskRequest(url: url.absoluteString) { (result) in
+        createDataTaskRequest(url: API.Request.Observation(geometry: geometry, ageInYear: ageInYear, include: [.comments, .determinationView(taxonID: taxonID), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: nil, offset: nil).encodedURL) { (result) in
             switch result {
             case .Error(let error):
                 completion(Result.Error(error))
@@ -563,37 +522,54 @@ extension DataService {
     }
     
 
-    enum imageSize: String {
+    enum ImageSize: String {
         case full = ""
         case mini = "https://svampe.databasen.org/unsafe/175x175/"
     }
     
-    func getImage(forUrl url: String, size: imageSize = .full, completion: @escaping (UIImage, String) -> Void) {
-        if let image = imagesCache.object(forKey: NSString.init(string: size.rawValue + url)) {
-            completion(image, url)
-        } else if let image = imagesCache.object(forKey: NSString.init(string: imageSize.mini.rawValue + url)) {
-            completion(image, url)
-            downloadImage(url: URL(string: size.rawValue + url)!, completion: completion)
-        } else if let image = ELFileManager.getImage(withURL: url) {
-            completion(image, url)
+    func getImage(forUrl uri: String, size: ImageSize, completion: @escaping (UIImage, String) -> Void) {
+        if let image = ELFileManager.getImage(withURL: uri) {
+            completion(image, uri)
+        } else if let image = imagesCache.object(forKey: NSString(string: "\(size.rawValue)\(uri)")) {
+            completion(image, uri)
+        } else if let image = imagesCache.object(forKey: NSString(string: "\(ImageSize.mini.rawValue)\(uri)")) {
+            completion(image, uri)
+            downloadImage(url: uri, imageSize: size, completion: completion)
         } else {
-            let url = URL(string: size.rawValue + url)!
-            downloadImage(url: url, completion: completion)
+            downloadImage(url: uri, imageSize: size, completion: completion)
         }
     }
     
-    private func downloadImage(url: URL, completion: @escaping (UIImage, String) -> Void) {
-        var request = URLRequest(url: url)
+    private func downloadImage(url: String, imageSize: ImageSize, completion: @escaping (UIImage, String) -> Void) {
+        var request = URLRequest(url: URL(string: "\(imageSize.rawValue)\(url)")!)
         request.timeoutInterval = 5
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             guard let data = try? self.handleURLSession(data: data, response: response, error: error) else {return}
             guard let image = UIImage(data: data) else {return}
-            self.imagesCache.setObject(image, forKey: NSString.init(string: url.absoluteString))
-            DispatchQueue.main.async {
-                completion(image, url.absoluteString)
-            }
+            self.imagesCache.setObject(image, forKey: NSString.init(string: "\(imageSize.rawValue)\(url)"))
+                completion(image, url)
         }
         task.resume()
     }
+    
+    func getImagePredictions(image: UIImage, completion: @escaping (Result<[PredictionResult], AppError>) -> ()) {
+        DispatchQueue.global(qos: .background).async {
+             let parameters = ["instances": [["image_in": ["b64": image.rotate().toBase64()]]]] as [String : Any]
+                   let data = try! JSONSerialization.data(withJSONObject: parameters, options: [])
+            self.createDataTaskRequest(url: API.Post.imagePredict(speciesQueries: [.attributes(presentInDenmark: nil), .danishNames, .images(required: false), .redlistData, .statistics, .acceptedTaxon]).encodedURL, method: "POST", data: data, contentType: "application/json", contentLenght: nil, token: nil) { (result) in
+                       switch result {
+                       case .Error(let error):
+                           completion(Result.Error(error))
+                       case .Success(let data):
+                           do {
+                               let predictionResults = try JSONDecoder().decode([PredictionResult].self, from: data)
+                               completion(Result.Success(predictionResults))
+                           } catch {
+                               completion(Result.Error(DataServiceError.decodingError(error)))
+                           }
+                   }
+               }
+        }
+}
 }
 

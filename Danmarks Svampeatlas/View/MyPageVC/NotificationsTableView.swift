@@ -13,7 +13,27 @@ class NotificationsTableView: GenericTableView<UserNotification> {
     override func setupView() {
         register(NotificationCell.self, forCellReuseIdentifier: "notificationCell")
         tableView.separatorColor = UIColor.appPrimaryColour()
+        tableView.tintColor = UIColor.appWhite()
         super.setupView()
+    }
+    
+    func removeNotification(notification: UserNotification) {
+        var currentItems = tableViewState.currentItems()
+        var maxCount = currentItems.count
+        
+        switch tableViewState {
+        case .Paging(items: _, max: let max):
+            maxCount = max ?? currentItems.count
+        default: break
+        }
+        
+        currentItems.removeAll(where: {$0.observationID == notification.observationID})
+        
+        if currentItems.count < maxCount {
+            tableViewState = .Paging(items: currentItems, max: maxCount)
+        } else {
+            tableViewState = .Items(currentItems)
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -35,6 +55,5 @@ class NotificationsTableView: GenericTableView<UserNotification> {
         else {
             return UITableView.automaticDimension
         }
-       
     }
     }

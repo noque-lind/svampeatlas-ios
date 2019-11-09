@@ -12,6 +12,7 @@ class MushroomView: UIView {
     
     private var thumbImage: RoundedImageView = {
         let view = RoundedImageView()
+        view.configureRoundness(fullyRounded: false)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalToConstant: 115).isActive = true
         return view
@@ -47,13 +48,18 @@ class MushroomView: UIView {
         return stackView
     }()
     
-    private lazy var lowerStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 2
-        stackView.distribution = .fill
-        return stackView
+    private lazy var informationView: InformationView = {
+        let view = InformationView(style: .dark)
+        return view
     }()
+//
+//    private lazy var lowerStackView: UIStackView = {
+//        let stackView = UIStackView()
+//        stackView.axis = .vertical
+//        stackView.spacing = 2
+//        stackView.distribution = .fill
+//        return stackView
+//    }()
     
     private lazy var redlistStackView: UIStackView = {
        let stackView = UIStackView()
@@ -83,7 +89,7 @@ class MushroomView: UIView {
             stackView.distribution = .fill
             stackView.spacing = 20
             stackView.addArrangedSubview(upperStackView)
-            stackView.addArrangedSubview(lowerStackView)
+            stackView.addArrangedSubview(informationView)
 //            stackView.addArrangedSubview(redlistStackView)
             return stackView
         }()
@@ -126,12 +132,6 @@ class MushroomView: UIView {
             }
         }
     }
-
-    
-    override func layoutSubviews() {
-        thumbImage.layer.cornerRadius = thumbImage.frame.width / 2
-        super.layoutSubviews()
-    }
     
     init(fullyRounded: Bool) {
         self.fullyRounded = fullyRounded
@@ -160,44 +160,8 @@ class MushroomView: UIView {
     }
     
     private func configureLowerStackView(informations: [(String, String)]) {
-        func createStackView(_ withInfo: (String, String)) -> UIStackView {
-            let leftLabel: UILabel = {
-                let label = UILabel()
-                label.font = UIFont.appPrimary()
-                label.textColor = UIColor.appPrimaryColour()
-                label.text = withInfo.0
-                label.textAlignment = .left
-                label.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
-                return label
-            }()
-            
-            let rightLabel: UILabel = {
-                let label = UILabel()
-                label.font = UIFont.appPrimary()
-                label.textColor = UIColor.appPrimaryColour()
-                label.text = withInfo.1
-                label.textAlignment = .right
-                label.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.horizontal)
-                return label
-            }()
-            
-            let stackView: UIStackView = {
-                let stackView = UIStackView()
-                stackView.axis = .horizontal
-                stackView.distribution = .fill
-                stackView.addArrangedSubview(leftLabel)
-                stackView.addArrangedSubview(rightLabel)
-                stackView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-                return stackView
-            }()
-            return stackView
-        }
-        
-        lowerStackView.arrangedSubviews.forEach({$0.removeFromSuperview()})
-        
-        for information in informations {
-            lowerStackView.addArrangedSubview(createStackView(information))
-        }
+        informationView.addInformation(information: informations)
+        self.invalidateIntrinsicContentSize()
     }
     
     @objc private func mushroomViewWasTapped() {
@@ -206,9 +170,18 @@ class MushroomView: UIView {
     }
     
     func configure(mushroom: Mushroom) {
+        informationView.reset()
+        
+        
         self.mushroom = mushroom
-//        thumbImage.downloadImage(size: .mini, urlString: mushroom.images?.first?.url)
-        thumbImage.configureImage(url: mushroom.images?.first?.url)
+
+        if let image = mushroom.images?.first {
+            thumbImage.isHidden = false
+            thumbImage.configureImage(url: image.url)
+        } else {
+            thumbImage.isHidden = true
+        }
+       
         
         if let danishName =  mushroom.danishName {
             titleLabel.attributedText = nil
@@ -223,11 +196,11 @@ class MushroomView: UIView {
         
         var informationArray = [(String, String)]()
         
-        if let totalObservations = mushroom.totalObservations {
+        if let totalObservations = mushroom.statistics?.acceptedCount {
             informationArray.append(("Antal danske fund:", "\(totalObservations)"))
         }
         
-        if let latestAcceptedRecord = mushroom.lastAcceptedObservation {
+        if let latestAcceptedRecord = mushroom.statistics?.lastAcceptedRecord {
             informationArray.append(("Seneste fund:", Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.medium) ?? ""))
         }
         
@@ -237,8 +210,8 @@ class MushroomView: UIView {
         
         configureLowerStackView(informations: informationArray)
         
-        if let redlistData = mushroom.redlistData {
-            redlistView.configure(redlistData.status, black: true)
+        if let redlistStatus = mushroom.redlistStatus {
+            redlistView.configure(redlistStatus, black: true)
             redlistStackView.isHidden = false
         } else {
             redlistStackView.isHidden = true

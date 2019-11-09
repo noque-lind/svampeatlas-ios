@@ -8,24 +8,6 @@
 
 import UIKit
 
-class DownloadableImageView: UIImageView {
-    private var urlString: String?
-    
-    func downloadImage(size: DataService.imageSize, urlString: String?) {
-        self.urlString = urlString
-        guard let urlString = urlString else {return}
-        DataService.instance.getImage(forUrl: urlString, size: size) { (image, url) in
-            if self.urlString == urlString {
-                DispatchQueue.main.async { [weak self] in
-                    self?.fadeToNewImage(image: image)
-                    self?.image = image
-                }
-            }
-        }
-    }
-}
-
-
 class RoundedImageView: UIView {
 
     private lazy var imageView: DownloadableImageView = {
@@ -33,11 +15,9 @@ class RoundedImageView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
-//        imageView.layer.mask = shapeLayer
         return imageView
     }()
     
-    private let shapeLayer = CAShapeLayer()
     var isMasked: Bool = true {
         didSet {
             imageView.clipsToBounds = isMasked
@@ -53,18 +33,12 @@ class RoundedImageView: UIView {
         fatalError()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        round()
-    }
     
     private func setupView() {
-        layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-        layer.shadowOpacity = 0.4
-        layer.shadowRadius = 2.5
-        layer.shadowOffset = CGSize(width: 0, height: 0)
-//        layer.shadowPath = shapeLayer.path
         clipsToBounds = true
+        layer.shadowOpacity = Float.shadowOpacity()
+        layer.cornerRadius = CGFloat.cornerRadius()
+        layer.shadowOffset = CGSize.shadowOffset()
         
         addSubview(imageView)
         imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -73,13 +47,6 @@ class RoundedImageView: UIView {
         imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
-    
-    private func round() {
-        layer.cornerRadius = frame.height / 2 - 7
-        let radius = frame.height / 2 - 7
-        
-        shapeLayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: [.topRight, .bottomRight], cornerRadii: CGSize(width: radius, height: radius)).cgPath
-        }
         
 
     func configureImage(url: String?) {
@@ -88,6 +55,12 @@ class RoundedImageView: UIView {
         }
     
     func configureImage(image: UIImage) {
-        self.imageView.image = image
+        imageView.image = image
+    }
+    
+    func configureRoundness(fullyRounded: Bool) {
+        if !fullyRounded {
+            layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        }
     }
 }

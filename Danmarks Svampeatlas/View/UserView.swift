@@ -11,7 +11,7 @@ import UIKit
 class UserView: UIView {
 
     private var profileImageView: ProfileImageView = {
-       let view = ProfileImageView(defaultImage: #imageLiteral(resourceName: "LogoSmall"))
+       let view = ProfileImageView(defaultImage: #imageLiteral(resourceName: "Images_Icon"))
         view.translatesAutoresizingMaskIntoConstraints = false
         view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
         return view
@@ -91,13 +91,11 @@ class UserView: UIView {
     }
     
     func configure(user: User) {
-        profileImageView.configure(initials: user.initials, imageURL: user.imageURL)
+        profileImageView.configure(initials: user.initials, imageURL: user.imageURL, imageSize: .full)
         primaryLabel.text = user.name
-        secondaryLabel.text = " "
         profileImageView.isHidden = false
         primaryLabel.isHidden = false
         secondaryLabel.isHidden = true
-        
         profileImageView.clipsToBounds = true
         profileImageView.backgroundColor = UIColor.appPrimaryColour()
     }
@@ -107,7 +105,7 @@ class UserView: UIView {
         secondaryLabel.text = "Log ind for at få den bedste oplevelse"
         primaryLabel.isHidden = false
         secondaryLabel.isHidden = false
-        profileImageView.configure(initials: "", imageURL: nil)
+        profileImageView.configure(image: #imageLiteral(resourceName: "Images_Icon"))
         profileImageView.backgroundColor = UIColor.clear
         profileImageView.clipsToBounds = false
     }

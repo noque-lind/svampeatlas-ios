@@ -10,12 +10,14 @@ import UIKit
 
 class ReloadCell: UITableViewCell {
     
+    static let identifier = "ReloadCell"
+    
     private var iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: 14).isActive = true
         imageView.contentMode = .scaleAspectFit
-        imageView.image = #imageLiteral(resourceName: "Reload")
+        imageView.image = #imageLiteral(resourceName: "Glyphs_Reload")
         return imageView
     }()
     

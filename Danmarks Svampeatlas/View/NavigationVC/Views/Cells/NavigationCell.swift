@@ -24,6 +24,7 @@ class NavigationCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
         imageView.backgroundColor = UIColor.clear
+        imageView.contentMode = .center
         return imageView
     }()
     
@@ -31,7 +32,7 @@ class NavigationCell: UITableViewCell {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.appWhite()
-        label.font = UIFont.appPrimaryHightlighed(customSize: 16)
+        label.font = UIFont.appPrimaryHightlighed()
         return label
     }()
     

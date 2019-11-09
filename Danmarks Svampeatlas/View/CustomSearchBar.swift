@@ -21,11 +21,11 @@ class CustomSearchBar: UITextField {
     lazy var iconView: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.appSecondaryColour()
-        button.setImage(#imageLiteral(resourceName: "Search"), for: [])
+        button.setImage(#imageLiteral(resourceName: "Glyphs_Search"), for: [])
         button.clipsToBounds = false
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+        button.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         button.layer.shadowRadius = 1.5
+        button.layer.shadowOpacity = Float.shadowOpacity()
         button.layer.masksToBounds = false
         button.addTarget(self, action: #selector(searchButtonPressed(sender:)), for: .touchUpInside)
         return button
@@ -67,12 +67,15 @@ class CustomSearchBar: UITextField {
         return rect
     }
     
+    override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+        return CGRect(x: 0.0, y: 0.0, width: bounds.height, height: bounds.height)
+    }
+    
     private func setupView() {
         isHidden = true
         autocorrectionType = .no
         
-        
-        self.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
         returnKeyType = .search
         iconView.layer.shadowOpacity = 0.4
         
@@ -123,11 +126,11 @@ extension CustomSearchBar {
     
     @objc func searchButtonPressed(sender: UIButton) {
         if !isExpanded {
-            iconView.setImage(#imageLiteral(resourceName: "Exit"), for: [])
+            iconView.setImage(#imageLiteral(resourceName: "Glyphs_Cancel"), for: [])
             expand()
             self.becomeFirstResponder()
         } else {
-            if iconView.image(for: []) != #imageLiteral(resourceName: "Search") {
+            if iconView.image(for: []) != #imageLiteral(resourceName: "Glyphs_Search") {
                 collapse()
                 searchBarDelegate?.clearedSearchEntry()
             }
@@ -163,7 +166,7 @@ extension CustomSearchBar {
                 self.superview?.layoutIfNeeded()
             }
             
-            iconView.setImage(#imageLiteral(resourceName: "Search"), for: [])
+            iconView.setImage(#imageLiteral(resourceName: "Glyphs_Search"), for: [])
             self.backgroundColor = UIColor.clear
             iconView.layer.shadowOpacity = 0.4
             layer.mask = nil

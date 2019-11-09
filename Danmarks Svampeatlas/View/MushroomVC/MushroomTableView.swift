@@ -8,6 +8,55 @@
 
 import UIKit
 
+class MushroomTable: TestTableView<MushroomTable.Item> {
+        
+    enum Item {
+        case mushroom(Mushroom)
+        case loadMore(offset: Int)
+    }
+    
+    var didSelectItem: ((Item, IndexPath) -> ())?
+    
+
+    override init() {
+        super.init()
+        register(cellClass: MushroomCell.self, forCellReuseIdentifier: MushroomCell.identifier)
+        register(cellClass: ReloadCell.self, forCellReuseIdentifier: ReloadCell.identifier)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    override func cellForItem(_ item: MushroomTable.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        switch item {
+        case .mushroom(let mushroom):
+             let cell = tableView.dequeueReusableCell(withIdentifier: MushroomCell.identifier, for: indexPath) as! MushroomCell
+                          cell.configureCell(mushroom: mushroom)
+                          return cell
+        case .loadMore:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReloadCell.identifier, for: indexPath) as! ReloadCell
+            cell.configureCell(text: "Vis flere")
+            return cell
+        }
+    }
+    
+    override func heightForItem(_ item: MushroomTable.Item) -> CGFloat {
+        switch item {
+        case .loadMore:
+            return 250
+        case .mushroom:
+            return UITableView.automaticDimension
+        }
+    }
+    
+    override func didSelectItem(_ item: MushroomTable.Item, indexPath: IndexPath) {
+        didSelectItem?(item, indexPath)
+    }
+    
+    
+}
+
 class MushroomTableView: GenericTableView<Mushroom> {
     
     var contentInset: UIEdgeInsets = UIEdgeInsets.zero {
@@ -70,7 +119,7 @@ class MushroomTableView: GenericTableView<Mushroom> {
         }
         
         action.backgroundColor = UIColor.white.withAlphaComponent(0.0)
-        action.image = CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) ? #imageLiteral(resourceName: "Icon_DeFavorite"): #imageLiteral(resourceName: "Favorite")
+        action.image = CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) ? #imageLiteral(resourceName: "Icons_Utils_Favorite_DeMake"): #imageLiteral(resourceName: "Icons_Utils_Favorite_Make")
          return UISwipeActionsConfiguration(actions: [action])
     }
 

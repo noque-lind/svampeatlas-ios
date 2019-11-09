@@ -178,6 +178,11 @@ class TableViewPickerCell: UITableViewCell {
     
     var didSelectCell: ((_ cellType: Section.CellType, _ isLocked: Bool) -> ())?
     var presentVC: ((UIViewController) -> ())?
+    var isLocked: Bool = false {
+        didSet {
+            switchHeaderView.isOn = isLocked
+        }
+    }
     
     override func prepareForReuse() {
         tableView.setContentOffset(CGPoint.zero, animated: false)

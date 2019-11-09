@@ -11,41 +11,159 @@ import UIKit
 class CustomTableView: AppTableView {
     
     
-
-
     
     
     
-//    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-//        if self.point(inside: point, with: event) {
-//            return self
-//        } else {
-//            return nil
-//        }
-//    }
     
-//    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if gestureRecognizer is UITapGestureRecognizer {
-//            return false
-//        } else {
-//            return true
-//        }
-//    }
+    
+    //    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    //        if self.point(inside: point, with: event) {
+    //            return self
+    //        } else {
+    //            return nil
+    //        }
+    //    }
+    
+    //    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    //        if gestureRecognizer is UITapGestureRecognizer {
+    //            return false
+    //        } else {
+    //            return true
+    //        }
+    //    }
 }
 
 
-protocol GenericTableViewDelegate: NavigationDelegate {
+
+
+class TestTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     
-    associatedtype Item
+    private lazy var tableView: UITableView = {
+        let view = UITableView()
+        view.backgroundColor = UIColor.clear
+        view.delegate = self
+        view.dataSource = self
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.clear
+        view.separatorStyle = .singleLine
+        view.separatorInset = UIEdgeInsets.zero
+        view.separatorColor = UIColor.appSecondaryColour()
+        view.alwaysBounceVertical = false
+        view.contentInsetAdjustmentBehavior = .never
+        view.panGestureRecognizer.isEnabled = false
+        view.tableFooterView = UIView()
+        view.delegate = self
+        view.dataSource = self
+        view.clipsToBounds = true
+        view.register(ErrorCell.self, forCellReuseIdentifier: ErrorCell.identifier)
+        view.register(LoaderCell.self, forCellReuseIdentifier: LoaderCell.identifier)
+        return view
+    }()
     
-    func tableView(_ tableView: UITableView, didRequestAdditionalDataAtOffset offset: Int)
-    func tableView(_ tableView: UITableView, didSelectItem item: Item)
+    var sections = [Section<T>]()
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    private func setupView() {
+        backgroundColor = UIColor.clear
+        clipsToBounds = false
+        addSubview(tableView)
+        tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    }
+    
+    func setSections(sections: [Section<T>]) {
+        self.sections = sections
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func addSection(section: Section<T>) {
+        sections.append(section)
+        
+        DispatchQueue.main.async {
+            self.tableView.insertSections(IndexSet(integer: self.sections.endIndex - 1), with: .bottom)
+        }
+    }
+    
+    func removeItem(item: T, indexPath: IndexPath) {
+        sections[indexPath.section].removeItemAt(index: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
+    
+    func register(cellClass: AnyClass?, forCellReuseIdentifier identifier: String) {
+        tableView.register(cellClass, forCellReuseIdentifier: identifier)
+    }
+    
+    func cellForItem(_ item: T, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+    
+    func heightForItem(_ item: T) -> CGFloat {
+        UITableView.automaticDimension
+    }
+    
+    func didSelectItem(_ item: T, indexPath: IndexPath) {}
+    
+    internal func numberOfSections(in tableView: UITableView) -> Int {
+        return sections.count
+    }
+    
+    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return sections[section].count()
+    }
+
+    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch sections[indexPath.section].state {
+        case .error(error: let error):
+            let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.identifier, for: indexPath) as! ErrorCell
+            cell.configure(error: error)
+            return cell
+        case .loading:
+            return tableView.dequeueReusableCell(withIdentifier: LoaderCell.identifier, for: indexPath)
+        case .items(items: let items):
+            guard let item = items[safe: indexPath.row] else {return UITableViewCell()}
+            let cell = cellForItem(item, tableView: tableView, indexPath: indexPath)
+            return cell
+        }
+    }
+    
+    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch sections[indexPath.section].state {
+        case .error:
+            if sections.count == 1 {
+                return tableView.frame.height
+            } else {
+                return 350
+            }
+        case .loading:
+            if sections.count == 1 {
+                return tableView.frame.height
+            } else {
+                return 200
+            }
+        case .items(items: let items):
+            return heightForItem(items[indexPath.row])
+        }
+    }
+    
+    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let item = sections[indexPath.section].itemAt(index: indexPath.row) else {return}
+        didSelectItem(item, indexPath: indexPath)
+    }
 }
 
-extension GenericTableViewDelegate {
-    func tableView(_ tableView: UITableView, didRequestAdditionalDataAtOffset offset: Int) {}
-    func tableView(_ tableView: UITableView, didSelectItem item: Item) {}
-}
 
 class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     
@@ -70,16 +188,16 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     private var heightConstraint = NSLayoutConstraint()
     private var automaticallyAdjustHeight: Bool
     private var animating: Bool
-//    weak var delegate: GenericTableViewDelegate?
+    //    weak var delegate: GenericTableViewDelegate?
     
     /**
-    Assign a closure to this variable that takes the following parameters:
+     Assign a closure to this variable that takes the following parameters:
      
      - Parameters:
-        - genericTableView<T>: The tableview it is called from.
-        - int: The current tableView offset
-        - int: The maximum number of items in the model.
-    */
+     - genericTableView<T>: The tableview it is called from.
+     - int: The current tableView offset
+     - int: The maximum number of items in the model.
+     */
     var didRequestAdditionalDataAtOffset: ((_ tableView: GenericTableView<T>, _ offset: Int, _ max: Int?) -> ())?
     var didSelectItem: ((_ item: T) -> ())?
     
@@ -90,7 +208,6 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
                 tableView.reloadData()
             case .Loading:
                 self.tableView.showLoader()
-                return
             case .Paging:
                 break
             case .Items:
@@ -156,9 +273,9 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
                 heightConstraint.isActive = true
             }
         default:
-                heightConstraint.isActive = false
-                heightConstraint.constant = 120
-                heightConstraint.isActive = true
+            heightConstraint.isActive = false
+            heightConstraint.constant = 120
+            heightConstraint.isActive = true
         }
     }
     

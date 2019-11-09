@@ -26,7 +26,7 @@ class SearchCell: UITableViewCell {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.heightAnchor.constraint(equalToConstant: 14).isActive = true
             view.widthAnchor.constraint(equalToConstant: 14).isActive = true
-            view.image = #imageLiteral(resourceName: "Search")
+            view.image = #imageLiteral(resourceName: "Glyphs_Search")
             return view
         }()
         

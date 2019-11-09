@@ -52,32 +52,16 @@ fileprivate struct PrivateDeterminationView: Decodable {
     public private(set) var taxon_vernacularname_dk: String?
     public private(set) var redlistStatus: String?
     public private(set) var determination_validation: String?
-    
-    private enum CodingKeys: String, CodingKey {
-        case taxon_id
-        case taxon_vernacularname_dk
-        case taxon_FullName
-        case redlistStatus
-        case determination_validation
-    }
+    public private(set) var determination_score: Int?
 }
 
 fileprivate struct PrivatePrimaryDeterminationView: Decodable {
+    public private(set) var score: Int?
     public private(set) var validation: String?
     public private(set) var Taxon: PrivateTaxon
 }
 fileprivate struct PrivateTaxon: Decodable {
-    public private(set) var acceptedTaxon: PrivateAcceptedTaxon
-}
-
-fileprivate struct PrivateAcceptedTaxon: Decodable {
-    public private(set) var _id: Int?
-    public private(set) var FullName: String?
-    public private(set) var Vernacularname_DK: Vernacularname_DK?
-}
-
-fileprivate struct Vernacularname_DK: Decodable {
-    public private(set) var vernacularname_dk: String
+    public private(set) var acceptedTaxon: AcceptedTaxon
 }
 
 fileprivate struct PrivateImages: Decodable {
@@ -85,7 +69,11 @@ fileprivate struct PrivateImages: Decodable {
     var createdAt: String
     var url: String {
         get {
-            return "https://svampe.databasen.org/uploads/" + name + ".JPG"
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "svampe.databasen.org"
+            urlComponents.path = "/uploads/\(name).JPG"
+            return urlComponents.url?.absoluteString ?? ""
         }
     }
 }
@@ -121,6 +109,14 @@ private struct PrivateGeoName: Decodable {
 // Front
 
 struct Observation: Decodable, Equatable {
+    enum ValidationStatus {
+        case approved
+        case verifying
+        case rejected
+        case unknown
+    }
+    
+    
     public private(set) var id: Int
     public private(set) var coordinates: [Double]
     public private(set) var speciesProperties: SpeciesProperties
@@ -131,18 +127,48 @@ struct Observation: Decodable, Equatable {
     public private(set) var location: String?
     public private(set) var images: [Image]?
     public private(set) var comments = [Comment]()
-    public private(set) var validationStatus: String?
+    public private(set) var validationStatus: ValidationStatus
     public private(set) var substrate: Substrate?
     public private(set) var vegetationType: VegetationType?
+
     
     init(from decoder: Decoder) throws {
         let privateObservation = try PrivateObservation(from: decoder)
+
         id = privateObservation.id
         coordinates = privateObservation.geom.coordinates
         date = privateObservation.observationDate
         observedBy = privateObservation.primaryUser?.profile?.name
         note = privateObservation.note
         ecologyNote = privateObservation.ecologyNote
+        
+        if let determinationScore =  privateObservation.determinationView?.determination_score, determinationScore >= 80 {
+            validationStatus = .approved
+        } else if let validation = privateObservation.determinationView?.determination_validation {
+            switch validation {
+            case "Afvist":
+                validationStatus = .rejected
+            case "Godkendt":
+                validationStatus = .approved
+            case "Valideres":
+                validationStatus = .verifying
+            default: validationStatus = .unknown
+            }
+        } else if let determinationScore = privateObservation.primaryDetermination?.score, determinationScore >= 80 {
+            validationStatus = .approved
+        } else if let validation = privateObservation.primaryDetermination?.validation {
+            switch validation {
+            case "Afvist":
+                validationStatus = .rejected
+            case "Godkendt":
+                validationStatus = .approved
+            case "Valideres":
+                validationStatus = .verifying
+            default: validationStatus = .unknown
+            }
+        } else {
+            validationStatus = .unknown
+        }
         
         if let geomNames = privateObservation.geoNames {
             location = "\(geomNames.countryName), \(geomNames.name)"
@@ -159,12 +185,10 @@ struct Observation: Decodable, Equatable {
         }
         
         if let determinationView = privateObservation.determinationView {
-            validationStatus = determinationView.determination_validation
-            
             speciesProperties = SpeciesProperties(id: determinationView.taxon_id ?? 0, name: determinationView.taxon_vernacularname_dk ?? determinationView.taxon_FullName ?? "")
         
         } else if let primaryDeterminationView = privateObservation.primaryDetermination {
-            speciesProperties = SpeciesProperties(id: primaryDeterminationView.Taxon.acceptedTaxon._id ?? 0, name: primaryDeterminationView.Taxon.acceptedTaxon.Vernacularname_DK?.vernacularname_dk ?? primaryDeterminationView.Taxon.acceptedTaxon.FullName ?? "")
+            speciesProperties = SpeciesProperties(id: primaryDeterminationView.Taxon.acceptedTaxon.id ?? 0, name: primaryDeterminationView.Taxon.acceptedTaxon.vernacularNameDK?.vernacularname_dk ?? primaryDeterminationView.Taxon.acceptedTaxon.fullName)
         } else {
             speciesProperties = SpeciesProperties(id: id, name: "")
         }

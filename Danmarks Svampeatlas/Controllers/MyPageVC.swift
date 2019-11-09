@@ -29,7 +29,7 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
 
     
     private lazy var menuButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
+        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
         return button
     }()
     
@@ -71,12 +71,6 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        super.viewDidAppear(animated)
-    }
-
     override func viewWillLayoutSubviews() {
         if let navigationBarFrame = self.navigationController?.navigationBar.frame {
             additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
@@ -96,8 +90,8 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = UIColor.appSecondaryColour()
         
         view.addSubview(scrollView)
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
@@ -105,10 +99,6 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         elNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         elNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         elNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-    }
-    
-    deinit {
-        print("MyPageVC Was deinited")
     }
 }
 

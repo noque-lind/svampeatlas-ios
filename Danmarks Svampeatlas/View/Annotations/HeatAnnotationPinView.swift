@@ -20,7 +20,7 @@ class HeatAnnotationView: MKAnnotationView {
     }
     
     private func setupView() {
-        image = UIImage(named: "Icons_Icons_Cluster1")!
+        image = UIImage(named: "Icons_Map_Cluster1")!
         canShowCallout = false
         displayPriority = .defaultHigh
         collisionMode = .circle

@@ -52,10 +52,11 @@ class TextViewCell: UITableViewCell {
 
 class AddCommentCell: UITableViewCell {
     private lazy var textView: ELTextView = {
-        let view = ELTextView(defaultHeight: 90)
+        let view = ELTextView(defaultHeight: 200)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.appSecondaryColour()
         view.textColor = UIColor.appWhite()
+        view.textView.isScrollEnabled = true
         view.shouldHandleKeyboard = false
         view.font = UIFont.appPrimaryHightlighed()
         view.titleTextColor = UIColor.appWhite()
@@ -66,7 +67,7 @@ class AddCommentCell: UITableViewCell {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.appGreen()
-        button.setImage(#imageLiteral(resourceName: "DisclosureButton"), for: [])
+        button.setImage(#imageLiteral(resourceName: "Glyphs_DisclosureButton"), for: [])
         button.widthAnchor.constraint(equalToConstant: 40).isActive = true
         button.layer.shadowOpacity = textView.shadowOpacity
         button.layer.shadowOffset = textView.shadowOffset

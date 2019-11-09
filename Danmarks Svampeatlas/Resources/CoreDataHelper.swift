@@ -13,12 +13,20 @@ import ELKit
 
 enum CoreDataError: AppError {
     
+    enum NoEntriesCategory {
+        case Substrate
+        case VegetationType
+        case Mushrooms
+        case Hosts
+        case User
+    }
+    
     var errorTitle: String {
         switch self {
         case .contentOutdated:
             return "Databasen skal opdateres"
         case .noEntries:
-            return "Tom database"
+            return "Fandt intet"
         case .readError:
             return "Læsefejl"
         case .saveError:
@@ -28,8 +36,12 @@ enum CoreDataError: AppError {
     
     var errorDescription: String {
         switch self {
-        case .noEntries:
-            return "Fandt ikke noget gemt data"
+        case .noEntries(category: let category):
+            switch category {
+            case .Mushrooms:
+                return "Du har ingen gemte favoritter. Du kan gøre en svamp til en favorit ved at swippe til venstre."
+            default: return "Der var ingen gemt data."
+            }
         case .readError:
             return "Der var desværre problemer med at læse data fra disken"
         case .contentOutdated:
@@ -40,7 +52,7 @@ enum CoreDataError: AppError {
     }
     
     
-    case noEntries
+    case noEntries(category: NoEntriesCategory)
     case contentOutdated
     case readError
     case saveError
@@ -78,6 +90,8 @@ struct CoreDataHelper {
     
     static func deleteMushroom(mushroom: Mushroom, completion: () -> ()) {
         
+       
+        
         let fetchRequest = NSFetchRequest<CDMushroom>(entityName: "CDMushroom")
         fetchRequest.predicate = NSPredicate(format: "id == %i", mushroom.id)
         
@@ -101,7 +115,7 @@ struct CoreDataHelper {
             let cdMushrooms = try managedContext.fetch(fetchRequest)
             let mushrooms = cdMushrooms.compactMap({Mushroom(from: $0)})
             
-            guard mushrooms.count > 0 else {completion(Result.Error(CoreDataError.noEntries)); return}
+            guard mushrooms.count > 0 else {completion(Result.Error(CoreDataError.noEntries(category: .Mushrooms))); return}
             completion(Result.Success(mushrooms))
         } catch {
             completion(Result.Error(CoreDataError.readError))
@@ -115,13 +129,17 @@ struct CoreDataHelper {
                 cdMushroom.id = Int32(mushroom.id)
                 cdMushroom.fullName = mushroom.fullName
                 cdMushroom.danishName = mushroom.danishName
-                cdMushroom.redlistStatus = mushroom.redlistData?.status
+                cdMushroom.redlistStatus = mushroom.redlistStatus
                 cdMushroom.updatedAt = mushroom.updatedAt
                 
                 let cdAttributes = CDMushroomAttribute(context: managedContext)
                 cdAttributes.diagnosis = mushroom.attributes?.diagnosis
                 cdAttributes.ecology = mushroom.attributes?.ecology
                 cdAttributes.mushroom = cdMushroom
+                cdAttributes.eatability = mushroom.attributes?.eatability
+                cdAttributes.mDescription = mushroom.attributes?.description
+                cdAttributes.similarities = mushroom.attributes?.similarities
+                cdAttributes.tipsForValidation = mushroom.attributes?.tipsForValidation
                 
                 cdMushroom.attributes = cdAttributes
                 
@@ -134,7 +152,7 @@ struct CoreDataHelper {
                         
                         DispatchQueue.main.async {
                             if !ELFileManager.fileExists(withURL: image.url) {
-                                DataService.instance.getImage(forUrl: image.url) { (image, imageURL) in
+                                DataService.instance.getImage(forUrl: image.url, size: .full) { (image, imageURL) in
                                     ELFileManager.saveImage(image: image, url: imageURL)
                                 }
                             }
@@ -183,7 +201,7 @@ extension CoreDataHelper {
                 
         
                 if let imageURL = user.imageURL {
-                    DataService.instance.getImage(forUrl: imageURL, completion: { (image, imageURL) in
+                    DataService.instance.getImage(forUrl: imageURL, size: .full, completion: { (image, imageURL) in
                         ELFileManager.saveImage(image: image, url: imageURL)
                     })
                 }
@@ -201,10 +219,10 @@ extension CoreDataHelper {
         do {
             let cdUser = try managedContext.fetch(fetchRequest).last
             
-            guard let user = cdUser else {return Result.Error(CoreDataError.noEntries)}
+            guard let user = cdUser else {return Result.Error(CoreDataError.noEntries(category: .User))}
             return Result.Success(User(from: user))
         } catch {
-            return Result.Error(CoreDataError.noEntries)
+            return Result.Error(CoreDataError.noEntries(category: .User))
         }
     }
     
@@ -236,7 +254,7 @@ extension CoreDataHelper {
                 let cdVegetationTypes = try managedContext.fetch(fetchRequest)
                 let vegetationTypes = cdVegetationTypes.compactMap({VegetationType(from: $0)})
                 
-                guard vegetationTypes.count > 0 else {completion(Result.Error(CoreDataError.noEntries)); return}
+                guard vegetationTypes.count > 0 else {completion(Result.Error(CoreDataError.noEntries(category: .VegetationType))); return}
                 completion(Result.Success(vegetationTypes))
             } catch {
                 print(error)
@@ -283,7 +301,7 @@ extension CoreDataHelper {
                 let cdSubstrateGroups = try managedContext.fetch(fetchRequest)
                 let substrateGroups = cdSubstrateGroups.compactMap({SubstrateGroup(from: $0)})
                 
-                guard substrateGroups.count > 0 else {completion(Result.Error(CoreDataError.noEntries)); return}
+                guard substrateGroups.count > 0 else {completion(Result.Error(CoreDataError.noEntries(category: .Substrate))); return}
                 completion(Result.Success(substrateGroups))
             } catch {
                 print(error)
@@ -301,7 +319,7 @@ extension CoreDataHelper {
             do {
                 let cdHosts = try managedContext.fetch(fetchRequest)
                 let hosts = cdHosts.compactMap({Host(from: $0)})
-                guard hosts.count > 0 else {completion(Result.Error(CoreDataError.noEntries)); return}
+                guard hosts.count > 0 else {completion(Result.Error(CoreDataError.noEntries(category: .Hosts))); return}
                 completion(Result.Success(hosts))
             } catch {
                 completion(Result.Error(.readError))
@@ -400,22 +418,8 @@ extension CoreDataHelper {
     
     
     static func getFavoriteHosts() -> Result<[Host], CoreDataError> {
-        return Result.Error(CoreDataError.noEntries)
+        return Result.Error(CoreDataError.noEntries(category: .Hosts))
     }
-    
-    /*
-    static func fetchUser(completion: (_ user: User?) -> ()) {
-        guard let managedContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext else {return}
-        
-        let fetchRequest = NSFetchRequest<CDUser>(entityName: "CDUser")
-        do {
-            let cdUser = try managedContext.fetch(fetchRequest).first
-            guard let user = cdUser else {completion(nil); return}
-            completion(User(from: user))
-        } catch {
-            completion(nil)
-        }
-    }*/
 }
 
 

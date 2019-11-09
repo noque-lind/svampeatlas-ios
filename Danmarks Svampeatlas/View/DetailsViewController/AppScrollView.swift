@@ -7,16 +7,15 @@
 //
 
 import UIKit
-import MapKit
+
 class AppScrollView: UIScrollView {
     
-    lazy var contentStackView: UIStackView = {
+    private lazy var contentStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.distribution = UIStackView.Distribution.fill
-        stackView.spacing = 24
+        stackView.spacing = 32
         return stackView
     }()
     
@@ -25,8 +24,8 @@ class AppScrollView: UIScrollView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.addSubview(contentStackView)
-        contentStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
-        contentStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
+        contentStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        contentStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         contentStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
         contentStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
         return view
@@ -40,47 +39,17 @@ class AppScrollView: UIScrollView {
         setupView()
     }
     
-    deinit {
-        print("AppScrollView deinited")
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
     
-    private func setupView() {
+    internal func setupView() {
         addSubview(contentView)
         contentView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         contentView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         contentView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         contentView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         contentView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-    }
-    
-    func addContent(title: String, content: UIView) -> UIStackView {
-        let stackView: UIStackView = {
-            let stackView = UIStackView()
-            stackView.axis = .vertical
-            stackView.spacing = 2
-            
-            let dividerLabel: UILabel = {
-                let label = UILabel()
-                label.font = UIFont.appDivider()
-                label.textColor = UIColor.appWhite()
-                label.text = title
-                return label
-            }()
-            
-            stackView.addArrangedSubview(dividerLabel)
-    if content is UIScrollView {
-    
-    }
-            stackView.addArrangedSubview(content)
-            return stackView
-    }()
-        contentStackView.addArrangedSubview(stackView)
-        return stackView
-        
     }
     
     func configureHeader(title: String, subtitle: String?, user: String?) {
@@ -123,7 +92,8 @@ class AppScrollView: UIScrollView {
                     let iconView: UIImageView = {
                         let view = UIImageView()
                         view.translatesAutoresizingMaskIntoConstraints = false
-                        view.image = #imageLiteral(resourceName: "Profile")
+                        view.image = #imageLiteral(resourceName: "Glyphs_Profile")
+                        view.contentMode = .center
                         view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
                         return view
                     }()
@@ -183,11 +153,13 @@ class AppScrollView: UIScrollView {
                     let stackView = UIStackView()
                     stackView.axis = .horizontal
                     stackView.spacing = 4
+                    stackView.alignment = .center
                     
                     let iconView: UIImageView = {
                         let view = UIImageView()
                         view.translatesAutoresizingMaskIntoConstraints = false
-                        view.image = #imageLiteral(resourceName: "Profile")
+                        view.image = #imageLiteral(resourceName: "Glyphs_Profile")
+                        view.contentMode = .center
                         view.widthAnchor.constraint(equalTo: view.heightAnchor).isActive = true
                         return view
                     }()
@@ -211,9 +183,45 @@ class AppScrollView: UIScrollView {
         }()
         contentStackView.addArrangedSubview(stackView)
     }
-
     
-    func configureText(title: String, text: String?) {
+    func addContent(title: String?, content: UIView, padding: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 8, bottom: 0.0, right: 8)) {
+        func createContentStackView(padding: UIEdgeInsets) -> UIStackView {
+            let stackView: UIStackView = {
+                let stackView = UIStackView()
+                stackView.isLayoutMarginsRelativeArrangement = true
+                stackView.layoutMargins = padding
+                stackView.addArrangedSubview(content)
+                return stackView
+            }()
+            return stackView
+        }
+        
+        
+        if let title = title {
+            let stackView: UIStackView = {
+               let stackView = UIStackView()
+                stackView.axis = .vertical
+                stackView.spacing = 8
+                
+                let header: SectionHeaderView = {
+                   let view = SectionHeaderView()
+                    view.configure(text: title)
+                    return view
+                }()
+                
+                stackView.addArrangedSubview(header)
+                stackView.addArrangedSubview(createContentStackView(padding: padding))
+                return stackView
+            }()
+            
+            contentStackView.addArrangedSubview(stackView)
+        } else {
+            contentStackView.addArrangedSubview(createContentStackView(padding: padding))
+        }
+    }
+    
+    
+    func addText(title: String, text: String?) {
         guard let text = text, text != "" else {return}
         
         let textLabel: UILabel = {
@@ -226,41 +234,45 @@ class AppScrollView: UIScrollView {
             paragraphStyle.hyphenationFactor = 1.0
             
             // Swift 4.2++
-            let attributedString = NSMutableAttributedString(string: text, attributes: [NSAttributedString.Key.paragraphStyle:paragraphStyle])
+            let attributedString = NSMutableAttributedString(string: text.capitalizeFirst(), attributes: [NSAttributedString.Key.paragraphStyle:paragraphStyle])
             label.attributedText = attributedString
             return label
         }()
         
-        _ = addContent(title: title, content: textLabel)
+        addContent(title: title, content: textLabel)
     }
     
-    func configureInformation(information: [(String, String)]) {
+    func addInformation(information: [(String, String)]) {
         guard information.count != 0 else {return}
         
         func createStackView(_ withInfo: (String, String)) -> UIStackView {
             let leftLabel: UILabel = {
                 let label = UILabel()
+                label.numberOfLines = 1
                 label.font = UIFont.appPrimary()
                 label.textColor = UIColor.appWhite()
                 label.text = withInfo.0
+                label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
                 label.textAlignment = .left
                 return label
             }()
             
             let rightLabel: UILabel = {
                 let label = UILabel()
+                label.numberOfLines = 0
+                label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
                 label.font = UIFont.appPrimary()
                 label.textColor = UIColor.appWhite()
                 label.text = withInfo.1
                 label.textAlignment = .right
-                label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
                 return label
             }()
             
             let stackView: UIStackView = {
                 let stackView = UIStackView()
                 stackView.axis = .horizontal
-                stackView.distribution = .fillProportionally
+                stackView.spacing = 16
+                stackView.distribution = .fill
                 stackView.addArrangedSubview(leftLabel)
                 stackView.addArrangedSubview(rightLabel)
                 return stackView
@@ -271,21 +283,11 @@ class AppScrollView: UIScrollView {
         let stackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
-            stackView.spacing = 2
-            
-            let dividerLabel: UILabel = {
-                let label = UILabel()
-                label.font = UIFont.appDivider()
-                label.textColor = UIColor.appWhite()
-                label.text = "Information"
-                return label
-            }()
-            
-            stackView.addArrangedSubview(dividerLabel)
-            _ = information.map({stackView.addArrangedSubview(createStackView($0))})
+            stackView.spacing = 4
+            information.forEach({stackView.addArrangedSubview(createStackView($0))})
             return stackView
         }()
         
-        contentStackView.addArrangedSubview(stackView)
+        addContent(title: "Information", content: stackView)
     }
 }

@@ -14,15 +14,15 @@ class ClusteredHeatAnnotation: MKClusterAnnotation {
         get {
             switch memberAnnotations.count {
             case 1:
-                return UIImage(named: "Icons_Icons_Cluster1")!
+                return UIImage(named: "Icons_Map_Cluster1")!
             case 1...9:
-                return UIImage(named: "Icons_Icons_Cluster1...9")!
+                return UIImage(named: "Icons_Map_Cluster1.9")!
             case 10...30:
-                return UIImage(named: "Icons_Icons_Cluster10...30")!
+                return UIImage(named: "Icons_Map_Cluster10.30")!
             case 30...50:
-                return UIImage(named: "Icons_Icons_Cluster30...50")!
+                return UIImage(named: "Icons_Map_Cluster30.50")!
             default:
-                return UIImage(named: "Icons_Icons_Cluster50...")!
+                return UIImage(named: "Icons_Map_Cluster50")!
             }
         }
     }
@@ -52,7 +52,6 @@ class ClusteredHeatAnnotationView: MKAnnotationView {
         displayPriority = .required
         collisionMode = .circle
         canShowCallout = false
-        image = #imageLiteral(resourceName: "CaptureBtn")
     }
     
     private func configure(annotation: ClusteredHeatAnnotation) {

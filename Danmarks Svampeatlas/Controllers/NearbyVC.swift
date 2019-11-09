@@ -32,7 +32,7 @@ class NearbyVC: UIViewController {
     }()
     
     private lazy var menuButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
+        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
         return button
     }()
         
@@ -45,9 +45,9 @@ class NearbyVC: UIViewController {
             self.locationManager.start()
         }
         
-        view.onAnnotationRelease = { [unowned self] (gesture) in
+        view.onAnnotationRelease = { [unowned self] (annotationButton) in
             self.mapView.shouldLoad = true
-            let pointAnnotation = self.mapView.addPointAnnotation(gesture: gesture)
+            let pointAnnotation = self.mapView.addLocationAnnotation(button: annotationButton)
             self.locationRetrieved(location: CLLocation.init(latitude: pointAnnotation.coordinate.latitude, longitude: pointAnnotation.coordinate.longitude))
         }
         return view
@@ -67,9 +67,6 @@ class NearbyVC: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    deinit {
-        print("Nearby VC deinited")
-    }
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
@@ -78,12 +75,6 @@ class NearbyVC: UIViewController {
         super.viewDidLoad()
         setupView()
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-    }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)

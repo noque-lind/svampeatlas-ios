@@ -13,7 +13,10 @@ struct temptModel {
     var confidence: CGFloat
 }
 
-protocol CameraViewDelegate: CameraControlsViewDelegate, ResultsViewDelegate {}
+protocol CameraViewDelegate: CameraControlsViewDelegate, ResultsViewDelegate {
+    func expandView()
+    func collapseView()
+}
 
 class CameraView: UIVisualEffectView {
     
@@ -28,10 +31,9 @@ class CameraView: UIVisualEffectView {
         switch self.cameraVCUsage {
         case .mlPredict, .imageCapture:
             hasNoPhotoButton = false
-        case .newObservationRecord, .tempNewObservationRecord:
+        case .newObservationRecord:
             hasNoPhotoButton = true
         }
-        
         
         let view = CameraControlsView(hasNoPhotoButton: hasNoPhotoButton)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -39,14 +41,14 @@ class CameraView: UIVisualEffectView {
     }()
     
     public private(set) var isExpanded = false
-    var topConstraint: NSLayoutConstraint!
+    
     var orientation: CameraVC.CameraRotation = .portrait {
         didSet {
             cameraControlsView.orientation = self.orientation
         }
     }
     
-    private var cameraVCUsage: CameraVC.CameraVCUsage
+    private var cameraVCUsage: CameraVC.Usage
     weak var delegate: CameraViewDelegate? = nil {
         didSet {
             cameraControlsView.delegate = delegate
@@ -55,7 +57,7 @@ class CameraView: UIVisualEffectView {
     }
     
     
-    init(cameraVCUsage: CameraVC.CameraVCUsage) {
+    init(cameraVCUsage: CameraVC.Usage) {
         self.cameraVCUsage = cameraVCUsage
         super.init(effect: UIBlurEffect(style: UIBlurEffect.Style.dark))
         setupView()
@@ -77,38 +79,52 @@ class CameraView: UIVisualEffectView {
         resultsView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         resultsView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         resultsView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        
-        
     }
-    
     
     private func expandView() {
         isExpanded = true
         
-        topConstraint.constant = (UIScreen.main.bounds.height / 3) * 2
-        
-        cameraControlsView.alpha = 0
-        UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
-            self.superview?.layoutIfNeeded()
-        }) { (finished) in
-            self.resultsView.showResults()
+        DispatchQueue.main.async {
+            self.delegate?.expandView()
+            self.cameraControlsView.alpha = 0
+            UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
+                self.superview?.layoutIfNeeded()
+            }) { (finished) in
+                DispatchQueue.main.async {
+                    self.resultsView.showResults()
+                }
+            }
         }
     }
     
-    func showResults(results: [temptModel]) {
-        resultsView.results = results
-        expandView()
+    func showResults(results: [PredictionResult]) {
+        DispatchQueue.main.async {
+            self.resultsView.configure(results: results)
+            self.expandView()
+        }
+    }
+    
+    func showError(error: AppError) {
+        DispatchQueue.main.async {
+            self.expandView()
+            self.resultsView.configureError(error: error)
+        }
     }
     
     func reset() {
-        topConstraint.constant = -70
         isExpanded = false
         resultsView.reset()
         cameraControlsView.reset()
         cameraControlsView.alpha = 1
+        delegate?.collapseView()
+        
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             self.superview?.layoutIfNeeded()
         }) { (finished) in
         }
+    }
+    
+    func askForConfirmation() {
+        cameraControlsView.askForConfirmation()
     }
 }

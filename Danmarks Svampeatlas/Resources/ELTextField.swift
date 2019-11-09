@@ -29,7 +29,7 @@ final class ELTextView: UIView, UITextViewDelegate {
     private lazy var titelLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
+        label.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.vertical)
         return label
     }()
     
@@ -37,6 +37,7 @@ final class ELTextView: UIView, UITextViewDelegate {
        let view = UITextView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.textAlignment = .justified
+        view.setContentHuggingPriority(.defaultLow, for: .vertical)
         view.isScrollEnabled = false
         view.backgroundColor = UIColor.clear
         view.delegate = self
@@ -126,8 +127,9 @@ final class ELTextView: UIView, UITextViewDelegate {
     
     var text: String? {
         set {
-            textView.text = newValue
-            setPlaceholder()
+            if text != nil {
+                  textView.text = text
+            }
         } get {
             return textView.text
         }
@@ -175,11 +177,11 @@ final class ELTextView: UIView, UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         didUpdateEntry?(textView.text)
-            ELKeyboardHelper.instance.focus()
-    
+        ELKeyboardHelper.instance.focus()
         if textView.intrinsicContentSize.height > textView.contentSize.height {
             delegate?.shouldChangeHeight()
-        } else if textView.intrinsicContentSize.height < textView.contentSize.height && frame.height != defaultHeight {
+        } else if textView.intrinsicContentSize.height < textView.contentSize.height && frame.height > intrinsicContentSize.height {
+        
             delegate?.shouldChangeHeight()
         }
     }

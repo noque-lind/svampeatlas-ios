@@ -105,8 +105,7 @@ class AppTableView: UITableView {
         if self.visibleCells.count > 0 {
         self.backgroundView = nil
         guard animating == true else {return}
-        
-        
+    
             var delayCounter = 0.0
             for cell in self.visibleCells {
                 cell.contentView.alpha = 0

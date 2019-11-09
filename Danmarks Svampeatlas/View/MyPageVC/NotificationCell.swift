@@ -43,10 +43,6 @@ class NotificationCell: UITableViewCell {
         fatalError()
     }
     
-    override func prepareForReuse() {
-        profileImageView.configure(initials: "", imageURL: nil)
-        super.prepareForReuse()
-    }
     
     private func setupView() {
         contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 70 + (8*2)).isActive = true
@@ -59,47 +55,52 @@ class NotificationCell: UITableViewCell {
         profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         
         
-        
         contentView.addSubview(primaryLabel)
         primaryLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        primaryLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 5).isActive = true
-        primaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0).isActive = true
+        primaryLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 8).isActive = true
+        primaryLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
         
         contentView.addSubview(dateLabel)
-        dateLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 5).isActive = true
+        dateLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 8).isActive = true
         dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
-        dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        dateLabel.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
         primaryLabel.bottomAnchor.constraint(equalTo: dateLabel.topAnchor, constant: -5).isActive = true
     }
     
     func configureCell(notification: UserNotification) {
+        profileImageView.reset()
+        
         let primaryText = NSMutableAttributedString(string: notification.triggerName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed()])
         
         switch notification.eventType {
         case "COMMENT_ADDED":
-            profileImageView.configure(initials: notification.triggerInitials, imageURL: notification.triggerImageURL)
+            profileImageView.configure(initials: notification.triggerInitials, imageURL: notification.triggerImageURL, imageSize: .full)
             
             primaryText.append(NSAttributedString(string: " har kommenteret på et fund af: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
             primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed().italized()]))
             primaryText.append(NSAttributedString(string: " som du følger.", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
             
         case "DETERMINATION_ADDED":
-            profileImageView.configure(initials: notification.triggerInitials, imageURL: notification.triggerImageURL)
+            profileImageView.configure(initials: notification.triggerInitials, imageURL: notification.triggerImageURL, imageSize: .full)
             
             primaryText.append(NSAttributedString(string: " har tilføjet bestemmelsen: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
             primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed().italized()]))
             primaryText.append(NSAttributedString(string: " til et fund som du følger.", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
             
         case "DETERMINATION_APPROVED":
-            profileImageView.configure(initials: "", imageURL: notification.imageURL)
+            if notification.imageURL != nil {
+                profileImageView.configure(initials: nil, imageURL: notification.imageURL, imageSize: .mini)
+            } else {
+                profileImageView.configure(image: #imageLiteral(resourceName: "Images_Icon"))
+            }
+            
             
             primaryText.deleteCharacters(in: NSRange(location: 0, length: primaryText.length))
             primaryText.append(NSAttributedString(string: "Et fund du følger er blevet valideret og godkendt som: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))
             primaryText.append(NSAttributedString(string: notification.observationFullName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed().italized()]))
         
         case "DETERMINATION_EXPERT_APPROVED":
-            profileImageView.configure(initials: "", imageURL: notification.imageURL)
+            profileImageView.configure(initials: nil, imageURL: notification.imageURL, imageSize: .mini)
             
             primaryText.deleteCharacters(in: NSRange(location: 0, length: primaryText.length))
             primaryText.append(NSAttributedString(string: "Fundet af: ", attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))

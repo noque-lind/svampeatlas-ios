@@ -19,12 +19,14 @@ class AddObservationVC: UIViewController {
     }
     
     private lazy var menuButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
+       
+        let button = UIBarButtonItem(image:  #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
         return button
     }()
     
     private lazy var uploadObservationButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload))
+        
+        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload))
         return button
     }()
     
@@ -81,6 +83,7 @@ class AddObservationVC: UIViewController {
         } else {
             self.newObservation = NewObservation()
         }
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -161,7 +164,7 @@ class AddObservationVC: UIViewController {
         self.navigationItem.setRightBarButton(uploadObservationButton, animated: false)
         self.navigationItem.setLeftBarButton(menuButton, animated: false)
     }
-    
+        
     private func reset() {
         self.newObservation = NewObservation()
         self.observationImagesView.configure(newObservation: newObservation)
@@ -172,13 +175,11 @@ class AddObservationVC: UIViewController {
     }
     
     @objc private func beginObservationUpload() {
-        switch newObservation.isComplete() {
-        case .Success(_):
+        switch newObservation.returnAsDictionary(user: session.user) {
+        case .Success(let dict):
             Spinner.start(onView: self.navigationController?.view)
-            
-            newObservation.user = session.user
-            
-            session.uploadObservation(newObservation: newObservation) { (result) in
+        
+            session.uploadObservation(dict: dict, images: newObservation.images) { (result) in
                 Spinner.stop()
                 switch result {
                 case .Success(let observationID):
@@ -199,6 +200,8 @@ class AddObservationVC: UIViewController {
             self.handleUncompleteObservation(newObservationError: error)
         }
     }
+    
+    
     
     
     private func handleUncompleteObservation(newObservationError error: NewObservation.Error) {
@@ -222,6 +225,9 @@ class AddObservationVC: UIViewController {
         case .noLocality:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)! , section: 0)
             notificationView.configure(primaryText: "Hvor er du?", secondaryText: "Du skal hjælpe med at fortælle hvad du er i nærheden af.")
+        case .noCoordinates:
+            indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)!, section: 0)
+            notificationView.configure(primaryText: "Ingen coordinater", secondaryText: "Appen kunne ikke finde dine koordinater, men du kan sætte dem selv.")
         }
         
         notificationView.show(animationType: .fromBottom ,queuePosition: .front)
@@ -249,7 +255,7 @@ extension AddObservationVC: LocationManagerDelegate {
                         if let currentCell = self.collectionView.visibleCells.first as? ObservationLocationCell {
                             currentCell.configureCell(locationManager: self.locationManager, newObservation: self.newObservation, localities: localities)
                         } else {
-                            let notificationView = ELNotificationView.appNotification(style: .Custom(color: UIColor.appPrimaryColour(), image: #imageLiteral(resourceName: "Selected")), primaryText: "Lokation bestemt", secondaryText: "Du er tættest på: \(closest!.name)", location: .bottom)
+                            let notificationView = ELNotificationView.appNotification(style: .Custom(color: UIColor.appPrimaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: "Lokation bestemt", secondaryText: "Du er tættest på: \(closest!.name)", location: .bottom)
                             notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
                         }
                     }
@@ -307,6 +313,7 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
             return cell
         case .Location:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationLocationCell", for: indexPath) as? ObservationLocationCell else {fatalError()}
+            cell.delegate = self
             return cell
         case .Details:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationDetailsCell", for: indexPath) as? ObservationDetailsCell else {fatalError()}

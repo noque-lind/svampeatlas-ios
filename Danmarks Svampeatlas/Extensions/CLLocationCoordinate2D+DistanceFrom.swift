@@ -23,20 +23,24 @@ extension CLLocationCoordinate2D {
         return angleInRadians * 180 / Double.pi
     }
     
-    func toCirclePolygon(radius: Double, numberOfSegments: Int = 20) -> [CLLocationCoordinate2D] {
+    func toCirclePolygon(radius: Double, numberOfSegments: Int = 15) -> [CLLocationCoordinate2D] {
         var coordinates = [CLLocationCoordinate2D]()
         
         let latitudeInRadians =  toRadians(angleInDegress: self.latitude)
         let longitudeInRadians = toRadians(angleInDegress: self.longitude)
         let radiusDividedByEathRadius = radius / 6378137
-        
+    
         while coordinates.count < numberOfSegments {
             let bearing = 2 * Double.pi * Double(coordinates.count) / Double(numberOfSegments)
             let offsetLangitude = asin((sin(latitudeInRadians) * cos(radiusDividedByEathRadius)) + cos(latitudeInRadians) * sin(radiusDividedByEathRadius) * cos(bearing))
             let offsetLongitude = longitudeInRadians + atan2(sin(bearing) * sin(radiusDividedByEathRadius) * cos(latitudeInRadians), cos(radiusDividedByEathRadius) - sin(latitudeInRadians) * sin(offsetLangitude))
             
+    
             coordinates.append(CLLocationCoordinate2D(latitude: toDegress(angleInRadians: offsetLangitude), longitude: toDegress(angleInRadians: offsetLongitude)))
         }
+        
+        
+        
         
         coordinates.append(coordinates[0])
         return coordinates

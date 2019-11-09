@@ -8,6 +8,58 @@
 
 import Foundation
 
+class Section<T> {
+    
+    enum State {
+        case items(items: [T])
+        case loading
+        case error(error: AppError)
+    }
+    
+    public private(set) var title: String?
+    public private(set) var state: State
+    
+    init(title: String?, state: State) {
+        self.title = title
+        self.state = state
+    }
+    
+    func count() -> Int {
+        switch state {
+        case .error(_):
+            return title != nil ? 2: 1
+        case .items(items: let items):
+            return title != nil ? items.count + 1: items.count
+        case .loading:
+            return title != nil ? 2: 1
+        }
+    }
+    
+    func itemAt(index: Int) -> T? {
+        if case State.items(items: let items) = state {
+            return items[safe: index]
+        } else {
+            return nil
+        }
+    }
+    
+    func removeItemAt(index: Int) {
+        if case State.items(items: var items) = state {
+            items.remove(at: index)
+            state = .items(items: items)
+        }
+    }
+    
+    
+    func setTitle(title: String?) {
+        self.title = title
+    }
+    
+    func setState(state: State) {
+        self.state = state
+    }
+}
+
 enum TableViewState<T> {
     case Loading
     case Error(AppError, (() ->())?)

@@ -19,7 +19,7 @@ class ObservationLocationCell: UICollectionViewCell {
         button.widthAnchor.constraint(equalToConstant: 25).isActive = true
         button.heightAnchor.constraint(equalToConstant: 25).isActive = true
         button.contentEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
-        button.setImage(#imageLiteral(resourceName: "Reload"), for: [])
+        button.setImage(#imageLiteral(resourceName: "Glyphs_Reload"), for: [])
         button.layer.cornerRadius = 12.5
         return button
     }()
@@ -27,14 +27,16 @@ class ObservationLocationCell: UICollectionViewCell {
     private lazy var annotationButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(#imageLiteral(resourceName: "MKAnnotationPinSolid"), for: UIControl.State.normal)
-        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
-        button.imageEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+      button.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_Location_Alternative"), for: UIControl.State.normal)
+        button.layer.shadowOffset = CGSize.shadowOffset()
+        button.layer.shadowOpacity = Float.shadowOpacity()
+        button.imageEdgeInsets = UIEdgeInsets(top: -16, left: -16, bottom: -16, right: -16)
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleGesture(gesture:)))
         button.addGestureRecognizer(panGestureRecognizer)
+        button.addTarget(self, action: #selector(annotationButtonPressed), for: .touchUpInside)
         return button
     }()
+    
     
     private lazy var mapView: NewMapView = {
         let view = NewMapView(type: .localities)
@@ -65,6 +67,7 @@ class ObservationLocationCell: UICollectionViewCell {
     private var localities = [Locality]()
     private weak var newObservation: NewObservation?
     private weak var locationManager: LocationManager?
+    weak var delegate: NavigationDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -108,7 +111,7 @@ class ObservationLocationCell: UICollectionViewCell {
         case .began:
             let location = gesture.location(in: self)
             annotationButton.transform = annotationButton.transform.translatedBy(x: location.x - annotationButton.center.x, y: location.y - annotationButton.center.y)
-            gesture.setTranslation(CGPoint(x: 0, y: -17), in: superview)
+            gesture.setTranslation(CGPoint(x: 0, y: -24), in: superview)
             let translation = gesture.translation(in: superview)
             annotationButton.transform = annotationButton.transform.translatedBy(x: translation.x, y: translation.y)
         case .changed:
@@ -116,11 +119,17 @@ class ObservationLocationCell: UICollectionViewCell {
             annotationButton.transform = annotationButton.transform.translatedBy(x: translation.x, y: translation.y)
             gesture.setTranslation(CGPoint.zero, in: superview)
         case .ended:
-            let annotation = mapView.addPointAnnotation(gesture: gesture)
+            let annotation = mapView.addLocationAnnotation(button: annotationButton)
             locationManager?.delegate?.locationRetrieved(location: CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude))
             annotationButton.transform = CGAffineTransform.identity
         default:
             return
+        }
+    }
+    
+    @objc private func annotationButtonPressed() {
+        if !UserDefaultsHelper.hasSeenLocalityHelper {
+            delegate?.presentVC(TermsController(terms: .localityHelper))
         }
     }
     
@@ -161,7 +170,7 @@ class ObservationLocationCell: UICollectionViewCell {
         mapView.clearAnnotations()
         mapView.addLocalityAnnotations(localities: localities)
         if let observationLocation = newObservation.observationCoordinate {
-            mapView.addPointAnnotation(coordinate: observationLocation.coordinate)
+            mapView.addLocationAnnotation(location: observationLocation.coordinate)
         }
 
         mapView.setRegionToShowAnnotations()

@@ -11,15 +11,6 @@ import MapKit
 
 class MushroomDetailsScrollView: AppScrollView {
     
-    private lazy var redlistStackViewViewAndToxicityStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.distribution = .fillProportionally
-        stackView.alignment = .center
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
     private lazy var observationsTableView: ObservationsTableView = {
         let tableView = ObservationsTableView(automaticallyAdjustHeight: true)
         tableView.tableView.separatorColor = UIColor.appPrimaryColour()
@@ -61,54 +52,65 @@ class MushroomDetailsScrollView: AppScrollView {
         fatalError()
     }
     
-    func configure(_ mushroom: Mushroom) {
+    func configure(_ mushroom: Mushroom, takesSelection: Bool) {
         self.mushroom = mushroom
         configureHeader(title: mushroom.danishName != nil ? NSAttributedString(string: mushroom.danishName!, attributes: [NSAttributedString.Key.font: UIFont.appTitle()]): mushroom.fullName.italized(font: UIFont.appTitle()), subtitle: mushroom.danishName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil, user: nil)
-        configureText(title: "Beskrivelse", text: mushroom.attributes?.diagnosis)
-        configureText(title: "Forvekslingsmuligheder", text: mushroom.attributes?.similarities)
         
-        var informationArray = [(String, String)]()
-        if let totalObservations = mushroom.totalObservations {
-            informationArray.append(("Antal danske fund", "\(totalObservations)"))
+        if takesSelection {
+            addText(title: "Valideringstips", text: mushroom.attributes?.tipsForValidation)
         }
         
-        if let latestAcceptedRecord = mushroom.lastAcceptedObservation {
-            informationArray.append(("Seneste danske fund", Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.long) ?? ""))
+        addText(title: "Beskrivelse", text: mushroom.attributes?.diagnosis)
+        addText(title: "Spiselighedsrapport", text: mushroom.attributes?.eatability)
+        addText(title: "Økologi", text: mushroom.attributes?.ecology)
+        addText(title: "Forvekslingsmuligheder", text: mushroom.attributes?.similarities)
+        
+        var informationArray = [(String, String)]()
+        if let totalObservations = mushroom.statistics?.acceptedCount {
+            informationArray.append(("Accepterede fund:", "\(totalObservations)"))
+        }
+        
+        if let latestAcceptedRecord = mushroom.statistics?.lastAcceptedRecord {
+            informationArray.append(("Seneste accepteret fund: ", Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.long) ?? ""))
         }
         if let updatedAt = mushroom.updatedAt {
             informationArray.append(("Sidst opdateret d.:", Date(ISO8601String: updatedAt)?.convert(into: DateFormatter.Style.medium) ?? ""))
         }
-        configureInformation(information: informationArray)
-        
-        configureRedlistInformation(redlistStatus: mushroom.redlistData?.status)
-//        configureToxicityInformation(toxicityLevel: mushroom.attributes?.toxicityLevel)
+        addInformation(information: informationArray)
+        configureRedlistAndToxicity(redlistStatus: mushroom.redlistStatus, toxicityReport: mushroom.attributes?.eatability)
         configureHeatMap(taxonID: mushroom.id)
         configureLatestObservationsView(taxonID: mushroom.id)
     }
     
-    private func configureRedlistInformation(redlistStatus: String?) {
-        guard let status = redlistStatus else {return}
+    private func configureRedlistAndToxicity(redlistStatus: String?, toxicityReport: String?) {
+        let stackView: UIStackView = {
+            let stackView = UIStackView()
+            stackView.axis = .vertical
+            stackView.spacing = 4
+            stackView.alignment = .center
+            
+            let toxicityView: ToxicityView = {
+                let view = ToxicityView()
+                view.configure(toxicityReport)
+                return view
+            }()
+            
+            let redlistView: RedlistView = {
+                let view = RedlistView(detailed: true)
+                view.configure(redlistStatus)
+                return view
+            }()
+            
+            stackView.addArrangedSubview(toxicityView)
+            stackView.addArrangedSubview(redlistView)
+            return stackView
+        }()
         
-        let redlistView = RedlistView(detailed: true)
-        redlistStackViewViewAndToxicityStackView.addArrangedSubview(redlistView)
-        redlistView.configure(status)
-        contentStackView.addArrangedSubview(redlistStackViewViewAndToxicityStackView)
-    }
-    
-    private func configureToxicityInformation(toxicityLevel: ToxicityLevel?) {
-        guard let toxicityLevel = toxicityLevel else {return}
-        
-        let toxicityView = ToxicityView()
-        redlistStackViewViewAndToxicityStackView.addArrangedSubview(toxicityView)
-        toxicityView.configure(toxicityLevel)
-        
-        if redlistStackViewViewAndToxicityStackView.superview == nil {
-            contentStackView.addArrangedSubview(redlistStackViewViewAndToxicityStackView)
-        }
+        addContent(title: nil, content: stackView)
     }
     
     private func configureHeatMap(taxonID: Int) {
-        _ = addContent(title: "Fund i nærheden", content: heatMap)
+        addContent(title: "Fund i nærheden", content: heatMap)
         heatMap.shouldLoad = true
         
         if locationManager.permissionsNotDetermined {
@@ -121,7 +123,7 @@ class MushroomDetailsScrollView: AppScrollView {
     }
     
     private func configureLatestObservationsView(taxonID: Int) {
-        _ = addContent(title: "Seneste observationer", content: observationsTableView)
+        addContent(title: "Seneste observationer", content: observationsTableView)
         
         observationsTableView.tableViewState = .Loading
         

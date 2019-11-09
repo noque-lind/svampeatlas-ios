@@ -14,7 +14,6 @@ class ProfileImageView: UIView {
        let imageView = DownloadableImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
-        imageView.image = #imageLiteral(resourceName: "f1a9d2f0.LogoSmallest")
         imageView.setContentCompressionResistancePriority(UILayoutPriority(249), for: NSLayoutConstraint.Axis.vertical)
         imageView.setContentCompressionResistancePriority(UILayoutPriority(249), for: NSLayoutConstraint.Axis.horizontal)
         imageView.contentMode = .scaleAspectFill
@@ -56,8 +55,7 @@ class ProfileImageView: UIView {
         fatalError()
     }
     
-    
-    
+
     private func setupView() {
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
@@ -78,14 +76,27 @@ class ProfileImageView: UIView {
         label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
     }
     
-        func configure(initials: String?, imageURL: String?) {
+    func reset() {
+        imageView.image = nil
+        imageView.alpha = 1
+        label.text = ""
+    }
+    
+    func configure(image: UIImage) {
+        imageView.image = image
+        imageView.alpha = 1
+        label.text = ""
+    }
+    
+    func configure(initials: String?, imageURL: String?, imageSize: DataService.ImageSize) {
+        imageView.image = nil
+        
             if let imageURL = imageURL {
-                imageView.image = nil
                 imageView.alpha = 0.7
-                imageView.downloadImage(size: .full, urlString: imageURL)
+                imageView.downloadImage(size: imageSize, urlString: imageURL)
             } else {
-                imageView.image = defaultImage
-                imageView.alpha = 1.0
+                imageView.image = nil
+                imageView.alpha = 0.0
             }
             
             if let initials = initials, initials != "" {

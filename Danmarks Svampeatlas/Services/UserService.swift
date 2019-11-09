@@ -114,12 +114,16 @@ class Session {
         DataService.instance.postComment(taxonID: observationID, comment: comment, token: token, completion: completion)
     }
     
-    func uploadObservation(newObservation: NewObservation, completion: @escaping (Result<Int, AppError>) -> ()) {
-        DataService.instance.postObservation(newObservation: newObservation, token: token, completion: completion)
+    func uploadObservation(dict: [String: Any], images: [UIImage], completion: @escaping (Result<Int, AppError>) -> ()) {
+        DataService.instance.postObservation(dict: dict, images: images, token: token, completion: completion)
     }
     
     func reportOffensiveContent(observationID: Int, comment: String?, completion: @escaping () -> ()) {
         DataService.instance.postOffensiveContentComment(observationID: observationID, comment: comment, token: token, completion: completion)
+    }
+    
+    func markNotificationAsRead(notificationID: Int) {
+        DataService.instance.markNotificationAsRead(notificationID: notificationID, token: token)
     }
 }
 
@@ -313,10 +317,10 @@ extension Session: SessionDelegate {
             }
                     }
         
-        func postObservation(newObservation: NewObservation, token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
+        func postObservation(dict: [String: Any], images: [UIImage], token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
         
             do {
-                let data = try JSONSerialization.data(withJSONObject: newObservation.returnAsDictionary(), options: [])
+                let data = try JSONSerialization.data(withJSONObject: dict, options: [])
                 createDataTaskRequest(url: API.postObservationURL(), method: "POST", data: data, contentType: "application/json", token: token) { (result) in
                     
                     switch result {
@@ -328,7 +332,7 @@ extension Session: SessionDelegate {
                         
                         let observationID = (dict["_id"] as? Int)!
                         
-                        self.uploadImages(observationID: observationID, images: newObservation.images, token: token, completion: { (result) in
+                        self.uploadImages(observationID: observationID, images: images, token: token, completion: { (result) in
                             switch result {
                             case .Error(let error):
                                 completion(Result.Error(error))
@@ -344,21 +348,28 @@ extension Session: SessionDelegate {
             }
         }
         
-        private func uploadImages(observationID: Int, images: [UIImage], token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
+        private func uploadImages(observationID: Int, images: [UIImage], token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
            
             let dispatchGroup = DispatchGroup()
+            var uploadedCount = 0
             
             for image in images {
                 dispatchGroup.enter()
                 
                 uploadImage(observationID: observationID, image: image, token: token) { (result) in
-                    print("Image upload completed")
+                    switch result {
+                    case .Error(let error):
+                        debugPrint(error)
+                    case .Success(_):
+                        uploadedCount += 1
+                    }
+                
                     dispatchGroup.leave()
                 }
             }
             
             dispatchGroup.notify(queue: DispatchQueue.global(qos: .background)) {
-                completion(Result.Success(()))
+                completion(Result.Success(uploadedCount))
             }
         }
         
@@ -366,9 +377,8 @@ extension Session: SessionDelegate {
            
             guard let media = ELMultipartFormData.Media(withImage: image, forKey: "file") else {completion(Result.Error(DataServiceError.encodingError)); return}
             
-            let boundary = "Boundary-\(NSUUID().uuidString)"
+            let boundary = "apiclient\(Date.timeIntervalSinceReferenceDate)"
             let data = ELMultipartFormData.createDataBody(withParameters: nil, media: media, boundary: boundary)
-            print("DATA IS: \(String(decoding: data, as: UTF8.self))")
             
             createDataTaskRequest(url: API.postImageURL(observationID: observationID), method: "POST", data: data, contentType: "multipart/form-data; boundary=\(boundary)", contentLenght: nil, token: token) { (result) in
                 switch result {
@@ -398,6 +408,17 @@ extension Session: SessionDelegate {
                 
             } catch {
                 debugPrint(error)
+            }
+        }
+        
+        func markNotificationAsRead(notificationID: Int, token: String) {
+            createDataTaskRequest(url: API.Put.notificationLastRead(notificationID: notificationID).encodedURL, method: "PUT", token: token) { (result) in
+                switch  result {
+                case .Error(let error):
+                    debugPrint(error)
+                case .Success(_):
+                    return
+                }
             }
         }
 }

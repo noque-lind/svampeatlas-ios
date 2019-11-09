@@ -66,7 +66,7 @@ class ClusterPinView: MKAnnotationView {
         displayPriority = .required
         collisionMode = .circle
         canShowCallout = false
-        self.image = #imageLiteral(resourceName: "ClusterPin")
+        self.image = #imageLiteral(resourceName: "Icons_Map_Cluster")
         self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
         
         addSubview(countLabel)

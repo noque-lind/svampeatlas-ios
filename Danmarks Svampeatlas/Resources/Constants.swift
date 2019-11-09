@@ -9,121 +9,6 @@
 import UIKit
 import MapKit
 
-class NewObservation {
-    
-    enum Error {
-        case noMushroom
-        case noSubstrateGroup
-        case noVegetationType
-        case noLocality
-    }
-    
-    var observationDate: Date
-    var observationDateAccuracy = "day"
-    var substrate: Substrate?
-    var vegetationType: VegetationType?
-    var hosts = [Host]()
-    var lockedHosts = false
-    var ecologyNote: String?
-    var mushroom: Mushroom?
-    var confidence: String = "sikker"
-    var note: String?
-    var observationCoordinate: CLLocation?
-    var user: User?
-    var locality: Locality?
-    var images = [UIImage]()
-    
-    
-    init() {
-        self.observationDate = Date()
-        
-        if let substrateID = UserDefaultsHelper.defaultSubstrateID {
-            self.substrate = CoreDataHelper.fetchSubstrateGroup(withID: substrateID)
-            self.substrate?.isLocked = true
-        }
-        
-        if let vegetationTypeID = UserDefaultsHelper.defaultVegetationTypeID {
-            self.vegetationType = CoreDataHelper.fetchVegetationType(withID: vegetationTypeID)
-            self.vegetationType?.isLocked = true
-        }
-        
-        if let hostsIDS = UserDefaultsHelper.defaultHostsIDS {
-            self.hosts = hostsIDS.compactMap({CoreDataHelper.fetchHost(withID: $0)})
-            self.lockedHosts = true
-        }
-    }
-    
-    func isComplete() -> Result<Bool, Error> {
-        if mushroom == nil {
-            guard images.count != 0  else {return Result.Error(Error.noMushroom)}
-        }
-        
-        guard substrate != nil else {return Result.Error(Error.noSubstrateGroup)}
-        guard vegetationType != nil else {return Result.Error(Error.noVegetationType)}
-        guard locality != nil else {return Result.Error(Error.noLocality)}
-        return Result.Success(true)
-    }
-    
-    func returnAsDictionary() -> [String: Any] {
-        var dict: [String: Any] = ["observationDate": observationDate.convert(into: "yyyy-MM-dd")]
-        dict["os"] = "iOS"
-        dict["browser"] = "Native App"
-        
-        if let substrate = substrate {
-             dict["substrate_id"] = substrate.id
-        }
-        
-        if let vegetationType = vegetationType {
-            dict["vegetationtype_id"] = vegetationType.id
-        }
-        
-        if let ecologyNote = ecologyNote {
-            dict["ecologynote"] = ecologyNote
-        }
-        
-        if let note = note {
-            dict["note"] = note
-        }
-        
-        if let observationCoordinate = observationCoordinate {
-            dict["decimalLatitude"] = observationCoordinate.coordinate.latitude
-            dict["decimalLongitude"] = observationCoordinate.coordinate.longitude
-            dict["accuracy"] = observationCoordinate.horizontalAccuracy
-        }
-        
-        if hosts.count > 0 {
-            var hostArray = [[String: Any]]()
-            
-            for host in hosts {
-                hostArray.append(["_id": host.id])
-            }
-            
-            dict["associatedOrganisms"] = hostArray
-        }
-        
-        if let user = user {
-            dict["users"] = [["_id": user.id, "Initialer": user.initials, "email": user.email, "facebook": user.facebookID ?? "", "name": user.name]]
-        }
-        
-        if let mushroom = mushroom, let user = user {
-            dict["determination"] = ["confidence": confidence, "taxon_id": mushroom.id, "user_id": user.id]
-        } else {
-            dict["determination"] = ["confidence": "sikker", "taxon_id": "60212", "user_id": user!.id]
-        }
-        
-        if let locality = locality {
-            if let geoName = locality.geoName {
-                dict["geonameId"] = geoName.geonameId
-                dict["geoname"] = ["geonameId": geoName.geonameId, "name": geoName.name, "adminName1": geoName.adminName1, "lat": geoName.lat, "lng": geoName.lng, "countryName": geoName.countryName, "countryCode": geoName.countryCode, "fcodeName": geoName.fcodeName, "fclName": geoName.fclName]
-            } else {
-                dict["locality_id"] = locality.id
-            }
-        }
-        
-        print(dict)
-       return dict
-    }
-}
 
 /*
  
@@ -138,7 +23,7 @@ class NewObservation {
  "updatedAt": "2019-01-09T16:26:04.000Z"
  }]
  
-
+ 
  
  
  {
@@ -169,32 +54,32 @@ class NewObservation {
  }
  
  
-{
-    "createdAt": "2019-01-09T10:11:58.000Z",
-    "observationDateAccuracy": "day",
-    "atlasUUID": "ffdb8590-13f6-11e9-b3ce-695d96b95c60",
-    "_id": 9357979,
-    "observationDate": "2019-01-09",
-    "substrate_id": "28",
-    "vegetationtype_id": "3",
-    "ecologynote": "Test",
-    "accuracy": 2500,
-    "note": "Test",
-    "os": "MacOS",
-    "browser": "Safari",
-    "locality_id": 10445,
-    "decimalLatitude": 55.65125,
-    "decimalLongitude": 12.57708,
-    "primaryuser_id": 5,
-    "geom": {
-        "fn": "GeomFromText",
-        "args": [
-        "POINT (12.57708 55.65125)"
-        ]
-    },
-    "updatedAt": "2019-01-09T10:11:58.000Z",
-    "primarydetermination_id": 5744369
-}*/
+ {
+ "createdAt": "2019-01-09T10:11:58.000Z",
+ "observationDateAccuracy": "day",
+ "atlasUUID": "ffdb8590-13f6-11e9-b3ce-695d96b95c60",
+ "_id": 9357979,
+ "observationDate": "2019-01-09",
+ "substrate_id": "28",
+ "vegetationtype_id": "3",
+ "ecologynote": "Test",
+ "accuracy": 2500,
+ "note": "Test",
+ "os": "MacOS",
+ "browser": "Safari",
+ "locality_id": 10445,
+ "decimalLatitude": 55.65125,
+ "decimalLongitude": 12.57708,
+ "primaryuser_id": 5,
+ "geom": {
+ "fn": "GeomFromText",
+ "args": [
+ "POINT (12.57708 55.65125)"
+ ]
+ },
+ "updatedAt": "2019-01-09T10:11:58.000Z",
+ "primarydetermination_id": 5744369
+ }*/
 
 /*
  
@@ -269,22 +154,24 @@ struct API {
     
     enum Request {
         case Observation(geometry: Geometry, ageInYear: Int?, include: [ObservationIncludeQueries], limit: Int?, offset: Int?)
-        case Mushroom(searchString: String?, requirePictures: Bool)
+        case Mushrooms(searchString: String?, speciesQueries: [SpeciesQueries], limit: Int, offset: Int)
+        case Mushroom(id: Int)
         case Hosts(searchString: String?)
         
         var encodedURL: String {
+            
             switch self {
             case .Observation(geometry: let geometry, let ageInYear, include: let include, let limit, let offset):
                 var components = URLComponents()
                 let geometry = URLQueryItem(name: "geometry", value: geometry.geoJSON())
                 components.queryItems = [geometry]
-            
+                
                 if let ageInYear = ageInYear, let dateString = Date(age: ageInYear * 12)?.convert(into: "yyyy-MM-dd") {
                     components.queryItems?.append(URLQueryItem(name: "where", value: "{\"observationDate\":{\"$gte\":\"\(dateString)\"}}"))
                 }
                 
                 var url: String = BASE_URL_API + "observations?" + ((components.percentEncodedQuery) ?? "") + includeQuery(includeQueries: include)
-            
+                
                 
                 if let limit = limit {
                     url += "&limit=\(limit)"
@@ -294,9 +181,45 @@ struct API {
                     url += "&offset=\(offset)"
                 }
                 
-               return url
-            case .Mushroom(searchString: let searchString, requirePictures: let requirePictures):
-                return ""
+                return url
+                
+                
+                
+            case .Mushrooms(searchString: let searchString, var speciesQueries, let limit, let offset):
+                var url = URLComponents()
+                url.scheme = "https"
+                url.host = "svampe.databasen.org"
+                url.path = "/api/taxa"
+                
+                var queryItems = [URLQueryItem]()
+                
+                if let searchString = searchString {
+                    queryItems.append(URLQueryItem(name: "where", value: createSearchQuery(searchString: searchString)))
+                    queryItems.append(URLQueryItem(name: "order", value: "RankID ASC, probability DESC, FullName ASC"))
+                    queryItems.append(URLQueryItem(name: "nocount", value: "true"))
+                } else {
+                    queryItems.append(URLQueryItem(name: "limit", value: String(limit)))
+                    queryItems.append(URLQueryItem(name: "offset", value: String(offset)))
+                    queryItems.append(URLQueryItem(name: "order", value: "FullName ASC"))
+                    speciesQueries.append(.tag(id: 16))
+                }
+                
+                queryItems.append(URLQueryItem(name: "include", value: parseSpeciesQueries(queries: speciesQueries)))
+                url.queryItems = queryItems
+                print(url.url!.absoluteString)
+                return url.url!.absoluteString
+                
+            case .Mushroom(id: let id):
+                var url = URLComponents()
+                url.scheme = "https"
+                url.host = "svampe.databasen.org"
+                url.path = "/api/taxa"
+                
+                let limitQuery = URLQueryItem(name: "include", value: parseSpeciesQueries(queries: [SpeciesQueries.attributes(presentInDenmark: nil), SpeciesQueries.danishNames, SpeciesQueries.images(required: false), SpeciesQueries.redlistData, SpeciesQueries.statistics]))
+                let whereQuery = URLQueryItem(name: "where", value: "{\"_id\":\(id)}")
+                url.queryItems = [limitQuery, whereQuery]
+                //                debugPrint(url.url!.absoluteString)
+                return url.url!.absoluteString
             case .Hosts(searchString: let searchString):
                 
                 var url = BASE_URL_API + "planttaxa?limit=30&order=probability+DESC"
@@ -305,7 +228,7 @@ struct API {
                     url.append("""
                         &where={"$or":[{"DKname":{"like":"\(searchString)%"}},{"LatinName":{"like":"\(searchString)%"}}]}
                         """.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
-                
+                    
                 }
                 return url
             default:
@@ -317,6 +240,7 @@ struct API {
     enum Post {
         case comment(taxonID: Int)
         case offensiveContentComment(taxonID: Int)
+        case imagePredict(speciesQueries: [SpeciesQueries])
         
         var encodedURL: String {
             switch self {
@@ -324,12 +248,69 @@ struct API {
                 return BASE_URL_API + "observations/\(taxonID)/forum"
             case .offensiveContentComment(taxonID: let taxonID):
                 return BASE_URL_API + "observations/\(taxonID)/notifications"
+            case .imagePredict(speciesQueries: let speciesQueries):
+                var url = URLComponents()
+                url.scheme = "https"
+                url.host = "svampe.databasen.org"
+                url.path = "/api/imagevision"
+                url.queryItems = [URLQueryItem(name: "include", value: parseSpeciesQueries(queries: speciesQueries))]
+                print(url.url!.absoluteString)
+                return url.url!.absoluteString
             default:
                 return ""
             }
         }
     }
     
+    enum Put {
+        case notificationLastRead(notificationID: Int)
+        
+        var encodedURL: String {
+            switch self {
+            case .notificationLastRead(let notificationID):
+                let url = BASE_URL_API + "users/me/feed/\(notificationID)/lastread"
+                //                debugPrint(url)
+                return BASE_URL_API + "users/me/feed/\(notificationID)/lastread"
+            }
+        }
+    }
+    
+    enum SpeciesQueries {
+        case attributes(presentInDenmark: Bool?)
+        case images(required: Bool)
+        case danishNames
+        case statistics
+        case redlistData
+        case acceptedTaxon
+        case tag(id: Int)
+        
+        var query: String {
+            switch self {
+            case .attributes(presentInDenmark: let presentInDenmark):
+                if let presentInDenmark = presentInDenmark {
+                    return "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"valideringsrapport\",\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"spiselighedsrapport\", \"BeskrivelseUK\"],\"where\":\"{\\\"PresentInDK\\\":\(presentInDenmark)}\"}"
+                } else {
+                    return "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"spiselighedsrapport\", \"BeskrivelseUK\"]}"
+                }
+                
+            case .danishNames:
+                return "{\"model\":\"TaxonDKnames\",\"as\":\"Vernacularname_DK\", \"attributes\":[\"vernacularname_dk\", \"source\"]}"
+                
+            case .images(required: let required):
+                return "{\"model\":\"TaxonImages\",\"as\":\"Images\",\"required\":\(required)}"
+            case .redlistData:
+                return "{\"model\":\"TaxonRedListData\",\"as\":\"redlistdata\",\"required\":false,\"attributes\":[\"status\"],\"where\":\"{\\\"year\\\":2009}\"}"
+            case .statistics:
+                return "{\"model\":\"TaxonStatistics\",\"as\":\"Statistics\", \"attributes\":[\"accepted_count\", \"last_accepted_record\", \"first_accepted_record\"]}"
+            case .tag(id: let id):
+                return "{\"model\":\"TaxonomyTagView\",\"as\":\"tags0\",\"where\":\"{\\\"tag_id\\\":\(id)}\"}"
+                
+            case .acceptedTaxon:
+                return "{\"model\":\"Taxon\",\"as\":\"acceptedTaxon\"}"
+                
+            }
+        }
+    }
     
     enum ObservationIncludeQueries {
         case images
@@ -355,20 +336,58 @@ struct API {
             case .comments: return "%7B%5C%22model%5C%22%3A%5C%22ObservationForum%5C%22%2C%5C%22as%5C%22%3A%5C%22Forum%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D"
             case .user(responseFilteredByUserID: let id):
                 if let id = id {
-                     return "%7B%5C%22model%5C%22%3A%5C%22User%5C%22%2C%5C%22as%5C%22%3A%5C%22PrimaryUser%5C%22%2C%5C%22required%5C%22%3Atrue%2C%5C%22where%5C%22%3A%7B%5C%22_id%5C%22%3A\(id)%7D%7D"
+                    return "%7B%5C%22model%5C%22%3A%5C%22User%5C%22%2C%5C%22as%5C%22%3A%5C%22PrimaryUser%5C%22%2C%5C%22required%5C%22%3Atrue%2C%5C%22where%5C%22%3A%7B%5C%22_id%5C%22%3A\(id)%7D%7D"
                 } else {
                     return "%7B%5C%22model%5C%22%3A%5C%22User%5C%22%2C%5C%22as%5C%22%3A%5C%22PrimaryUser%5C%22%2C%5C%22required%5C%22%3Atrue%7D"
                 }
-               
+                
             case .locality:
                 return "%7B%5C%22model%5C%22%3A%5C%22Locality%5C%22%2C%5C%22as%5C%22%3A%5C%22Locality%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22_id%5C%22%2C%5C%22name%5C%22%5D%7D"
-            
+                
             case .geomNames:
                 return "%7B%5C%22model%5C%22%3A%5C%22GeoNames%5C%22%2C%5C%22as%5C%22%3A%5C%22GeoNames%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D"
             }
         }
         
     }
+    
+    private static func parseSpeciesQueries(queries: [SpeciesQueries]) -> String {
+        var string = "["
+        
+        for query in queries {
+            string.append(query.query)
+            string.append(",")
+        }
+        
+        if !queries.isEmpty { _ = string.popLast() }
+        string.append("]")
+        return string
+    }
+    
+    
+    private static func createSearchQuery(searchString: String) -> String {
+        var genus = ""
+        var fullSearchTerm = ""
+        var taxonName = ""
+        
+        for word in searchString.components(separatedBy: " ") {
+            guard word != "" else {break}
+            if fullSearchTerm == "" {
+                fullSearchTerm = word
+                genus = word
+            } else {
+                fullSearchTerm += "+\(word)"
+                if taxonName == "" {
+                    taxonName = word
+                } else {
+                    taxonName += "+\(word)"
+                }
+            }
+        }
+        
+        return "{\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$Vernacularname_DK.vernacularname_dk$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+    }
+    
     
     private static func parseQueryEnums(observationIncludeQueries: [ObservationIncludeQueries]) -> String {
         var string = ""
@@ -385,7 +404,9 @@ struct API {
     }
     
     static func userNotificationsURL(userID id: Int, limit: Int, offset: Int) -> String {
-        return BASE_URL_API + "users/me/feed?limit=\(limit)?offset=\(offset)"
+        let url = BASE_URL_API + "users/me/feed?limit=\(limit)?offset=\(offset)"
+        //        debugPrint(url)
+        return url
     }
     
     static func observationWithIDURL(observationID id: Int) -> String {
@@ -402,7 +423,7 @@ struct API {
     
     static func observationsURL(includeQueries: [ObservationIncludeQueries], limit: Int, offset: Int) -> String {
         let url = BASE_URL_API + "observations?_order=%5B%5B%22observationDate%22,%22DESC%22,%22ASC%22%5D,%5B%22_id%22,%22DESC%22%5D%5D" + includeQuery(includeQueries: includeQueries) + "&limit=\(limit)&offset=\(offset)&where=%7B%7D"
-        print(url)
+        //        print(url)
         return url
     }
     
@@ -445,17 +466,17 @@ struct API {
         let coordinate = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
         
         if radius != Radius.country {
-        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: radius.rawValue, longitudinalMeters: radius.rawValue)
-        
-        let cord1 = CLLocationCoordinate2D(latitude: coordinate.latitude + region.span.latitudeDelta, longitude: coordinate.longitude + region.span.longitudeDelta)
-        let cord2 = CLLocationCoordinate2D(latitude: coordinate.latitude - region.span.latitudeDelta, longitude: coordinate.longitude - region.span.longitudeDelta)
-    
+            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: radius.rawValue, longitudinalMeters: radius.rawValue)
+            
+            let cord1 = CLLocationCoordinate2D(latitude: coordinate.latitude + region.span.latitudeDelta, longitude: coordinate.longitude + region.span.longitudeDelta)
+            let cord2 = CLLocationCoordinate2D(latitude: coordinate.latitude - region.span.latitudeDelta, longitude: coordinate.longitude - region.span.longitudeDelta)
+            
             let result = BASE_URL_API + "localities?where=%7B%22decimalLongitude%22:%7B%22$between%22:%5B\(cord2.longitude),\(cord1.longitude)%5D%7D,%22decimalLatitude%22:%7B%22$between%22:%5B\(cord2.latitude),\(cord1.latitude)%5D%7D%7D"
-    
-        return result
+            
+            return result
         } else {
             let url = BASE_URL_API + "geonames/findnearby?lat=\(coordinates.latitude)&lng=\(coordinates.longitude)"
-            print(url)
+            //            print(url)
             return url
         }
         
@@ -515,7 +536,7 @@ func SEARCHFORMUSHROOM_URL(searchTerm: String) -> String {
     
     
     let returned = BASE_URL_API + "taxa?" + "include=%5B%7B%22model%22%3A%22TaxonRedListData%22%2C%22as%22%3A%22redlistdata%22%2C%22required%22%3Afalse%2C%22attributes%22%3A%5B%22status%22%5D%2C%22where%22%3A%22%7B%5C%22year%5C%22%3A2009%7D%22%7D%2C%7B%22model%22%3A%22Taxon%22%2C%22as%22%3A%22acceptedTaxon%22%7D%2C%7B%22model%22%3A%22TaxonAttributes%22%2C%22as%22%3A%22attributes%22%2C%22attributes%22%3A%5B%22PresentInDK%22%2C%20%22forvekslingsmuligheder%22%2C%20%22oekologi%22%2C%20%22diagnose%22%5D%2C%22where%22%3A%22%7B%7D%22%7D%2C%7B%22model%22%3A%22TaxonDKnames%22%2C%22as%22%3A%22Vernacularname_DK%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonStatistics%22%2C%22as%22%3A%22Statistics%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonImages%22%2C%22as%22%3A%22images%22%2C%22required%22%3Afalse%7D%5D" + "&nocount=true&where=%7B%22%24or%22%3A%5B%7B%22FullName%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22%24Vernacularname_DK.vernacularname_dk%24%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22FullName%22%3A%7B%22like%22%3A%22\(genus)%25%22%7D%2C%22TaxonName%22%3A%7B%22like%22%3A%22\(taxonName)%25%22%7D%7D%5D%7D"
-    print(returned)
+    //    print(returned)
     return returned
 }
 

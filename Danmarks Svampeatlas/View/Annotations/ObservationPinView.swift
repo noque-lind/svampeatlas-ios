@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 
+
 class ObservationPin: NSObject, MKAnnotation {
     var detailed: Bool
     var observation: Observation
@@ -93,14 +94,14 @@ class ObservationPinView: MKAnnotationView {
         self.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
         
         if withImage {
-            self.image = #imageLiteral(resourceName: "SinglePin")
+            self.image = #imageLiteral(resourceName: "Icons_Map_ImagePin")
             self.addSubview(imageView)
             imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 4).isActive = true
             imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -4).isActive = true
             imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4).isActive = true
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor).isActive = true
         } else {
-            self.image = #imageLiteral(resourceName: "SinglePinNoImage")
+            self.image = #imageLiteral(resourceName: "Icons_Map_Pin")
         }
     }
     

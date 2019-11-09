@@ -8,11 +8,12 @@
 
 import UIKit
 import ELKit
+import SafariServices
 
 class LoginVC: UIViewController {
     
     private lazy var menuButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
+        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
         return button
     }()
     
@@ -35,8 +36,6 @@ class LoginVC: UIViewController {
                 return label
             }()
             
-            
-
             let lowerLabel: UILabel = {
                 let label = UILabel()
                 label.font = UIFont.appTitle()
@@ -80,7 +79,7 @@ class LoginVC: UIViewController {
         textField.backgroundColor = UIColor.appSecondaryColour()
         textField.textContentType = .username
         textField.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        textField.icon = #imageLiteral(resourceName: "Profile")
+        textField.icon = #imageLiteral(resourceName: "Glyphs_Profile")
         return textField
     }()
     
@@ -93,7 +92,7 @@ class LoginVC: UIViewController {
         textField.backgroundColor = UIColor.appSecondaryColour()
         textField.heightAnchor.constraint(equalToConstant: 60).isActive = true
         textField.isSecureTextEntry = true
-        textField.icon = #imageLiteral(resourceName: "Glyphs_lock")
+        textField.icon = #imageLiteral(resourceName: "Glyphs_Lock")
         return textField
     }()
     
@@ -102,21 +101,33 @@ class LoginVC: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.appGreen()
         button.setTitle("Log ind", for: [])
+        button.layer.cornerRadius = CGFloat.cornerRadius()
+        button.layer.shadowOpacity = Float.shadowOpacity()
+        button.layer.shadowOffset = CGSize.shadowOffset()
         button.titleLabel?.font = UIFont.appTitle()
-        button.setTitleColor(UIColor.appWhite(), for: [])
+        button.setTitleColor(UIColor.appWhite(), for: .normal)
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         button.addTarget(self, action: #selector(logInButtonPressed), for: .touchUpInside)
         return button
     }()
     
-    private lazy var forgotPasswordButton: UIButton = {
+    private lazy var createNewAccountButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Har du glemt dit kodeord?", for: [])
-        button.setTitleColor(UIColor.appWhite(), for: [])
+        button.setTitle("Klik her for at oprette en ny konto", for: [])
+        button.setTitleColor(UIColor.appWhite(), for: .normal)
+        button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.titleLabel?.font = UIFont.appPrimary()
+        button.titleLabel?.numberOfLines = 0
         button.titleLabel?.textAlignment = .center
+        button.addTarget(self, action: #selector(createAccountPressed), for: .touchUpInside)
         return button
     }()
+    
+    @objc private func createAccountPressed() {
+        let svc = SFSafariViewController(url: URL(string: "https://svampe.databasen.org/signup")!)
+        present(svc, animated: true, completion: nil)
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
@@ -152,12 +163,13 @@ class LoginVC: UIViewController {
     
     
     private func setupView() {
-
         view.backgroundColor = UIColor.appPrimaryColour()
     
         let gradientImageView: GradientImageView = {
             let view = GradientImageView()
             view.translatesAutoresizingMaskIntoConstraints = false
+            
+            view.setImage(image: #imageLiteral(resourceName: "Images_MushroomBackground"), fade: true)
             return view
         }()
         
@@ -182,7 +194,7 @@ class LoginVC: UIViewController {
             stackView.addArrangedSubview(initialsTextField)
             stackView.addArrangedSubview(passwordTextField)
             stackView.addArrangedSubview(loginButton)
-//            stackView.addArrangedSubview(forgotPasswordButton)
+            stackView.addArrangedSubview(createNewAccountButton)
             return stackView
         }()
         
@@ -193,7 +205,6 @@ class LoginVC: UIViewController {
         
         
         ELKeyboardHelper.instance.registerObject(view: passwordTextField)
-        gradientImageView.setImage(image: #imageLiteral(resourceName: "BomuldsSloerhat"), fade: true)
     }
     
     @objc private func logInButtonPressed() {

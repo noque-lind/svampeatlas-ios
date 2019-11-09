@@ -32,6 +32,7 @@ class SettingCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.appPrimary()
         label.textAlignment = .right
+        label.numberOfLines = 0
         label.textColor = UIColor.appWhite()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -70,8 +71,8 @@ class SettingCell: UITableViewCell {
         contentView.addSubview(stackView)
         stackView.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8).isActive = true
         stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
-        stackView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
     }
     
     func configureCell(icon: UIImage, description: String, content: String) {

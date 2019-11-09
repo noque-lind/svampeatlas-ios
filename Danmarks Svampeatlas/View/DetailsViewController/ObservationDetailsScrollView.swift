@@ -72,7 +72,7 @@ class ObservationDetailsScrollView: AppScrollView {
                 button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
                 button.layer.cornerRadius = 5
                 button.setTitle("Rapporter stødende indhold", for: [])
-                button.setTitleColor(UIColor.appRed(), for: [])
+                button.setTitleColor(UIColor.red, for: [])
                 button.titleLabel?.font = UIFont.appPrimaryHightlighed(customSize: 12)
             button.translatesAutoresizingMaskIntoConstraints = false
             button.addTarget(self, action: #selector(reportContentButtonPressed), for: .touchUpInside)
@@ -107,19 +107,25 @@ class ObservationDetailsScrollView: AppScrollView {
         self.observation = observation
         
         
-        
         configureHeader(title: observation.speciesProperties.name, subtitle: nil, user: observation.observedBy)
-        configureText(title: "Kommentarer om voksested", text: observation.ecologyNote)
-        configureText(title: "Andre noter", text: observation.note)
+        addText(title: "Kommentarer om voksested", text: observation.ecologyNote)
+        addText(title: "Andre noter", text: observation.note)
         
         var informationArray = [(String, String)]()
         
-        if let validationStatus = observation.validationStatus {
-            informationArray.append(("Valideringsstatus:", validationStatus))
+        switch observation.validationStatus {
+        case .approved:
+            informationArray.append(("Valideringsstatus:", "Godkendt"))
+        case .rejected:
+            informationArray.append(("Valideringsstatus:", "Afvist"))
+        case .verifying:
+            informationArray.append(("Valideringsstatus:", "Valideres"))
+        case .unknown:
+            informationArray.append(("Valideringsstatus:", "Vides ikke"))
         }
         
         if let observationDate = observation.date, observationDate != "" {
-            informationArray.append(("Fundets dato:", Date(ISO8601String: observationDate)?.convert(into: DateFormatter.Style.long) ?? ""))
+            informationArray.append(("Fundets dato:", Date(ISO8601String: observationDate)?.convert(into: .medium, ignoreRecentFormatting: false, ignoreTime: true) ?? ""))
         }
         
         if let substrate = observation.substrate {
@@ -135,7 +141,7 @@ class ObservationDetailsScrollView: AppScrollView {
         }
         
         
-        configureInformation(information: informationArray)
+        addInformation(information: informationArray)
         configureMapView(observation: observation)
         
         if showSpeciesView {
@@ -145,19 +151,19 @@ class ObservationDetailsScrollView: AppScrollView {
         configureComments(observationID: observation.id)
         
         if session != nil {
-            contentStackView.addArrangedSubview(reportContentView)
+            addContent(title: nil, content: reportContentView)
         }
     }
     
     private func configureMapView(observation: Observation) {
-        contentStackView.addArrangedSubview(mapView)
-        mapView.addObservationAnnotations(observations: [observation])
-        let coordinate = CLLocationCoordinate2D.init(latitude: observation.coordinates.last!, longitude: observation.coordinates.first!)
-        mapView.setRegion(center: coordinate, zoomMetres: 50000)
+        addContent(title: nil, content: mapView)
+         let coordinate = CLLocationCoordinate2D.init(latitude: observation.coordinates.last!, longitude: observation.coordinates.first!)
         
+        mapView.addLocationAnnotation(location: coordinate)
+        mapView.setRegion(center: coordinate, zoomMetres: 50000)
         mapView.wasTapped = { [unowned self] in
             let mapVC = MapVC()
-            mapVC.mapView.addObservationAnnotations(observations: [observation])
+            mapVC.mapView.addLocationAnnotation(location: coordinate)
             mapVC.mapView.setRegion(center: coordinate, zoomMetres: 50000)
             self.customDelegate?.pushVC(mapVC)
         }
@@ -165,15 +171,13 @@ class ObservationDetailsScrollView: AppScrollView {
     
     private func configureSpeciesView(taxonID: Int?) {
         guard let taxonID = taxonID else {return}
-        let content = addContent(title: "Art", content: mushroomView)
+        addContent(title: "Art", content: mushroomView)
         Spinner.start(onView: mushroomView)
         
-        DataService.instance.getMushroom(withID: taxonID) { [weak mushroomView, weak content] (result) in
+        DataService.instance.getMushroom(withID: taxonID) { [weak mushroomView] (result) in
             switch result {
             case .Error(_):
-                DispatchQueue.main.async { [weak content] in
-                    content?.removeFromSuperview()
-                }
+                return
             case .Success(let mushroom):
                 DispatchQueue.main.sync { [weak mushroomView] in
                     Spinner.stop()
@@ -185,20 +189,19 @@ class ObservationDetailsScrollView: AppScrollView {
     }
     
     private func configureComments(observationID: Int) {
-        let content = addContent(title: "Kommentarer", content: commentsTableView)
+        addContent(title: "Kommentarer", content: commentsTableView)
         
         commentsTableView.tableViewState = .Loading
         ELKeyboardHelper.instance.registerObject(view: commentsTableView)
         
-        DataService.instance.getObservation(withID: observationID) { [weak commentsTableView, weak content] (result) in
-            DispatchQueue.main.async { [weak commentsTableView, weak content] in
+        DataService.instance.getObservation(withID: observationID) { [weak commentsTableView] (result) in
+            DispatchQueue.main.async { [weak commentsTableView] in
                 switch result {
                 case .Success(let observation):
                     if (observation.comments.count > 0) || (commentsTableView?.allowComments ?? false) {
-                    
                         commentsTableView?.tableViewState = TableViewState.Items(observation.comments)
                     } else {
-                     content?.removeFromSuperview()
+//                     content?.removeFromSuperview()
                     }
                     
                 case .Error(let error):

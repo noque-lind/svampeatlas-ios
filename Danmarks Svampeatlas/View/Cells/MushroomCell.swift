@@ -10,6 +10,8 @@ import UIKit
 
 class MushroomCell: UITableViewCell {
     
+    static let identifier = "MushroomCell"
+    
     static var estimatedRowHeight = 150
     
     private lazy var mushroomView: MushroomView = {

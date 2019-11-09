@@ -66,9 +66,9 @@ class ObservationDetailsCell: UICollectionViewCell {
         view.dataSource = self
         view.separatorInset = UIEdgeInsets.zero
         view.backgroundColor = UIColor.clear
+        view.separatorColor = UIColor.appWhite()
         view.contentInsetAdjustmentBehavior = .never
         view.contentInset.bottom = self.safeAreaInsets.bottom
-        view.estimatedRowHeight = 200
         view.translatesAutoresizingMaskIntoConstraints = false
         view.register(SettingCell.self, forCellReuseIdentifier: "selectorCell")
         view.register(PickerViewCell.self, forCellReuseIdentifier: "PickerViewCell")
@@ -77,11 +77,11 @@ class ObservationDetailsCell: UICollectionViewCell {
         return view
     }()
     
-    private var didLayoutSubView = false
     private let rows: [Categories] = Categories.allCases
     private weak var navigationDelegate: NavigationDelegate?
     private var newObservation: NewObservation?
     private var shouldClearObservationHost = false
+    private var didAdjustSafeAreaInsets: Bool = false
     private var addedRow: (parent: IndexPath, indexPath: IndexPath, selectors: Selectors)? {
         didSet {
             if let oldValue = oldValue, addedRow == nil {
@@ -91,6 +91,15 @@ class ObservationDetailsCell: UICollectionViewCell {
             
             guard let addedRow = addedRow else {return}
                 tableView.insertRows(at: [addedRow.indexPath], with: .fade)
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if tableView.contentInset.bottom != self.safeAreaInsets.bottom && !didAdjustSafeAreaInsets {
+            didAdjustSafeAreaInsets = true
+            tableView.contentInset.bottom = self.safeAreaInsets.bottom
+            tableView.scrollIndicatorInsets.bottom = self.safeAreaInsets.bottom
         }
     }
     
@@ -107,13 +116,6 @@ class ObservationDetailsCell: UICollectionViewCell {
         self.navigationDelegate = delegate
         self.newObservation = newObservation
         tableView.reloadData()
-    }
-    
-    override func layoutSubviews() {
-        if !didLayoutSubView {
-            tableView.contentInset.bottom = safeAreaInsets.bottom
-        }
-        super.layoutSubviews()
     }
     
 
@@ -236,7 +238,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
 
         switch rows[adjustedIndexPathRow] {
             case .Date, .Substrate, .VegetationType, .Host:
-                return 45
+                return UITableView.automaticDimension
             case .Notes, .EcologyNotes:
                 return UITableView.automaticDimension
             }
@@ -314,6 +316,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 return cell
             case .SubstraPicker:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewPickerCell", for: indexPath) as! TableViewPickerCell
+                cell.isLocked = newObservation?.substrate?.isLocked ?? false
                 cell.didSelectCell = { [unowned self] cellType, isLocked in
                     self.didSelectCell(cellType: cellType, isLocked: isLocked)
                 }
@@ -321,6 +324,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 return cell
             case .VegetationPicker:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewPickerCell", for: indexPath) as! TableViewPickerCell
+                cell.isLocked = newObservation?.vegetationType?.isLocked ?? false
                 cell.didSelectCell = { [unowned self] cellType, isLocked in
                     self.didSelectCell(cellType: cellType, isLocked: isLocked)
                 }
@@ -328,6 +332,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 return cell
             case .HostSelector:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewPickerCell", for: indexPath) as! TableViewPickerCell
+                cell.isLocked = newObservation?.lockedHosts ?? false
                 cell.didSelectCell = { [unowned self] cellType, isLocked in
                     self.didSelectCell(cellType: cellType, isLocked: isLocked)
                 }
@@ -376,7 +381,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                         string = "-"
                     }
                     
-                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_VegetationType"), description: "Vært:", content: string)
+                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Host"), description: "Vært:", content: string)
                     
                 default: break
                 }

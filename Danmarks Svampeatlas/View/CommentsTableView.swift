@@ -26,6 +26,7 @@ class CommentsTableView: GenericTableView<Comment> {
     
     override func setupView() {
         tableView.separatorStyle = .singleLine
+        tableView.estimatedRowHeight = 120
         register(CommentCell.self, forCellReuseIdentifier: "commentCell")
         register(AddCommentCell.self, forCellReuseIdentifier: "addCommentCell")
         super.setupView()
@@ -60,11 +61,13 @@ class CommentsTableView: GenericTableView<Comment> {
 
 extension CommentsTableView: ELTextViewDelegate {
     func shouldChangeHeight() {
-        UIView.setAnimationsEnabled(false)
-        self.tableView.beginUpdates()
-        ELKeyboardHelper.instance.focus()
-        self.tableView.endUpdates()
-        UIView.setAnimationsEnabled(true)
+        
+//        tableView.reloadRows(at: [IndexPath(row: tableViewState.itemsCount() + 1, section: 0)], with: .none)
+//        UIView.setAnimationsEnabled(false)
+//        self.tableView.beginUpdates()
+////        ELKeyboardHelper.instance.focus()
+//        self.tableView.endUpdates()
+//        UIView.setAnimationsEnabled(true)
     }
     
     func didUpdateTextEntry(title: String, _ text: String) {

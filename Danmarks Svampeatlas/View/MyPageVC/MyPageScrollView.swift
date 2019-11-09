@@ -30,20 +30,23 @@ class MyPageScrollView: UIScrollView {
         view.layer.shadowOpacity = 0.4
         view.layer.maskedCorners = [CACornerMask.layerMaxXMaxYCorner, CACornerMask.layerMinXMaxYCorner]
         view.addSubview(contentStackView)
-        contentStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8).isActive = true
-        contentStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8).isActive = true
+        contentStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        contentStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         contentStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
         contentStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
         return view
     }()
     
-    private lazy var notificationsCountLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.appDivider()
-        label.adjustsFontSizeToFitWidth = true
-        label.textColor = UIColor.appWhite()
-        label.isHidden = true
-        return label
+    private lazy var notificationsCountLabel: SectionHeaderView = {
+        let view = SectionHeaderView()
+        view.configure(text: "Notifikationer")
+        return view
+    }()
+    
+    private lazy var observationsCountLabel: SectionHeaderView = {
+        let view = SectionHeaderView()
+        view.configure(text: "Observationer")
+        return view
     }()
     
     private lazy var notificationsTableView: NotificationsTableView = {
@@ -56,19 +59,9 @@ class MyPageScrollView: UIScrollView {
         return view
     }()
     
-    private lazy var observationsCountLabel: UILabel = {
-       let label = UILabel()
-        label.font = UIFont.appDivider()
-        label.textColor = UIColor.appWhite()
-        label.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .horizontal)
-        label.isHidden = true
-        return label
-    }()
-    
-    
     private lazy var logoutButton: UIButton = {
        let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "Icons_LogOut") , for: [])
+        button.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_LogOut") , for: [])
         button.translatesAutoresizingMaskIntoConstraints = false
         button.widthAnchor.constraint(equalToConstant: 24).isActive = true
         button.heightAnchor.constraint(equalToConstant: 24).isActive = true
@@ -76,8 +69,8 @@ class MyPageScrollView: UIScrollView {
         return button
     }()
     
+    private var notificationsCount = 0
     private var session: Session
-
     weak var navigationDelegate: NavigationDelegate?
     
     init(session: Session) {
@@ -127,57 +120,37 @@ class MyPageScrollView: UIScrollView {
         let notificationsStackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
-            stackView.spacing = 0
+            stackView.spacing = 8
+            stackView.addArrangedSubview(notificationsCountLabel)
             
-            let labelStackView: UIStackView = {
-                let stackView = UIStackView()
-                stackView.axis = .horizontal
-                stackView.spacing = 5
-                
-                let label: UILabel = {
-                    let label = UILabel()
-                    label.text = "Notifikationer"
-                    label.font = UIFont.appDivider()
-                    label.textColor = UIColor.appWhite()
-                    return label
-                }()
-                
-                stackView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-                stackView.addArrangedSubview(notificationsCountLabel)
-                stackView.addArrangedSubview(label)
+            let contentStackView: UIStackView = {
+               let stackView = UIStackView()
+                stackView.isLayoutMarginsRelativeArrangement = true
+                stackView.layoutMargins = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+                stackView.addArrangedSubview(notificationsTableView)
                 return stackView
             }()
             
-            stackView.addArrangedSubview(labelStackView)
-            stackView.addArrangedSubview(notificationsTableView)
+            stackView.addArrangedSubview(contentStackView)
             return stackView
         }()
         
         let observationsStackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
-            stackView.spacing = 5
+            stackView.spacing = 8
             
-            let labelStackView: UIStackView = {
+            stackView.addArrangedSubview(observationsCountLabel)
+            
+            let contentStackView: UIStackView = {
                let stackView = UIStackView()
-                stackView.axis = .horizontal
-                stackView.spacing = 5
-                
-                let label: UILabel = {
-                    let label = UILabel()
-                    label.text = "Observationer"
-                    label.font = UIFont.appDivider()
-                    label.textColor = UIColor.appWhite()
-                    return label
-                }()
-                
-                stackView.addArrangedSubview(observationsCountLabel)
-                stackView.addArrangedSubview(label)
+                stackView.isLayoutMarginsRelativeArrangement = true
+                stackView.layoutMargins = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+                stackView.addArrangedSubview(observationsTableView)
                 return stackView
             }()
             
-            stackView.addArrangedSubview(labelStackView)
-            stackView.addArrangedSubview(observationsTableView)
+            stackView.addArrangedSubview(contentStackView)
             return stackView
         }()
         
@@ -190,15 +163,16 @@ class MyPageScrollView: UIScrollView {
     
 
     private func setupNotifications() {
-        
             notificationsTableView.tableViewState = .Loading
-            session.getNotificationCount { [weak notificationsCountLabel, weak session, weak notificationsTableView] (result) in
+            session.getNotificationCount { [weak self, weak notificationsCountLabel, weak session, weak notificationsTableView] (result) in
             switch result {
             case .Success(let count):
+                self?.notificationsCount = count
+                
                 DispatchQueue.main.async { [weak notificationsCountLabel] in
-                    notificationsCountLabel?.text = "\(count)"
-                    notificationsCountLabel?.isHidden = false
+                    notificationsCountLabel?.configure(text: "\(count) Notifikationer")
                 }
+                
                 session?.getUserNotifications(limit: ((count <= 4) ? count: 4), offset: 0, completion: { [weak notificationsTableView] (result) in
                     switch result {
                     case .Error(let error):
@@ -217,38 +191,34 @@ class MyPageScrollView: UIScrollView {
         }
         
         notificationsTableView.didRequestAdditionalDataAtOffset = { [unowned session] tableView, offset, max in
-            var allNotifications = tableView.tableViewState.currentItems()
             tableView.tableViewState = .Loading
             
-            session.getUserNotifications(limit: (max! <= 8) ? max!: 8, offset: offset, completion: { (result) in
+            session.getUserNotifications(limit: (max! >= offset + 8) ? offset + 8: max!, offset: offset, completion: { (result) in
                 switch result {
                 case .Error(let error):
                     tableView.tableViewState = .Error(error, nil)
                 case .Success(let notifications):
-                    allNotifications.append(contentsOf: notifications)
-                    if allNotifications.count >= max! {
-                        tableView.tableViewState = .Items(allNotifications)
+                    if notifications.count >= max! {
+                        tableView.tableViewState = .Items(notifications)
                     } else {
-                        tableView.tableViewState = .Paging(items: allNotifications, max: max!)
+                        tableView.tableViewState = .Paging(items: notifications, max: max!)
                     }
                 }
             })
         }
         
         notificationsTableView.didSelectItem = {[unowned self] usernotification in
-            let currentTableViewState = self.notificationsTableView.tableViewState
-            self.notificationsTableView.tableViewState = .Loading
-            
-            DataService.instance.getObservation(withID: usernotification.observationID, completion: { [weak self] (result) in
-                switch result {
-                case .Error(let error):
-                    let notif = ELNotificationView.appNotification(style: .error, primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
-                    notif.show(animationType: .fromBottom)
-                case .Success(let observation):
-                    self?.navigationDelegate?.pushVC(DetailsViewController(detailsContent: .observation(observation: observation, showSpeciesView: true, session: self?.session)))
-                }
-                self?.notificationsTableView.tableViewState = currentTableViewState
-            })
+            if self.notificationsCount > 1 {
+                 self.notificationsCount -= 1
+                self.notificationsTableView.removeNotification(notification: usernotification)
+            } else {
+                self.notificationsCount = 0
+                self.notificationsTableView.tableViewState = .Error(Session.SessionError.noNotifications, nil)
+            }
+           
+            self.notificationsCountLabel.configure(text: "\(self.notificationsCount) Notifikationer")
+            self.session.markNotificationAsRead(notificationID: usernotification.observationID)
+            self.navigationDelegate?.pushVC(DetailsViewController(detailsContent: .observationWithID(observationID: usernotification.observationID, showSpeciesView: true, session: self.session)))
         }
     }
     
@@ -284,8 +254,7 @@ class MyPageScrollView: UIScrollView {
                 self?.observationsTableView.tableViewState = .Error(error, nil)
             case .Success(let count):
                 DispatchQueue.main.async {
-                    self?.observationsCountLabel.text = "\(count)"
-                    self?.observationsCountLabel.isHidden = false
+                    self?.observationsCountLabel.configure(text: "\(count) Observationer")
                 }
                 self?.session.getObservations(limit: 15, offset: 0, completion: { (result) in
                     switch result {

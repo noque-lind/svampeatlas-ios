@@ -9,6 +9,6 @@
 import Foundation
 
 public protocol AppError: Error {
-    var errorDescription: String {get}
-    var errorTitle: String {get}
+    var errorDescription: String { get }
+    var errorTitle: String { get }
 }

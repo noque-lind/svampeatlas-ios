@@ -199,7 +199,6 @@ extension DataService {
         
         let api = API.Request.Mushrooms(searchString: searchString, speciesQueries: speciesQueries, limit: limit, offset: offset).encodedURL
         
-        print(api)
         createDataTaskRequest(url: API.Request.Mushrooms(searchString: searchString, speciesQueries: speciesQueries, limit: limit, offset: offset).encodedURL) { (result) in
             switch result {
             case .Error(let error):

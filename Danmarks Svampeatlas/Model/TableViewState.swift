@@ -8,18 +8,29 @@
 
 import Foundation
 
-class Section<T> {
+class Section<T>: Hashable {
     
+    static func == (lhs: Section<T>, rhs: Section<T>) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uid.hashValue)
+    }
+
+
     enum State {
         case items(items: [T])
         case loading
         case error(error: AppError)
     }
     
+    private let uid: UUID
     public private(set) var title: String?
     public private(set) var state: State
     
     init(title: String?, state: State) {
+        self.uid = UUID()
         self.title = title
         self.state = state
     }

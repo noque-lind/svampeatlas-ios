@@ -75,8 +75,6 @@
 		DB24AEA72281CBE40057DF82 /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB24AEA62281CBE40057DF82 /* CGFloat+Extension.swift */; };
 		DB24AEA92281D5E40057DF82 /* MapViewFilteringSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB24AEA82281D5E40057DF82 /* MapViewFilteringSettings.swift */; };
 		DB2A52CF216383E20000F483 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2A52CE216383E20000F483 /* UIImageView+Extension.swift */; };
-		DB2B777122995B9800082E52 /* ELKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB2B776D22995B7800082E52 /* ELKit.framework */; };
-		DB2B777F2299D0A400082E52 /* ELKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DB2B776D22995B7800082E52 /* ELKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB2C55B5234A076E007FABE4 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2C55B4234A076E007FABE4 /* SectionHeaderView.swift */; };
 		DB2EC90C216D285F00B980A0 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2EC90B216D285F00B980A0 /* Double+Extension.swift */; };
 		DB2ECE67219F666E0025DD85 /* GenericTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2ECE66219F666E0025DD85 /* GenericTableView.swift */; };
@@ -91,6 +89,8 @@
 		DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C42180DFA9001874A6 /* MyPageVC.swift */; };
 		DB4F53C72181F569001874A6 /* MyPageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C62181F569001874A6 /* MyPageScrollView.swift */; };
 		DB59F55F232D2B5B005D5EA5 /* Collection+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */; };
+		DB5AA02D2376D81C00F5D780 /* ELKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB5AA02A2376D7D200F5D780 /* ELKit.framework */; };
+		DB5AA02E2376D81C00F5D780 /* ELKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DB5AA02A2376D7D200F5D780 /* ELKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB5E160A21AC452300F8C3FD /* NearbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E160921AC452300F8C3FD /* NearbyVC.swift */; };
 		DB6437492295CCFA00BE7FF4 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6437482295CCFA00BE7FF4 /* SearchCell.swift */; };
 		DB64374B2296A3F700BE7FF4 /* Host.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB64374A2296A3F700BE7FF4 /* Host.swift */; };
@@ -163,26 +163,19 @@
 			remoteGlobalIDString = 4A69BC752038D96500D3B88B;
 			remoteInfo = SvampeAtlas;
 		};
-		DB2B776C22995B7800082E52 /* PBXContainerItemProxy */ = {
+		DB5AA0292376D7D200F5D780 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DB2B776722995B7800082E52 /* ELKit.xcodeproj */;
+			containerPortal = DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DB2B772C229954E500082E52;
 			remoteInfo = ELKit;
 		};
-		DB2B776E22995B7800082E52 /* PBXContainerItemProxy */ = {
+		DB5AA02B2376D7D200F5D780 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DB2B776722995B7800082E52 /* ELKit.xcodeproj */;
+			containerPortal = DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DB2B7735229954E500082E52;
 			remoteInfo = ELKitTests;
-		};
-		DB2B77802299D0A400082E52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DB2B776722995B7800082E52 /* ELKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DB2B772B229954E500082E52;
-			remoteInfo = ELKit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -193,7 +186,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				DB2B777F2299D0A400082E52 /* ELKit.framework in Embed Frameworks */,
+				DB5AA02E2376D81C00F5D780 /* ELKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -275,7 +268,6 @@
 		DB24AEA62281CBE40057DF82 /* CGFloat+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
 		DB24AEA82281D5E40057DF82 /* MapViewFilteringSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewFilteringSettings.swift; sourceTree = "<group>"; };
 		DB2A52CE216383E20000F483 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
-		DB2B776722995B7800082E52 /* ELKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ELKit.xcodeproj; path = ../../Programming/ELKit/ELKit.xcodeproj; sourceTree = "<group>"; };
 		DB2C55B4234A076E007FABE4 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		DB2EC90B216D285F00B980A0 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		DB2ECE66219F666E0025DD85 /* GenericTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericTableView.swift; sourceTree = "<group>"; };
@@ -291,6 +283,7 @@
 		DB4F53C42180DFA9001874A6 /* MyPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageVC.swift; sourceTree = "<group>"; };
 		DB4F53C62181F569001874A6 /* MyPageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageScrollView.swift; sourceTree = "<group>"; };
 		DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
+		DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ELKit.xcodeproj; path = ../../../ELKit/ELKit.xcodeproj; sourceTree = "<group>"; };
 		DB5E160921AC452300F8C3FD /* NearbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyVC.swift; sourceTree = "<group>"; };
 		DB6437482295CCFA00BE7FF4 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		DB64374A2296A3F700BE7FF4 /* Host.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Host.swift; sourceTree = "<group>"; };
@@ -354,7 +347,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB2B777122995B9800082E52 /* ELKit.framework in Frameworks */,
+				DB5AA02D2376D81C00F5D780 /* ELKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,7 +511,6 @@
 				4A28AB862044413100F21EEE /* Constants.swift */,
 				4A95D5442057D7B500EBB2C5 /* ActivityIndicatorView.swift */,
 				4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */,
-				DBEE2857212441DB0017817A /* AppError.swift */,
 				DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */,
 				4A72AB8520EE530900F9E45C /* CoreDataHelper.swift */,
 				DB897AFB21D29E3700E74C00 /* InputAccessoryView.swift */,
@@ -569,7 +561,7 @@
 		4A69BC6D2038D96500D3B88B = {
 			isa = PBXGroup;
 			children = (
-				DB2B776722995B7800082E52 /* ELKit.xcodeproj */,
+				DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */,
 				4A69BC782038D96500D3B88B /* Danmarks Svampeatlas */,
 				4A69BC902038D96500D3B88B /* Danmarks Svampeatlas Tests */,
 				4A69BC9B2038D96500D3B88B /* Danmarks Svampeatlas UITests */,
@@ -629,6 +621,7 @@
 		4A69BCAA20397F8400D3B88B /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DBEE2857212441DB0017817A /* AppError.swift */,
 				20D4C80F223A7962006AA9E9 /* NavigationItem.swift */,
 				4A69BCAB2039805100D3B88B /* Mushroom.swift */,
 				4A40CD6F209217B500F58F25 /* Observation.swift */,
@@ -658,15 +651,6 @@
 			path = NearbyVC;
 			sourceTree = "<group>";
 		};
-		DB2B776822995B7800082E52 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DB2B776D22995B7800082E52 /* ELKit.framework */,
-				DB2B776F22995B7800082E52 /* ELKitTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		DB2B777022995B9800082E52 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -683,6 +667,15 @@
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 			);
 			path = DetailsViewController;
+			sourceTree = "<group>";
+		};
+		DB5AA0252376D7D200F5D780 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DB5AA02A2376D7D200F5D780 /* ELKit.framework */,
+				DB5AA02C2376D7D200F5D780 /* ELKitTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		DB6E9E2B218A4CD700A6FB1C /* MyPageVC */ = {
@@ -758,7 +751,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				DB2B77812299D0A400082E52 /* PBXTargetDependency */,
 			);
 			name = "Danmarks Svampeatlas";
 			productName = SvampeAtlas;
@@ -849,8 +841,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = DB2B776822995B7800082E52 /* Products */;
-					ProjectRef = DB2B776722995B7800082E52 /* ELKit.xcodeproj */;
+					ProductGroup = DB5AA0252376D7D200F5D780 /* Products */;
+					ProjectRef = DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -863,18 +855,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		DB2B776D22995B7800082E52 /* ELKit.framework */ = {
+		DB5AA02A2376D7D200F5D780 /* ELKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ELKit.framework;
-			remoteRef = DB2B776C22995B7800082E52 /* PBXContainerItemProxy */;
+			remoteRef = DB5AA0292376D7D200F5D780 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		DB2B776F22995B7800082E52 /* ELKitTests.xctest */ = {
+		DB5AA02C2376D7D200F5D780 /* ELKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = ELKitTests.xctest;
-			remoteRef = DB2B776E22995B7800082E52 /* PBXContainerItemProxy */;
+			remoteRef = DB5AA02B2376D7D200F5D780 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1074,11 +1066,6 @@
 			isa = PBXTargetDependency;
 			target = 4A69BC752038D96500D3B88B /* Danmarks Svampeatlas */;
 			targetProxy = 4A69BC992038D96500D3B88B /* PBXContainerItemProxy */;
-		};
-		DB2B77812299D0A400082E52 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ELKit;
-			targetProxy = DB2B77802299D0A400082E52 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

@@ -11,11 +11,15 @@ import UIKit
 class LoaderCell: UITableViewCell {
     
     static let identifier = "LoaderCell"
+    static let height: CGFloat = 200
     
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
         spinner.startAnimating()
+        spinner.hidesWhenStopped = false
         spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        spinner.heightAnchor.constraint(equalToConstant: 50).isActive = true
         return spinner
     }()
     
@@ -23,6 +27,7 @@ class LoaderCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
     }
+    
     
     required init?(coder: NSCoder) {
         fatalError()

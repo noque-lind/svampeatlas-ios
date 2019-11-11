@@ -220,14 +220,14 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "1F3372E8-94FF-4438-904F-733D12DE5038 - 17369fec66fda526"
+                  uuid = "1F3372E8-94FF-4438-904F-733D12DE5038 - 549e6ed3f873d873"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "Danmarks_Svampeatlas.NearbyVC.userDeniedPermissions() -&gt; ()"
                   moduleName = "Danmarks Svampeatlas"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/emillind/Documents/Svampeatlas/app/Danmarks%20Svampeatlas/Controllers/NearbyVC.swift"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Controllers/NearbyVC.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "167"
@@ -235,14 +235,14 @@
                   offsetFromSymbolStart = "22">
                </Location>
                <Location
-                  uuid = "1F3372E8-94FF-4438-904F-733D12DE5038 - 5a44815a03b59f2a"
+                  uuid = "1F3372E8-94FF-4438-904F-733D12DE5038 - 19ec70659d3be27f"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
                   symbolName = "closure #1 () -&gt; () in Danmarks_Svampeatlas.NearbyVC.userDeniedPermissions() -&gt; ()"
                   moduleName = "Danmarks Svampeatlas"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/emillind/Documents/Svampeatlas/app/Danmarks%20Svampeatlas/Controllers/NearbyVC.swift"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Controllers/NearbyVC.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "168"

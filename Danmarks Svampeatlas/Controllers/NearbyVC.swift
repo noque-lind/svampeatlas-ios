@@ -14,7 +14,11 @@ class NearbyVC: UIViewController {
     private lazy var categoryView: CategoryView<NewMapView.Categories> = {
         let items = NewMapView.Categories.allCases.compactMap({Category<NewMapView.Categories>(type: $0, title: $0.rawValue)})
         let view = CategoryView<NewMapView.Categories>.init(categories: items, firstIndex: 0)
-        view.delegate = self
+        
+        view.categorySelected = { [unowned mapView] category in
+            mapView.filterByCategory(category: category)
+        }
+        
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -119,13 +123,6 @@ class NearbyVC: UIViewController {
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         self.navigationItem.setLeftBarButton(menuButton, animated: false)
         navigationController?.navigationBar.shadowImage = UIImage()
-    }
-}
-
-extension NearbyVC: CategoryViewDelegate {
-    func categorySelected(category: Any) {
-        guard let category = category as? NewMapView.Categories else {return}
-        mapView.filterByCategory(category: category)
     }
 }
 

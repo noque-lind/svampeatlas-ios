@@ -52,11 +52,11 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         return view
     }()
     
+    var categorySelected: ((T) -> ())? = nil
     private var items: [Category<T>]
     var selectedItem: Category<T>
     private var firstIndex: Int?
     private var cellsWidth: CGFloat
-    weak var delegate: CategoryViewDelegate?
     
     private var selectorViewWidthConstraint = NSLayoutConstraint()
     private var selectorViewCenterXConstraint = NSLayoutConstraint()
@@ -105,6 +105,10 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         }, completion: nil)
     }
     
+    func selectCategory(category: T, force: Bool) {
+        categorySelected?(category)
+    }
+    
     func moveSelector(toCellAtIndexPath indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) {
             moveSelector(toCell: cell)
@@ -131,7 +135,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
             collectionView.selectItem(at: IndexPath.init(row: indexPath.row, section: 0), animated: true, scrollPosition: .top)
             cell.isSelected = true
             moveSelector(toCell: cell)
-            delegate?.categorySelected(category: items[indexPath.row].type)
+            categorySelected?(items[indexPath.row].type)
             firstIndex = nil
         }
     }
@@ -155,7 +159,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedItem = items[indexPath.row]
-        delegate?.categorySelected(category: items[indexPath.row].type)
+        categorySelected?(items[indexPath.row].type)
         guard let cell = collectionView.cellForItem(at: indexPath) else {return}
         moveSelector(toCell: cell)
         

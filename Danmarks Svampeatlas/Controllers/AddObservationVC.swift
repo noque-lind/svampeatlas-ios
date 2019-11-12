@@ -41,8 +41,14 @@ class AddObservationVC: UIViewController {
         let items = ObservationCategories.allCases.compactMap({Category<ObservationCategories>(type: $0, title: $0.rawValue)})
         let view = CategoryView<ObservationCategories>.init(categories: items, firstIndex: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.delegate = self
         view.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        
+        view.categorySelected = { [unowned collectionView] category in
+            guard let index = ObservationCategories.allCases.index(of: category) else {return}
+            collectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
+            view.endEditing(true)
+        }
+        
         return view
     }()
     
@@ -288,14 +294,6 @@ extension AddObservationVC: LocationManagerDelegate {
             
             notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
         }
-    }
-}
-
-extension AddObservationVC: CategoryViewDelegate {
-    func categorySelected(category: Any) {
-        guard let category = category as? ObservationCategories, let index = ObservationCategories.allCases.firstIndex(of: category) else {return}
-        collectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
-        view.endEditing(true)
     }
 }
 

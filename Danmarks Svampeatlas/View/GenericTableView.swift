@@ -33,38 +33,47 @@ class CustomTableView: AppTableView {
     //    }
 }
 
-class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
+protocol ELTableViewUpdater {
     
+    associatedtype T
     
-    class DataSource {
-        
-        var tableView: UITableView? = nil
-        public private(set) var sections: [Section<T>] = []
-                
+    func addSection(section: Section<T>)
+    func removeItem(indexPath: IndexPath)
+    func updateSection(section: Section<T>)
+}
 
+class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
+        
+    class Updater {
+        
+        private var superclass: ELTableView
+        
+        init(superclass: ELTableView) {
+            self.superclass = superclass
+        }
+        
+        deinit {
+            print("Updater deinit")
+        }
+        
         func addSection(section: Section<T>) {
-            sections.append(section)
-            tableView?.insertSections(IndexSet(integer: self.sections.endIndex - 1), with: .bottom)
+            superclass.sections.append(section)
+            superclass.tableView.insertSections(IndexSet(integer: superclass.sections.endIndex - 1), with: .bottom)
         }
         
-        func removeItem(indexPath: IndexPath) {
-            sections[indexPath.section].removeItemAt(index: indexPath.row)
-            tableView?.deleteRows(at: [indexPath], with: .none)
+        func removeItem(indexPath: IndexPath, animation: UITableView.RowAnimation = .none) {
+            superclass.sections[indexPath.section].removeItemAt(index: indexPath.row)
+            superclass.tableView.deleteRows(at: [indexPath], with: animation)
         }
-        
         
         func updateSection(section: Section<T>) {
-            guard let index = sections.index(of: section) else {return}
-                 self.tableView?.reloadSections(IndexSet(integer: index), with: .automatic)
-        }
-        
-        func setSections(sections: [Section<T>]) {
-            self.sections = sections
+            guard let index = superclass.sections.index(of: section) else {return}
+            superclass.tableView.reloadSections(IndexSet(integer: index), with: .automatic)
         }
     }
     
-    private lazy var tableView: UITableView = {
-        let view = UITableView()
+    private lazy var tableView: AnimatingTableView = {
+        let view = AnimatingTableView(animating: true)
         view.backgroundColor = UIColor.clear
         view.delegate = self
         view.dataSource = self
@@ -85,7 +94,15 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         return view
     }()
     
-    private var dataSource = DataSource()
+    var contentInset: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0) {
+        didSet {
+            tableView.contentInset = contentInset
+            tableView.scrollIndicatorInsets = contentInset
+        }
+    }
+    
+    
+    public private(set) var sections = [Section<T>]()
     
     init() {
         super.init(frame: CGRect.zero)
@@ -106,30 +123,27 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
-    
-    
-    
-    func performUpdates(updates: @escaping (DataSource) -> (), completion: (() -> Void)? = nil) {
-        dataSource.tableView = tableView
-        
+    func performUpdates(updates: @escaping (Updater) -> (), completion: (() -> Void)? = nil) {
         DispatchQueue.main.async {
             self.tableView.performBatchUpdates({
-                updates(self.dataSource)
+                updates(Updater(superclass: self))
             }) { (_) in
                 completion?()
-                self.dataSource.tableView = nil
             }
         }
     }
     
     func setSections(sections: [Section<T>]) {
-        dataSource.setSections(sections: sections)
-        tableView.reloadData()
+        self.sections = sections
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            
+            if sections.first != nil {
+                self.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: false)
+            }
+        }
     }
-    
-    
-    
-    
     
     func register(cellClass: AnyClass?, forCellReuseIdentifier identifier: String) {
         tableView.register(cellClass, forCellReuseIdentifier: identifier)
@@ -146,15 +160,15 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     func didSelectItem(_ item: T, indexPath: IndexPath) {}
     
     internal func numberOfSections(in tableView: UITableView) -> Int {
-        return dataSource.sections.count
+        return sections.count
     }
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource.sections[section].count()
+        return sections[section].count()
     }
 
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch dataSource.sections[indexPath.section].state {
+        switch sections[indexPath.section].state {
         case .error(error: let error):
             let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.identifier, for: indexPath) as! ErrorCell
             cell.configure(error: error)
@@ -169,15 +183,15 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch dataSource.sections[indexPath.section].state {
+        switch sections[indexPath.section].state {
         case .error:
-            if dataSource.sections.count == 1 {
+            if sections.count == 1 {
                 return tableView.frame.height
             } else {
                 return 350
             }
         case .loading:
-            if dataSource.sections.count == 1 {
+            if sections.count == 1 {
                 return tableView.frame.height
             } else {
                 return LoaderCell.height
@@ -187,10 +201,27 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? LoaderCell {
+            cell.show()
+        }
+    }
+    
     internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let item = dataSource.sections[indexPath.section].itemAt(index: indexPath.row) else {return}
+        guard let item = sections[indexPath.section].itemAt(index: indexPath.row) else {return}
         didSelectItem(item, indexPath: indexPath)
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    @available(iOS 11.0, *)
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        return nil
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {}
 }
 
 

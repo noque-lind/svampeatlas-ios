@@ -114,6 +114,7 @@ class DataService{
     static let instance = DataService()
     weak var sessionDelegate: SessionDelegate?
     private let imagesCache = NSCache<NSString, UIImage>()
+    private let mushroomCache = NSCache<NSString, NSData>()
     private var currentlyDownloading = Dictionary<String, URLSessionTask>()
     
     //CLASS FUNCTIONS
@@ -199,23 +200,36 @@ extension DataService {
         
         let api = API.Request.Mushrooms(searchString: searchString, speciesQueries: speciesQueries, limit: limit, offset: offset).encodedURL
         
-        createDataTaskRequest(url: API.Request.Mushrooms(searchString: searchString, speciesQueries: speciesQueries, limit: limit, offset: offset).encodedURL) { (result) in
-            switch result {
-            case .Error(let error):
-                completion(Result.Error(error))
-            case .Success(let data):
-                do {
-                    let mushrooms = try JSONDecoder().decode([Mushroom].self, from: data)
-                    
-                    if searchString != nil && mushrooms.count == 0 {
-                        completion(Result.Error(DataServiceError.searchReponseEmpty))
-                    } else {
-                        completion(Result.Success(mushrooms))
-                    }
-                } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
-                }
-            }
+        func handleData(data: Data) {
+            do {
+                                       self.mushroomCache.setObject(NSData(data: data), forKey: NSString(string: api))
+                                          
+                                          let mushrooms = try JSONDecoder().decode([Mushroom].self, from: data)
+                                          
+                                          if searchString != nil && mushrooms.count == 0 {
+                                              completion(Result.Error(DataServiceError.searchReponseEmpty))
+                                          } else {
+                                              completion(Result.Success(mushrooms))
+                                          }
+                                      } catch {
+                                          completion(Result.Error(DataServiceError.decodingError(error)))
+                                      }
+        }
+        
+        
+        
+        
+        if let data = mushroomCache.object(forKey: NSString(string: api)) {
+            handleData(data: Data(data))
+        } else {
+            createDataTaskRequest(url: api) { (result) in
+                       switch result {
+                       case .Error(let error):
+                           completion(Result.Error(error))
+                       case .Success(let data):
+                        handleData(data: data)
+                       }
+                   }
         }
     }
     

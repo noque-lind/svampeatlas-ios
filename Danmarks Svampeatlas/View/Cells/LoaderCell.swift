@@ -23,6 +23,11 @@ class LoaderCell: UITableViewCell {
         return spinner
     }()
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        spinner.alpha = 0
+    }
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
@@ -39,5 +44,13 @@ class LoaderCell: UITableViewCell {
         contentView.addSubview(spinner)
         spinner.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         spinner.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+    }
+    
+    func show() {
+        UIView.animate(withDuration: 0.2) {
+            self.spinner.alpha = 1
+        }
+        
+        spinner.startAnimating()
     }
 }

@@ -86,6 +86,42 @@ class BackgroundView: UIView {
     }
 }
 
+class AnimatingTableView: UITableView {
+    
+    private let animating: Bool
+    
+    init(frame: CGRect, style: UITableView.Style, animating: Bool = true) {
+        self.animating = animating
+        super.init(frame: frame, style: style)
+    }
+    
+    convenience init(animating: Bool) {
+        self.init(frame: CGRect.zero, style: .plain, animating: animating)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    override func reloadData() {
+        super.reloadData()
+        
+        if visibleCells.count > 0 && animating {
+            
+            var delayCounter = 0.0
+            for cell in self.visibleCells {
+                cell.contentView.alpha = 0
+                
+                UIView.animate(withDuration: 0.1, delay: TimeInterval(delayCounter), options: .curveEaseIn, animations: {
+                    cell.contentView.transform = CGAffineTransform.identity
+                    cell.contentView.alpha = 1
+                }, completion: nil)
+                delayCounter = delayCounter + 0.10
+            }
+        }
+    }
+}
+
 class AppTableView: UITableView {
     
     private var animating: Bool
@@ -100,12 +136,13 @@ class AppTableView: UITableView {
         fatalError()
     }
     
+    
     override func reloadData() {
         super.reloadData()
         if self.visibleCells.count > 0 {
-        self.backgroundView = nil
-        guard animating == true else {return}
-    
+            self.backgroundView = nil
+            guard animating == true else {return}
+            
             var delayCounter = 0.0
             for cell in self.visibleCells {
                 cell.contentView.alpha = 0
@@ -115,7 +152,7 @@ class AppTableView: UITableView {
                 }, completion: nil)
                 delayCounter = delayCounter + 0.10
             }
-         self.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top, animated: false)
+            self.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top, animated: false)
         }
     }
     

@@ -9,8 +9,6 @@
 import UIKit
 import ELKit
 
-
-
 class MushroomVC: UIViewController {
     
     private enum Categories: String, CaseIterable {
@@ -27,7 +25,43 @@ class MushroomVC: UIViewController {
     private lazy var categoryView: CategoryView<Categories> = {
         let items = Categories.allCases.compactMap({Category<Categories>(type: $0, title: $0.rawValue)})
         var view = CategoryView<Categories>(categories: items, firstIndex: 1)
-        view.delegate = self
+        
+        view.categorySelected = { [unowned self, unowned tableView] category in
+            tableView.setSections(sections: [.init(title: nil, state: .loading)])
+            self.hideSearchBar()
+            
+            switch category {
+            case .species:
+                let limit = 35
+                DataService.instance.getMushrooms(searchString: nil, limit: limit) { [weak self] (result) in
+                    guard category == self?.categoryView.selectedItem.type  else {return}
+                    switch result {
+                    case .Error(let error):
+                        self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error))])
+                    case .Success(let mushrooms):
+                        self?.showSearchBar()
+                        
+                        var items = mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})
+                        
+                        if mushrooms.count == limit {
+                            items.append(.loadMore(offset: mushrooms.count))
+                        }
+                        
+                        self?.tableView.setSections(sections: [.init(title: nil, state: .items(items: items))])
+                    }
+                }
+            case .favorites:
+                CoreDataHelper.fetchAllFavoritedMushrooms { [weak tableView] (result) in
+                    switch result {
+                    case .Success(let mushrooms):
+                        tableView?.setSections(sections: [.init(title: nil, state: .items(items: mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})))])
+                    case .Error(let error):
+                        tableView?.setSections(sections: [.init(title: nil, state: .error(error: error))])
+                    }
+                }
+            }
+        }
+        
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -45,11 +79,11 @@ class MushroomVC: UIViewController {
             case .loadMore(offset: let offset):
                 let section = Section<MushroomTableView.Item>.init(title: nil, state: .loading)
                 
-                tableView.performUpdates(updates: { (tableView) in
-                    tableView.addSection(section: section)
-                    tableView.removeItem(indexPath: indexPath)
+                tableView.performUpdates(updates: { (updater) in
+                    updater.addSection(section: section)
+                    updater.removeItem(indexPath: indexPath)
                 }) {
-                    let limit = 50
+                    let limit = 35
                     DataService.instance.getMushrooms(searchString: nil, limit: limit, offset: offset, completion: { (result) in
                         switch result {
                         case .Error(let error):
@@ -61,15 +95,14 @@ class MushroomVC: UIViewController {
                             if mushrooms.count == limit {
                                 items.append(.loadMore(offset: offset + mushrooms.count))
                             }
-                        
+                            
                             section.setState(state: .items(items: items))
                         }
-                       
-                        tableView.performUpdates(updates: { (dataSource) in
-                            dataSource.updateSection(section: section)
-                            
+                        
+                        tableView.performUpdates(updates: { (updater) in
+                            updater.updateSection(section: section)
                         })
-                })
+                    })
                 }
                 
             case .mushroom(let mushroom):
@@ -77,74 +110,48 @@ class MushroomVC: UIViewController {
                 
             }
         }
+        
+        tableView.isAtTop = { [unowned searchBar] isAtTop in
+            if isAtTop {
+                searchBar.expand()
+            } else {
+                searchBar.collapse()
+            }
+        }
+        
+        tableView.mushroomSwiped = { [unowned self] mushroom, indexPath in
+            if CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) {
+                CoreDataHelper.deleteMushroom(mushroom: mushroom, completion: { [weak self] in
+                    guard let selectedItemType = self?.categoryView.selectedItem.type, case Categories.favorites = selectedItemType else {
+                        return
+                    }
+                    
+                    tableView.performUpdates(updates: { (updater) in
+                        updater.removeItem(indexPath: indexPath, animation: .left)
+                    }, completion: nil)
+                })
+            } else {
+                CoreDataHelper.saveMushroom(mushroom: mushroom) { (result) in
+                    switch result {
+                    case .Error(let error):
+                        DispatchQueue.main.async {
+                            let view = ELNotificationView(style: ELNotificationView.Style.error, attributes: ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed()), primaryText: error.errorTitle, secondaryText: error.errorDescription)
+                            view.show(animationType: ELNotificationView.AnimationType.fromBottom)
+                        }
+                    case .Success(_):
+                        DispatchQueue.main.async {
+                            let view = ELNotificationView(style: ELNotificationView.Style.success, attributes: ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed()), primaryText: "Du har gjort \(mushroom.danishName ?? mushroom.fullName) til din favorit", secondaryText: "Du kan nu altid se svampen, også uden internet.")
+                            view.show(animationType: ELNotificationView.AnimationType.fromBottom)
+                        }
+                    }
+                }
+            }
+        }
+        
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
-    
-    //    private lazy var tableView: MushroomTableView = {
-    //        let tableView = MushroomTableView(animating: true, automaticallyAdjustHeight: false)
-    //        tableView.translatesAutoresizingMaskIntoConstraints = false
-    //        tableView.clipsToBounds = true
-    //
-    //        tableView.isAtTop = { [unowned self] isAtTop in
-    //            if isAtTop {
-    //                self.searchBar.expand()
-    //            } else {
-    //                self.searchBar.collapse()
-    //            }
-    //        }
-    //
-    //        tableView.didSelectItem = { [unowned self] mushroom in
-    //
-    //
-    //        tableView.didRequestAdditionalDataAtOffset = { (tableView, offset, max) in
-    //            var currentItems = tableView.tableViewState.currentItems()
-    //            DataService.instance.getMushrooms(searchString: nil, offset: offset, completion: { (result) in
-    //                switch result {
-    //                case .Error(let error):
-    //                    tableView.tableViewState = .Error(error, nil)
-    //                case .Success(let mushrooms):
-    //                    currentItems.append(contentsOf: mushrooms)
-    //                    tableView.tableViewState = .Paging(items: currentItems, max: nil)
-    //                }
-    //            })
-    //        }
-    //
-    //        tableView.mushroomSwiped = { [unowned self] mushroom in
-    //            if CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) {
-    //                CoreDataHelper.deleteMushroom(mushroom: mushroom, completion: { [weak self] in
-    //                    guard let selectedItemType = self?.categoryView.selectedItem.type, case Categories.favorites = selectedItemType else {
-    //                        return
-    //                    }
-    //
-    //                    CoreDataHelper.fetchAllFavoritedMushrooms(completion: { [weak self] (result) in
-    //                        switch result {
-    //                        case .Success(let mushrooms):
-    //                            self?.tableView.tableViewState = .Items(mushrooms)
-    //                        case .Error(let error):
-    //                            self?.tableView.tableViewState = .Error(error, nil)
-    //                        }
-    //                    })
-    //                })
-    //            } else {
-    //                CoreDataHelper.saveMushroom(mushroom: mushroom) { (result) in
-    //                    switch result {
-    //                    case .Error(let error):
-    //                        DispatchQueue.main.async {
-    //                            let view = ELNotificationView(style: ELNotificationView.Style.error, attributes: ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed()), primaryText: error.errorTitle, secondaryText: error.errorDescription)
-    //                            view.show(animationType: ELNotificationView.AnimationType.fromBottom)
-    //                        }
-    //                    case .Success(_):
-    //                        DispatchQueue.main.async {
-    //                            let view = ELNotificationView(style: ELNotificationView.Style.success, attributes: ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed()), primaryText: "Du har gjort \(mushroom.danishName ?? mushroom.fullName) til din favorit", secondaryText: "Du kan nu altid se svampen, også uden internet.")
-    //                            view.show(animationType: ELNotificationView.AnimationType.fromBottom)
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        return tableView
-    //    }()
     
     private lazy var searchBar: CustomSearchBar = {
         let view = CustomSearchBar()
@@ -223,94 +230,35 @@ class MushroomVC: UIViewController {
     
     private func showSearchBar() {
         DispatchQueue.main.async {
-            //            self.tableView.contentInset = UIEdgeInsets(top: 58, left: 0.0, bottom: 0.0, right: 0.0)
-            //            self.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 58, left: 0.0, bottom: 0.0, right: 0.0)
+            self.tableView.contentInset = UIEdgeInsets(top: 58, left: 0.0, bottom: 0.0, right: 0.0)
             self.searchBar.isHidden = false
             self.searchBar.expand()
         }
     }
     
     private func hideSearchBar() {
-        DispatchQueue.main.async { [weak self] in
-            //            self?.tableView.contentInset = UIEdgeInsets(top: 4, left: 0.0, bottom: 0.0, right: 0.0)
-            //            self?.tableView.scrollIndicatorInsets = UIEdgeInsets(top: 4, left: 0.0, bottom: 0.0, right: 0.0)
-            self?.searchBar.isHidden = true
-            self?.searchBar.text = nil
+        DispatchQueue.main.async {
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0.0, bottom: 0.0, right: 0.0)
+            self.searchBar.isHidden = true
+            self.searchBar.text = nil
         }
     }
 }
-
-
-
-extension MushroomVC: CategoryViewDelegate {
-    
-    func categorySelected(category: Any) {
-        guard let category = category as? Categories else {return}
-        
-        tableView.setSections(sections: [.init(title: nil, state: .loading)])
-
-        hideSearchBar()
-        
-        switch category {
-        case .species:
-            let limit = 10
-            DataService.instance.getMushrooms(searchString: nil, limit: limit) { [weak self] (result) in
-                guard category == self?.categoryView.selectedItem.type  else {return}
-                switch result {
-                case .Error(let error):
-                    self?.tableView.performUpdates(updates: {(dataSource) in
-                        
-                        self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error))])
-                    })
-                case .Success(let mushrooms):
-                    self?.showSearchBar()
-
-                    var items = mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})
-
-                    if mushrooms.count == limit {
-                        items.append(.loadMore(offset: mushrooms.count))
-                    }
-
-//                    self?.tableView.setSections(sections: [.init(title: nil, state: .items(items: items))])
-                    
-                    self?.tableView.performUpdates(updates: {(dataSource) in
-                        dataSource.setSections(sections: [.init(title: nil, state: .items(items: items))])
-                    })
-                }
-            }
-        case .favorites:
-            CoreDataHelper.fetchAllFavoritedMushrooms { [weak self] (result) in
-                //                switch result {
-                //                case .Success(let mushrooms):
-                ////                        self?.tableView.tableViewState = .Items(mushrooms)
-                //                case .Error(let error):
-                ////                    self?.tableView.tableViewState = .Error(error, nil)
-                //                }
-            }
-        }
-    }
-}
-
 
 extension MushroomVC: CustomSearchBarDelegate {
     func newSearchEntry(entry: String) {
-        //        defaultTableViewState = tableView.tableViewState
-        //        tableView.tableViewState = .Loading
-        
-        //        DataService.instance.getMushrooms(searchString: entry) { [weak self] (result) in
-        //            switch result {
-        //            case .Success(let mushrooms):
-        ////                self?.tableView.tableViewState = TableViewState.Items(mushrooms.filter({!$0.isGenus}))
-        //            case .Error(let appError):
-        ////                self?.tableView.tableViewState = TableViewState.Error(appError, nil)
-        //            }
-        //        }
+                DataService.instance.getMushrooms(searchString: entry) { [weak tableView] (result) in
+                    switch result {
+                    case .Success(let mushrooms):
+                        tableView?.setSections(sections: [.init(title: nil, state: .items(items: mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})))])
+                    case .Error(let appError):
+                        tableView?.setSections(sections: [.init(title: nil, state: .error(error: appError))])
+                    }
+                }
     }
     
     func clearedSearchEntry() {
-        //        if let defaultTableViewState = defaultTableViewState {
-        //            tableView.tableViewState = defaultTableViewState
-        //        }
+        categoryView.selectCategory(category: Categories.species, force: true)
     }
 }
 

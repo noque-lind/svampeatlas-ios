@@ -18,6 +18,15 @@ protocol SessionDelegate: class {
 class Session {
     
     enum SessionError: AppError {
+        var recoveryAction: RecoveryAction? {
+            switch self {
+            case .notLoggedIn, .tokenInvalid:
+                return .login
+            default: return nil
+            }
+        }
+        
+    
         var errorDescription: String {
             switch self {
             case .notLoggedIn:

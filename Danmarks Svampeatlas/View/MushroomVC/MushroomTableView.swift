@@ -15,7 +15,6 @@ class MushroomTableView: ELTableView<MushroomTableView.Item> {
         case loadMore(offset: Int)
     }
     
-    var didSelectItem: ((Item, IndexPath) -> ())?
     var mushroomSwiped: ((Mushroom, IndexPath) -> ())?
     var isAtTop: ((Bool) -> ())?
     
@@ -49,10 +48,6 @@ class MushroomTableView: ELTableView<MushroomTableView.Item> {
         case .mushroom:
             return UITableView.automaticDimension
         }
-    }
-    
-    override func didSelectItem(_ item: MushroomTableView.Item, indexPath: IndexPath) {
-        didSelectItem?(item, indexPath)
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

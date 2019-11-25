@@ -12,7 +12,10 @@ import CoreData
 import ELKit
 
 enum CoreDataError: AppError {
-    
+    var recoveryAction: RecoveryAction? {
+        return nil
+    }
+        
     enum NoEntriesCategory {
         case Substrate
         case VegetationType
@@ -63,13 +66,13 @@ fileprivate class CoreDataService {
     private lazy var persistentContainer: NSPersistentContainer = {
        let container = NSPersistentContainer(name: "SvampeAtlas")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                let notification = ELNotificationView.appNotification(style: .error, primaryText: "Database fejl", secondaryText: "Der skete desværre en fejl med at indlæse appen's lokale database.", location: .bottom)
-                notification.show(animationType: .fromBottom, queuePosition: .back, onViewController: nil)
-                debugPrint(error)
-            } else {
-                debugPrint("CoreData store loaded")
-            }
+//            if let error = error as NSError? {
+//                let notification = ELNotificationView.appNotification(style: .error, primaryText: "Database fejl", secondaryText: "Der skete desværre en fejl med at indlæse appen's lokale database.", location: .bottom)
+//                notification.show(animationType: .fromBottom, queuePosition: .back, onViewController: nil)
+//                debugPrint(error)
+//            } else {
+//                debugPrint("CoreData store loaded")
+//            }
         })
         return container
     }()

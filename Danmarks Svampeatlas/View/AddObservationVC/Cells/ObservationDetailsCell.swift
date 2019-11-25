@@ -254,7 +254,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 cell.tableViewState = .Items([.init(title: nil, cells: vegetationTypes.compactMap({TableViewPickerCell.Section.CellType.vegetationTypeCell($0)}))])
 
             case .Error(let error):
-                cell.tableViewState = .Error(error, {
+                cell.tableViewState = .Error(error, { recoveryAction in
                     self.getVegetationTypes(forCell: cell)
                 })
             }
@@ -267,7 +267,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
         DataService.instance.getSubstrateGroups { (result) in
             switch result {
             case .Error(let error):
-                cell.tableViewState = .Error(error, {
+                cell.tableViewState = .Error(error, {  recoveryAction in
                     self.getSubstrateGroups(forCell: cell)
                 })
             case .Success(let substrateGroups):

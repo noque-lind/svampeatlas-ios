@@ -8,7 +8,15 @@
 
 import Foundation
 
+public enum RecoveryAction: String {
+    case openSettings = "Åben indstillinger"
+    case tryAgain = "Prøv igen"
+    case login = "Log ind"
+    case activate = "Aktivér"
+}
+
 public protocol AppError: Error {
     var errorDescription: String { get }
     var errorTitle: String { get }
+    var recoveryAction: RecoveryAction? { get }
 }

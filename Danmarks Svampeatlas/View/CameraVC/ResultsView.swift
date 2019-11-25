@@ -12,9 +12,67 @@ import UIKit
 protocol ResultsViewDelegate: class {
     func retry()
     func mushroomSelected(predictionResult: PredictionResult, predictionResults: [PredictionResult])
+    func panGesture(gesture: UIPanGestureRecognizer)
 }
 
-class ResultsView: UIView {
+
+class ResultsTableView: ELTableView<ResultsTableView.Item> {
+    
+    enum Item {
+        case result(predictionResult: PredictionResult)
+        case tryAgain
+        case creditation
+    }
+    
+    var scrollViewDidScroll: ((UIScrollView) -> ())?
+    
+    
+    override init() {
+        super.init()
+        register(cellClass: ContainedResultCell.self, forCellReuseIdentifier: ContainedResultCell.identifier)
+        register(cellClass: ReloadCell.self, forCellReuseIdentifier: ReloadCell.identifier)
+        register(cellClass: CreditationCell.self, forCellReuseIdentifier: CreditationCell.identifier)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+
+    
+    override func cellForItem(_ item: ResultsTableView.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+        switch item {
+        case .result(predictionResult: let predictionResult):
+            let cell = tableView.dequeueReusableCell(withIdentifier: ContainedResultCell.identifier, for: indexPath) as! ContainedResultCell
+            cell.configureCell(mushroom: predictionResult.mushroom, confidence: predictionResult.score)
+            return cell
+            
+        case .tryAgain:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ReloadCell.identifier, for: indexPath) as! ReloadCell
+            cell.configureCell(text: "Prøv igen")
+            return cell
+        case .creditation:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CreditationCell.identifier, for: indexPath) as! CreditationCell
+            cell.configureCell(creditation: .AI)
+            return cell
+        }
+    }
+    
+    override func heightForItem(_ item: ResultsTableView.Item) -> CGFloat {
+        switch item {
+        case .tryAgain:
+            return LoaderCell.height
+        case .result, .creditation:
+            return UITableView.automaticDimension
+        }
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollViewDidScroll?(scrollView)
+    }
+}
+
+class ResultsView: UIView, UIGestureRecognizerDelegate {
 
     private lazy var headerLabel: UILabel = {
        let label = UILabel()
@@ -57,19 +115,52 @@ class ResultsView: UIView {
         return view
     }()
     
-    private lazy var tableView: AppTableView = {
-       let tableView = AppTableView(animating: false, frame: CGRect.zero, style: .plain)
+    private lazy var tableView: ResultsTableView = {
+        let tableView = ResultsTableView()
         tableView.separatorStyle = .none
-        tableView.backgroundColor = UIColor.clear
-        tableView.register(ContainedResultCell.self, forCellReuseIdentifier: "resultCell")
-        tableView.register(ReloadCell.self, forCellReuseIdentifier: "reloadCell")
-        tableView.alpha = 0
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.delegate = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.dataSource = self
+        
+        tableView.didSelectItem = { [weak delegate, unowned self] item, indexPath in
+            switch item {
+            case .tryAgain: delegate?.retry()
+            case .result(predictionResult: let predictionsResult):
+                delegate?.mushroomSelected(predictionResult: predictionsResult, predictionResults: self.results)
+            default: break
+            }
+        }
+        
+
         return tableView
     }()
+    
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//        if otherGestureRecognizer === tableView.panGestureRecognizer {
+//            print("IT IS")
+//            return true
+//        } else {
+//            return false
+//        }
+//    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        print(tableView.scrollView.contentOffset)
+        if tableView.scrollView.contentOffset == CGPoint.zero {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//        if gestureRecognizer === tableView.panGestureRecognizer {
+//            print("IT IS")
+//            return true
+//        } else {
+//            return true
+//        }
+//    }
+    
+  
     
     private var results = [PredictionResult]()
     weak var delegate: ResultsViewDelegate? = nil
@@ -80,12 +171,23 @@ class ResultsView: UIView {
         setupView()
     }
     
+
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
     private func setupView() {
         alpha = 0
+        
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(didPan(gesture:)))
+        gesture.delegate = self
+        addGestureRecognizer(gesture)
+        
+    }
+    
+    @objc private func didPan(gesture: UIPanGestureRecognizer) {
+        delegate?.panGesture(gesture: gesture)
     }
     
     func configure(results: [PredictionResult]) {
@@ -115,14 +217,10 @@ class ResultsView: UIView {
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         if let error = error {
-            tableView.showError(error, handler: nil)
+            tableView.setSections(sections: [.init(title: nil, state: .error(error: error, handler: nil))])
             self.error = nil
         } else {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-            
-            tableView.setContentOffset(CGPoint.zero, animated: false)
+            tableView.setSections(sections: [.init(title: nil, state: .items(items: results.compactMap({ResultsTableView.Item.result(predictionResult: $0)}))), .init(title: nil, state: .items(items: [.creditation, .tryAgain]))])
         }
         
         UIView.animate(withDuration: 0.2) {
@@ -138,7 +236,7 @@ class ResultsView: UIView {
     
     func reset() {
         results.removeAll()
-        tableView.reloadData()
+        tableView.setSections(sections: [])
         topView.alpha = 0
         tableView.alpha = 0
         topView.removeFromSuperview()
@@ -147,41 +245,3 @@ class ResultsView: UIView {
     }
 }
 
-extension ResultsView: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return results.count + 1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == results.count {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "reloadCell", for: indexPath) as! ReloadCell
-            cell.configureCell(text: "Prøv igen")
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as! ContainedResultCell
-                cell.accessoryType = .disclosureIndicator
-            let result = results[indexPath.row]
-            cell.configureCell(mushroom: result.mushroom, confidence: result.score)
-            return cell
-        }
-        
-        
-        
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == results.count {
-            return 120
-        } else {
-        return UITableView.automaticDimension
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == results.count {
-            delegate?.retry()
-        } else {
-            delegate?.mushroomSelected(predictionResult: results[indexPath.row] ,predictionResults: results)
-        }
-    }
-}

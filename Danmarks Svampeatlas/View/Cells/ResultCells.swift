@@ -213,6 +213,8 @@ class UnknownSpecieCell: BaseCell {
 
 class ContainedResultCell: BaseCell {
     
+    static let identifier = "ContainedResultCell"
+    
     private var toxicityView: ToxicityView = {
         let view = ToxicityView()
         return view

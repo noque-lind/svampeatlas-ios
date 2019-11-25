@@ -127,7 +127,11 @@
 		DB8CF12721B94CF400ACBF06 /* ObservationImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF12621B94CF400ACBF06 /* ObservationImagesView.swift */; };
 		DB8D1731211B293E00C38D2C /* Array+MergeElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8D1730211B293E00C38D2C /* Array+MergeElements.swift */; };
 		DB8D1733211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8D1732211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift */; };
+		DB8FE83523805BC0002D837C /* UINavigationController+AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8FE83423805BC0002D837C /* UINavigationController+AppConfiguration.swift */; };
 		DB95F7EB21141BFF003F8C93 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */; };
+		DB96D7D3237C8F39005C7AF6 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB96D7D2237C8F39005C7AF6 /* ErrorView.swift */; };
+		DB96D7D8237D8597005C7AF6 /* CreditationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB96D7D7237D8597005C7AF6 /* CreditationCell.swift */; };
+		DB96D7DC237DA014005C7AF6 /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB96D7DB237DA014005C7AF6 /* PhotoAlbum.swift */; };
 		DB9F59952175F4D9007790D3 /* MapViewSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9F59942175F4D9007790D3 /* MapViewSettingsView.swift */; };
 		DBA0D96921F99F54001E9CA8 /* LocalityAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0D96821F99F54001E9CA8 /* LocalityAnnotationView.swift */; };
 		DBA0D96D21F9ACB3001E9CA8 /* LocalityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0D96C21F9ACB3001E9CA8 /* LocalityCell.swift */; };
@@ -136,6 +140,8 @@
 		DBB33A4521CE67E200BCED22 /* ELTextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */; };
 		DBC30C8A21EE1A1900826FC6 /* TableViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8921EE1A1900826FC6 /* TableViewState.swift */; };
 		DBC30C8C21EE1F5B00826FC6 /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */; };
+		DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */; };
+		DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */; };
 		DBD27B24231DAB5300391CCF /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD27B23231DAB5300391CCF /* Image.swift */; };
 		DBD27B29231ECA5A00391CCF /* species.txt in Resources */ = {isa = PBXBuildFile; fileRef = DBD27B27231ECA5A00391CCF /* species.txt */; };
 		DBD27B2B231ECB2F00391CCF /* PredictionMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD27B2A231ECB2F00391CCF /* PredictionMatch.swift */; };
@@ -320,7 +326,11 @@
 		DB8CF12621B94CF400ACBF06 /* ObservationImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationImagesView.swift; sourceTree = "<group>"; };
 		DB8D1730211B293E00C38D2C /* Array+MergeElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+MergeElements.swift"; sourceTree = "<group>"; };
 		DB8D1732211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+DistanceFrom.swift"; sourceTree = "<group>"; };
+		DB8FE83423805BC0002D837C /* UINavigationController+AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+AppConfiguration.swift"; sourceTree = "<group>"; };
 		DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
+		DB96D7D2237C8F39005C7AF6 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		DB96D7D7237D8597005C7AF6 /* CreditationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditationCell.swift; sourceTree = "<group>"; };
+		DB96D7DB237DA014005C7AF6 /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
 		DB9F59942175F4D9007790D3 /* MapViewSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewSettingsView.swift; sourceTree = "<group>"; };
 		DBA0D96821F99F54001E9CA8 /* LocalityAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalityAnnotationView.swift; sourceTree = "<group>"; };
 		DBA0D96C21F9ACB3001E9CA8 /* LocalityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalityCell.swift; sourceTree = "<group>"; };
@@ -329,6 +339,8 @@
 		DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELTextViewCell.swift; sourceTree = "<group>"; };
 		DBC30C8921EE1A1900826FC6 /* TableViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewState.swift; sourceTree = "<group>"; };
 		DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
+		DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELPhotos.swift; sourceTree = "<group>"; };
+		DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+OpenSettings.swift"; sourceTree = "<group>"; };
 		DBD27B23231DAB5300391CCF /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		DBD27B27231ECA5A00391CCF /* species.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = species.txt; sourceTree = "<group>"; };
 		DBD27B2A231ECB2F00391CCF /* PredictionMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMatch.swift; sourceTree = "<group>"; };
@@ -465,6 +477,7 @@
 				DB2C55B4234A076E007FABE4 /* SectionHeaderView.swift */,
 				DBD5CCAC234A22B000EC09C7 /* ValidationView.swift */,
 				DB684489234D189100CD0AE2 /* InformationView.swift */,
+				DB96D7D2237C8F39005C7AF6 /* ErrorView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -484,6 +497,7 @@
 				DBDEE48A219601DB0047C788 /* CommentCell.swift */,
 				DB68448C234D2FE700CD0AE2 /* LoaderCell.swift */,
 				DB68448E234D319C00CD0AE2 /* ErrorCell.swift */,
+				DB96D7D7237D8597005C7AF6 /* CreditationCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -517,6 +531,8 @@
 				DB77162D220C2F2200E71903 /* ELMultipartFormData.swift */,
 				DB771631220C6A2500E71903 /* ELFileManager.swift */,
 				DBD27B2A231ECB2F00391CCF /* PredictionMatch.swift */,
+				DB96D7DB237DA014005C7AF6 /* PhotoAlbum.swift */,
+				DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -732,6 +748,8 @@
 				DB24AEA62281CBE40057DF82 /* CGFloat+Extension.swift */,
 				DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */,
 				DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */,
+				DB8FE83423805BC0002D837C /* UINavigationController+AppConfiguration.swift */,
+				DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -800,7 +818,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = NaturhistoriskMuseum;
 				TargetAttributes = {
 					4A69BC752038D96500D3B88B = {
@@ -912,6 +930,7 @@
 				DB24AEA92281D5E40057DF82 /* MapViewFilteringSettings.swift in Sources */,
 				DB7F04F222AAB19D00785AF8 /* MapVC.swift in Sources */,
 				DB0C5A0A2275A6D00071B15C /* HeatAnnotationPinView.swift in Sources */,
+				DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */,
 				DB6E9E2D218A4D5E00A6FB1C /* NotificationsTableView.swift in Sources */,
 				DB893117232BCBEA000BDCD1 /* UIApplication+Urls.swift in Sources */,
 				4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */,
@@ -961,6 +980,7 @@
 				4A1F76012079606B0082B873 /* CameraVC.swift in Sources */,
 				4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */,
 				DB3C4929219AEF11001894B5 /* ReloadCell.swift in Sources */,
+				DB96D7DC237DA014005C7AF6 /* PhotoAlbum.swift in Sources */,
 				20D4C810223A7962006AA9E9 /* NavigationItem.swift in Sources */,
 				DB2A52CF216383E20000F483 /* UIImageView+Extension.swift in Sources */,
 				DB89311A232BCE52000BDCD1 /* AboutVC.swift in Sources */,
@@ -979,6 +999,7 @@
 				DB2C55B5234A076E007FABE4 /* SectionHeaderView.swift in Sources */,
 				DB0C5A13227898E70071B15C /* ObservationDetailsScrollView.swift in Sources */,
 				DB679392214CF659003B34B2 /* String+Extension.swift in Sources */,
+				DB96D7D3237C8F39005C7AF6 /* ErrorView.swift in Sources */,
 				4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */,
 				4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */,
 				4A80757020BD717100F958AC /* AppScrollView.swift in Sources */,
@@ -997,9 +1018,11 @@
 				DB8D1731211B293E00C38D2C /* Array+MergeElements.swift in Sources */,
 				DBA0D96921F99F54001E9CA8 /* LocalityAnnotationView.swift in Sources */,
 				DB77162E220C2F2200E71903 /* ELMultipartFormData.swift in Sources */,
+				DB96D7D8237D8597005C7AF6 /* CreditationCell.swift in Sources */,
 				4AEE2F37204551B600D20C2D /* RoundedImageView.swift in Sources */,
 				4A4E4CFF20AE00AD00B3F898 /* AppNavigationController.swift in Sources */,
 				DBD5CCAD234A22B000EC09C7 /* ValidationView.swift in Sources */,
+				DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */,
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
 				DB64374B2296A3F700BE7FF4 /* Host.swift in Sources */,
 				DBF4F3C6232A41CC0042E7A8 /* TermsController.swift in Sources */,
@@ -1029,6 +1052,7 @@
 				4A4AE30B2070181000178BFB /* MushroomCell.swift in Sources */,
 				DB8D1733211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift in Sources */,
 				4A28AB8B2044454200F21EEE /* GradientView.swift in Sources */,
+				DB8FE83523805BC0002D837C /* UINavigationController+AppConfiguration.swift in Sources */,
 				DB687422234CE0760038C5A0 /* VerncularNameDK.swift in Sources */,
 				4AD43A0620529CF5001F6541 /* CategoryCell.swift in Sources */,
 				DB771632220C6A2500E71903 /* ELFileManager.swift in Sources */,
@@ -1097,6 +1121,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -1104,6 +1129,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -1155,6 +1181,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -1162,6 +1189,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

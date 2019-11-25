@@ -18,8 +18,8 @@ enum DetailsContent {
 
 class DetailsViewController: UIViewController {
     
-    private lazy var backgroundView: BackgroundView = {
-        let view = BackgroundView()
+    private lazy var backgroundView: ErrorView = {
+        let view = ErrorView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -261,7 +261,7 @@ class DetailsViewController: UIViewController {
         backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         backgroundView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        backgroundView.configure(mainTitle: error.errorTitle, secondaryTitle: error.errorDescription, handler: nil)
+        backgroundView.configure(error: error, handler: nil)
     }
     
     private func setupView() {

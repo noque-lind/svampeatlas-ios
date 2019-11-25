@@ -318,7 +318,7 @@ extension ObservationSpecieCell: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .error(let error):
             let cell = tableView.dequeueReusableCell(withIdentifier: "errorCell", for: indexPath) as! ErrorCell
-            cell.configure(error: error)
+            cell.configure(error: error, handler: nil)
             return cell
         }
     }

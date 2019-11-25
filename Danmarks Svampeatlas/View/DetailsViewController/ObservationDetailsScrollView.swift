@@ -217,8 +217,8 @@ class ObservationDetailsScrollView: AppScrollView {
             session?.uploadComment(observationID: observationID, comment: text, completion: { [weak commentsTableView] (result) in
                 switch result {
                 case .Error(let error):
-                    let notification = ELNotificationView.appNotification(style: .error, primaryText: "Din kommentar kunne ikke tilføjes", secondaryText: error.errorDescription, location: .bottom)
-                    notification.show(animationType: .fromBottom)
+                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                        .show(animationType: .fromBottom)
                 case .Success(let comment):
                     currentComments.append(comment)
                     commentsTableView?.tableViewState = .Items(currentComments)

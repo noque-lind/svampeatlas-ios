@@ -241,12 +241,20 @@ import AVFoundation
 
 protocol AVViewDelegate: class {
     func error(error: AppError)
-    func photo(image: UIImage)
+    func photoData(image: Data)
 }
 
 class AVView: UIView {
     
     enum AVViewError: AppError {
+        var recoveryAction: RecoveryAction? {
+            switch self {
+            case .permissionsError:
+                return .openSettings
+            default: return nil
+            }
+        }
+    
         var errorDescription: String {
             switch self {
             case .cameraError(let error): return "\(error.localizedDescription)"
@@ -394,6 +402,7 @@ class AVView: UIView {
         
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
+        settings.metadata = [String(kCGImagePropertyGPSDictionary):  [String( kCGImagePropertyGPSLatitude): 12.6107, String(kCGImagePropertyGPSLongitude): 55.6886]]
         
         switch orientation {
         case .portrait:
@@ -434,16 +443,18 @@ class AVView: UIView {
 }
 
 extension AVView: AVCapturePhotoCaptureDelegate {
+    
+    
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    
+        
         if let error = error {
             debugPrint(error)
         } else {
             DispatchQueue.main.async {
                 if let imageData = photo.fileDataRepresentation() {
-                    if let image = UIImage.init(data: imageData) {
-                        self.delegate?.photo(image: image)
-                        self.captureSession.stopRunning()
-                    }
+                    self.delegate?.photoData(image: imageData)
+                    self.captureSession.stopRunning()
                 }
             }
         }

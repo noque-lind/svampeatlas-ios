@@ -119,12 +119,12 @@ extension CGSize {
 
 extension ELNotificationView {
     static func appNotification(style: ELNotificationView.Style, primaryText: String, secondaryText: String, location: ELNotificationView.Location) -> ELNotificationView {
-            return ELNotificationView(style: style, attributes: ELNotificationView.Attributes(fillsScreen: false, font: UIFont.appPrimaryHightlighed(), textColor: UIColor.appPrimaryColour()), primaryText: primaryText, secondaryText: secondaryText, location: location)
+        return ELNotificationView(style: style, attributes: .appAttributes(), primaryText: primaryText, secondaryText: secondaryText, location: location)
     }
 }
 
 extension ELNotificationView.Attributes {
     static func appAttributes() -> ELNotificationView.Attributes {
-        return ELNotificationView.Attributes(fillsScreen: false, font: UIFont.appPrimaryHightlighed(), textColor: UIColor.appPrimaryColour())
+        return ELNotificationView.Attributes(fillsScreen: true, font: UIFont.appPrimaryHightlighed(), textColor: UIColor.appWhite())
     }
 }

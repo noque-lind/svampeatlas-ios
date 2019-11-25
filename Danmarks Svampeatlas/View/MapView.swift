@@ -65,7 +65,7 @@ class NewMapView: UIView {
     private var spinner = Spinner()
     private var tempIsUserInteractionEnabled: Bool = true
     private var category = Categories.regular
-    private var errorView: BackgroundView? {
+    private var errorView: ErrorView? {
         willSet {
             if newValue == nil {
                      self.errorView?.removeFromSuperview()
@@ -182,14 +182,14 @@ class NewMapView: UIView {
         }
     }
     
-    func showError(error: AppError, handler: (() -> ())? = nil) {
+    func showError(error: AppError, handler: ((RecoveryAction?) -> ())? = nil) {
         shouldLoad = false
         
         DispatchQueue.main.async {
-            let backGroundView: BackgroundView = {
-                let view = BackgroundView()
+            let backGroundView: ErrorView = {
+                let view = ErrorView()
                 view.translatesAutoresizingMaskIntoConstraints = false
-                view.configure(mainTitle: error.errorTitle, secondaryTitle: error.errorDescription, handler: handler)
+                view.configure(error: error, handler: handler)
                 view.backgroundColor = UIColor.appPrimaryColour()
                 return view
             }()

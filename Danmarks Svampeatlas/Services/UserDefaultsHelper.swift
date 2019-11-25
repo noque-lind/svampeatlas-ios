@@ -63,6 +63,22 @@ struct UserDefaultsHelper {
         }
     }
     
+    static var hasBeenAskedToSaveImages: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "hasBeenAskedToSaveImages")
+        } set {
+            UserDefaults.standard.set(newValue, forKey: "hasBeenAskedToSaveImages")
+        }
+    }
+    
+    static var saveImages: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "saveImages")
+        } set {
+            UserDefaults.standard.set(newValue, forKey: "saveImages")
+        }
+    }
+    
     static var hasSeenLocalityHelper: Bool {
         return UserDefaults.standard.bool(forKey: "hasSeenLocalityHelper")
     }
@@ -94,5 +110,9 @@ struct UserDefaultsHelper {
     
     static func setHasSeenLocalityHelper() {
         UserDefaults.standard.set(true, forKey: "hasSeenLocalityHelper")
+    }
+    
+    static func setSaveImages(_ value: Bool) {
+        UserDefaults.standard.set(value, forKey: "")
     }
 }

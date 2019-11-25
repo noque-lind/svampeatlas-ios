@@ -197,7 +197,7 @@ class AddObservationVC: UIViewController {
                     
                 case .Error(let error):
                     DispatchQueue.main.async {
-                        let notificationView = ELNotificationView.appNotification(style: .error, primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                        let notificationView = ELNotificationView.appNotification(style: .success, primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
                         notificationView.show(animationType: ELNotificationView.AnimationType.fromBottom, onViewController: self)
                     }
                 }
@@ -213,7 +213,7 @@ class AddObservationVC: UIViewController {
     private func handleUncompleteObservation(newObservationError error: NewObservation.Error) {
         var indexPath: IndexPath
         
-        let notificationView = ELNotificationView(style: .error, attributes: ELNotificationView.Attributes.appAttributes())
+        let notificationView = ELNotificationView(style: .error(actions: nil), attributes: ELNotificationView.Attributes.appAttributes())
     
         switch error {
         case .noMushroom:
@@ -244,6 +244,31 @@ class AddObservationVC: UIViewController {
 
 
 extension AddObservationVC: LocationManagerDelegate {
+    func locationInaccessible(error: LocationManager.LocationManagerError) {
+        switch error {
+        case .permissionDenied:
+            DispatchQueue.main.async {
+                let notificationView = ELNotificationView.appNotification(style: .error(actions: [
+                    .neutral(error.recoveryAction?.rawValue,
+                             {
+                        if let bundleId = Bundle.main.bundleIdentifier,
+                            let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        }
+                    })
+                
+                ]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
+            }
+            
+        case .badAccuracy, .networkError, .unknown, .permissionsUndetermined:
+            let notificationView = ELNotificationView.appNotification(style: .error(actions: [.neutral(error.recoveryAction?.rawValue, {
+                // Prøv igen
+            })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+            notificationView.show(animationType: .fromBottom)
+        }
+    }
+    
     func locationRetrieved(location: CLLocation) {
         newObservation.observationCoordinate = location
         
@@ -270,29 +295,10 @@ extension AddObservationVC: LocationManagerDelegate {
                 
             case .Error(let error):
                 DispatchQueue.main.async {
-                    let notificationView = ELNotificationView.appNotification(style: .error, primaryText: "Nærmeste lokalitet kunne ikke findes, prøv igen.", secondaryText: error.errorDescription, location: .bottom)
+                    let notificationView = ELNotificationView.appNotification(style: .error(actions: nil), primaryText: "Nærmeste lokalitet kunne ikke findes, prøv igen.", secondaryText: error.errorDescription, location: .bottom)
                     notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
                 }
             }
-        }
-    }
-    
-    func locationInaccessible(error: LocationManagerError) {
-        print(error)
-    }
-    
-    func userDeniedPermissions() {
-        DispatchQueue.main.async {
-            let notificationView = ELNotificationView.appNotification(style: .error, primaryText: "Kunne ikke hente din lokation", secondaryText: "Giv appen tilladelse i indstillinger.", location: .bottom)
-            
-            notificationView.onTap = {
-                if let bundleId = Bundle.main.bundleIdentifier,
-                    let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }
-            }
-            
-            notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
         }
     }
 }

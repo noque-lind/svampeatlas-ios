@@ -79,7 +79,7 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         view.dataSource = self
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
-        view.separatorStyle = .singleLine
+        view.separatorStyle = self.separatorStyle
         view.separatorInset = UIEdgeInsets.zero
         view.separatorColor = UIColor.appSecondaryColour()
         view.alwaysBounceVertical = false
@@ -101,8 +101,27 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    var separatorStyle: UITableViewCell.SeparatorStyle = .singleLine {
+        didSet {
+            tableView.separatorStyle = separatorStyle
+        }
+    }
+    
+    var scrollView: UIScrollView {
+        get {
+            return tableView
+        }
+    }
+    
+    var panGestureRecognizer: UIPanGestureRecognizer {
+        get {
+            return tableView.panGestureRecognizer
+        }
+    }
+    
     
     public private(set) var sections = [Section<T>]()
+    var didSelectItem: ((T, IndexPath) -> ())?
     
     init() {
         super.init(frame: CGRect.zero)
@@ -157,7 +176,9 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         UITableView.automaticDimension
     }
     
-    func didSelectItem(_ item: T, indexPath: IndexPath) {}
+    func didSelectItem(_ item: T, indexPath: IndexPath) {
+        didSelectItem?(item, indexPath)
+    }
     
     internal func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
@@ -169,9 +190,9 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
 
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch sections[indexPath.section].state {
-        case .error(error: let error):
+        case .error(error: let error, let handler):
             let cell = tableView.dequeueReusableCell(withIdentifier: ErrorCell.identifier, for: indexPath) as! ErrorCell
-            cell.configure(error: error)
+            cell.configure(error: error, handler: handler)
             return cell
         case .loading:
             return tableView.dequeueReusableCell(withIdentifier: LoaderCell.identifier, for: indexPath)

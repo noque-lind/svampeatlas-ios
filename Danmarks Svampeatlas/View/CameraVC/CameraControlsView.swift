@@ -183,24 +183,29 @@ class CameraControlsView: UIView {
         PHPhotoLibrary.requestAuthorization { (authorization) in
             switch authorization {
             case .denied, .notDetermined, .restricted:
-                DispatchQueue.main.async {
-                    let notif = ELNotificationView.appNotification(style: .error, primaryText: "Manglende tilladelser", secondaryText: "Du har ikke givet appen tilladelse til at se dit photobibliotek. Du kan ændre det i indstillinger", location: .center)
-                    notif.onTap = {
-                        DispatchQueue.main.async {
-                            if let bundleId = Bundle.main.bundleIdentifier,
-                                let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                            }
-                        }
-                    }
-                    notif.show(animationType: .zoom)
-                }
+                return
+//                DispatchQueue.main.async {
+//                    ELNotificationView.appNotification(style: .error(actions: <#T##[ELNotificationView.Action]?#>), primaryText: <#T##String#>, secondaryText: <#T##String#>, location: <#T##ELNotificationView.Location#>)
+//
+//
+//                    let notif = ELNotificationView(style: .error, attributes: .init(fillsScreen: true, cornerRadius: 0.0, borderWidth: 0.0, font: UIFont.appPrimaryHightlighed(), textColor: UIColor.appWhite()), primaryText: "Manglende tilladelser", secondaryText: "Du har ikke givet appen tilladelse til at se dit fotobibliotek. Du kan ændre det i indstillinger", location: .top)
+//
+//                    notif.onTap = {
+//                        DispatchQueue.main.async {
+//                            if let bundleId = Bundle.main.bundleIdentifier,
+//                                let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
+//                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//                            }
+//                        }
+//                    }
+//                    notif.show(animationType: .fromTop)
+//                }
             case .authorized:
                 DispatchQueue.main.async { [weak self] in
                     let picker = UIImagePickerController()
                     picker.sourceType = .photoLibrary
                     picker.modalPresentationStyle = .fullScreen
-                    picker.delegate = self
+//                    picker.delegate = self
                     self?.delegate?.presentVC(picker)
                 }
             }
@@ -256,19 +261,5 @@ class CameraControlsView: UIView {
         case .denied, .restricted, .notDetermined:
             photoLibraryButton.setImage(#imageLiteral(resourceName: "Icons_Utils_PhotoLibrary"), for: [])
         }
-    }
-}
-
-extension CameraControlsView: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {return}
-        picker.dismiss(animated: true, completion: nil)
-        setupSpinner()
-        delegate?.photoLibraryImagePicked(image: image)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-        self.delegate?.reset()
     }
 }

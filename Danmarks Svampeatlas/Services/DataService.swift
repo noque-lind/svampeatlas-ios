@@ -26,6 +26,10 @@ class DataService{
         case unhandled
         case empty
         
+        var recoveryAction: RecoveryAction? {
+            return nil
+        }
+        
         var errorDescription: String {
             switch self {
             case .decodingError(let error):
@@ -61,6 +65,8 @@ class DataService{
     }
     
     enum URLSessionError: AppError {
+        
+        
         case noInternet
         case timeout
         case invalidResponse
@@ -105,6 +111,13 @@ class DataService{
                 return "Uautoriseret"
             case .payloadTooLarge:
                 return "Anmodningen var for stor"
+            }
+        }
+        
+        var recoveryAction: RecoveryAction? {
+            switch self {
+            case .unAuthorized: return .login
+            default: return .tryAgain
             }
         }
     }

@@ -12,8 +12,8 @@ class ErrorCell: UITableViewCell {
     
     static let identifier = "ErrorCell"
     
-    private let errorView: BackgroundView = {
-       let view = BackgroundView()
+    private let errorView: ErrorView = {
+       let view = ErrorView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -37,7 +37,7 @@ class ErrorCell: UITableViewCell {
         errorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     
-    func configure(error: AppError) {
-        errorView.configure(mainTitle: error.errorTitle, secondaryTitle: error.errorDescription, handler: nil)
+    func configure(error: AppError, handler: ((RecoveryAction?) -> ())?) {
+        errorView.configure(error: error, handler: handler)
     }
 }

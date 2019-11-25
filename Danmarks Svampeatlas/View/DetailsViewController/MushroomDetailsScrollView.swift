@@ -114,11 +114,9 @@ class MushroomDetailsScrollView: AppScrollView {
         heatMap.shouldLoad = true
         
         if locationManager.permissionsNotDetermined {
-            heatMap.showError(error: LocationManagerError.permissionDenied) { [unowned locationManager] in
+            heatMap.showError(error: LocationManager.LocationManagerError.permissionsUndetermined) { [unowned locationManager] _ in
                 locationManager.start()
             }
-        } else {
-            locationManager.start()
         }
     }
     
@@ -163,6 +161,21 @@ class MushroomDetailsScrollView: AppScrollView {
 }
 
 extension MushroomDetailsScrollView: LocationManagerDelegate {
+    func locationInaccessible(error: LocationManager.LocationManagerError) {
+        heatMap.showError(error: error) { (recoveryAction) in
+            guard let recoveryAction = recoveryAction else {return}
+            switch recoveryAction {
+            case .openSettings:
+                if let bundleId = Bundle.main.bundleIdentifier,
+                               let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
+                               UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                           }
+                
+            default: return
+            }
+        }
+    }
+    
     func locationRetrieved(location: CLLocation) {
         guard let taxonID = mushroom?.id else {return}
         let geometry = API.Geometry(coordinate: location.coordinate, radius: 80000.0, type: .rectangle)
@@ -184,20 +197,5 @@ extension MushroomDetailsScrollView: LocationManagerDelegate {
                 heatMap?.showError(error: error)
             }
     }
-    }
-    
-    func locationInaccessible(error: LocationManagerError) {
-        heatMap.showError(error: error)
-    }
-    
-    func userDeniedPermissions() {
-        heatMap.showError(error: LocationManagerError.permissionDenied) {
-            DispatchQueue.main.async {
-                if let bundleId = Bundle.main.bundleIdentifier,
-                    let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }
-            }
-        }
     }
 }

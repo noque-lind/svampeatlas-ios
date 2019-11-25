@@ -8,83 +8,6 @@
 
 import UIKit
 
-class BackgroundView: UIView {
-    private let mainLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.appPrimaryHightlighed()
-        label.textColor = UIColor.appWhite()
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private let secondaryLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.appPrimary()
-        label.textColor = UIColor.appWhite()
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
-    }()
-    
-    private let actionButton: UIButton = {
-        let button = UIButton(type: UIButton.ButtonType.system)
-        button.setTitleColor(UIColor.appThird(), for: [])
-        button.isHidden = true
-        button.addTarget(self, action: #selector(actionButtonPressed), for: UIControl.Event.touchUpInside)
-        return button
-    }()
-    
-    private var handler: (() -> ())?
-    
-    init() {
-        super.init(frame: CGRect.zero)
-        setupView()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupView() {
-        let contentStackView: UIStackView = {
-            let stackView = UIStackView()
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.axis = .vertical
-            stackView.spacing = 20
-            stackView.addArrangedSubview(mainLabel)
-            stackView.addArrangedSubview(secondaryLabel)
-            stackView.addArrangedSubview(actionButton)
-            return stackView
-        }()
-        
-        addSubview(contentStackView)
-        contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 32).isActive = true
-        contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -32).isActive = true
-        contentStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-    }
-    
-    @objc private func actionButtonPressed() {
-        handler?()
-    }
-    
-    func configure(mainTitle: String?, secondaryTitle: String?, handler: (() -> ())?) {
-        if let mainTitle = mainTitle {
-            mainLabel.text = mainTitle
-            mainLabel.isHidden = false
-        }
-        
-        if let secondaryTitle = secondaryTitle {
-            secondaryLabel.text = secondaryTitle
-            secondaryLabel.isHidden = false
-        }
-        
-        if let handler = handler {
-            actionButton.isHidden = false
-            actionButton.setTitle("Do it", for: [])
-            self.handler = handler
-        }
-    }
-}
 
 class AnimatingTableView: UITableView {
     
@@ -164,10 +87,11 @@ class AppTableView: UITableView {
         }
     }
     
-    func showError(_ appError: AppError, handler: (() -> ())?) {
+    func showError(_ appError: AppError, handler: ((RecoveryAction?) -> ())?) {
         DispatchQueue.main.async {
-            let view = BackgroundView()
-            view.configure(mainTitle: appError.errorTitle, secondaryTitle: appError.errorDescription, handler: handler)
+            let view = ErrorView()
+            view.configure(error: appError, handler: handler)
+        
             self.backgroundView = view
         }
     }

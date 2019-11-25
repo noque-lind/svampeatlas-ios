@@ -66,10 +66,6 @@ class MushroomVC: UIViewController {
         return view
     }()
     
-    private lazy var menuButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
-        return button
-    }()
     
     private lazy var tableView: MushroomTableView = {
         let tableView = MushroomTableView()
@@ -135,7 +131,7 @@ class MushroomVC: UIViewController {
                     switch result {
                     case .Error(let error):
                         DispatchQueue.main.async {
-                            let view = ELNotificationView(style: ELNotificationView.Style.error, attributes: ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed()), primaryText: error.errorTitle, secondaryText: error.errorDescription)
+                            let view = ELNotificationView(style: ELNotificationView.Style.error(actions: nil), attributes: ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed()), primaryText: error.errorTitle, secondaryText: error.errorDescription)
                             view.show(animationType: ELNotificationView.AnimationType.fromBottom)
                         }
                     case .Success(_):
@@ -187,22 +183,16 @@ class MushroomVC: UIViewController {
         if (self.navigationController != nil) {
             print("Navigation controller not nil in MushroomVC")
         }
-        self.navigationItem.setLeftBarButton(menuButton, animated: false)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.view.backgroundColor = nil
-        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
-        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.backgroundColor = nil
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+        navigationController?.appConfiguration(translucent: false)
         super.viewWillAppear(animated)
     }
     
     private func setupView() {
-        view.backgroundColor = UIColor.appPrimaryColour()
         title = "Svampebog"
+        
+        navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: eLRevealViewController(), action: #selector(eLRevealViewController()?.toggleSideMenu)), animated: false)
+    
+        view.backgroundColor = UIColor.appPrimaryColour()
         
         view.insertSubview(gradientView, at: 0)
         gradientView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true

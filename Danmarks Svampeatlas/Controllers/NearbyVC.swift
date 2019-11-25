@@ -142,6 +142,21 @@ extension NearbyVC: CustomMapViewDelegate {
 }
 
 extension NearbyVC: LocationManagerDelegate {
+    func locationInaccessible(error: LocationManager.LocationManagerError) {
+        mapView.showError(error: error) { (recoveryAction) in
+            guard let recoveryAction = recoveryAction else {return}
+            switch recoveryAction {
+            case .openSettings:
+                if let bundleId = Bundle.main.bundleIdentifier,
+                                  let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
+                                  UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                              }
+                
+            default: return
+            }
+        }
+    }
+    
     func locationRetrieved(location: CLLocation) {
         DataService.instance.getObservationsWithin(geometry: API.Geometry(coordinate: location.coordinate, radius: CLLocationDistance(mapViewFilteringSettings.distance), type: .circle), ageInYear: mapViewFilteringSettings.age) { [weak mapView] (result) in
             mapView?.shouldLoad = false
@@ -152,21 +167,6 @@ extension NearbyVC: LocationManagerDelegate {
             case .Success(let observations):
                 mapView?.addObservationAnnotations(observations: observations)
                 mapView?.addCirclePolygon(center: location.coordinate, radius: CLLocationDistance(self.mapViewFilteringSettings.distance))
-            }
-        }
-    }
-    
-    func locationInaccessible(error: LocationManagerError) {
-        mapView.showError(error: error)
-    }
-    
-    func userDeniedPermissions() {
-        mapView.showError(error: LocationManagerError.permissionDenied) {
-            DispatchQueue.main.async {
-                if let bundleId = Bundle.main.bundleIdentifier,
-                    let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }
             }
         }
     }

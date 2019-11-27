@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 protocol ObservationImagesViewDelegate: NavigationDelegate {
         func shouldAnimateHeightChanged()
@@ -151,6 +152,10 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
 }
 
 extension ObservationImagesView: CameraVCDelegate {
+    func assetReady(_ phAsset: PHAsset) {
+        return
+    }
+    
     func imageReady(image: UIImage) {
         images.append(image)
         newObservation?.appendImage(image: image)

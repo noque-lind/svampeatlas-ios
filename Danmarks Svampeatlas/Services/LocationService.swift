@@ -100,14 +100,19 @@ class LocationManager: NSObject {
             state = .locating
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10) { [weak self] in
-                self?.stopServiceAndSendLocation()
+                if self?.state == State.locating {
+                  self?.stopServiceAndSendLocation()
+                }
             }
         }
     }
     
     private func stopServiceAndSendLocation() {
-        locationManager?.stopUpdatingHeading()
+        guard state != .stopped else {return}
         state = .stopped
+        locationManager?.stopUpdatingLocation()
+        locationManager = nil
+        
         
         DispatchQueue.main.async {
             if let location = self.latestLocation {
@@ -122,7 +127,7 @@ class LocationManager: NSObject {
 
 extension LocationManager: CLLocationManagerDelegate {
     
-    private func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last, location.horizontalAccuracy >= 0, location.timestamp.timeIntervalSinceNow < 5 else {return}
         
         latestLocation = location
@@ -132,7 +137,7 @@ extension LocationManager: CLLocationManagerDelegate {
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = CLError.Code.init(rawValue: (error as NSError).code) {
             switch error {
             case .network: delegate?.locationInaccessible(error: .networkError)
@@ -141,7 +146,7 @@ extension LocationManager: CLLocationManagerDelegate {
         }
     }
     
-    private func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+   internal func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()

@@ -92,6 +92,7 @@
 		DB5AA02D2376D81C00F5D780 /* ELKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB5AA02A2376D7D200F5D780 /* ELKit.framework */; };
 		DB5AA02E2376D81C00F5D780 /* ELKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DB5AA02A2376D7D200F5D780 /* ELKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB5E160A21AC452300F8C3FD /* NearbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E160921AC452300F8C3FD /* NearbyVC.swift */; };
+		DB5E88E8238D9431005339D4 /* CaptureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E88E7238D9431005339D4 /* CaptureButton.swift */; };
 		DB6437492295CCFA00BE7FF4 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6437482295CCFA00BE7FF4 /* SearchCell.swift */; };
 		DB64374B2296A3F700BE7FF4 /* Host.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB64374A2296A3F700BE7FF4 /* Host.swift */; };
 		DB649F8C21B9C91000E0A4E8 /* SubstrateGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB649F8B21B9C91000E0A4E8 /* SubstrateGroups.swift */; };
@@ -291,6 +292,7 @@
 		DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
 		DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ELKit.xcodeproj; path = ../../../ELKit/ELKit.xcodeproj; sourceTree = "<group>"; };
 		DB5E160921AC452300F8C3FD /* NearbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyVC.swift; sourceTree = "<group>"; };
+		DB5E88E7238D9431005339D4 /* CaptureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureButton.swift; sourceTree = "<group>"; };
 		DB6437482295CCFA00BE7FF4 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		DB64374A2296A3F700BE7FF4 /* Host.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Host.swift; sourceTree = "<group>"; };
 		DB649F8B21B9C91000E0A4E8 /* SubstrateGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstrateGroups.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				4A1F7608207A31150082B873 /* CameraView.swift */,
 				4A70A5DC20D8E61E007B6214 /* CameraControlsView.swift */,
 				2083452C22574C4300E86730 /* AVView.swift */,
+				DB5E88E7238D9431005339D4 /* CaptureButton.swift */,
 			);
 			path = CameraVC;
 			sourceTree = "<group>";
@@ -1030,6 +1033,7 @@
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
 				DBD27B2B231ECB2F00391CCF /* PredictionMatch.swift in Sources */,
 				DBB33A4521CE67E200BCED22 /* ELTextViewCell.swift in Sources */,
+				DB5E88E8238D9431005339D4 /* CaptureButton.swift in Sources */,
 				DB0C5A0C2275A75E0071B15C /* ClusteredHeatAnnotationPinView.swift in Sources */,
 				DB8CF0A7217BA99200ADAFB0 /* LoginVC.swift in Sources */,
 				DB6E9E2F218A4ED500A6FB1C /* NotificationCell.swift in Sources */,

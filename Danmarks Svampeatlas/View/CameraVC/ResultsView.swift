@@ -12,7 +12,6 @@ import UIKit
 protocol ResultsViewDelegate: class {
     func retry()
     func mushroomSelected(predictionResult: PredictionResult, predictionResults: [PredictionResult])
-    func panGesture(gesture: UIPanGestureRecognizer)
 }
 
 
@@ -179,16 +178,8 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
     
     private func setupView() {
         alpha = 0
-        
-        let gesture = UIPanGestureRecognizer(target: self, action: #selector(didPan(gesture:)))
-        gesture.delegate = self
-        addGestureRecognizer(gesture)
-        
     }
-    
-    @objc private func didPan(gesture: UIPanGestureRecognizer) {
-        delegate?.panGesture(gesture: gesture)
-    }
+
     
     func configure(results: [PredictionResult]) {
         self.results = results

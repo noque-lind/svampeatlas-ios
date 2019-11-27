@@ -11,21 +11,11 @@ import Photos
 
 protocol ELPhotosManagerDelegate: NavigationDelegate {
     func error(_ error: ELPhotos.ELPhotosError)
+    func assetFetched(_ phAsset: PHAsset)
+    func assetFetchCanceled()
 }
 
-extension ELPhotos: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {return}
-        picker.dismiss(animated: true, completion: nil)
-        //        setupSpinner()
-        //        delegate?.photoLibraryImagePicked(image: image)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-        //        self.delegate?.reset()
-    }
-}
+
 
 
 class ELPhotos: NSObject  {
@@ -66,29 +56,46 @@ class ELPhotos: NSObject  {
         }
     }
     
+    static func fetchPhotoLibraryThumbnail(size: CGSize, completion: @escaping (UIImage?) -> ()) {
+        switch PHPhotoLibrary.authorizationStatus() {
+               case .authorized:
+                   let fetchOptions = PHFetchOptions()
+                   fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+                   fetchOptions.fetchLimit = 1
+                   
+                   let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+                   
+                   guard let phAsset = fetchResult.firstObject else {return}
+                   let requestOptions = PHImageRequestOptions()
+                   requestOptions.isSynchronous = false
+                   
+                   PHImageManager.default().requestImage(for: phAsset, targetSize: size, contentMode: .aspectFit, options: requestOptions) { (image, _) in
+                       guard let image = image else {return}
+                        completion(image)
+                   }
+               case .denied, .restricted, .notDetermined:
+                    completion(nil)
+               }
+    }
     
-    private func showPhotoLibrary() {
+    func showPhotoLibrary() {
         PHPhotoLibrary.requestAuthorization { [weak delegate, weak self] (authorization) in
+            DispatchQueue.main.async {
             switch authorization {
             case .notDetermined, .restricted, .denied:
-                DispatchQueue.main.async {
                     self?.delegate?.error(.notAuthorized)
-                }
-                
             case .authorized:
-                DispatchQueue.main.async {
                     let picker = UIImagePickerController()
                     picker.sourceType = .photoLibrary
                     picker.modalPresentationStyle = .fullScreen
                     picker.delegate = self
                     delegate?.presentVC(picker)
-                }
+            }
             }
         }
     }
-
     
-    func saveImage(photoData: Data, inAlbum albumName: String) {
+    func saveImage(photoData: Data, location: CLLocation?, inAlbum albumName: String) {
         PHPhotoLibrary.requestAuthorization { [weak delegate, weak self] (authorization) in
             switch authorization {
             case .notDetermined, .restricted, .denied:
@@ -97,9 +104,9 @@ class ELPhotos: NSObject  {
                 }
             case .authorized:
                 self?.dispatchQueue.sync {
-                if let album = self?.fetchAlbumWithName(albumName) {
-                        self?.saveImageInAlbum(photoData: photoData, album)
-                } else {
+                    if let album = self?.fetchAlbumWithName(albumName) {
+                        self?.saveImageInAlbum(photoData: photoData, location: location, album)
+                    } else {
                         self?.createAlbumWithName(albumName) { (error) in
                             if let error = error {
                                 DispatchQueue.main.async {
@@ -107,19 +114,19 @@ class ELPhotos: NSObject  {
                                     delegate?.error(.unknown)
                                 }
                             } else if let album = self?.fetchAlbumWithName(albumName) {
-                                self?.saveImageInAlbum(photoData: photoData, album)
+                                self?.saveImageInAlbum(photoData: photoData, location: location, album)
                             }
                         }
-                }
+                    }
                 }
             }
         }
     }
     
-    
-    private func saveImageInAlbum(photoData: Data, _ album: PHAssetCollection) {
+    private func saveImageInAlbum(photoData: Data, location: CLLocation?, _ album: PHAssetCollection) {
         PHPhotoLibrary.shared().performChanges({
             let assetCreationRequest = PHAssetCreationRequest.forAsset()
+            assetCreationRequest.location = location
             assetCreationRequest.addResource(with: .photo, data: photoData, options: nil)
             if let assetPlaceholder = assetCreationRequest.placeholderForCreatedAsset {
                 let albumChangeRequest = PHAssetCollectionChangeRequest(for: album)
@@ -141,5 +148,18 @@ class ELPhotos: NSObject  {
         }) { (success, error) in
             completion(error)
         }
+    }
+}
+
+extension ELPhotos: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let asset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset else {return}
+        picker.dismiss(animated: true, completion: nil)
+        delegate?.assetFetched(asset)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+        delegate?.assetFetchCanceled()
     }
 }

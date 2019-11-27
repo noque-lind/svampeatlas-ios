@@ -13,11 +13,47 @@ import ELKit
 
 protocol CameraControlsViewDelegate: class {
     func captureButtonPressed()
+    func photoLibraryButtonPressed()
     func usePhotoPressed()
     func noPhotoPressed()
-    func presentVC(_ vc: UIViewController)
     func reset()
-    func photoLibraryImagePicked(image: UIImage)
+}
+
+class PhotoLibraryButton: UIButton {
+    
+    var pressed: (() -> ())?
+    
+    init() {
+        super.init(frame: CGRect.zero)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    private func setupView() {
+        backgroundColor = UIColor.clear
+        layer.cornerRadius = CGFloat.cornerRadius()
+        clipsToBounds = true
+        contentMode = .scaleAspectFill
+        layer.shadowOpacity = Float.shadowOpacity()
+        addTarget(self, action: #selector(pressed(sender:)), for: .touchUpInside)
+    }
+    
+    @objc private func pressed(sender: UIButton) {
+        pressed?()
+    }
+    
+    func setPhotosLibraryThumbnail() {
+        ELPhotos.fetchPhotoLibraryThumbnail(size: self.frame.size) { [weak self] (image) in
+            if let image = image {
+                self?.setImage(image, for: [])
+            } else {
+                self?.setImage(#imageLiteral(resourceName: "Icons_Utils_PhotoLibrary"), for: [])
+            }
+        }
+    }
 }
 
 class CameraControlsView: UIView {
@@ -27,38 +63,40 @@ class CameraControlsView: UIView {
         case usePhoto = "Brug billede"
     }
     
-    private lazy var captureButton: UIButton = {
-        let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "Icons_Utils_CaptureButton"), for: [])
+    private lazy var captureButton: CaptureButton = {
+        let button = CaptureButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.widthAnchor.constraint(equalToConstant: 50).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        button.addTarget(self, action: #selector(captureButtonPressed), for: .touchUpInside)
+        
+        button.pressed = { [unowned delegate] in
+            delegate?.captureButtonPressed()
+            button.showSpinner(true)
+        }
+        
         return button
     }()
     
-    private lazy var photoLibraryButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.clear
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 5.0
-        button.clipsToBounds = true
-        button.contentMode = .scaleAspectFill
-        button.layer.shadowOpacity = 0.5
-        button.addTarget(self, action: #selector(leftImageViewPressed), for: .touchUpInside)
+    private lazy var photoLibraryButton: PhotoLibraryButton = {
+        let button = PhotoLibraryButton()
         button.widthAnchor.constraint(equalToConstant: 40).isActive = true
         button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
-        return button
-    }()
+        button.translatesAutoresizingMaskIntoConstraints = false
         
-
-    private lazy var activityIndicatorView: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .whiteLarge)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.hidesWhenStopped = true
-        view.color = UIColor.appWhite()
-        view.alpha = 0
-        return view
+        button.pressed = { [unowned textButton, unowned self] in
+            if let state = TextLabelStates(rawValue: textButton.title(for: []) ?? "") {
+                switch state {
+                case .usePhoto:
+                    self.delegate?.reset()
+                case .noPhoto:
+                    self.delegate?.photoLibraryButtonPressed()
+                }
+            } else {
+                self.delegate?.photoLibraryButtonPressed()
+            }
+        }
+        
+        return button
     }()
     
     private lazy var textButton: UIButton = {
@@ -95,7 +133,7 @@ class CameraControlsView: UIView {
             UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
                 self.textButton.transform = CGAffineTransform(rotationAngle: rotationAngle)
                 self.photoLibraryButton.transform = CGAffineTransform(rotationAngle: rotationAngle)
-            
+                
             }, completion: nil)
         }
     }
@@ -125,7 +163,7 @@ class CameraControlsView: UIView {
         photoLibraryButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         photoLibraryButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
         
-        getPhotoLibraryThumbnail()
+        photoLibraryButton.setPhotosLibraryThumbnail()
     
         addSubview(textButton)
         textButton.topAnchor.constraint(equalTo: topAnchor, constant: 4).isActive = true
@@ -138,25 +176,6 @@ class CameraControlsView: UIView {
         }
     }
     
-    @objc private func captureButtonPressed() {
-        delegate?.captureButtonPressed()
-        setupSpinner()
-    }
-
-    
-    @objc private func leftImageViewPressed() {
-        if let state = TextLabelStates(rawValue: textButton.title(for: []) ?? "") {
-            switch state {
-            case .usePhoto:
-                delegate?.reset()
-            case .noPhoto:
-                presentPhotoLibraryPicker()
-            }
-        } else {
-            presentPhotoLibraryPicker()
-        }
-    }
-    
     @objc private func textButtonPressed() {
         guard let state = TextLabelStates(rawValue: textButton.title(for: []) ?? "") else {return}
         switch state {
@@ -166,61 +185,14 @@ class CameraControlsView: UIView {
             delegate?.usePhotoPressed()
         }
     }
-    
-    private func setupSpinner() {
-    self.addSubview(activityIndicatorView)
-    activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-    activityIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-    activityIndicatorView.startAnimating()
-    
-    UIView.animate(withDuration: 0.2) {
-    self.captureButton.alpha = 0
-    self.activityIndicatorView.alpha = 1
-        }
-    }
-    
-    private func presentPhotoLibraryPicker() {
-        PHPhotoLibrary.requestAuthorization { (authorization) in
-            switch authorization {
-            case .denied, .notDetermined, .restricted:
-                return
-//                DispatchQueue.main.async {
-//                    ELNotificationView.appNotification(style: .error(actions: <#T##[ELNotificationView.Action]?#>), primaryText: <#T##String#>, secondaryText: <#T##String#>, location: <#T##ELNotificationView.Location#>)
-//
-//
-//                    let notif = ELNotificationView(style: .error, attributes: .init(fillsScreen: true, cornerRadius: 0.0, borderWidth: 0.0, font: UIFont.appPrimaryHightlighed(), textColor: UIColor.appWhite()), primaryText: "Manglende tilladelser", secondaryText: "Du har ikke givet appen tilladelse til at se dit fotobibliotek. Du kan ændre det i indstillinger", location: .top)
-//
-//                    notif.onTap = {
-//                        DispatchQueue.main.async {
-//                            if let bundleId = Bundle.main.bundleIdentifier,
-//                                let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-//                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-//                            }
-//                        }
-//                    }
-//                    notif.show(animationType: .fromTop)
-//                }
-            case .authorized:
-                DispatchQueue.main.async { [weak self] in
-                    let picker = UIImagePickerController()
-                    picker.sourceType = .photoLibrary
-                    picker.modalPresentationStyle = .fullScreen
-//                    picker.delegate = self
-                    self?.delegate?.presentVC(picker)
-                }
-            }
-        }
         
-    }
-    
     func reset() {
         captureButton.alpha = 1
-        activityIndicatorView.removeFromSuperview()
-        activityIndicatorView.alpha = 0
-        getPhotoLibraryThumbnail()
+        captureButton.showSpinner(false)
+        photoLibraryButton.setPhotosLibraryThumbnail()
         
         if hasNoPhotoButton {
-             textButton.setTitle(TextLabelStates.noPhoto.rawValue, for: [])
+            textButton.setTitle(TextLabelStates.noPhoto.rawValue, for: [])
             textButton.alpha = 1
         } else {
             textButton.setTitle(nil, for: [])
@@ -229,37 +201,9 @@ class CameraControlsView: UIView {
     }
     
     func askForConfirmation() {
-        activityIndicatorView.removeFromSuperview()
-        activityIndicatorView.alpha = 0
-        
+        captureButton.showSpinner(false)
         photoLibraryButton.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_BackButton"), for: [])
         textButton.setTitle(TextLabelStates.usePhoto.rawValue, for: [])
         textButton.alpha = 1
-    }
-    
-    private func getPhotoLibraryThumbnail() {
-        switch PHPhotoLibrary.authorizationStatus() {
-        case .authorized:
-            
-            let fetchOptions = PHFetchOptions()
-            fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
-            fetchOptions.fetchLimit = 1
-            
-            let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-            
-            guard let phAsset = fetchResult.firstObject else {return}
-            let requestOptions = PHImageRequestOptions()
-            requestOptions.isSynchronous = false
-            
-            
-            PHImageManager.default().requestImage(for: phAsset, targetSize: CGSize(width: 40, height: 40), contentMode: .aspectFit, options: requestOptions) { [weak photoLibraryButton] (image, _) in
-                guard let image = image else {return}
-                DispatchQueue.main.async {
-                    photoLibraryButton?.setImage(image, for: [])
-                }
-            }
-        case .denied, .restricted, .notDetermined:
-            photoLibraryButton.setImage(#imageLiteral(resourceName: "Icons_Utils_PhotoLibrary"), for: [])
-        }
     }
 }

@@ -128,22 +128,19 @@ class MushroomVC: UIViewController {
                 })
             } else {
                 CoreDataHelper.saveMushroom(mushroom: mushroom) { (result) in
+                    DispatchQueue.main.async {
                     switch result {
                     case .Error(let error):
-                        DispatchQueue.main.async {
-                            let view = ELNotificationView(style: ELNotificationView.Style.error(actions: nil), attributes: ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed()), primaryText: error.errorTitle, secondaryText: error.errorDescription)
-                            view.show(animationType: ELNotificationView.AnimationType.fromBottom)
-                        }
+                            ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                                .show(animationType: .fromBottom)
                     case .Success(_):
-                        DispatchQueue.main.async {
-                            let view = ELNotificationView(style: ELNotificationView.Style.success, attributes: ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed()), primaryText: "Du har gjort \(mushroom.danishName ?? mushroom.fullName) til din favorit", secondaryText: "Du kan nu altid se svampen, også uden internet.")
-                            view.show(animationType: ELNotificationView.AnimationType.fromBottom)
-                        }
+                        ELNotificationView.appNotification(style: .success, primaryText: "\(mushroom.danishName ?? mushroom.fullName) er nu markeret som favorit", secondaryText: "Du har hurtig adgang til at se svampen og dens billeder, også uden internet - under mine favoritter.", location: .bottom)
+                            .show(animationType: .fromBottom)
+                    }
                     }
                 }
             }
         }
-        
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
@@ -158,7 +155,6 @@ class MushroomVC: UIViewController {
         return view
     }()
     
-    private var defaultTableViewState: TableViewState<Mushroom>?
     private var session: Session?
     
     init(session: Session?) {
@@ -180,10 +176,8 @@ class MushroomVC: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if (self.navigationController != nil) {
-            print("Navigation controller not nil in MushroomVC")
-        }
-        navigationController?.appConfiguration(translucent: false)
+        navigationController?.appConfiguration(translucent: true)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         super.viewWillAppear(animated)
     }
     

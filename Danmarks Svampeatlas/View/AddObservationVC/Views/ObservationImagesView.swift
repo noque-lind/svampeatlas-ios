@@ -146,15 +146,17 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
         if indexPath.row == images.count {
             let vc = CameraVC(cameraVCUsage: CameraVC.Usage.imageCapture)
             vc.delegate = self
-            delegate?.presentVC(vc)
+            delegate?.presentVC(UINavigationController(rootViewController: vc))
         }
     }
 }
 
 extension ObservationImagesView: CameraVCDelegate {
-    func assetReady(_ phAsset: PHAsset) {
-        return
+    func imageReady(_ image: UIImage, location: CLLocation?) {
+        
     }
+    
+
     
     func imageReady(image: UIImage) {
         images.append(image)

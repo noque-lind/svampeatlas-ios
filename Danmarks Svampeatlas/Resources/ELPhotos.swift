@@ -153,13 +153,14 @@ class ELPhotos: NSObject  {
 
 extension ELPhotos: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let asset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset else {return}
+        guard let asset = info[UIImagePickerController.InfoKey.imageURL] as? PHAsset else {return}
         picker.dismiss(animated: true, completion: nil)
         delegate?.assetFetched(asset)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+        
         delegate?.assetFetchCanceled()
     }
 }

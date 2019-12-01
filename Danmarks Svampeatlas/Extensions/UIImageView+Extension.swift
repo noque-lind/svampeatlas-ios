@@ -37,8 +37,6 @@ class DownloadableImageView: UIImageView {
             }
         }
     }
-    
-    
 }
 
 extension UIImageView {
@@ -49,6 +47,12 @@ extension UIImageView {
         crossFade.toValue = image
         self.image = image
         self.layer.add(crossFade, forKey: "animateContents")
+    }
+    
+    func loadImage(url: URL) {
+        DispatchQueue.main.async {
+            self.image = UIImage(url: url)
+        }
     }
     
 

@@ -182,8 +182,8 @@
             filePath = "Danmarks Svampeatlas/Controllers/DetailsViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
+            startingLineNumber = "115"
+            endingLineNumber = "115"
             landmarkName = "viewWillLayoutSubviews()"
             landmarkType = "7">
          </BreakpointContent>
@@ -216,8 +216,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "98"
             endingLineNumber = "98"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "startUpdatingLocation()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -232,24 +232,40 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "149"
             endingLineNumber = "149"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "locationManager(_:didChangeAuthorization:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B52BBECD-5EDA-4B45-8A72-DF20F1A5BB15"
-            shouldBeEnabled = "No"
+            uuid = "4123374C-DF67-4F3C-A746-E44EDA6606BA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Controllers/AddObservationVC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
+            landmarkName = "presentVC(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7E6DF54B-5D56-4E86-B08F-B74889C42789"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Danmarks Svampeatlas/Controllers/CameraVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "287"
-            endingLineNumber = "287"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "269"
+            endingLineNumber = "269"
+            landmarkName = "captureButtonPressed()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

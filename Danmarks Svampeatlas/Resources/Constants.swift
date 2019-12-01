@@ -117,7 +117,11 @@ import MapKit
  */
 
 
-
+struct Utilities {
+    
+    static let PHOTOALBUMNAME = "Svampeatlas"
+    
+}
 
 
 struct API {

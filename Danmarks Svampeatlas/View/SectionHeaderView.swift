@@ -10,6 +10,8 @@ import UIKit
 
 class SectionHeaderView: UITableViewHeaderFooterView {
     
+    static let identifier = "SectionHeaderView"
+    
     private let label: UILabel = {
        let label = UILabel()
         label.font = UIFont.appDivider()
@@ -19,9 +21,14 @@ class SectionHeaderView: UITableViewHeaderFooterView {
         return label
     }()
     
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        setupView()
+    }
     
-    init() {
-        super.init(reuseIdentifier: "sectionHeaderView")
+    
+    convenience init() {
+        self.init(reuseIdentifier: SectionHeaderView.identifier)
     setupView()
     }
     
@@ -30,6 +37,7 @@ class SectionHeaderView: UITableViewHeaderFooterView {
     }
     
     private func setupView() {
+        backgroundView = UIImageView()
         
         let contentView: UIView = {
            let view = UIView()

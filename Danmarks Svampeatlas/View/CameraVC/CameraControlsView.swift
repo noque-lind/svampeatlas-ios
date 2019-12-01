@@ -19,43 +19,6 @@ protocol CameraControlsViewDelegate: class {
     func reset()
 }
 
-class PhotoLibraryButton: UIButton {
-    
-    var pressed: (() -> ())?
-    
-    init() {
-        super.init(frame: CGRect.zero)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-    
-    private func setupView() {
-        backgroundColor = UIColor.clear
-        layer.cornerRadius = CGFloat.cornerRadius()
-        clipsToBounds = true
-        contentMode = .scaleAspectFill
-        layer.shadowOpacity = Float.shadowOpacity()
-        addTarget(self, action: #selector(pressed(sender:)), for: .touchUpInside)
-    }
-    
-    @objc private func pressed(sender: UIButton) {
-        pressed?()
-    }
-    
-    func setPhotosLibraryThumbnail() {
-        ELPhotos.fetchPhotoLibraryThumbnail(size: self.frame.size) { [weak self] (image) in
-            if let image = image {
-                self?.setImage(image, for: [])
-            } else {
-                self?.setImage(#imageLiteral(resourceName: "Icons_Utils_PhotoLibrary"), for: [])
-            }
-        }
-    }
-}
-
 class CameraControlsView: UIView {
     
     enum TextLabelStates: String {
@@ -69,8 +32,8 @@ class CameraControlsView: UIView {
         button.widthAnchor.constraint(equalToConstant: 50).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        button.pressed = { [unowned delegate] in
-            delegate?.captureButtonPressed()
+        button.pressed = { [weak self] in
+            self?.delegate?.captureButtonPressed()
             button.showSpinner(true)
         }
         

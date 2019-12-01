@@ -11,12 +11,12 @@ import AVFoundation
 import Vision
 import ELKit
 import CoreLocation
-
 import Foundation
 import Photos
+import ImageIO
 
 protocol CameraVCDelegate: class {
-    func assetReady(_ phAsset: PHAsset)
+    func imageReady(_ image: UIImage, location: CLLocation?)
 }
 
 class CameraVC: UIViewController {
@@ -69,8 +69,8 @@ class CameraVC: UIViewController {
     
     
     weak var delegate: CameraVCDelegate? = nil
-    private let photoAlbumName = "Svampeatlas"
-    
+
+    private var currentImageURL: URL?
     private let usage: Usage
     private var errorView: ErrorView?
     private var cameraViewTopConstraint = NSLayoutConstraint()
@@ -119,10 +119,10 @@ class CameraVC: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
-        avView.stop()
-        super.viewWillDisappear(animated)
+               avView.stop()
+        super.viewDidDisappear(animated)
     }
     
     private func setupView() {
@@ -152,11 +152,13 @@ class CameraVC: UIViewController {
             navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: eLRevealViewController(), action: #selector(eLRevealViewController()?.toggleSideMenu)), animated: false)
             navigationItem.setRightBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_About"), style: .plain, target: self, action: #selector(informationButtonPressed)), animated: false)
         case .imageCapture:
-            navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Glyphs_Cancel"), style: .plain, target: self, action: #selector(dismiss(animated:completion:))), animated: false)
+            navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Glyphs_Cancel"), style: .plain, target: self, action: #selector(onDismissPressed)), animated: false)
         }
     }
     
-    
+    @objc private func onDismissPressed() {
+        dismiss(animated: true, completion: nil)
+    }
     
     internal func reset() {
         avView.alpha = 1
@@ -211,6 +213,36 @@ class CameraVC: UIViewController {
         presentVC(TermsController(terms: .cameraHelper))
     }
     
+    private func handleImageSaving(photoData: Data) {
+        if !UserDefaultsHelper.hasBeenAskedToSaveImages {
+            ELNotificationView.appNotification(style: .action(backgroundColor: UIColor.appPrimaryColour(), actions: [
+                .positive("Ja, gem billederne", { [unowned self] in
+                    UserDefaultsHelper.saveImages = true
+                 self.imagesToSave.append(photoData)
+                }),
+                .negative("Nej", {
+                    UserDefaultsHelper.saveImages = false
+                })]), primaryText: "Skal dine billeder gemmes?", secondaryText: "Hvis du er interesseret, kan vi oprette et album til de billeder du tager i denne app.", location: .top)
+                .show(animationType: .fromTop, onViewController: self)
+                 UserDefaultsHelper.hasBeenAskedToSaveImages = true
+        } else {
+            if UserDefaultsHelper.saveImages {
+             imagesToSave.append(photoData)
+            }
+        }
+    }
+    
+    private func getPredictions(image: UIImage) {
+           DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
+               switch result {
+               case .Error(let error):
+                   self?.cameraView.showError(error: error)
+               case .Success(let predictions):
+                   self?.cameraView.showResults(results: predictions)
+               }
+           }
+       }
+    
     private func createNewObservationRecord(photo: UIImage?, mushroom: Mushroom?, predictionResults: [PredictionResult]?, session: Session) {
         let newObservation = NewObservation()
         
@@ -243,7 +275,7 @@ extension CameraVC: CameraViewDelegate {
         
         switch usage {
         case .imageCapture:
-//            delegate?.imageReady(image: image)
+            delegate?.imageReady(image, location: nil)
             dismiss(animated: true, completion: nil)
         case .newObservationRecord(session: let session):
             createNewObservationRecord(photo: image, mushroom: nil, predictionResults: nil, session: session)
@@ -297,78 +329,50 @@ extension CameraVC: CameraViewDelegate {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func handleImage(_ image: UIImage) {
+    func handleImage(_ url: URL) {
+        avView.alpha = 0
+        imageView.loadImage(url: url)
+        
         switch usage {
         case .imageCapture:
-            avView.alpha = 0
-            imageView.image = image
             cameraView.askForConfirmation()
-        case .mlPredict:
-            imageView.image = image
-            avView.alpha = 0
-            DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
-                switch result {
-                case .Error(let error):
-                    self?.cameraView.showError(error: error)
-                case .Success(let predictions):
-                    self?.cameraView.showResults(results: predictions)
-                }
-            }
-            
+        case .mlPredict: return
+//            getPredictions(image: image)
         case .newObservationRecord:
-            imageView.image = image
-            avView.alpha = 0
             cameraView.askForConfirmation()
         }
     }
 }
 
 extension CameraVC: AVViewDelegate {
-    
-    private func handleImageSaving(photoData: Data) {
-        if !UserDefaultsHelper.hasBeenAskedToSaveImages {
-            ELNotificationView.appNotification(style: .action(backgroundColor: UIColor.appPrimaryColour(), actions: [
-                .positive("Ja, gem billederne", { [unowned self] in
-                    UserDefaultsHelper.saveImages = true
-                 self.imagesToSave.append(photoData)
-                }),
-                .negative("Nej", {
-                    UserDefaultsHelper.saveImages = false
-                })]), primaryText: "Skal dine billeder gemmes?", secondaryText: "Hvis du er interesseret, kan vi oprette et album til de billeder du tager i denne app.", location: .top)
-                .show(animationType: .fromTop, onViewController: self)
-                 UserDefaultsHelper.hasBeenAskedToSaveImages = true
-        } else {
-            if UserDefaultsHelper.saveImages {
-             imagesToSave.append(photoData)
-            }
-        }
-    }
-    
-    func error(error: AppError) {
+    func error(error: AVView.AVViewError) {
         showCameraError(error: error)
     }
     
     func photoData(_ photoData: Data) {
-        handleImageSaving(photoData: photoData)
-        guard let image = UIImage(data: photoData) else {return}
-        handleImage(image)
+        switch ELFileManager.saveTempImage(imageData: photoData) {
+        case .Success(let url):
+            handleImage(url)
+            imageView.loadImage(url: url)
+        case .Error(let error):
+            showCameraError(error: error)
+        }
     }
 }
 
 extension CameraVC: ELPhotosManagerDelegate {
-    private func getPredictions(image: UIImage) {
-        DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
-            switch result {
-            case .Error(let error):
-                self?.cameraView.showError(error: error)
-            case .Success(let predictions):
-                self?.cameraView.showResults(results: predictions)
-            }
-        }
-    }
+   
     
     
     func assetFetched(_ phAsset: PHAsset) {
+        
+        
+//        switch usage {
+//        case .imageCapture: return
+//        case .mlPredict(session: let session):
+//            getPredictions(image: )
+//        }
+        print(phAsset.location)
 //        switch usage {
 //        case .imageCapture:
 //
@@ -402,7 +406,8 @@ extension CameraVC: ELPhotosManagerDelegate {
                        case .openSettings: UIApplication.openSettings()
                        default: return
                        }
-                   })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .top).show(animationType: .fromTop)
+                })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .top)
+                .show(animationType: .fromTop)
         }
 }
 
@@ -410,12 +415,12 @@ extension CameraVC: LocationManagerDelegate {
     func locationInaccessible(error: LocationManager.LocationManagerError) {
         let imagesToSave = self.imagesToSave
         self.imagesToSave.removeAll()
-        imagesToSave.forEach({ elPhotos.saveImage(photoData: $0, location: nil, inAlbum: photoAlbumName) })
+        imagesToSave.forEach({ elPhotos.saveImage(photoData: $0, location: nil, inAlbum: Utilities.PHOTOALBUMNAME) })
     }
     func locationRetrieved(location: CLLocation) {
         let imagesToSave = self.imagesToSave
         self.imagesToSave.removeAll()
         debugPrint("Saving image with location")
-        imagesToSave.forEach({ elPhotos.saveImage(photoData: $0, location: location, inAlbum: photoAlbumName) })
+        imagesToSave.forEach({ elPhotos.saveImage(photoData: $0, location: location, inAlbum: Utilities.PHOTOALBUMNAME) })
     }
 }

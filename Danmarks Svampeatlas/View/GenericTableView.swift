@@ -91,6 +91,7 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         view.clipsToBounds = true
         view.register(ErrorCell.self, forCellReuseIdentifier: ErrorCell.identifier)
         view.register(LoaderCell.self, forCellReuseIdentifier: LoaderCell.identifier)
+        view.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.identifier)
         return view
     }()
     
@@ -158,7 +159,7 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         DispatchQueue.main.async {
             self.tableView.reloadData()
             
-            if sections.first != nil {
+            if sections.first != nil && sections.first?.count() != 0 {
                 self.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: false)
             }
         }
@@ -178,6 +179,17 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     
     func didSelectItem(_ item: T, indexPath: IndexPath) {
         didSelectItem?(item, indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return sections[section].title != nil ? UITableView.automaticDimension: 0.0
+    }
+    
+    internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let title = sections[section].title else {return nil}
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.identifier) as! SectionHeaderView
+        headerView.configure(text: title)
+        return headerView
     }
     
     internal func numberOfSections(in tableView: UITableView) -> Int {
@@ -218,7 +230,11 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
                 return LoaderCell.height
             }
         case .items(items: let items):
-            return heightForItem(items[indexPath.row])
+            if indexPath.row < items.count {
+                return heightForItem(items[indexPath.row])
+            } else {
+                return 0
+            }
         }
     }
     

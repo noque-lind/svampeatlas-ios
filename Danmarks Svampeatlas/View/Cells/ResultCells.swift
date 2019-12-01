@@ -10,6 +10,10 @@ import UIKit
 
 class BaseCell: UITableViewCell {
     
+    class var identifier: String {
+        return "BaseCell"
+    }
+    
     fileprivate lazy var roundedImageView: RoundedImageView = {
         let view = RoundedImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -111,6 +115,11 @@ fileprivate class HightlightableButton: UIButton {
 
 class UnknownSpeciesCellButton: BaseCell {
     
+    override class var identifier: String {
+        return "UnknownSpeciesCellButton"
+    }
+    
+
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         containerView.backgroundColor = highlighted ? UIColor.appThird(): UIColor.appWhite()
     }
@@ -152,6 +161,10 @@ class UnknownSpeciesCellButton: BaseCell {
 }
 
 class UnknownSpecieCell: BaseCell {
+    
+    override class var identifier: String {
+        return "UnknownSpecieCell"
+    }
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton()
@@ -213,7 +226,9 @@ class UnknownSpecieCell: BaseCell {
 
 class ContainedResultCell: BaseCell {
     
-    static let identifier = "ContainedResultCell"
+    override class var identifier: String {
+        return "ContainedResultCell"
+    }
     
     private var toxicityView: ToxicityView = {
         let view = ToxicityView()
@@ -312,6 +327,10 @@ class ContainedResultCell: BaseCell {
 }
 
 class SelectedSpecieCell: ContainedResultCell {
+    
+    override class var identifier: String {
+        return "SelectedSpecieCell"
+    }
     
     private var questionLabel: UILabel = {
         let label = UILabel()

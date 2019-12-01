@@ -18,18 +18,6 @@ class AddObservationVC: UIViewController {
         case Location = "Lokalitet"
     }
     
-    private lazy var menuButton: UIBarButtonItem = {
-       
-        let button = UIBarButtonItem(image:  #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
-        return button
-    }()
-    
-    private lazy var uploadObservationButton: UIBarButtonItem = {
-        
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload))
-        return button
-    }()
-    
     private lazy var observationImagesView: ObservationImagesView = {
         let view = ObservationImagesView(newObservation: newObservation)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -97,14 +85,16 @@ class AddObservationVC: UIViewController {
         fatalError()
     }
     
-    override var shouldAutorotate: Bool {
-        return false
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.appConfiguration(translucent: true)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+        super.viewWillAppear(animated)
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -120,24 +110,21 @@ class AddObservationVC: UIViewController {
         observationImagesView.invalidateLayout()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.title = "Nyt fund"
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.view.backgroundColor = UIColor.clear
-        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
-        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
-        super.viewWillAppear(animated)
-    }
-    
     deinit {
         debugPrint("AddObservationVC was deinited")
     }
     
     private func setupView() {
+        title = "Nyt fund"
+        
+        if let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) {
+            let imageProperties = CGImageSourceCopyMetadataAtIndex(imageSource, 0, nil)
+            print(imageProperties)
+        }
+        
+        navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu)), animated: false)
+        navigationItem.setRightBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload)), animated: false)
+        
         view.backgroundColor = UIColor.appPrimaryColour()
         
         let gradientView: GradientView = {
@@ -167,8 +154,6 @@ class AddObservationVC: UIViewController {
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: categoryView.bottomAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        self.navigationItem.setRightBarButton(uploadObservationButton, animated: false)
-        self.navigationItem.setLeftBarButton(menuButton, animated: false)
     }
         
     private func reset() {
@@ -187,19 +172,15 @@ class AddObservationVC: UIViewController {
         
             session.uploadObservation(dict: dict, images: newObservation.images) { (result) in
                 Spinner.stop()
+                DispatchQueue.main.async {
                 switch result {
                 case .Success(let observationID):
-                    DispatchQueue.main.async {
-                        let notificationView = ELNotificationView.appNotification(style: .success, primaryText: "Dit fund er blevet oprettet", secondaryText: "ID: \(observationID)", location: .bottom)
-                        notificationView.show(animationType: ELNotificationView.AnimationType.fromBottom, onViewController: self)
-                        self.reset()
-                    }
-                    
+                    ELNotificationView.appNotification(style: .success, primaryText: "Dit fund er blevet oprettet", secondaryText: "ID: \(observationID)", location: .bottom)
+                        .show(animationType: .fromBottom, onViewController: self)
                 case .Error(let error):
-                    DispatchQueue.main.async {
-                        let notificationView = ELNotificationView.appNotification(style: .success, primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
-                        notificationView.show(animationType: ELNotificationView.AnimationType.fromBottom, onViewController: self)
-                    }
+                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                        .show(animationType: .fromBottom, onViewController: self)
+                }
                 }
             }
         case .Error(let error):
@@ -207,12 +188,9 @@ class AddObservationVC: UIViewController {
         }
     }
     
-    
-    
-    
     private func handleUncompleteObservation(newObservationError error: NewObservation.Error) {
         var indexPath: IndexPath
-        
+
         let notificationView = ELNotificationView(style: .error(actions: nil), attributes: ELNotificationView.Attributes.appAttributes())
     
         switch error {
@@ -233,7 +211,7 @@ class AddObservationVC: UIViewController {
             notificationView.configure(primaryText: "Hvor er du?", secondaryText: "Du skal hjælpe med at fortælle hvad du er i nærheden af.")
         case .noCoordinates:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)!, section: 0)
-            notificationView.configure(primaryText: "Ingen coordinater", secondaryText: "Appen kunne ikke finde dine koordinater, men du kan sætte dem selv.")
+            notificationView.configure(primaryText: "Ingen koordinater", secondaryText: "Appen kunne ikke finde dine koordinater, men du kan sætte dem selv.")
         }
         
         notificationView.show(animationType: .fromBottom ,queuePosition: .front)
@@ -247,56 +225,47 @@ extension AddObservationVC: LocationManagerDelegate {
     func locationInaccessible(error: LocationManager.LocationManagerError) {
         switch error {
         case .permissionDenied:
-            DispatchQueue.main.async {
-                let notificationView = ELNotificationView.appNotification(style: .error(actions: [
-                    .neutral(error.recoveryAction?.rawValue,
-                             {
-                        if let bundleId = Bundle.main.bundleIdentifier,
-                            let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                        }
-                    })
-                
-                ]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
-                notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
-            }
-            
+                ELNotificationView.appNotification(style: .error(actions: [
+                    .neutral(error.recoveryAction?.rawValue, {
+                        UIApplication.openSettings()
+                    })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                    .show(animationType: .fromBottom, onViewController: self)
         case .badAccuracy, .networkError, .unknown, .permissionsUndetermined:
-            let notificationView = ELNotificationView.appNotification(style: .error(actions: [.neutral(error.recoveryAction?.rawValue, {
-                // Prøv igen
-            })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
-            notificationView.show(animationType: .fromBottom)
+            ELNotificationView.appNotification(style: .error(actions: [
+                .neutral(error.recoveryAction?.rawValue, {
+                    // Prøv igen
+                })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                .show(animationType: .fromBottom, onViewController: self)
         }
     }
     
     func locationRetrieved(location: CLLocation) {
         newObservation.observationCoordinate = location
         
-        DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { (result) in
+        DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self, weak locationManager, weak newObservation, weak collectionView] result in
             switch result {
             case .Success(let localities):
-                self.localities = localities
+                self?.localities = localities
                 
                 let closest = localities.min(by: {$0.location.distance(from: location) < $1.location.distance(from: location)})
                 
                 if closest != nil {
-                    self.newObservation.locality = closest
+                    newObservation?.locality = closest
                     
                     DispatchQueue.main.async {
-                        if let currentCell = self.collectionView.visibleCells.first as? ObservationLocationCell {
-                            currentCell.configureCell(locationManager: self.locationManager, newObservation: self.newObservation, localities: localities)
+                        if let currentCell = collectionView?.visibleCells.first as? ObservationLocationCell, let locationManager = locationManager, let newObservation = newObservation  {
+                            currentCell.configureCell(locationManager: locationManager, newObservation: newObservation, localities: localities)
                         } else {
-                            let notificationView = ELNotificationView.appNotification(style: .Custom(color: UIColor.appPrimaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: "Lokation bestemt", secondaryText: "Du er tættest på: \(closest!.name)", location: .bottom)
-                            notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
+                            ELNotificationView.appNotification(style: .Custom(color: UIColor.appSecondaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: "Din placering er bestemt", secondaryText: "Du er tættest på: \(closest!.name)", location: .bottom)
+                                .show(animationType: .fromBottom, onViewController: self)
                         }
                     }
-                    
                 }
                 
             case .Error(let error):
                 DispatchQueue.main.async {
-                    let notificationView = ELNotificationView.appNotification(style: .error(actions: nil), primaryText: "Nærmeste lokalitet kunne ikke findes, prøv igen.", secondaryText: error.errorDescription, location: .bottom)
-                    notificationView.show(animationType: .fade, queuePosition: .back, onViewController: self)
+                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: "Nærmeste placering kunne ikke findes.", secondaryText: error.errorDescription, location: .bottom)
+                        .show(animationType: .fromBottom, onViewController: self)
                 }
             }
         }

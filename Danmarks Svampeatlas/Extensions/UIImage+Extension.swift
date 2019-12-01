@@ -9,6 +9,12 @@
 import UIKit
 
 extension UIImage {
+    
+    convenience init?(url: URL) {
+        guard let data = try? Data(contentsOf: url) else {return nil}
+        self.init(data: data)
+    }
+    
     func colorized(color: UIColor) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
         

@@ -8,11 +8,6 @@
 
 import UIKit
 
-protocol ImagesCollectionViewDelegate: class {
-    func didSelectImage(atIndexPath indexPath: IndexPath)
-}
-
-
 class ImagesCollectionView: UIView {
     
     private var imageContentMode: UIView.ContentMode
@@ -45,6 +40,8 @@ class ImagesCollectionView: UIView {
         return collectionView
     }()
     
+    var didSelectImage: ((IndexPath) -> ())?
+    
     var currentlyShownCell: UICollectionViewCell? {
         get {
             return collectionView.visibleCells.first
@@ -56,7 +53,6 @@ class ImagesCollectionView: UIView {
     }
     
     private var imageScrollTimer: Timer?
-    weak var delegate: ImagesCollectionViewDelegate? = nil
     
     init(imageContentMode: UIView.ContentMode) {
         self.imageContentMode = imageContentMode
@@ -127,7 +123,7 @@ extension ImagesCollectionView: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-       delegate?.didSelectImage(atIndexPath: indexPath)
+        didSelectImage?(indexPath)
     }
 }
 

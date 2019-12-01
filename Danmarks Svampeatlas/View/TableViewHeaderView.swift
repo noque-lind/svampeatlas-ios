@@ -10,6 +10,8 @@ import UIKit
 
 class HeaderView: UITableViewHeaderFooterView {
     
+    static let identifier = "HeaderView"
+    
     var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false

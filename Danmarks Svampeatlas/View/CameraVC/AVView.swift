@@ -8,9 +8,11 @@
 
 import UIKit
 import AVFoundation
+import Photos
+import CoreLocation
 
 protocol AVViewDelegate: class {
-    func error(error: AppError)
+    func error(error: AVView.AVViewError)
     func photoData(_ photoData: Data)
 }
 
@@ -21,7 +23,7 @@ class AVView: UIView {
             switch self {
             case .permissionsError:
                 return .openSettings
-            default: return nil
+            default: return .tryAgain
             }
         }
         
@@ -29,6 +31,7 @@ class AVView: UIView {
             switch self {
             case .cameraError(let error): return "\(error.localizedDescription)"
             case .permissionsError: return"Du kan give appen tilladelse til at bruge kameraet i indstillinger."
+            case .unknown: return "Det skete en ukendt fejl"
             }
         }
         
@@ -38,11 +41,14 @@ class AVView: UIView {
                 return"Manglende tilladelse"
             case .cameraError:
                 return "Kamera fejl"
+            case .unknown:
+                return "Ukendt fejl"
             }
         }
         
         case permissionsError
         case cameraError(error: Error)
+        case unknown
     }
     
     private lazy var captureSession: AVCaptureSession = {
@@ -57,6 +63,7 @@ class AVView: UIView {
         return layer
     }()
     
+    private let locationManager = CLLocationManager()
     weak var delegate: AVViewDelegate?
     var orientation: CameraVC.CameraRotation = .portrait
     
@@ -172,7 +179,16 @@ class AVView: UIView {
     
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
-        //        settings.metadata = [String(kCGImagePropertyGPSDictionary):  [String( kCGImagePropertyGPSLatitude): 12.6107, String(kCGImagePropertyGPSLongitude): 55.6886]]
+        
+    
+        if let location = locationManager.location {
+            settings.metadata = [String(kCGImagePropertyGPSDictionary):  [
+            String(kCGImagePropertyGPSAltitude): location.altitude,
+            String( kCGImagePropertyGPSLatitude): location.coordinate.latitude,
+            String(kCGImagePropertyGPSLongitude): location.coordinate.longitude,
+            String(kCGImagePropertyGPSTimeStamp): location.timestamp.timeIntervalSince1970,
+            String(kCGImagePropertyGPSDOP): location.horizontalAccuracy]]
+        }
         
         switch orientation {
         case .portrait:
@@ -218,9 +234,12 @@ extension AVView: AVCapturePhotoCaptureDelegate {
             if let error = error {
                 self.delegate?.error(error: AVViewError.cameraError(error: error))
             } else {
+                self.captureSession.stopRunning()
+                
                 if let imageData = photo.fileDataRepresentation() {
                     self.delegate?.photoData(imageData)
-                    self.captureSession.stopRunning()
+                } else {
+                    self.delegate?.error(error: .unknown)
                 }
             }
         }

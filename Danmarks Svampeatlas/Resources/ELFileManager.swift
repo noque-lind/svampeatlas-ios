@@ -10,6 +10,31 @@ import UIKit
 
 struct ELFileManager {
     
+    enum ELFileManagerError: AppError {
+        var errorDescription: String {
+            switch self {
+            case .imageSavingError: return "Der skete en fejl i forbindelse med at gemme billedet til telefonens midlertidige lagerplads."
+            }
+        }
+        
+        var errorTitle: String {
+            switch self {
+            case .imageSavingError: return "Gemme fejl"
+            }
+        }
+        
+        var recoveryAction: RecoveryAction? {
+            switch self {
+            case .imageSavingError: return .tryAgain
+            }
+        }
+        
+        
+        case imageSavingError
+        
+    }
+    
+    
     fileprivate static func getImageName(forImageWithOriginalURL originalURL: String) -> String? {
         guard let dict = UserDefaults.standard.dictionary(forKey: "fileManagerDict"), let name = dict[originalURL] as? String else {return nil}
         return name
@@ -24,8 +49,20 @@ struct ELFileManager {
         }
     }
     
+    static func saveTempImage(imageData: Data) -> Result<URL, ELFileManagerError> {
+        let temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo().globallyUniqueString)
+        do {
+            try imageData.write(to: temporaryDirectory, options: .atomic)
+            return Result.Success(temporaryDirectory)
+        } catch {
+            return Result.Error(.imageSavingError)
+        }
+    }
+    
     fileprivate static func DocumentsDir() -> URL {
           return FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first!
+        
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     }
     
     static func fileExists(withURL url: String) -> Bool {

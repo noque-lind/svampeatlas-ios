@@ -32,7 +32,15 @@ class DetailsViewController: UIViewController {
     
     private lazy var imagesCollectionView: ImagesCollectionView = {
         let collectionView = ImagesCollectionView(imageContentMode: UIView.ContentMode.scaleAspectFill)
-        collectionView.delegate = self
+        
+        collectionView.didSelectImage = { [unowned self] indexPath in
+            let photoVC = ImageVC(images: self.images!, selectedIndexPath: indexPath)
+            photoVC.transitioningDelegate = self
+            photoVC.modalPresentationStyle = .fullScreen
+            photoVC.interactor = self.interactor
+            self.present(photoVC, animated: true, completion: nil)
+        }
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.configureTimer()
         return collectionView
@@ -334,16 +342,6 @@ extension DetailsViewController: UIViewControllerTransitioningDelegate {
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return ShowImageAnimationController(isBeingPresented: false, imageFrame: CGRect.zero)
-    }
-}
-
-extension DetailsViewController: ImagesCollectionViewDelegate {
-    func didSelectImage(atIndexPath indexPath: IndexPath) {
-        let photoVC = ImageVC(images: images!, selectedIndexPath: indexPath)
-        photoVC.transitioningDelegate = self
-        photoVC.modalPresentationStyle = .fullScreen
-        photoVC.interactor = interactor
-        present(photoVC, animated: true, completion: nil)
     }
 }
 

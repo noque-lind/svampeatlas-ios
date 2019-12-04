@@ -245,8 +245,8 @@ class ObservationSpecieCell: UICollectionViewCell {
             speciesSection.setState(state: .items(items: [.unknownSpeciesButton]))
         }
         
-        tableView.performUpdates(updates: { [unowned speciesSection] updater in
-            updater.updateSection(section: speciesSection)
+        tableView.performUpdates(updates: { updater in
+            updater.updateSection(section: self.speciesSection)
         })
     }
     
@@ -259,8 +259,9 @@ class ObservationSpecieCell: UICollectionViewCell {
                 favoritesSection?.setTitle(title: "Mine favoritter")
                 favoritesSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
                 
-                self.tableView.performUpdates(updates: { [unowned self] updater in
-                    updater.updateSection(section: self.favoritesSection)
+                self.tableView.performUpdates(updates: { updater in
+                    guard let favoritesSection = favoritesSection else {return}
+                    updater.updateSection(section: favoritesSection)
                 })
             }
         }

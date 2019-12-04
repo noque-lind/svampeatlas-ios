@@ -11,7 +11,7 @@ import Photos
 
 protocol ELPhotosManagerDelegate: NavigationDelegate {
     func error(_ error: ELPhotos.ELPhotosError)
-    func assetFetched(_ phAsset: PHAsset)
+    func assetFetched(_ imageURL: URL)
     func assetFetchCanceled()
 }
 
@@ -24,26 +24,30 @@ class ELPhotos: NSObject  {
         var errorDescription: String {
             switch self {
             case .notAuthorized: return "Du har ikke givet appen tilladelse til at skrive og læse til dit fotobibliotek. Du kan ændre det i indstillinger, men bemærk at dette genstarter appen."
-            case .unknown: return "Der skete en ukendt fejl i forbindelse med at gemme billedet til dit fotoalbum."
+            case .unknownSaveError: return "Der skete en ukendt fejl i forbindelse med at gemme billedet til dit fotoalbum."
+            case .unknownFetchError: return "Der skete en ukendt fejl i forbindelse med at få adgang til det valgte billede."
             }
         }
         
         var errorTitle: String {
             switch self {
             case .notAuthorized: return "Mangler tilladelse"
-            case .unknown: return "Ukendt fejl"
+            case .unknownSaveError: return "Ukendt fejl"
+            case .unknownFetchError: return "Ukendt fejl"
             }
         }
         
         var recoveryAction: RecoveryAction? {
             switch self {
             case .notAuthorized: return .openSettings
-            case .unknown: return .tryAgain
+            case .unknownSaveError: return .tryAgain
+            case .unknownFetchError: return .tryAgain
             }
         }
         
         case notAuthorized
-        case unknown
+        case unknownSaveError
+        case unknownFetchError
     }
     
     
@@ -95,7 +99,7 @@ class ELPhotos: NSObject  {
         }
     }
     
-    func saveImage(photoData: Data, location: CLLocation?, inAlbum albumName: String) {
+    func saveImage(photoData: Data, inAlbum albumName: String) {
         PHPhotoLibrary.requestAuthorization { [weak delegate, weak self] (authorization) in
             switch authorization {
             case .notDetermined, .restricted, .denied:
@@ -105,16 +109,16 @@ class ELPhotos: NSObject  {
             case .authorized:
                 self?.dispatchQueue.sync {
                     if let album = self?.fetchAlbumWithName(albumName) {
-                        self?.saveImageInAlbum(photoData: photoData, location: location, album)
+                        self?.saveImageInAlbum(photoData: photoData, album)
                     } else {
                         self?.createAlbumWithName(albumName) { (error) in
                             if let error = error {
                                 DispatchQueue.main.async {
                                     debugPrint(error)
-                                    delegate?.error(.unknown)
+                                    delegate?.error(.unknownSaveError)
                                 }
                             } else if let album = self?.fetchAlbumWithName(albumName) {
-                                self?.saveImageInAlbum(photoData: photoData, location: location, album)
+                                self?.saveImageInAlbum(photoData: photoData, album)
                             }
                         }
                     }
@@ -123,10 +127,9 @@ class ELPhotos: NSObject  {
         }
     }
     
-    private func saveImageInAlbum(photoData: Data, location: CLLocation?, _ album: PHAssetCollection) {
+    private func saveImageInAlbum(photoData: Data, _ album: PHAssetCollection) {
         PHPhotoLibrary.shared().performChanges({
             let assetCreationRequest = PHAssetCreationRequest.forAsset()
-            assetCreationRequest.location = location
             assetCreationRequest.addResource(with: .photo, data: photoData, options: nil)
             if let assetPlaceholder = assetCreationRequest.placeholderForCreatedAsset {
                 let albumChangeRequest = PHAssetCollectionChangeRequest(for: album)
@@ -152,15 +155,32 @@ class ELPhotos: NSObject  {
 }
 
 extension ELPhotos: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let asset = info[UIImagePickerController.InfoKey.imageURL] as? PHAsset else {return}
-        picker.dismiss(animated: true, completion: nil)
-        delegate?.assetFetched(asset)
+        guard let phAsset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset else {return}
+        
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        
+        PHImageManager.default().requestImageData(for: phAsset, options: requestOptions) { [weak self] (data, string, orientation, nil) in
+            if let data = data {
+                switch ELFileManager.saveTempImage(imageData: data) {
+                case .Error(let error):
+                    self?.delegate?.error(.unknownFetchError)
+                case .Success(let url):
+                    self?.delegate?.assetFetched(url)
+                }
+            } else {
+                self?.delegate?.error(.unknownFetchError)
+            }
+            
+            picker.dismiss(animated: true, completion: nil)
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
-        
         delegate?.assetFetchCanceled()
     }
 }

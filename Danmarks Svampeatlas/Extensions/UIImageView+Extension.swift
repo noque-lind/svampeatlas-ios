@@ -15,8 +15,8 @@ class DownloadableImageView: UIImageView {
         url = urlString
         
         guard let urlString = urlString else {return}
-        DataService.instance.getImage(forUrl: urlString, size: size) { (image, url) in
-            DispatchQueue.main.async { [weak self] in
+        DataService.instance.getImage(forUrl: urlString, size: size) { [weak self] (image, url) in
+            DispatchQueue.main.async {
                 //                debugPrint("Downloaded an image where self.urlString == downloaded URl is:  \(urlString == url)")
                 //                debugPrint(urlString)
                 //                debugPrint(url)

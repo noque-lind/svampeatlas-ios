@@ -39,6 +39,8 @@ class TermsController: UIViewController {
         view.titleLabel?.font = UIFont.appTitle()
         view.heightAnchor.constraint(equalToConstant: 70).isActive = true
         view.backgroundColor = UIColor.appGreen()
+        view.setTitleColor(UIColor.darkGray, for: .highlighted)
+        view.setTitleColor(UIColor.appWhite(), for: [])
         view.addTarget(self, action: #selector(acceptButtonPressed), for: .touchUpInside)
         return view
     }()

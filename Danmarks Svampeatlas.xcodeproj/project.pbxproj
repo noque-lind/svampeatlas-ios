@@ -144,6 +144,7 @@
 		DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */; };
 		DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */; };
 		DBCFD9AC239263A600A9302F /* PhotoLibraryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCFD9AB239263A600A9302F /* PhotoLibraryButton.swift */; };
+		DBCFD9B123942F9700A9302F /* CameraControlsTextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCFD9B023942F9700A9302F /* CameraControlsTextButton.swift */; };
 		DBD27B24231DAB5300391CCF /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD27B23231DAB5300391CCF /* Image.swift */; };
 		DBD27B29231ECA5A00391CCF /* species.txt in Resources */ = {isa = PBXBuildFile; fileRef = DBD27B27231ECA5A00391CCF /* species.txt */; };
 		DBD27B2B231ECB2F00391CCF /* PredictionMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD27B2A231ECB2F00391CCF /* PredictionMatch.swift */; };
@@ -345,6 +346,7 @@
 		DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELPhotos.swift; sourceTree = "<group>"; };
 		DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+OpenSettings.swift"; sourceTree = "<group>"; };
 		DBCFD9AB239263A600A9302F /* PhotoLibraryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryButton.swift; sourceTree = "<group>"; };
+		DBCFD9B023942F9700A9302F /* CameraControlsTextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlsTextButton.swift; sourceTree = "<group>"; };
 		DBD27B23231DAB5300391CCF /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		DBD27B27231ECA5A00391CCF /* species.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = species.txt; sourceTree = "<group>"; };
 		DBD27B2A231ECB2F00391CCF /* PredictionMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMatch.swift; sourceTree = "<group>"; };
@@ -393,6 +395,7 @@
 				2083452C22574C4300E86730 /* AVView.swift */,
 				DB5E88E7238D9431005339D4 /* CaptureButton.swift */,
 				DBCFD9AB239263A600A9302F /* PhotoLibraryButton.swift */,
+				DBCFD9B023942F9700A9302F /* CameraControlsTextButton.swift */,
 			);
 			path = CameraVC;
 			sourceTree = "<group>";
@@ -1030,6 +1033,7 @@
 				DBD5CCAD234A22B000EC09C7 /* ValidationView.swift in Sources */,
 				DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */,
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
+				DBCFD9B123942F9700A9302F /* CameraControlsTextButton.swift in Sources */,
 				DB64374B2296A3F700BE7FF4 /* Host.swift in Sources */,
 				DBF4F3C6232A41CC0042E7A8 /* TermsController.swift in Sources */,
 				DBCFD9AC239263A600A9302F /* PhotoLibraryButton.swift in Sources */,

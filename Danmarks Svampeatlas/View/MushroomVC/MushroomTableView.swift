@@ -9,7 +9,7 @@
 import UIKit
 
 class MushroomTableView: ELTableView<MushroomTableView.Item> {
-        
+    
     enum Item {
         case mushroom(Mushroom)
         case loadMore(offset: Int)
@@ -24,6 +24,10 @@ class MushroomTableView: ELTableView<MushroomTableView.Item> {
         register(cellClass: ReloadCell.self, forCellReuseIdentifier: ReloadCell.identifier)
     }
     
+    deinit {
+        debugPrint("MushroomTableView deinited")
+    }
+    
     required init?(coder: NSCoder) {
         fatalError()
     }
@@ -31,9 +35,9 @@ class MushroomTableView: ELTableView<MushroomTableView.Item> {
     override func cellForItem(_ item: MushroomTableView.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         switch item {
         case .mushroom(let mushroom):
-             let cell = tableView.dequeueReusableCell(withIdentifier: MushroomCell.identifier, for: indexPath) as! MushroomCell
-                          cell.configureCell(mushroom: mushroom)
-                          return cell
+            let cell = tableView.dequeueReusableCell(withIdentifier: MushroomCell.identifier, for: indexPath) as! MushroomCell
+            cell.configureCell(mushroom: mushroom)
+            return cell
         case .loadMore:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReloadCell.identifier, for: indexPath) as! ReloadCell
             cell.configureCell(text: "Vis flere")
@@ -68,9 +72,9 @@ class MushroomTableView: ELTableView<MushroomTableView.Item> {
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y <= -scrollView.contentInset.top {
-                    isAtTop?(true)
-                } else {
-                    isAtTop?(false)
-                }
+            isAtTop?(true)
+        } else {
+            isAtTop?(false)
+        }
     }
 }

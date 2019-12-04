@@ -43,7 +43,7 @@ class ResultsTableView: ELTableView<ResultsTableView.Item> {
         switch item {
         case .result(predictionResult: let predictionResult):
             let cell = tableView.dequeueReusableCell(withIdentifier: ContainedResultCell.identifier, for: indexPath) as! ContainedResultCell
-            cell.configureCell(mushroom: predictionResult.mushroom, confidence: predictionResult.score)
+            cell.configureCell(mushroom: predictionResult.mushroom)
             return cell
             
         case .tryAgain:

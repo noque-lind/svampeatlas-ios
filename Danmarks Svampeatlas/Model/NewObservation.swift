@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import ImageIO
 
 class NewObservation {
     
@@ -38,11 +39,10 @@ class NewObservation {
     var observationCoordinate: CLLocation?
     var user: User?
     var locality: Locality?
-    public private(set) var images = [UIImage]()
+    public private(set) var images = [URL]()
     var predictionResultsState: TableViewState<PredictionResult> = .Empty
     
     var predictionsResultsStateChanged: (() -> ())?
-    
     
     init() {
         self.observationDate = Date()
@@ -63,12 +63,12 @@ class NewObservation {
         }
     }
     
-    func appendImage(image: UIImage) {
+    func appendImage(imageURL: URL) {
         if images.count == 0 && mushroom == nil {
-            getPredictions(image: image)
+//            getPredictions(image: image)
         }
         
-        images.append(image)
+        images.append(imageURL)
     }
     
     func removeImage(at: Int) {
@@ -95,6 +95,51 @@ class NewObservation {
                 }
             }
         }
+    }
+    
+    func returnImageLocationIfNecessary(location: CLLocation) -> CLLocation? {
+        guard let firstImageURL = images.first, let imageLocation = extractExifLocation(imageURL: firstImageURL) else {return nil}
+        
+        if imageLocation.distance(from: location) > 500 {
+            return imageLocation
+        } else {
+            return nil
+        }
+    }
+    
+    func returnImageLocationIfNecessary(imageURL: URL) -> CLLocation? {
+        guard let imageLocation = extractExifLocation(imageURL: imageURL) else {return nil}
+        
+        if let currentLocation = observationCoordinate {
+            if imageLocation.distance(from: currentLocation) > 500 {
+                return imageLocation
+            } else {
+                return nil
+            }
+        } else {
+            return imageLocation
+        }
+    }
+    
+    func extractExifLocation(imageURL: URL) -> CLLocation? {
+        guard let imageSource = CGImageSourceCreateWithURL(imageURL as CFURL, nil)else {return nil}
+        guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String: Any] else { return nil }
+        guard let gpsDict = imageProperties[String(kCGImagePropertyGPSDictionary)] as? [String: Any] else { return nil }
+        guard var latitude = gpsDict[String(kCGImagePropertyGPSLatitude)] as? Double, var longitude = gpsDict[String(kCGImagePropertyGPSLongitude)] as? Double else {return nil}
+        let altitude = (gpsDict[String(kCGImagePropertyGPSAltitude)] as? Double) ?? -1
+        let accuracy = (gpsDict[String(kCGImagePropertyGPSDOP)] as? Double) ?? -1
+        let latitudeRef = (gpsDict[String(kCGImagePropertyGPSLatitudeRef)] as? String)
+        let longitudeRef = (gpsDict[String(kCGImagePropertyGPSLongitudeRef)] as? String)
+        
+        if latitudeRef == "S" {
+            latitude = -latitude
+        }
+        
+        if longitudeRef == "W" {
+            longitude = -longitude
+        }
+      
+       return CLLocation.init(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), altitude: altitude, horizontalAccuracy: accuracy, verticalAccuracy: accuracy, timestamp: Date())
     }
     
     private func setPredictionResultsState(state: TableViewState<PredictionResult>) {

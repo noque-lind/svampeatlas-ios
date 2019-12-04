@@ -42,12 +42,16 @@ class ObservationImagesView: UIView {
     
     var heightConstraint: NSLayoutConstraint?
     
+    var imageAdded: ((URL) -> ())?
+    var imageDeleted: ((URL) -> ())?
+    var onAddImagePressed: (() -> ())?
+    
     private var collapsedHeight: CGFloat
     private var expandedHeight: CGFloat
     private var isExpanded: Bool = false
     weak var delegate: ObservationImagesViewDelegate?
     
-    private var images = [UIImage]() {
+    private var images = [URL]() {
         didSet {
             if images.count > 0 && isExpanded == false {
                 heightConstraint?.isActive = false
@@ -65,16 +69,12 @@ class ObservationImagesView: UIView {
         }
     }
     
-    private weak var newObservation: NewObservation?
-    
-    init(newObservation: NewObservation, collapsedHeight: CGFloat = 92, expandedHeight: CGFloat = 200) {
+    init(collapsedHeight: CGFloat = 92, expandedHeight: CGFloat = 200) {
         self.collapsedHeight = collapsedHeight
         self.expandedHeight = expandedHeight
         super.init(frame: CGRect.zero)
-        configure(newObservation: newObservation)
         collectionView.reloadData()
         collectionView.scrollToItem(at: IndexPath(item: images.count, section: 0), at: UICollectionView.ScrollPosition.right, animated: false)
-        
         setupView()
     }
     
@@ -103,9 +103,8 @@ class ObservationImagesView: UIView {
         collectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
     }
     
-    func configure(newObservation: NewObservation) {
-        self.newObservation = newObservation
-        self.images = newObservation.images
+    func configure(imageURLS: [URL]) {
+        self.images = imageURLS
         collectionView.reloadData()
     }
     
@@ -127,7 +126,7 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationImageCell", for: indexPath) as! ObservationImageCell
         cell.delegate = self
         if images.endIndex > indexPath.row {
-            cell.configureCell(image: images[indexPath.row])
+            cell.configureCell(imageURL: images[indexPath.row])
         }
         return cell
     }
@@ -152,48 +151,37 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
 }
 
 extension ObservationImagesView: CameraVCDelegate {
-    func imageReady(_ image: UIImage, location: CLLocation?) {
-        
-    }
-    
-
-    
-    func imageReady(image: UIImage) {
-        images.append(image)
-        newObservation?.appendImage(image: image)
-        
+    func imageReady(_ imageURL: URL) {
+        imageAdded?(imageURL)
         let newIndexPath = IndexPath(row: images.count, section: 0)
-
-        self.collectionView.performBatchUpdates({
-            self.collectionView.insertItems(at: [IndexPath(row: newIndexPath.row - 1, section: 0)])
-            
-        }) { (_) in
-            
-        }
         
-        
-        DispatchQueue.main.async {
-            self.collectionView.scrollToItem(at: newIndexPath, at: UICollectionView.ScrollPosition.right, animated: true)
+        collectionView.performBatchUpdates({ [unowned self, unowned collectionView] in
+            self.images.append(imageURL)
+            collectionView.insertItems(at: [IndexPath(row: images.endIndex - 1, section: 0)])
+        }) { [unowned collectionView] (_) in
+            DispatchQueue.main.async {
+                collectionView.scrollToItem(at: newIndexPath, at: UICollectionView.ScrollPosition.right, animated: true)
+            }
         }
     }
-    }
+}
 
 extension ObservationImagesView: ObservationImageCellDelegate {
     func imageDeleted(image: UIImage?) {
-        guard let image = image, let index = images.firstIndex(of: image) else {return}
-        let indexPath = IndexPath(row: index, section: 0)
-        images.remove(at: index)
-        newObservation?.removeImage(at: index)
-        
-        if images.count == 0 {
-            self.collectionView.reloadData()
-        } else {
-            self.collectionView.performBatchUpdates({
-                self.collectionView.deleteItems(at: [indexPath])
-            }) { (_) in
-                
-            }
-        }
+//        guard let image = image, let index = images.firstIndex(of: image) else {return}
+//        let indexPath = IndexPath(row: index, section: 0)
+//        images.remove(at: index)
+//        newObservation?.removeImage(at: index)
+//
+//        if images.count == 0 {
+//            self.collectionView.reloadData()
+//        } else {
+//            self.collectionView.performBatchUpdates({
+//                self.collectionView.deleteItems(at: [indexPath])
+//            }) { (_) in
+//
+//            }
+//        }
     }
 }
 
@@ -334,8 +322,8 @@ class ObservationImageCell: UICollectionViewCell {
     }
     
     
-    func configureCell(image: UIImage) {
-        imageView.image = image
+    func configureCell(imageURL: URL) {
+        imageView.loadImage(url: imageURL)
     }
 }
 

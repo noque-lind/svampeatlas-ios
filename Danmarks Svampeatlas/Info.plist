@@ -42,7 +42,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Dette giver dig mulighed for at bruge dit kamera til at tilføje billeder til dine fund, eller til at bestemme nye svampearter.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Vi skal bruge din lokation for at finde svampearterne nær dig, samt til at finde din lokation når du uploader fund.</string>
+	<string>Dette giver dig mulighed for at finde svampearter nær dig, nemt finde din placering når du skal uploade fund samt til at tagge de billeder du tager med GPS information, så du kan finde placeringen senere.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Dette giver dig mulighed for at tilføje billeder fra dit fotobibliotek til dine fund, eller bruge dem til at få navneforslag</string>
 	<key>UIAppFonts</key>

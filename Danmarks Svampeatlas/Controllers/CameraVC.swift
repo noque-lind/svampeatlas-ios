@@ -13,10 +13,9 @@ import ELKit
 import CoreLocation
 import Foundation
 import Photos
-import ImageIO
 
 protocol CameraVCDelegate: class {
-    func imageReady(_ image: UIImage, location: CLLocation?)
+    func imageReady(_ imageURL: URL)
 }
 
 class CameraVC: UIViewController {
@@ -61,26 +60,12 @@ class CameraVC: UIViewController {
         return photos
     }()
     
-    private lazy var locationManager: LocationManager = {
-       let locationManager = LocationManager()
-        locationManager.delegate = self
-        return locationManager
-    }()
-    
-    
     weak var delegate: CameraVCDelegate? = nil
 
     private var currentImageURL: URL?
     private let usage: Usage
     private var errorView: ErrorView?
     private var cameraViewTopConstraint = NSLayoutConstraint()
-    private var imagesToSave = [Data]() {
-        didSet {
-            if imagesToSave.count != 0 {
-             locationManager.start()
-            }
-        }
-    }
     
     init(cameraVCUsage: Usage) {
         self.usage = cameraVCUsage
@@ -161,18 +146,20 @@ class CameraVC: UIViewController {
     }
     
     internal func reset() {
-        avView.alpha = 1
-        cameraView.reset()
+        avView.isHidden = false
         imageView.image = nil
+        cameraView.reset()
         avView.start()
+        
+        if let imageURL = currentImageURL {
+            ELFileManager.deleteImage(imageURL: imageURL)
+        }
     }
     
     private func showCameraError(error: AppError) {
-        DispatchQueue.main.async {
-            let backgroundView: ErrorView = {
+            let errorView: ErrorView = {
                 let view = ErrorView()
                 view.translatesAutoresizingMaskIntoConstraints = false
-                
                 view.configure(error: error) { [unowned self] (recoveryAction) in
                     switch recoveryAction {
                     case .openSettings:
@@ -180,19 +167,21 @@ class CameraVC: UIViewController {
                     default:
                         self.errorView?.removeFromSuperview()
                         self.errorView = nil
+                        self.reset()
                     }
                 }
                 
                 return view
             }()
-            
-            self.errorView = backgroundView
-            self.view.addSubview(backgroundView)
-            backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-            backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-            backgroundView.topAnchor.constraint(equalTo: self.avView.topAnchor).isActive = true
-            backgroundView.bottomAnchor.constraint(equalTo: self.avView.bottomAnchor).isActive = true
-        }
+          
+            imageView.isHidden = true
+            avView.isHidden = true
+            self.errorView = errorView
+            view.addSubview(errorView)
+            errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            errorView.topAnchor.constraint(equalTo: avView.topAnchor).isActive = true
+            errorView.bottomAnchor.constraint(equalTo: avView.bottomAnchor).isActive = true
     }
     
     @objc private func orientationDidChange() {
@@ -216,9 +205,9 @@ class CameraVC: UIViewController {
     private func handleImageSaving(photoData: Data) {
         if !UserDefaultsHelper.hasBeenAskedToSaveImages {
             ELNotificationView.appNotification(style: .action(backgroundColor: UIColor.appPrimaryColour(), actions: [
-                .positive("Ja, gem billederne", { [unowned self] in
+                .positive("Ja, gem billederne", { [unowned elPhotos] in
                     UserDefaultsHelper.saveImages = true
-                 self.imagesToSave.append(photoData)
+                    elPhotos.saveImage(photoData: photoData, inAlbum: Utilities.PHOTOALBUMNAME)
                 }),
                 .negative("Nej", {
                     UserDefaultsHelper.saveImages = false
@@ -227,12 +216,13 @@ class CameraVC: UIViewController {
                  UserDefaultsHelper.hasBeenAskedToSaveImages = true
         } else {
             if UserDefaultsHelper.saveImages {
-             imagesToSave.append(photoData)
+                elPhotos.saveImage(photoData: photoData, inAlbum: Utilities.PHOTOALBUMNAME)
             }
         }
     }
     
-    private func getPredictions(image: UIImage) {
+    private func getPredictions(imageURL: URL) {
+        guard let image = UIImage.init(url: imageURL) else {return}
            DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
                switch result {
                case .Error(let error):
@@ -243,13 +233,16 @@ class CameraVC: UIViewController {
            }
        }
     
-    private func createNewObservationRecord(photo: UIImage?, mushroom: Mushroom?, predictionResults: [PredictionResult]?, session: Session) {
+    private func createNewObservationRecord(imageURL: URL?, mushroom: Mushroom?, predictionResults: [PredictionResult]?, session: Session) {
+        
+        // When CameraVC is in the context of creating a newObservation Record and show the AddObservationVC.
+        
         let newObservation = NewObservation()
         
         newObservation.mushroom = mushroom
         
-        if let image = photo {
-            newObservation.appendImage(image: image)
+        if let imageURL = imageURL {
+            newObservation.appendImage(imageURL: imageURL)
         }
         
         if let predictionResults = predictionResults {
@@ -258,102 +251,99 @@ class CameraVC: UIViewController {
         
         self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: AddObservationVC(newObservation: newObservation, session: session)))
     }
+    
+    private func handleImage(_ url: URL) {
+        // Whether the image comes from the photo library or is a newly captured image, this function gets called. This function should ensure that the image is shown to the user, and the correct things happen depending on the context.
+        
+        currentImageURL = url
+        avView.isHidden = true
+        imageView.loadImage(url: url)
+        switch usage {
+        case .imageCapture: cameraView.setCameraControlsState(state: .confirmation)
+        case .mlPredict:
+            getPredictions(imageURL: url)
+            cameraView.setCameraControlsState(state: .loading)
+        case .newObservationRecord: cameraView.setCameraControlsState(state: .confirmation)
+        }
+    }
 }
 
 
 extension CameraVC: CameraViewDelegate {
-    func photoLibraryButtonPressed() {
-        elPhotos.showPhotoLibrary()
-    }
-   
-    func captureButtonPressed() {
-        avView.capturePhoto()
+    func move(expanded: Bool) {
+        cameraViewTopConstraint.constant = expanded ? ( -avView.frame.height / 4) * 3: 0
     }
     
-    func usePhotoPressed() {
-        guard let image = imageView.image else {return}
-        
-        switch usage {
-        case .imageCapture:
-            delegate?.imageReady(image, location: nil)
-            dismiss(animated: true, completion: nil)
-        case .newObservationRecord(session: let session):
-            createNewObservationRecord(photo: image, mushroom: nil, predictionResults: nil, session: session)
-        case .mlPredict:
-            return
+    func photoLibraryButtonPressed(state: CameraControlsView.State) {
+        switch state {
+        case .confirmation: reset()
+        case .regular:
+            avView.stop()
+            elPhotos.showPhotoLibrary()
+        default: return
         }
     }
     
-    func noPhotoPressed() {
-        guard case .newObservationRecord(session: let session) = usage else {return}
-        createNewObservationRecord(photo: nil, mushroom: nil, predictionResults: nil, session: session)
+    func textButtonPressed(state: CameraControlsView.State) {
+        switch state {
+        case .confirmation:
+            if let imageURL = currentImageURL {
+                switch usage {
+                case .imageCapture:
+                    delegate?.imageReady(imageURL)
+                    dismiss(animated: true, completion: nil)
+                case .newObservationRecord(session: let session):
+                    createNewObservationRecord(imageURL: imageURL, mushroom: nil, predictionResults: nil, session: session)
+                case .mlPredict: return
+                }
+            }
+        case .regular:
+            guard case .newObservationRecord(session: let session) = usage else {return}
+            createNewObservationRecord(imageURL: nil, mushroom: nil, predictionResults: nil, session: session)
+        default: return
+        }
     }
-    
-    func expandView() {
-        cameraViewTopConstraint.constant = ( -avView.frame.height / 4) * 3
-    }
-    
-    func collapseView() {
-        cameraViewTopConstraint.constant = 0
+       
+    func captureButtonPressed() {
+        cameraView.setCameraControlsState(state: .loading)
+        avView.capturePhoto()
     }
     
     func retry() {
-        resetSession()
+        reset()
     }
     
     func mushroomSelected(predictionResult: PredictionResult, predictionResults: [PredictionResult]) {
         switch usage {
         case .mlPredict(session: let session):
             if let session = session {
-                pushVC(vc: DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom, session: session, takesSelection: (selected: false, title: "Nyt fund", handler: { (selected) in
-                    self.createNewObservationRecord(photo: self.imageView.image, mushroom: predictionResult.mushroom, predictionResults: predictionResults, session: session)
-                }))))
+                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom, session: session, takesSelection: (selected: false, title: "Nyt fund", handler: { [unowned self] (selected) in
+                    self.createNewObservationRecord(imageURL: self.currentImageURL, mushroom: predictionResult.mushroom, predictionResults: predictionResults, session: session)
+                }))), animated: true)
+                
             } else {
-                pushVC(vc: DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom, session: session, takesSelection: nil)))
+                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom, session: session, takesSelection: nil)), animated: true)
             }
         default: return
-        }
-    }
-    
-    func presentVC(_ vc: UIViewController) {
-        avView.stop()
-        self.present(vc, animated: true, completion: nil)
-    }
-    
-    func resetSession() {
-        reset()
-    }
-    
-    func pushVC(vc: UIViewController) {
-        avView.stop()
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    func handleImage(_ url: URL) {
-        avView.alpha = 0
-        imageView.loadImage(url: url)
-        
-        switch usage {
-        case .imageCapture:
-            cameraView.askForConfirmation()
-        case .mlPredict: return
-//            getPredictions(image: image)
-        case .newObservationRecord:
-            cameraView.askForConfirmation()
         }
     }
 }
 
 extension CameraVC: AVViewDelegate {
     func error(error: AVView.AVViewError) {
+        // Whenever there's an error with the AVView, AKA. the starting and stopping of camera and image capture, an error should be shown on the screen. This error is fatal to the continuation, hence it should replace AVView with an ErrorView.
+        
         showCameraError(error: error)
     }
     
     func photoData(_ photoData: Data) {
+        // Whenever a photo is taken, the data for whatever the AVView returns is given here. From here we save that data in a temporary location on device. Temporary files are not purged for the lifetime off the app, but should nevertheless be deleted when no longer needed. Whenever an image is saved, we want to see if the user wants it saved to their photoalbum.
+        
+        handleImageSaving(photoData: photoData)
+        
         switch ELFileManager.saveTempImage(imageData: photoData) {
         case .Success(let url):
             handleImage(url)
-            imageView.loadImage(url: url)
         case .Error(let error):
             showCameraError(error: error)
         }
@@ -361,46 +351,28 @@ extension CameraVC: AVViewDelegate {
 }
 
 extension CameraVC: ELPhotosManagerDelegate {
-   
     
-    
-    func assetFetched(_ phAsset: PHAsset) {
-        
-        
-//        switch usage {
-//        case .imageCapture: return
-//        case .mlPredict(session: let session):
-//            getPredictions(image: )
-//        }
-        print(phAsset.location)
-//        switch usage {
-//        case .imageCapture:
-//
-//        default:
-//            <#code#>
-//        }
-//
-//
-//        switch usage {
-//        case .mlPredict:
-//            avView.alpha = 0
-//            imageView.image = image
-//
-//
-//
-//        case .imageCapture:
-//            delegate?.imageReady(image: image)
-//            dismiss(animated: false, completion: nil)
-//        case .newObservationRecord(session: let session):
-//            createNewObservationRecord(photo: image, mushroom: nil, predictionResults: nil, session: session)
-//        }
+    func presentVC(_ vc: UIViewController) {
+        // To present the photolibrary VC
+        present(vc, animated: true, completion: nil)
     }
     
-    func assetFetchCanceled() {
-        resetSession()
+    func assetFetched(_ imageURL: URL) {
+        // When the user selects an image from their photoalbum we retrieve the URL for that image, and use that as the referencing point.
+        
+        handleImage(imageURL)
+    }
+    
+   func assetFetchCanceled() {
+        
+        // If the user cancelled the photolibrary fetch the session should reset.
+        reset()
     }
     
     func error(_ error: ELPhotos.ELPhotosError) {
+        
+        // If the user has choosen to save images to the photo library, but haven't allowed the app access, this error will show every time they take an image. This error is not fatal, hence shown as a notification.
+        
              ELNotificationView.appNotification(style: .error(actions: [.neutral(error.recoveryAction?.rawValue, {
                        switch error.recoveryAction {
                        case .openSettings: UIApplication.openSettings()
@@ -409,18 +381,4 @@ extension CameraVC: ELPhotosManagerDelegate {
                 })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .top)
                 .show(animationType: .fromTop)
         }
-}
-
-extension CameraVC: LocationManagerDelegate {
-    func locationInaccessible(error: LocationManager.LocationManagerError) {
-        let imagesToSave = self.imagesToSave
-        self.imagesToSave.removeAll()
-        imagesToSave.forEach({ elPhotos.saveImage(photoData: $0, location: nil, inAlbum: Utilities.PHOTOALBUMNAME) })
-    }
-    func locationRetrieved(location: CLLocation) {
-        let imagesToSave = self.imagesToSave
-        self.imagesToSave.removeAll()
-        debugPrint("Saving image with location")
-        imagesToSave.forEach({ elPhotos.saveImage(photoData: $0, location: location, inAlbum: Utilities.PHOTOALBUMNAME) })
-    }
 }

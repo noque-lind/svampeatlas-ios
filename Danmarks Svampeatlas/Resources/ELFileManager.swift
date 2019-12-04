@@ -59,6 +59,10 @@ struct ELFileManager {
         }
     }
     
+    static func deleteImage(imageURL: URL) {
+        try? FileManager.default.removeItem(at: imageURL)
+    }
+    
     fileprivate static func DocumentsDir() -> URL {
           return FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first!
         

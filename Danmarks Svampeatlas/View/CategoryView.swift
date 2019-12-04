@@ -70,6 +70,10 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         setupView()
     }
     
+    deinit {
+        debugPrint("CategoryView Deinited")
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }

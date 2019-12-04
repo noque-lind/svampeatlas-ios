@@ -143,6 +143,7 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
+ /// Remember to never reference anything else than the updater class within the update block.
     func performUpdates(updates: @escaping (Updater) -> (), completion: (() -> Void)? = nil) {
         DispatchQueue.main.async {
             self.tableView.performBatchUpdates({

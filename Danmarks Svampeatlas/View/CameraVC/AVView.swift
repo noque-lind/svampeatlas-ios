@@ -140,7 +140,6 @@ class AVView: UIView {
                         self.delegate?.error(error: AVViewError.permissionsError)
                     }
                 }
-                
             })
         }
     }
@@ -172,22 +171,43 @@ class AVView: UIView {
     }
     
     func stop() {
-        DispatchQueue.main.async {
+        DispatchQueue.global(qos: .default).async {
             self.captureSession.stopRunning()
         }
     }
     
     func capturePhoto() {
         let settings = AVCapturePhotoSettings()
-        
     
         if let location = locationManager.location {
+            var latitude = location.coordinate.latitude
+                   var longitude = location.coordinate.longitude
+                   var latitudeRef: String
+                   var longitudeRef: String
+                   
+            if latitude < 0.0 {
+                latitude *= -1.0
+                latitudeRef = "S"
+            } else {
+                latitudeRef = "N"
+            }
+            
+            if longitude < 0.0 {
+                longitude *= -1.0
+                longitudeRef = "W"
+            } else {
+                longitudeRef = "E"
+            }
+                   
             settings.metadata = [String(kCGImagePropertyGPSDictionary):  [
             String(kCGImagePropertyGPSAltitude): location.altitude,
-            String( kCGImagePropertyGPSLatitude): location.coordinate.latitude,
-            String(kCGImagePropertyGPSLongitude): location.coordinate.longitude,
+            String( kCGImagePropertyGPSLatitude): latitude,
+            String(kCGImagePropertyGPSLatitudeRef): latitudeRef,
+            String(kCGImagePropertyGPSLongitude): longitude,
+            String(kCGImagePropertyGPSLongitudeRef): longitudeRef,
             String(kCGImagePropertyGPSTimeStamp): location.timestamp.timeIntervalSince1970,
-            String(kCGImagePropertyGPSDOP): location.horizontalAccuracy]]
+            String(kCGImagePropertyGPSDOP): location.horizontalAccuracy
+        ]]
         }
         
         switch orientation {

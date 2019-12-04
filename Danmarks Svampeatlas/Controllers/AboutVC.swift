@@ -16,19 +16,7 @@ class AboutVC: UIViewController {
     }()
     
     override func viewWillAppear(_ animated: Bool) {
-        if (self.navigationController != nil) {
-            print("Navigation controller not nil in MushroomVC")
-        }
-        self.navigationItem.setLeftBarButton(menuButton, animated: false)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.view.backgroundColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
-        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.backgroundColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+        navigationController?.appConfiguration(translucent: false)
         super.viewWillAppear(animated)
     }
     
@@ -38,8 +26,10 @@ class AboutVC: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = UIColor.appSecondaryColour()
         title = "Om"
+        view.backgroundColor = UIColor.appSecondaryColour()
+        
+         navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: eLRevealViewController(), action: #selector(eLRevealViewController()?.toggleSideMenu)), animated: false)
         
         let contentStackView: UIStackView = {
             func createImageViewWithImage(image: UIImage) -> UIImageView {

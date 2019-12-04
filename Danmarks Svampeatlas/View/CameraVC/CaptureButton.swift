@@ -43,6 +43,7 @@ class CaptureButton: UIButton {
     func showSpinner(_ show: Bool) {
         switch show {
         case false:
+            setImage(#imageLiteral(resourceName: "Icons_Utils_CaptureButton"), for: [])
             activityIndicatorView.removeFromSuperview()
             activityIndicatorView.alpha = 0
         case true:
@@ -52,7 +53,7 @@ class CaptureButton: UIButton {
             activityIndicatorView.startAnimating()
             
             UIView.animate(withDuration: 0.2) {
-            self.alpha = 0
+                self.setImage(nil, for: [])
             self.activityIndicatorView.alpha = 1
                 }
             }

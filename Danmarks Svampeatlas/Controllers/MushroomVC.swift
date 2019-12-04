@@ -26,37 +26,37 @@ class MushroomVC: UIViewController {
         let items = Categories.allCases.compactMap({Category<Categories>(type: $0, title: $0.rawValue)})
         var view = CategoryView<Categories>(categories: items, firstIndex: 1)
         
-        view.categorySelected = { [unowned self, unowned tableView] category in
-            tableView.setSections(sections: [.init(title: nil, state: .loading)])
-            self.hideSearchBar()
-            
+        view.categorySelected = { [weak self, weak view] category in
+            self?.tableView.setSections(sections: [.init(title: nil, state: .loading)])
+            self?.hideSearchBar()
+
             switch category {
             case .species:
                 let limit = 35
-                DataService.instance.getMushrooms(searchString: nil, limit: limit) { [weak self] (result) in
-                    guard category == self?.categoryView.selectedItem.type  else {return}
+                DataService.instance.getMushrooms(searchString: nil, limit: limit) { (result) in
+                    guard category == view?.selectedItem.type else {return}
                     switch result {
                     case .Error(let error):
                         self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error))])
                     case .Success(let mushrooms):
                         self?.showSearchBar()
-                        
+
                         var items = mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})
-                        
+
                         if mushrooms.count == limit {
                             items.append(.loadMore(offset: mushrooms.count))
                         }
-                        
+
                         self?.tableView.setSections(sections: [.init(title: nil, state: .items(items: items))])
                     }
                 }
-            case .favorites:
-                CoreDataHelper.fetchAllFavoritedMushrooms { [weak tableView] (result) in
+            case .favorites: return
+                CoreDataHelper.fetchAllFavoritedMushrooms { (result) in
                     switch result {
                     case .Success(let mushrooms):
-                        tableView?.setSections(sections: [.init(title: nil, state: .items(items: mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})))])
+                        self?.tableView.setSections(sections: [.init(title: nil, state: .items(items: mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})))])
                     case .Error(let error):
-                        tableView?.setSections(sections: [.init(title: nil, state: .error(error: error))])
+                        self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error))])
                     }
                 }
             }
@@ -70,12 +70,12 @@ class MushroomVC: UIViewController {
     private lazy var tableView: MushroomTableView = {
         let tableView = MushroomTableView()
         
-        tableView.didSelectItem = { [unowned self, unowned tableView] item, indexPath in
+        tableView.didSelectItem = { [weak self, weak tableView] item, indexPath in
             switch item {
             case .loadMore(offset: let offset):
                 let section = Section<MushroomTableView.Item>.init(title: nil, state: .loading)
-                
-                tableView.performUpdates(updates: { (updater) in
+
+                tableView?.performUpdates(updates: { (updater) in
                     updater.addSection(section: section)
                     updater.removeItem(indexPath: indexPath)
                 }) {
@@ -85,25 +85,25 @@ class MushroomVC: UIViewController {
                         case .Error(let error):
                             section.setState(state: .error(error: error))
                         case .Success(let mushrooms):
-                            
+
                             var items = mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})
-                            
+
                             if mushrooms.count == limit {
                                 items.append(.loadMore(offset: offset + mushrooms.count))
                             }
-                            
+
                             section.setState(state: .items(items: items))
                         }
-                        
-                        tableView.performUpdates(updates: { (updater) in
+
+                        tableView?.performUpdates(updates: { (updater) in
                             updater.updateSection(section: section)
                         })
                     })
                 }
-                
+
             case .mushroom(let mushroom):
-                self.navigationController?.pushViewController(DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: self.session, takesSelection: nil)), animated: true)
-                
+                self?.navigationController?.pushViewController(DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: self?.session, takesSelection: nil)), animated: true)
+
             }
         }
         
@@ -115,14 +115,14 @@ class MushroomVC: UIViewController {
             }
         }
         
-        tableView.mushroomSwiped = { [unowned self] mushroom, indexPath in
+        tableView.mushroomSwiped = { [weak self, weak tableView] mushroom, indexPath in
             if CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) {
-                CoreDataHelper.deleteMushroom(mushroom: mushroom, completion: { [weak self] in
+                CoreDataHelper.deleteMushroom(mushroom: mushroom, completion: {
                     guard let selectedItemType = self?.categoryView.selectedItem.type, case Categories.favorites = selectedItemType else {
                         return
                     }
-                    
-                    tableView.performUpdates(updates: { (updater) in
+
+                    tableView?.performUpdates(updates: { (updater) in
                         updater.removeItem(indexPath: indexPath, animation: .left)
                     }, completion: nil)
                 })
@@ -132,10 +132,10 @@ class MushroomVC: UIViewController {
                     switch result {
                     case .Error(let error):
                             ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
-                                .show(animationType: .fromBottom)
+                                .show(animationType: .fromBottom, onViewController: self)
                     case .Success(_):
                         ELNotificationView.appNotification(style: .success, primaryText: "\(mushroom.danishName ?? mushroom.fullName) er nu markeret som favorit", secondaryText: "Du har hurtig adgang til at se svampen og dens billeder, også uden internet - under mine favoritter.", location: .bottom)
-                            .show(animationType: .fromBottom)
+                            .show(animationType: .fromBottom, onViewController: self)
                     }
                     }
                 }

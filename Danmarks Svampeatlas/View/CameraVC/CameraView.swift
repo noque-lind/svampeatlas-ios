@@ -14,8 +14,7 @@ struct temptModel {
 }
 
 protocol CameraViewDelegate: CameraControlsViewDelegate, ResultsViewDelegate {
-    func expandView()
-    func collapseView()
+    func move(expanded: Bool)
 }
 
 class CameraView: UIVisualEffectView {
@@ -85,7 +84,7 @@ class CameraView: UIVisualEffectView {
         isExpanded = true
         
         DispatchQueue.main.async {
-            self.delegate?.expandView()
+            self.delegate?.move(expanded: true)
             self.cameraControlsView.alpha = 0
             UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
                 self.superview?.layoutIfNeeded()
@@ -114,9 +113,9 @@ class CameraView: UIVisualEffectView {
     func reset() {
         isExpanded = false
         resultsView.reset()
-        cameraControlsView.reset()
+        cameraControlsView.setState(state: .regular)
         cameraControlsView.alpha = 1
-        delegate?.collapseView()
+        delegate?.move(expanded: false)
         
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             self.superview?.layoutIfNeeded()
@@ -124,7 +123,9 @@ class CameraView: UIVisualEffectView {
         }
     }
     
-    func askForConfirmation() {
-        cameraControlsView.askForConfirmation()
+    
+    func setCameraControlsState(state: CameraControlsView.State) {
+        cameraControlsView.setState(state: state)
     }
+
 }

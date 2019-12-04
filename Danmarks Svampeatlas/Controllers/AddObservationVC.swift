@@ -19,9 +19,17 @@ class AddObservationVC: UIViewController {
     }
     
     private lazy var observationImagesView: ObservationImagesView = {
-        let view = ObservationImagesView(newObservation: newObservation)
+        let view = ObservationImagesView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
+        
+        view.imageAdded = { [unowned newObservation, unowned self] imageURL in
+            newObservation.appendImage(imageURL: imageURL)
+            if let imageLocation = newObservation.returnImageLocationIfNecessary(imageURL: imageURL) {
+                self.handleImageLocation(imageLocation: imageLocation, alternativeLocation: nil)
+            }
+        }
+        
         return view
     }()
     
@@ -31,10 +39,10 @@ class AddObservationVC: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        view.categorySelected = { [unowned collectionView] category in
+        view.categorySelected = { [unowned collectionView, unowned self] category in
             guard let index = ObservationCategories.allCases.index(of: category) else {return}
             collectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
-            view.endEditing(true)
+            self.view.endEditing(true)
         }
         
         return view
@@ -116,12 +124,7 @@ class AddObservationVC: UIViewController {
     
     private func setupView() {
         title = "Nyt fund"
-        
-        if let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) {
-            let imageProperties = CGImageSourceCopyMetadataAtIndex(imageSource, 0, nil)
-            print(imageProperties)
-        }
-        
+    
         navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu)), animated: false)
         navigationItem.setRightBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload)), animated: false)
         
@@ -154,11 +157,13 @@ class AddObservationVC: UIViewController {
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: categoryView.bottomAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        observationImagesView.configure(imageURLS: newObservation.images)
     }
         
     private func reset() {
         self.newObservation = NewObservation()
-        self.observationImagesView.configure(newObservation: newObservation)
+        self.observationImagesView.configure(imageURLS: newObservation.images)
         self.collectionView.reloadData()
         self.collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
         self.categoryView.moveSelector(toCellAtIndexPath: IndexPath.init(row: 0, section: 0))
@@ -170,7 +175,7 @@ class AddObservationVC: UIViewController {
         case .Success(let dict):
             Spinner.start(onView: self.navigationController?.view)
         
-            session.uploadObservation(dict: dict, images: newObservation.images) { (result) in
+            session.uploadObservation(dict: dict, imageURLS: newObservation.images) { [weak self] (result) in
                 Spinner.stop()
                 DispatchQueue.main.async {
                 switch result {
@@ -214,9 +219,24 @@ class AddObservationVC: UIViewController {
             notificationView.configure(primaryText: "Ingen koordinater", secondaryText: "Appen kunne ikke finde dine koordinater, men du kan sætte dem selv.")
         }
         
-        notificationView.show(animationType: .fromBottom ,queuePosition: .front)
+        notificationView.show(animationType: .fromBottom ,queuePosition: .front, onViewController: self)
         categoryView.moveSelector(toCellAtIndexPath: indexPath)
         collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
+    }
+    
+    private func handleImageLocation(imageLocation: CLLocation, alternativeLocation: CLLocation?) {
+        ELNotificationView.appNotification(style: .action(backgroundColor: UIColor.appSecondaryColour(), actions: [
+        .positive("Ja, brug billedets placering", { [unowned newObservation, unowned self] in
+            newObservation.observationCoordinate = imageLocation
+            self.findLocality(location: imageLocation)
+        }),
+        .negative("Nej", { [unowned newObservation, unowned self] in
+            if let alternativeLocation = alternativeLocation {
+                newObservation.observationCoordinate = alternativeLocation
+                           self.findLocality(location: alternativeLocation)
+            }
+        })]), primaryText: "Forslag til placering", secondaryText: "Et tilføjet billede lader til at være blevet taget over 500 meter væk fra din nuværende placering. Vil du bruge billedets GPS-information i stedet for din nuværende placering?", location: .bottom)
+        .show(animationType: .fromBottom, onViewController: self)
     }
 }
 
@@ -230,18 +250,17 @@ extension AddObservationVC: LocationManagerDelegate {
                         UIApplication.openSettings()
                     })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
                     .show(animationType: .fromBottom, onViewController: self)
+        
         case .badAccuracy, .networkError, .unknown, .permissionsUndetermined:
             ELNotificationView.appNotification(style: .error(actions: [
-                .neutral(error.recoveryAction?.rawValue, {
-                    // Prøv igen
+                .neutral(error.recoveryAction?.rawValue, { [unowned locationManager] in
+                    locationManager.start()
                 })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
                 .show(animationType: .fromBottom, onViewController: self)
         }
     }
     
-    func locationRetrieved(location: CLLocation) {
-        newObservation.observationCoordinate = location
-        
+    private func findLocality(location: CLLocation) {
         DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self, weak locationManager, weak newObservation, weak collectionView] result in
             switch result {
             case .Success(let localities):
@@ -256,7 +275,7 @@ extension AddObservationVC: LocationManagerDelegate {
                         if let currentCell = collectionView?.visibleCells.first as? ObservationLocationCell, let locationManager = locationManager, let newObservation = newObservation  {
                             currentCell.configureCell(locationManager: locationManager, newObservation: newObservation, localities: localities)
                         } else {
-                            ELNotificationView.appNotification(style: .Custom(color: UIColor.appSecondaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: "Din placering er bestemt", secondaryText: "Du er tættest på: \(closest!.name)", location: .bottom)
+                            ELNotificationView.appNotification(style: .Custom(color: UIColor.appSecondaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: "Fundets placering er blevet bestemt", secondaryText: "Navn: \(closest!.name) \nKoordinater: \(location.coordinate.latitude.rounded(toPlaces: 2)), \(location.coordinate.longitude.rounded(toPlaces: 2))", location: .bottom)
                                 .show(animationType: .fromBottom, onViewController: self)
                         }
                     }
@@ -268,6 +287,15 @@ extension AddObservationVC: LocationManagerDelegate {
                         .show(animationType: .fromBottom, onViewController: self)
                 }
             }
+        }
+    }
+    
+    func locationRetrieved(location: CLLocation) {
+        if let imageLocation = newObservation.returnImageLocationIfNecessary(location: location) {
+            handleImageLocation(imageLocation: imageLocation, alternativeLocation: location)
+        } else {
+            newObservation.observationCoordinate = location
+            findLocality(location: location)
         }
     }
 }
@@ -317,10 +345,10 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
 
 extension AddObservationVC: ObservationImagesViewDelegate, NavigationDelegate {
     func shouldAnimateHeightChanged() {
-        UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.curveEaseInOut, animations: { [weak self] in
-            self?.view.layoutIfNeeded()
-            self?.observationImagesView.invalidateLayout()
-            self?.collectionView.collectionViewLayout.invalidateLayout()
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.curveEaseInOut, animations: {
+            self.view.layoutIfNeeded()
+            self.observationImagesView.invalidateLayout()
+            self.collectionView.collectionViewLayout.invalidateLayout()
         }) { (_) in
         }
     }

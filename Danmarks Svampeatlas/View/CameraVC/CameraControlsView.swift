@@ -12,19 +12,20 @@ import ELKit
 
 
 protocol CameraControlsViewDelegate: class {
+    func photoLibraryButtonPressed(state: CameraControlsView.State)
     func captureButtonPressed()
-    func photoLibraryButtonPressed()
-    func usePhotoPressed()
-    func noPhotoPressed()
-    func reset()
+    func textButtonPressed(state: CameraControlsView.State)
 }
 
 class CameraControlsView: UIView {
     
-    enum TextLabelStates: String {
-        case noPhoto = "Intet billede"
-        case usePhoto = "Brug billede"
+    enum State {
+        case confirmation
+        case regular
+        case loading
     }
+    
+   
     
     private lazy var captureButton: CaptureButton = {
         let button = CaptureButton()
@@ -32,9 +33,8 @@ class CameraControlsView: UIView {
         button.widthAnchor.constraint(equalToConstant: 50).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        button.pressed = { [weak self] in
-            self?.delegate?.captureButtonPressed()
-            button.showSpinner(true)
+        button.pressed = { [unowned self] in
+            self.delegate?.captureButtonPressed()
         }
         
         return button
@@ -46,36 +46,20 @@ class CameraControlsView: UIView {
         button.heightAnchor.constraint(equalTo: button.widthAnchor).isActive = true
         button.translatesAutoresizingMaskIntoConstraints = false
         
-        button.pressed = { [unowned textButton, unowned self] in
-            if let state = TextLabelStates(rawValue: textButton.title(for: []) ?? "") {
-                switch state {
-                case .usePhoto:
-                    self.delegate?.reset()
-                case .noPhoto:
-                    self.delegate?.photoLibraryButtonPressed()
-                }
-            } else {
-                self.delegate?.photoLibraryButtonPressed()
-            }
+        button.pressed = { [unowned self] in
+            self.delegate?.photoLibraryButtonPressed(state: self.state)
         }
         
         return button
     }()
     
-    private lazy var textButton: UIButton = {
-        let button = UIButton()
-        button.alpha = 0
-        button.titleLabel?.textAlignment = .center
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
+    private lazy var textButton: CameraControlsTextButton = {
+        let button = CameraControlsTextButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(UIColor.appWhite(), for: .normal)
-        button.setTitleColor(UIColor.darkGray, for: .highlighted)
-        
-        button.titleLabel?.font = UIFont.appPrimary()
-        button.titleLabel?.numberOfLines = 0
-        button.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
         button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
-        button.addTarget(self, action: #selector(textButtonPressed), for: .touchUpInside)
+        button.pressed = { [unowned self] in
+            self.delegate?.textButtonPressed(state: self.state)
+        }
         return button
     }()
     
@@ -103,7 +87,7 @@ class CameraControlsView: UIView {
     
     weak var delegate: CameraControlsViewDelegate? = nil
     private let hasNoPhotoButton: Bool
-    
+    private var state: State = .regular
     
     init(hasNoPhotoButton: Bool) {
         self.hasNoPhotoButton = hasNoPhotoButton
@@ -125,48 +109,43 @@ class CameraControlsView: UIView {
         addSubview(photoLibraryButton)
         photoLibraryButton.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         photoLibraryButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        
-        photoLibraryButton.setPhotosLibraryThumbnail()
     
         addSubview(textButton)
-        textButton.topAnchor.constraint(equalTo: topAnchor, constant: 4).isActive = true
-        textButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4).isActive = true
+        textButton.topAnchor.constraint(equalTo: topAnchor, constant: 6).isActive = true
+        textButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6).isActive = true
         textButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
         
-        if hasNoPhotoButton {
-            textButton.alpha = 1
-            textButton.setTitle(TextLabelStates.noPhoto.rawValue, for: [])
-        }
+        setState(state: .regular)
     }
     
-    @objc private func textButtonPressed() {
-        guard let state = TextLabelStates(rawValue: textButton.title(for: []) ?? "") else {return}
+    func setState(state: State) {
+        self.state = state
+        
         switch state {
-        case .noPhoto:
-            delegate?.noPhotoPressed()
-        case .usePhoto:
-            delegate?.usePhotoPressed()
+        case .regular:
+            captureButton.isHidden = false
+            captureButton.showSpinner(false)
+            photoLibraryButton.isHidden = false
+            photoLibraryButton.setPhotosLibraryThumbnail()
+            
+            if hasNoPhotoButton {
+                textButton.setState(state: .noPhoto)
+                textButton.isHidden = false
+            } else {
+                textButton.isHidden = true
+            }
+            
+        case .confirmation:
+            captureButton.isHidden = true
+            photoLibraryButton.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_BackButton"), for: [])
+            textButton.setState(state: .usePhoto)
+            textButton.isHidden = false
+            photoLibraryButton.isHidden = false
+        case .loading:
+            captureButton.isHidden = false
+            captureButton.showSpinner(true)
+            photoLibraryButton.isHidden = true
+            textButton.isHidden = true
         }
-    }
-        
-    func reset() {
-        captureButton.alpha = 1
-        captureButton.showSpinner(false)
-        photoLibraryButton.setPhotosLibraryThumbnail()
-        
-        if hasNoPhotoButton {
-            textButton.setTitle(TextLabelStates.noPhoto.rawValue, for: [])
-            textButton.alpha = 1
-        } else {
-            textButton.setTitle(nil, for: [])
-            textButton.alpha = 0
-        }
-    }
-    
-    func askForConfirmation() {
-        captureButton.showSpinner(false)
-        photoLibraryButton.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_BackButton"), for: [])
-        textButton.setTitle(TextLabelStates.usePhoto.rawValue, for: [])
-        textButton.alpha = 1
     }
 }

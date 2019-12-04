@@ -123,8 +123,11 @@ class Session {
         DataService.instance.postComment(taxonID: observationID, comment: comment, token: token, completion: completion)
     }
     
-    func uploadObservation(dict: [String: Any], images: [UIImage], completion: @escaping (Result<Int, AppError>) -> ()) {
-        DataService.instance.postObservation(dict: dict, images: images, token: token, completion: completion)
+    func uploadObservation(dict: [String: Any], imageURLS: [URL], completion: @escaping (Result<Int, AppError>) -> ()) {
+        
+        
+        
+//        DataService.instance.postObservation(dict: dict, images: images, token: token, completion: completion)
     }
     
     func reportOffensiveContent(observationID: Int, comment: String?, completion: @escaping () -> ()) {

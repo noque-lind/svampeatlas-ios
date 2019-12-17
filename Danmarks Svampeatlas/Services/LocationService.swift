@@ -29,7 +29,7 @@ class LocationManager: NSObject {
                 return .openSettings
             case .permissionsUndetermined:
                 return .activate
-            default: return nil
+            default: return .tryAgain
             }
         }
         

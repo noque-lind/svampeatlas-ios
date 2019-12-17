@@ -308,8 +308,8 @@ class DetailsViewController: UIViewController {
     
     @objc private func selectButtonPressed() {
         guard let takesSelection = takesSelection else {return}
-        takesSelection.handler(!takesSelection.selected)
         self.navigationController?.popViewController(animated: true)
+        takesSelection.handler(!takesSelection.selected)
     }
 }
 

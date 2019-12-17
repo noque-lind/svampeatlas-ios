@@ -63,22 +63,19 @@ enum CoreDataError: AppError {
 
 fileprivate class CoreDataService {
     
-    private lazy var persistentContainer: NSPersistentContainer = {
+    static let instance = CoreDataService()
+    
+    lazy var persistentContainer: NSPersistentContainer = {
        let container = NSPersistentContainer(name: "SvampeAtlas")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-//            if let error = error as NSError? {
-//                let notification = ELNotificationView.appNotification(style: .error, primaryText: "Database fejl", secondaryText: "Der skete desværre en fejl med at indlæse appen's lokale database.", location: .bottom)
-//                notification.show(animationType: .fromBottom, queuePosition: .back, onViewController: nil)
-//                debugPrint(error)
-//            } else {
-//                debugPrint("CoreData store loaded")
-//            }
+            if let error = error as NSError? {
+                ELNotificationView.appNotification(style: .error(actions: nil), primaryText: "Database fejl", secondaryText: "Der skete en fejl med at indlæse appen's lokale database. Det betyder du vil opleve problemer med at indlæse lokalt gemt data. Prøv at genstarte appen hvis du oplever problemer, og hvis problemet fortsætter må du meget gerne kontakte app@noque.dk", location: .bottom)
+                    .show(animationType: .fromBottom)
+            }
         })
         return container
     }()
     
-    
-    static let instance = CoreDataService()
     var managedContext: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
@@ -112,7 +109,30 @@ struct CoreDataHelper {
         
     }
     
-    static func fetchAllFavoritedMushrooms(completion: (Result<[Mushroom], CoreDataError>) -> ()) {
+    static func fetchAllFavoritedMushrooms() -> Result<[Mushroom], CoreDataError> {
+        let fetchRequest = NSFetchRequest<CDMushroom>(entityName: "CDMushroom")
+        do {
+            let cdMushrooms = try managedContext.fetch(fetchRequest)
+            let mushrooms = cdMushrooms.compactMap({Mushroom(from: $0)})
+            
+            guard mushrooms.count > 0 else {return Result.Error(CoreDataError.noEntries(category: .Mushrooms))}
+            return .Success(mushrooms)
+        } catch {
+            return .Error(.readError)
+        }
+    }
+    
+    static func fetchAllFavoritedMushrooms(completion: @escaping (Result<[Mushroom], CoreDataError>) -> ()) {
+        CoreDataService.instance.persistentContainer.performBackgroundTask { (context) in
+            do {
+                let cdMushrooms: [CDMushroom] = try context.fetch(CDMushroom.fetchRequest())
+                completion(.Success(cdMushrooms.compactMap({Mushroom(from: $0)})))
+            } catch {
+                completion(.Error(.readError))
+            }
+        }
+        
+        
         let fetchRequest = NSFetchRequest<CDMushroom>(entityName: "CDMushroom")
         do {
             let cdMushrooms = try managedContext.fetch(fetchRequest)
@@ -365,6 +385,11 @@ extension CoreDataHelper {
     
     static func saveSubstrateGroups(substrateGroups: [SubstrateGroup]) {
             do {
+                
+                CoreDataService.instance.persistentContainer.performBackgroundTask { (context) in
+                    
+                }
+                
                 let deleteRequest1 = NSBatchDeleteRequest(fetchRequest: CDSubstrateGroup.fetchRequest())
                 let deleteRequest2 = NSBatchDeleteRequest(fetchRequest: CDSubstrate.fetchRequest())
                 try managedContext.execute(deleteRequest1)

@@ -12,12 +12,36 @@ import ImageIO
 
 class NewObservation {
     
-    enum Error {
+    enum Error: AppError {
+        
+        var recoveryAction: RecoveryAction? {
+            return nil
+        }
+        
+        
         case noMushroom
         case noSubstrateGroup
         case noVegetationType
         case noLocality
         case noCoordinates
+       
+        var errorTitle: String {
+            switch self {
+            case .noSubstrateGroup, .noVegetationType, .noMushroom: return "Manglende information"
+            case .noLocality: return "Hvor er du?"
+            case .noCoordinates: return "Ingen koordinater"
+            }
+        }
+        
+        var errorDescription: String {
+            switch self {
+            case .noMushroom: return "Du mangler at fortælle hvilken svampeart du har fundet. Hvis du ikke ved det, kan du trykke på knappen 'Ubestemt svamp'."
+            case .noSubstrateGroup: return "Du mangler at angive et substrat."
+            case .noVegetationType: return "Du mangler at angive en vegetationstype."
+            case .noCoordinates: return "DDine koordinater kunne ikke findes automatisk, så du skal selv angive fundets position."
+            case .noLocality: return "Dine koordinater er blevet bestemt, men det var ikke muligt at finde et nærliggende stedsnavn. Prøv venligst igen."
+            }
+        }
     }
     
     enum DeterminationConfidence: String, CaseIterable {
@@ -40,7 +64,11 @@ class NewObservation {
     var user: User?
     var locality: Locality?
     public private(set) var images = [URL]()
-    var predictionResultsState: TableViewState<PredictionResult> = .Empty
+    var predictionResultsState: Section<PredictionResult>.State = .empty {
+        didSet {
+            predictionsResultsStateChanged?()
+        }
+    }
     
     var predictionsResultsStateChanged: (() -> ())?
     
@@ -65,33 +93,33 @@ class NewObservation {
     
     func appendImage(imageURL: URL) {
         if images.count == 0 && mushroom == nil {
-//            getPredictions(image: image)
+            getPredictions(imageURL: imageURL)
         }
         
         images.append(imageURL)
     }
     
-    func removeImage(at: Int) {
-        images.remove(at: at)
+    func removeImage(imageURL: URL) {
+        ELFileManager.deleteImage(imageURL: imageURL)
+        
+        guard let index = images.firstIndex(of: imageURL) else {return}
+        images.remove(at: index)
         
         if images.isEmpty {
-            predictionResultsState = .Empty
-            predictionsResultsStateChanged?()
+            predictionResultsState = .empty
         }
     }
     
-    private func getPredictions(image: UIImage) {
-        setPredictionResultsState(state: .Loading)
-        
+    private func getPredictions(imageURL: URL) {
+        guard let image = UIImage(url: imageURL) else {return}
+        predictionResultsState = .loading
         DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .Error(let error):
-                    self?.setPredictionResultsState(state: .Error(error, nil))
+                    self?.predictionResultsState = .error(error: error, handler: nil)
                 case .Success(let predictionResults):
-                    if case .Loading = self?.predictionResultsState  {
-                        self?.setPredictionResultsState(state: .Items(predictionResults))
-                    }
+                    self?.predictionResultsState = .items(items: predictionResults)
                 }
             }
         }
@@ -142,19 +170,19 @@ class NewObservation {
        return CLLocation.init(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), altitude: altitude, horizontalAccuracy: accuracy, verticalAccuracy: accuracy, timestamp: Date())
     }
     
-    private func setPredictionResultsState(state: TableViewState<PredictionResult>) {
-        predictionResultsState = state
-        predictionsResultsStateChanged?()
-    }
+//    private func setPredictionResultsState(state: TableViewState<PredictionResult>) {
+//        predictionResultsState = state
+//        predictionsResultsStateChanged?()
+//    }
     
     private func getDeterminationNotes(pickedMushroom: Mushroom) -> String {
-        guard let predictionResult = predictionResultsState.currentItems().first(where: {$0.mushroom == pickedMushroom}) else {return ""}
-        
+        guard case Section<PredictionResult>.State.items(items: let predictionResults) = predictionResultsState, let predictionResult = predictionResults.first(where: {$0.mushroom == pickedMushroom}) else {return ""}
+            
         var string = "#imagevision_score: \(predictionResult.score.rounded(toPlaces: 2)) #imagevision_list: "
         
-        predictionResultsState.currentItems().forEach { (predictionResult) in
-            string += "\(predictionResult.mushroom.fullName) (\(predictionResult.score.rounded(toPlaces: 2))), "
-        }
+        predictionResults.forEach({
+            string += "\($0.mushroom.fullName) (\($0.score.rounded(toPlaces: 2))), "
+        })
         
         return String(string.dropLast(2))
     }

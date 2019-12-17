@@ -55,13 +55,7 @@ class LoginVC: UIViewController {
             label.font = UIFont.appPrimary()
             label.textColor = UIColor.appWhite()
             label.numberOfLines = 0
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.alignment = NSTextAlignment.justified
-            paragraphStyle.hyphenationFactor = 1
-            
-            // Swift 4.2++
-            let attributedString = NSMutableAttributedString(string: "Bidrag til viden om danske svampe ved at dele dine fund med andre, samt modtage valideringer af dine fund fra danmarks førende svampeeksperter.", attributes: [NSAttributedString.Key.paragraphStyle:paragraphStyle])
-            label.attributedText = attributedString
+            label.text = "Bidrag til viden om danske svampe ved at dele dine fund med andre, samt modtage valideringer af dine fund fra danmarks førende svampeeksperter."
             return label
         }()
         

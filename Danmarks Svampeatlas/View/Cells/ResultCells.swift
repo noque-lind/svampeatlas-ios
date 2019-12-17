@@ -256,42 +256,48 @@ class ContainedResultCell: BaseCell {
         roundedImageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         roundedImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
-        let textStackView: UIStackView = {
-            let stackView = UIStackView()
-            stackView.spacing = 4
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.axis = .vertical
-            stackView.addArrangedSubview(titleLabel)
-            stackView.addArrangedSubview(secondaryLabel)
-            return stackView
-        }()
+        containerView.addSubview(titleLabel)
+         titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24).isActive = true
+                titleLabel.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 8).isActive = true
+                titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8).isActive = true
+                titleLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
         
         
-        containerView.addSubview(textStackView)
-        textStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24).isActive = true
-        textStackView.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 8).isActive = true
-        textStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8).isActive = true
+//        let textStackView: UIStackView = {
+//            let stackView = UIStackView()
+//            stackView.spacing = 4
+//            stackView.translatesAutoresizingMaskIntoConstraints = false
+//            stackView.axis = .vertical
+//            stackView.addArrangedSubview(titleLabel)
+//            stackView.addArrangedSubview(secondaryLabel)
+//            return stackView
+//        }()
+//
+//
+//        containerView.addSubview(textStackView)
+//        textStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24).isActive = true
+//        textStackView.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 8).isActive = true
+//        textStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8).isActive = true
+//        textStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
         
         
-        let informationStackView: UIStackView = {
-            let stackView = UIStackView()
-           stackView.spacing = 4
-            stackView.alignment = .center
-            stackView.setContentHuggingPriority(.required, for: .vertical)
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.axis = .horizontal
-            stackView.addArrangedSubview(toxicityView)
-            stackView.addArrangedSubview(decimalValueLabel)
-            stackView.addArrangedSubview(UIStackView())
-            return stackView
-        }()
-        
-        containerView.addSubview(informationStackView)
-        informationStackView.topAnchor.constraint(equalTo: textStackView.bottomAnchor, constant: 8).isActive = true
-        informationStackView.leadingAnchor.constraint(equalTo: textStackView.leadingAnchor).isActive = true
-        informationStackView.trailingAnchor.constraint(equalTo: textStackView.trailingAnchor).isActive = true
-        informationStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
-        
+//        let informationStackView: UIStackView = {
+//            let stackView = UIStackView()
+//           stackView.spacing = 4
+//            stackView.alignment = .leading
+//            stackView.setContentHuggingPriority(.required, for: .vertical)
+//            stackView.translatesAutoresizingMaskIntoConstraints = false
+//            stackView.axis = .vertical
+////            stackView.addArrangedSubview(toxicityView)
+//            return stackView
+//        }()
+//
+//
+//        containerView.addSubview(informationStackView)
+//        informationStackView.topAnchor.constraint(equalTo: textStackView.bottomAnchor, constant: 8).isActive = true
+//        informationStackView.leadingAnchor.constraint(equalTo: textStackView.leadingAnchor).isActive = true
+//        informationStackView.trailingAnchor.constraint(equalTo: textStackView.trailingAnchor).isActive = true
+//        informationStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
     }
     
     func configureCell(mushroom: Mushroom) {
@@ -299,18 +305,20 @@ class ContainedResultCell: BaseCell {
             var titleText = "Slægt: "
             titleText.append(mushroom.danishName ?? mushroom.fullName)
             titleLabel.text = titleText
-            secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
+            secondaryLabel.text = mushroom.danishName != nil ? mushroom.fullName: nil
+//            secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
             roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Utils_Genus").withRenderingMode(.alwaysTemplate))
             roundedImageView.tintColor = UIColor.appPrimaryColour()
         } else {
             titleLabel.text = mushroom.danishName ?? mushroom.fullName
-            secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
+             secondaryLabel.text = mushroom.danishName != nil ? mushroom.fullName: nil
+//            secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
             roundedImageView.configureImage(url: mushroom.images?.first?.url)
         }
         
         toxicityView.configure(mushroom.attributes?.eatability)
-        titleLabel.sizeToFit()
-        secondaryLabel.sizeToFit()
+//        titleLabel.sizeToFit()
+//        secondaryLabel.sizeToFit()
     }
     
     override func prepareForReuse() {

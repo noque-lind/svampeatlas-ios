@@ -121,10 +121,14 @@ extension ELNotificationView {
     static func appNotification(style: ELNotificationView.Style, primaryText: String, secondaryText: String, location: ELNotificationView.Location) -> ELNotificationView {
         return ELNotificationView(style: style, attributes: .appAttributes(), primaryText: primaryText, secondaryText: secondaryText, location: location)
     }
+    
+    static func appNotification(style: ELNotificationView.Style, location: ELNotificationView.Location) -> ELNotificationView {
+        return ELNotificationView.init(style: style, attributes: ELNotificationView.Attributes.appAttributes())
+    }
 }
 
 extension ELNotificationView.Attributes {
     static func appAttributes() -> ELNotificationView.Attributes {
-        return ELNotificationView.Attributes(fillsScreen: true, font: UIFont.appPrimaryHightlighed(), textColor: UIColor.appWhite())
+        return ELNotificationView.Attributes(font: UIFont.appPrimaryHightlighed(), textColor: UIColor.appWhite())
     }
 }

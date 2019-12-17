@@ -128,7 +128,7 @@ final class ELTextView: UIView, UITextViewDelegate {
     var text: String? {
         set {
             if text != nil {
-                  textView.text = text
+                  textView.text = newValue
             }
         } get {
             return textView.text

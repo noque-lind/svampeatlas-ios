@@ -78,8 +78,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
         Session.resumeSession { (result) in
             switch result {
-            case .Success(let ses):
-                self.session = ses
+            case .Success(let session):
+                self.session = session
             case .Error(_):
                 self.session = nil
             }

@@ -23,26 +23,38 @@ class Section<T>: Hashable {
         case items(items: [T])
         case loading
         case error(error: AppError, handler: ((RecoveryAction?) -> ())? = nil)
+        case empty
     }
     
     private let uid: UUID
-    public private(set) var title: String?
+    private var _title: String?
+    var title: String? {
+        get {
+            switch state {
+            case .empty: return nil
+            default: return _title
+            }
+        }
+    }
+    
     public private(set) var state: State
     
     init(title: String?, state: State) {
         self.uid = UUID()
-        self.title = title
+        self._title = title
         self.state = state
     }
     
     func count() -> Int {
         switch state {
         case .error(_):
-            return title != nil ? 2: 1
+            return 1
         case .items(items: let items):
-            return title != nil ? items.count + 1: items.count
+            return items.count
         case .loading:
-            return title != nil ? 2: 1
+            return 1
+        case .empty:
+            return 0
         }
     }
     
@@ -63,7 +75,7 @@ class Section<T>: Hashable {
     
     
     func setTitle(title: String?) {
-        self.title = title
+        self._title = title
     }
     
     func setState(state: State) {

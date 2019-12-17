@@ -14,6 +14,7 @@ class CreditationCell: UITableViewCell {
     
     enum Creditation {
         case AI
+        case AINewObservation
     }
     
     private let label: UILabel = {
@@ -52,6 +53,10 @@ class CreditationCell: UITableViewCell {
         case .AI:
             label.text = """
 Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.
+"""
+        case .AINewObservation:
+            label.text = """
+            Disse navneforslag er baseret på det første billede du har tilføjet til dette fund. Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.
 """
         }
     }

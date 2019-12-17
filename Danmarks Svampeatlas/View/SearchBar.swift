@@ -13,12 +13,12 @@ protocol CustomSearchBarDelegate: NSObjectProtocol {
     func clearedSearchEntry()
 }
 
-class CustomSearchBar: UITextField {
+class SearchBar: UITextField {
     
     var leadingConstraint = NSLayoutConstraint()
     private var widthConstraint = NSLayoutConstraint()
     
-    lazy var iconView: UIButton = {
+    private lazy var iconView: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.appSecondaryColour()
         button.setImage(#imageLiteral(resourceName: "Glyphs_Search"), for: [])
@@ -107,7 +107,7 @@ class CustomSearchBar: UITextField {
     }
 }
 
-extension CustomSearchBar {
+extension SearchBar {
     @objc func editingChanged(sender: UITextField) {
         guard let text = sender.text, text != "" else {progressBarView?.reset(); searchBarDelegate?.clearedSearchEntry(); return}
         
@@ -195,13 +195,13 @@ extension CustomSearchBar {
     }
 }
 
-extension CustomSearchBar: UITextFieldDelegate {
+extension SearchBar: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return true
     }
 }
 
-extension CustomSearchBar: ProgressBarViewDelegate {
+extension SearchBar: ProgressBarViewDelegate {
     func completedLoading() {
         guard let entry = text, entry != recentSearch else {return}
         searchBarDelegate?.newSearchEntry(entry: entry)

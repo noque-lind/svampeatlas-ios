@@ -21,13 +21,35 @@ class AddObservationVC: UIViewController {
     private lazy var observationImagesView: ObservationImagesView = {
         let view = ObservationImagesView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.delegate = self
+        view.isExpanded = !(newObservation.images.count == 0)
+        let heightAnchor = view.heightAnchor.constraint(equalToConstant: view.isExpanded ? ObservationImagesView.expandedHeight: ObservationImagesView.collapsedHeight)
+        heightAnchor.isActive = true
         
-        view.imageAdded = { [unowned newObservation, unowned self] imageURL in
-            newObservation.appendImage(imageURL: imageURL)
-            if let imageLocation = newObservation.returnImageLocationIfNecessary(imageURL: imageURL) {
-                self.handleImageLocation(imageLocation: imageLocation, alternativeLocation: nil)
+        view.shouldAnimateHeight = { [weak self] constant in
+            heightAnchor.constant = constant
+            
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.curveEaseInOut, animations: {
+                self?.view.layoutIfNeeded()
+                self?.collectionView.collectionViewLayout.invalidateLayout()
+            }) { (_) in
             }
+        }
+        
+        view.imageDeleted = { [unowned newObservation] imageURL in
+            newObservation.removeImage(imageURL: imageURL)
+        }
+        
+        view.onAddImageButtonPressed = { [unowned self, unowned view, unowned newObservation] in
+            let vc = CameraVC(cameraVCUsage: .imageCapture)
+            vc.onImageCaptured = { imageURL in
+                newObservation.appendImage(imageURL: imageURL)
+                view.addImage(imageURL: imageURL)
+                
+                if let imageLocation = newObservation.returnImageLocationIfNecessary(imageURL: imageURL) {
+                    self.handleImageLocation(imageLocation: imageLocation, alternativeLocation: nil)
+                }
+            }
+            self.presentVC(UINavigationController(rootViewController: vc))
         }
         
         return view
@@ -44,7 +66,6 @@ class AddObservationVC: UIViewController {
             collectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
             self.view.endEditing(true)
         }
-        
         return view
     }()
     
@@ -87,16 +108,12 @@ class AddObservationVC: UIViewController {
         }
         
         super.init(nibName: nil, bundle: nil)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupView()
-        }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.appConfiguration(translucent: true)
@@ -104,18 +121,18 @@ class AddObservationVC: UIViewController {
         super.viewWillAppear(animated)
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        configure()
+        }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if newObservation.observationCoordinate == nil && newObservation.locality == nil {
             locationManager.start()
         }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        collectionView.collectionViewLayout.invalidateLayout()
-        observationImagesView.invalidateLayout()
     }
     
     deinit {
@@ -157,16 +174,18 @@ class AddObservationVC: UIViewController {
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.topAnchor.constraint(equalTo: categoryView.bottomAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
+    }
+    
+    private func configure() {
         observationImagesView.configure(imageURLS: newObservation.images)
+        collectionView.reloadData()
+        categoryView.moveSelector(toCellAtIndexPath: IndexPath.init(row: 0, section: 0))
     }
         
     private func reset() {
-        self.newObservation = NewObservation()
-        self.observationImagesView.configure(imageURLS: newObservation.images)
-        self.collectionView.reloadData()
-        self.collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
-        self.categoryView.moveSelector(toCellAtIndexPath: IndexPath.init(row: 0, section: 0))
+        newObservation = NewObservation()
+        configure()
+        collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
         locationManager.start()
     }
     
@@ -197,26 +216,15 @@ class AddObservationVC: UIViewController {
         var indexPath: IndexPath
 
         let notificationView = ELNotificationView(style: .error(actions: nil), attributes: ELNotificationView.Attributes.appAttributes())
+        notificationView.configure(primaryText: error.errorTitle, secondaryText: error.errorDescription)
     
         switch error {
         case .noMushroom:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Species)! , section: 0)
-            
-            notificationView.configure(primaryText: "Manglende information", secondaryText: "For at uploade en observation, skal du enten tilføje billeder, eller identificere en art.")
-            
-        case .noSubstrateGroup:
+        case .noSubstrateGroup, .noVegetationType:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Details)! , section: 0)
-            notificationView.configure(primaryText: "Manglende information", secondaryText: "Du skal både opgive substrat og vegetationstype for din observation")
-        case .noVegetationType:
-            indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Details)! , section: 0)
-            
-            notificationView.configure(primaryText: "Manglende information", secondaryText: "Du skal både opgive substrat og vegetationstype for din observation")
-        case .noLocality:
+        case .noLocality, .noCoordinates:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)! , section: 0)
-            notificationView.configure(primaryText: "Hvor er du?", secondaryText: "Du skal hjælpe med at fortælle hvad du er i nærheden af.")
-        case .noCoordinates:
-            indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)!, section: 0)
-            notificationView.configure(primaryText: "Ingen koordinater", secondaryText: "Appen kunne ikke finde dine koordinater, men du kan sætte dem selv.")
         }
         
         notificationView.show(animationType: .fromBottom ,queuePosition: .front, onViewController: self)
@@ -240,24 +248,31 @@ class AddObservationVC: UIViewController {
     }
 }
 
-
 extension AddObservationVC: LocationManagerDelegate {
     func locationInaccessible(error: LocationManager.LocationManagerError) {
-        switch error {
-        case .permissionDenied:
-                ELNotificationView.appNotification(style: .error(actions: [
-                    .neutral(error.recoveryAction?.rawValue, {
-                        UIApplication.openSettings()
-                    })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
-                    .show(animationType: .fromBottom, onViewController: self)
+        let notif: ELNotificationView
         
-        case .badAccuracy, .networkError, .unknown, .permissionsUndetermined:
-            ELNotificationView.appNotification(style: .error(actions: [
+        switch error.recoveryAction {
+        case .openSettings:
+            notif = ELNotificationView.appNotification(style: .error(actions: [
+                .neutral(error.recoveryAction?.rawValue, {
+                    UIApplication.openSettings()
+                })
+            ]),location: .bottom)
+            
+        case .tryAgain:
+            notif = ELNotificationView.appNotification(style: .error(actions: [
                 .neutral(error.recoveryAction?.rawValue, { [unowned locationManager] in
                     locationManager.start()
-                })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
-                .show(animationType: .fromBottom, onViewController: self)
+                })
+            ]), location: .bottom)
+        
+        default:
+            notif = ELNotificationView.appNotification(style: .error(actions: nil), location: .bottom)
         }
+        
+        notif.configure(primaryText: error.errorTitle, secondaryText: error.errorDescription)
+        notif.show(animationType: .fromBottom)
     }
     
     private func findLocality(location: CLLocation) {
@@ -309,8 +324,8 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
         switch ObservationCategories.allCases[indexPath.row]{
         case .Species:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationSpecieCell", for: indexPath) as? ObservationSpecieCell else {fatalError()}
-            cell.configureCell(newObservation: newObservation)
             cell.delegate = self
+            cell.configureCell(newObservation: newObservation)
             return cell
         case .Location:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationLocationCell", for: indexPath) as? ObservationLocationCell else {fatalError()}
@@ -327,8 +342,8 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
         if let cell = cell as? ObservationLocationCell {
             cell.configureCell(locationManager: locationManager, newObservation: newObservation, localities: localities)
         }
-  
     }
+
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
@@ -343,18 +358,10 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
     }
 }
 
-extension AddObservationVC: ObservationImagesViewDelegate, NavigationDelegate {
-    func shouldAnimateHeightChanged() {
-        UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.curveEaseInOut, animations: {
-            self.view.layoutIfNeeded()
-            self.observationImagesView.invalidateLayout()
-            self.collectionView.collectionViewLayout.invalidateLayout()
-        }) { (_) in
-        }
-    }
+extension AddObservationVC: NavigationDelegate {
     
     func pushVC(_ vc: UIViewController) {
-        self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func presentVC(_ vc: UIViewController) {

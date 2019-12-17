@@ -77,7 +77,7 @@ class ObservationDetailsCell: UICollectionViewCell {
         return view
     }()
     
-    private let rows: [Categories] = Categories.allCases
+    private let rows = [Categories]()
     private weak var navigationDelegate: NavigationDelegate?
     private var newObservation: NewObservation?
     private var shouldClearObservationHost = false

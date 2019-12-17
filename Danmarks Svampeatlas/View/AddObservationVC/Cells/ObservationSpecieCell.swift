@@ -15,7 +15,12 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
         case selectableMushroom(Mushroom, Double?)
         case unknownSpecies
         case unknownSpeciesButton
+        case citation
     }
+    
+    var isAtTop: ((Bool) -> ())?
+    var confidenceSelected: ((NewObservation.DeterminationConfidence) -> ())?
+    
     
     override init() {
         super.init()
@@ -23,6 +28,7 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
         register(cellClass: ContainedResultCell.self, forCellReuseIdentifier: ContainedResultCell.identifier)
         register(cellClass: SelectedSpecieCell.self, forCellReuseIdentifier: SelectedSpecieCell.identifier)
         register(cellClass: UnknownSpeciesCellButton.self, forCellReuseIdentifier: UnknownSpeciesCellButton.identifier)
+        register(cellClass: CreditationCell.self, forCellReuseIdentifier: CreditationCell.identifier)
     }
     
     required init?(coder: NSCoder) {
@@ -33,6 +39,7 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
         switch item {
         case .selectableMushroom(let mushroom, let confidence):
             let cell = tableView.dequeueReusableCell(withIdentifier: ContainedResultCell.identifier, for: indexPath) as! ContainedResultCell
+            
             if let confidence = confidence {
                 cell.configureCell(mushroom: mushroom, confidence: confidence)
             } else {
@@ -45,17 +52,14 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
         case .selectedMushroom(let mushroom, let confidence):
             let cell = tableView.dequeueReusableCell(withIdentifier: SelectedSpecieCell.identifier, for: indexPath) as! SelectedSpecieCell
             cell.configureCell(mushroom: mushroom, confidence: confidence)
-            
-            //            cell.confidenceSelected = { [weak self] determinationConfidence in
-            //                self?.newObservation?.determinationConfidence = determinationConfidence
-            //            }
-            
+            cell.confidenceSelected = confidenceSelected
             cell.accessoryType = .none
             return cell
             
         case .unknownSpecies:
             let cell = tableView.dequeueReusableCell(withIdentifier: UnknownSpecieCell.identifier, for: indexPath) as! UnknownSpecieCell
             
+        
             //            cell.deselectButtonPressed = { [unowned self] in
             //                self.newObservation?.mushroom = nil
             //                self.configureSpeciesSection()
@@ -65,56 +69,26 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
         case .unknownSpeciesButton:
             let cell = tableView.dequeueReusableCell(withIdentifier: UnknownSpeciesCellButton.identifier, for: indexPath) as! UnknownSpeciesCellButton
             return cell
+        case .citation:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CreditationCell.identifier, for: indexPath) as! CreditationCell
+            cell.configureCell(creditation: .AINewObservation)
+            return cell
+        }
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y <= -scrollView.contentInset.top {
+            isAtTop?(true)
+        } else {
+            isAtTop?(false)
         }
     }
 }
 
 class ObservationSpecieCell: UICollectionViewCell {
     
-    //    private class Section {
-    //
-    //        enum CellType {
-    //            case selectedMushroom(Mushroom, NewObservation.DeterminationConfidence)
-    //            case selectableMushroom(Mushroom, Double?)
-    //            case unknownSpecie
-    //            case unknownSpeciesButton
-    //            case loader
-    //            case error(AppError)
-    //        }
-    //
-    //        var title: String?
-    //        var cells: [CellType]
-    //        var alpha: CGFloat
-    //
-    //        init(title: String?, cells: [CellType], alpha: CGFloat = 1.0) {
-    //            self.title = title
-    //            self.cells = cells
-    //            self.alpha = alpha
-    //        }
-    //
-    //        func itemAt(index: Int) -> CellType? {
-    //            if let item = cells[safe: index] {
-    //                return item
-    //            } else {
-    //                return nil
-    //            }
-    //        }
-    //
-    //        func setTitle(title: String?) {
-    //            self.title = title
-    //        }
-    //
-    //        func setCells(cells: [CellType]) {
-    //            self.cells = cells
-    //        }
-    //
-    //        func setAlpha(alpha: CGFloat) {
-    //            self.alpha = alpha
-    //        }
-    //    }
-    
-    private lazy var searchBar: CustomSearchBar = {
-        let view = CustomSearchBar()
+    private lazy var searchBar: SearchBar = {
+        let view = SearchBar()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.searchBarDelegate = self
         view.isHidden = false
@@ -124,59 +98,86 @@ class ObservationSpecieCell: UICollectionViewCell {
     private lazy var tableView: AddObservationMushroomTableView = {
         let tableView = AddObservationMushroomTableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.setSections(sections: [speciesSection, suggestionsSection, favoritesSection])
+        tableView.separatorStyle = .none
         
-//        tableView.didSelectItem = { [unowned self] item, indexPath in
-//            switch item {
-//            case .unknownSpeciesButton:
-//                let vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id, takesSelection: (selected: false, title: "Vælg", handler: { (selected) in
-//                    self.newObservation?.mushroom = Mushroom.genus()
-//                    self.configureSpeciesSection()
-//                })))
-//
-//                self.delegate?.pushVC(vc)
-//
-//            case .selectableMushroom(let mushroom, _):
-//                if mushroom != self.newObservation?.mushroom {
-//                    let vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: false, title: mushroom.isGenus ? "Vælg slægt": "Vælg art", handler: { (selected) in
-//                        self.newObservation?.mushroom = mushroom
-//                        self.configureSpeciesSection()
-//                    })))
-//                    self.delegate?.pushVC(vc)
-//                } else {
-//                    let vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: true, title: "Fravælg", handler: { (selected) in
-//                        self.newObservation?.mushroom = nil
-//                        self.configureSpeciesSection()
-//                    })))
-//                    self.delegate?.pushVC(vc)
-//                }
-//
-//            case .selectedMushroom(let mushroom, _):
-//                let vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: true, title: "Fravælg", handler: { (selected) in
-//                    self.newObservation?.mushroom = nil
-//                    self.configureSpeciesSection()
-//                })))
-//                self.delegate?.pushVC(vc)
-//            default:
-//                return
-//            }
-//        }
+        tableView.isAtTop = { [unowned searchBar] isAtTop in
+            if isAtTop {
+                searchBar.expand()
+            } else {
+                searchBar.collapse()
+            }
+        }
         
+        tableView.didSelectItem = { [unowned self, unowned tableView] item, _ in
+            let vc: UIViewController
+            switch item {
+            case .unknownSpeciesButton:
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id, takesSelection: (selected: false, title: "Vælg", handler: { (selected) in
+                    self.newObservation?.mushroom = Mushroom.genus()
+                    self.configureUpperSection()
+                    self.configurePredictions()
+                    
+                    tableView.performUpdates(updates: { (updater) in
+                        updater.updateSection(section: self.upperSection)
+                        updater.updateSection(section: self.middleSection)
+                        updater.scrollToTop(animated: true)
+                    })
+                })))
+            case .selectableMushroom(let mushroom, _):
+                let selected = mushroom == self.newObservation?.mushroom
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: selected, title: selected ? "Fravælg": (mushroom.isGenus ? "Vælg slægt": "Vælg art"), handler: { (_) in
+                    
+                    if selected {
+                        self.newObservation?.mushroom = nil
+                    } else {
+                        self.newObservation?.mushroom = mushroom
+                    }
+                    
+                    self.configureUpperSection()
+                    self.configurePredictions()
+                    
+                    tableView.performUpdates(updates: { (updater) in
+                        updater.updateSection(section: self.upperSection)
+                        updater.updateSection(section: self.middleSection)
+                        updater.scrollToTop(animated: false)
+                    }) {
+                        tableView.scrollToTop(animated: true)
+                    }
+                })))
+            case .selectedMushroom(let mushroom, _):
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: true, title: "Fravælg", handler: { (selected) in
+                    self.newObservation?.mushroom = nil
+                    self.configureUpperSection()
+                    
+                    tableView.performUpdates(updates: { (updater) in
+                        updater.updateSection(section: self.upperSection)
+                        updater.scrollToTop(animated: true)
+                    })
+                })))
+                
+            default:
+                return
+            }
+            self.delegate?.pushVC(vc)
+        }
+        
+        tableView.setSections(sections: [upperSection, middleSection, lowerSection])
         return tableView
     }()
     
     weak var delegate: NavigationDelegate?
     
-    private let speciesSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
-    private let suggestionsSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
-    private let favoritesSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
+    private let upperSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
+    private let middleSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
+    private let lowerSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
     
     private var newObservation: NewObservation? {
         didSet {
-            if let newObservation = newObservation {
-                newObservation.predictionsResultsStateChanged = { [weak self] in
-                    self?.configureSuggestionsSection()
-                }
+            newObservation?.predictionsResultsStateChanged = { [weak self] in
+                self?.configurePredictions()
+                self?.tableView.performUpdates(updates: { updater in
+                    updater.updateSection(section: self?.middleSection)
+                })
             }
         }
     }
@@ -218,109 +219,86 @@ class ObservationSpecieCell: UICollectionViewCell {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         endEditing(true)
     }
-        
+    
     func configureCell(newObservation: NewObservation?) {
         self.newObservation = newObservation
-        configureSpeciesSection()
-//        configureSuggestionsSection()
-//        configureFavoritesSection()
-        
-//        tableView.performUpdates(updates: { [unowned self] updater in
-//            updater.updateSection(section: self.speciesSection)
-//        })
+        configureUpperSection()
+//        configurePredictions()
     }
     
-    private func defaultState() {
-//        tableViewState = .Items(sections)
-    }
     
-    private func configureSpeciesSection() {
+    private func configureUpperSection() {
         if let selectedMushroom = newObservation?.mushroom, let selectedDeterminationConfidence = newObservation?.determinationConfidence {
             hideSearchBar()
-            speciesSection.setTitle(title: selectedMushroom.isGenus ? "Valgte slægt": "Valgte art")
-            speciesSection.setState(state: .items(items: [.selectedMushroom(selectedMushroom, selectedDeterminationConfidence)]))
+            upperSection.setTitle(title: selectedMushroom.isGenus ? "Valgte slægt": "Valgte art")
+            upperSection.setState(state: .items(items: [.selectedMushroom(selectedMushroom, selectedDeterminationConfidence)]))
         } else {
             showSearchBar()
-            speciesSection.setTitle(title: nil)
-            speciesSection.setState(state: .items(items: [.unknownSpeciesButton]))
+            upperSection.setTitle(title: nil)
+            upperSection.setState(state: .items(items: [.unknownSpeciesButton]))
         }
-        
-        tableView.performUpdates(updates: { updater in
-            updater.updateSection(section: self.speciesSection)
-        })
     }
     
-    func configureFavoritesSection() {
-        CoreDataHelper.fetchAllFavoritedMushrooms { [weak favoritesSection] (result) in
+    private func configureFavoritesSection() {
+        CoreDataHelper.fetchAllFavoritedMushrooms { [weak lowerSection] (result) in
             switch result {
-            case .Error(_):
-                break
+            case .Error(_): return
             case .Success(let mushrooms):
-                favoritesSection?.setTitle(title: "Mine favoritter")
-                favoritesSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
-                
-                self.tableView.performUpdates(updates: { updater in
-                    guard let favoritesSection = favoritesSection else {return}
-                    updater.updateSection(section: favoritesSection)
-                })
+                lowerSection?.setTitle(title: "Mine favoritter")
+                lowerSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
             }
         }
     }
     
-    private func configureSuggestionsSection() {
+    private func configurePredictions() {
+        searchBar.text = nil
+        middleSection.setTitle(title: "Navneforslag")
+        
         if let predictionsState = newObservation?.predictionResultsState {
             switch predictionsState {
-            case .Error(let error, nil):
-                suggestionsSection.setTitle(title: "Navneforslag")
-                suggestionsSection.setState(state: .error(error: error, handler: nil))
-            case .Loading:
-                suggestionsSection.setTitle(title: "Navneforslag")
-                suggestionsSection.setState(state: .loading)
-            case .Items(let predictionResults):
-                suggestionsSection.setTitle(title: "Navneforslag")
-                suggestionsSection.setState(state: .items(items: predictionResults.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0.mushroom, $0.score)})))
-            default:
-                suggestionsSection.setTitle(title: nil)
-                suggestionsSection.setState(state: .items(items: []))
+            case .error(error: let error, handler: _):
+                middleSection.setState(state: .error(error: error, handler: nil))
+            case .loading:
+                middleSection.setState(state: .loading)
+            case .items(items: let items):
+                var items = items.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0.mushroom, $0.score)})
+                items.append(.citation)
+                middleSection.setState(state: .items(items: items))
+            case .empty:
+                middleSection.setState(state: .empty)
             }
-        } else {
-            suggestionsSection.setTitle(title: nil)
-            suggestionsSection.setState(state: .items(items: []))
-        }
-    }
-}
-
-extension ObservationSpecieCell {
-    
-
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= -scrollView.contentInset.top {
-            searchBar.expand()
-        } else {
-            searchBar.collapse()
         }
     }
 }
 
 extension ObservationSpecieCell: CustomSearchBarDelegate {
     func newSearchEntry(entry: String) {
-//        tableViewState = .Loading
+        middleSection.setTitle(title: "Søgeresultater")
+        middleSection.setState(state: .loading)
         
-        DataService.instance.getMushrooms(searchString: entry, speciesQueries: [.attributes(presentInDenmark: nil), .images(required: false), .danishNames, .redlistData, .statistics]) { [weak self] (result) in
-            switch result {
-            case .Error(let appError):
-                return
-//                self?.tableViewState = TableViewState.Error(appError, nil)
-            case .Success(let mushrooms):
-                return
-//                let cells = mushrooms.compactMap({Section.CellType.selectableMushroom($0, nil)})
-//                self?.tableViewState = TableViewState.Items([Section.init(title: "Søgeresultater", cells: cells)])
+        tableView.performUpdates(updates: { (updater) in
+            updater.updateSection(section: self.middleSection)
+        }) { [weak middleSection, weak tableView] in
+            DataService.instance.getMushrooms(searchString: entry, speciesQueries: [.attributes(presentInDenmark: nil), .images(required: false), .danishNames, .redlistData, .statistics]) { (result) in
+                switch result {
+                case .Error(let appError):
+                    middleSection?.setState(state: .error(error: appError, handler: nil))
+                case .Success(let mushrooms):
+                    middleSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
+                }
+                
+                tableView?.performUpdates(updates: { updater in
+                    updater.updateSection(section: middleSection)
+                })
             }
         }
     }
     
     func clearedSearchEntry() {
-        defaultState()
+        configurePredictions()
+        
+        tableView.performUpdates(updates: { updater in
+            updater.updateSection(section: self.middleSection)
+        })
     }
 }

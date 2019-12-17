@@ -14,10 +14,6 @@ import CoreLocation
 import Foundation
 import Photos
 
-protocol CameraVCDelegate: class {
-    func imageReady(_ imageURL: URL)
-}
-
 class CameraVC: UIViewController {
     
     enum Usage {
@@ -60,8 +56,8 @@ class CameraVC: UIViewController {
         return photos
     }()
     
-    weak var delegate: CameraVCDelegate? = nil
-
+    var onImageCaptured: ((URL) -> ())?
+    
     private var currentImageURL: URL?
     private let usage: Usage
     private var errorView: ErrorView?
@@ -147,6 +143,7 @@ class CameraVC: UIViewController {
     
     internal func reset() {
         avView.isHidden = false
+        imageView.isHidden = false
         imageView.image = nil
         cameraView.reset()
         avView.start()
@@ -246,7 +243,7 @@ class CameraVC: UIViewController {
         }
         
         if let predictionResults = predictionResults {
-            newObservation.predictionResultsState = .Items(predictionResults)
+            newObservation.predictionResultsState = .items(items: predictionResults)
         }
         
         self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: AddObservationVC(newObservation: newObservation, session: session)))
@@ -290,7 +287,7 @@ extension CameraVC: CameraViewDelegate {
             if let imageURL = currentImageURL {
                 switch usage {
                 case .imageCapture:
-                    delegate?.imageReady(imageURL)
+                    onImageCaptured?(imageURL)
                     dismiss(animated: true, completion: nil)
                 case .newObservationRecord(session: let session):
                     createNewObservationRecord(imageURL: imageURL, mushroom: nil, predictionResults: nil, session: session)

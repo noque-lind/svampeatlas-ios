@@ -19,7 +19,7 @@ class AnimatingTableView: UITableView {
     }
     
     convenience init(animating: Bool) {
-        self.init(frame: CGRect.zero, style: .plain, animating: animating)
+        self.init(frame: CGRect.zero, style: .grouped, animating: animating)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -39,7 +39,7 @@ class AnimatingTableView: UITableView {
                     cell.contentView.transform = CGAffineTransform.identity
                     cell.contentView.alpha = 1
                 }, completion: nil)
-                delayCounter = delayCounter + 0.10
+                delayCounter = delayCounter + 0.04
             }
         }
     }

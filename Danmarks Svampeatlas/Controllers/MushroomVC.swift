@@ -146,8 +146,8 @@ class MushroomVC: UIViewController {
         return tableView
     }()
     
-    private lazy var searchBar: CustomSearchBar = {
-        let view = CustomSearchBar()
+    private lazy var searchBar: SearchBar = {
+        let view = SearchBar()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.searchBarDelegate = self
         view.heightAnchor.constraint(equalToConstant: 50).isActive = true

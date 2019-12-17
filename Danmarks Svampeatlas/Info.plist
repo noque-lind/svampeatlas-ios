@@ -44,7 +44,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Dette giver dig mulighed for at finde svampearter nær dig, nemt finde din placering når du skal uploade fund samt til at tagge de billeder du tager med GPS information, så du kan finde placeringen senere.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Dette giver dig mulighed for at tilføje billeder fra dit fotobibliotek til dine fund, eller bruge dem til at få navneforslag</string>
+	<string>Dette giver dig mulighed for at tilføje billeder fra dit fotobibliotek til dine fund, eller bruge dem til at få navneforslag. Appen skal også bruge denne tilladelse til at gemme dine billeder i dit fotobibliotek, hvis du vælger at appens billeder skal gemmes. </string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>CaviarDreams_Bold.ttf</string>

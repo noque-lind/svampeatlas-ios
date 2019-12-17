@@ -9,10 +9,6 @@
 import UIKit
 import Photos
 
-protocol ObservationImagesViewDelegate: NavigationDelegate {
-        func shouldAnimateHeightChanged()
-}
-
 class ObservationImagesView: UIView {
     
     private lazy var collectionView: UICollectionView = {
@@ -32,49 +28,37 @@ class ObservationImagesView: UIView {
         return view
     }()
     
-    private lazy var expandedLayout: UICollectionViewFlowLayout = {
+    private let expandedLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 200, height: expandedHeight)
+        layout.itemSize = CGSize(width: 200, height: ObservationImagesView.expandedHeight)
         layout.minimumLineSpacing = 16
         return layout
     }()
     
-    var heightConstraint: NSLayoutConstraint?
+    static let collapsedHeight: CGFloat = 92
+    static let expandedHeight: CGFloat = 200
     
-    var imageAdded: ((URL) -> ())?
+    var onAddImageButtonPressed: (() -> ())?
     var imageDeleted: ((URL) -> ())?
-    var onAddImagePressed: (() -> ())?
+    var shouldAnimateHeight: ((CGFloat) -> ())?
     
-    private var collapsedHeight: CGFloat
-    private var expandedHeight: CGFloat
-    private var isExpanded: Bool = false
-    weak var delegate: ObservationImagesViewDelegate?
+    var isExpanded: Bool = false
     
     private var images = [URL]() {
         didSet {
             if images.count > 0 && isExpanded == false {
-                heightConstraint?.isActive = false
-                heightConstraint?.constant = expandedHeight
+                shouldAnimateHeight?(ObservationImagesView.expandedHeight)
                 isExpanded = true
-                heightConstraint?.isActive = true
-                delegate?.shouldAnimateHeightChanged()
             } else if images.count == 0 && isExpanded == true {
-                heightConstraint?.isActive = false
-                heightConstraint?.constant = collapsedHeight
+                shouldAnimateHeight?(ObservationImagesView.collapsedHeight)
                 isExpanded = false
-                heightConstraint?.isActive = true
-                delegate?.shouldAnimateHeightChanged()
             }
         }
     }
     
-    init(collapsedHeight: CGFloat = 92, expandedHeight: CGFloat = 200) {
-        self.collapsedHeight = collapsedHeight
-        self.expandedHeight = expandedHeight
+    init() {
         super.init(frame: CGRect.zero)
-        collectionView.reloadData()
-        collectionView.scrollToItem(at: IndexPath(item: images.count, section: 0), at: UICollectionView.ScrollPosition.right, animated: false)
         setupView()
     }
     
@@ -83,16 +67,6 @@ class ObservationImagesView: UIView {
     }
     
     private func setupView() {
-        if images.count != 0 {
-            heightConstraint = self.heightAnchor.constraint(equalToConstant: expandedHeight)
-            isExpanded = true
-        } else {
-            heightConstraint = self.heightAnchor.constraint(equalToConstant: collapsedHeight)
-            isExpanded = false
-        }
-        
-        heightConstraint?.isActive = true
-        
         clipsToBounds = false
         backgroundColor = UIColor.appPrimaryColour()
         
@@ -124,9 +98,19 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
             return cell
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationImageCell", for: indexPath) as! ObservationImageCell
-        cell.delegate = self
-        if images.endIndex > indexPath.row {
-            cell.configureCell(imageURL: images[indexPath.row])
+        cell.configureCell(imageURL: images[indexPath.row])
+        cell.onSwipeUp = { [unowned self] imageURL in
+            guard let index = self.images.firstIndex(of: imageURL) else {return}
+            self.images.remove(at: index)
+            self.imageDeleted?(imageURL)
+            
+            if self.images.count == 0 {
+                self.collectionView.reloadData()
+            } else {
+                self.collectionView.performBatchUpdates({
+                    self.collectionView.deleteItems(at: [.init(row: index, section: 0)])
+                }, completion: nil)
+            }
         }
         return cell
     }
@@ -143,48 +127,21 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == images.count {
-            let vc = CameraVC(cameraVCUsage: CameraVC.Usage.imageCapture)
-            vc.delegate = self
-            delegate?.presentVC(UINavigationController(rootViewController: vc))
+            onAddImageButtonPressed?()
         }
     }
-}
-
-extension ObservationImagesView: CameraVCDelegate {
-    func imageReady(_ imageURL: URL) {
-        imageAdded?(imageURL)
-        let newIndexPath = IndexPath(row: images.count, section: 0)
-        
-        collectionView.performBatchUpdates({ [unowned self, unowned collectionView] in
-            self.images.append(imageURL)
-            collectionView.insertItems(at: [IndexPath(row: images.endIndex - 1, section: 0)])
-        }) { [unowned collectionView] (_) in
+    
+    func addImage(imageURL: URL) {
+        images.append(imageURL)
+        collectionView.performBatchUpdates({
+            collectionView.insertItems(at: [.init(row: images.endIndex - 1, section: 0)])
+        }) { (_) in
             DispatchQueue.main.async {
-                collectionView.scrollToItem(at: newIndexPath, at: UICollectionView.ScrollPosition.right, animated: true)
+                self.collectionView.scrollToItem(at: .init(row: self.images.endIndex, section: 0), at: .right, animated: true)
             }
         }
     }
 }
-
-extension ObservationImagesView: ObservationImageCellDelegate {
-    func imageDeleted(image: UIImage?) {
-//        guard let image = image, let index = images.firstIndex(of: image) else {return}
-//        let indexPath = IndexPath(row: index, section: 0)
-//        images.remove(at: index)
-//        newObservation?.removeImage(at: index)
-//
-//        if images.count == 0 {
-//            self.collectionView.reloadData()
-//        } else {
-//            self.collectionView.performBatchUpdates({
-//                self.collectionView.deleteItems(at: [indexPath])
-//            }) { (_) in
-//
-//            }
-//        }
-    }
-}
-
 
 class ObservationImageCellAdd: UICollectionViewCell {
     
@@ -248,7 +205,9 @@ class ObservationImageCell: UICollectionViewCell {
         return imageView
     }()
     
-    weak var delegate: ObservationImageCellDelegate?
+    private var imageURL: URL?
+    var onSwipeUp: ((URL) -> ())?
+    
     private var animator = UIViewPropertyAnimator()
     private var panGestureRecognizer = UIPanGestureRecognizer()
     
@@ -298,10 +257,13 @@ class ObservationImageCell: UICollectionViewCell {
                 self.transform = CGAffineTransform(translationX: 0.0, y: -self.frame.height)
                 self.alpha = 0
             })
-            animator.addCompletion { (position) in
+            animator.addCompletion { [weak self] (position) in
                 switch position {
                 case .end:
-                    self.delegate?.imageDeleted(image: self.imageView.image)
+                    if let imageURL = self?.imageURL {
+                        self?.onSwipeUp?(imageURL)
+                    }
+    
                 default: break
                 }
             }
@@ -323,6 +285,7 @@ class ObservationImageCell: UICollectionViewCell {
     
     
     func configureCell(imageURL: URL) {
+        self.imageURL = imageURL
         imageView.loadImage(url: imageURL)
     }
 }

@@ -46,8 +46,8 @@ fileprivate class HostTableView: GenericTableView<Host> {
 
 class SearchVC: UIViewController {
 
-    private lazy var searchBar: CustomSearchBar = {
-       let view = CustomSearchBar()
+    private lazy var searchBar: SearchBar = {
+       let view = SearchBar()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.searchBarDelegate = self
         view.isHidden = false

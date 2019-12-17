@@ -53,7 +53,7 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         }
         
         deinit {
-            print("Updater deinit")
+            debugPrint("Updater deinit")
         }
         
         func addSection(section: Section<T>) {
@@ -66,17 +66,19 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
             superclass.tableView.deleteRows(at: [indexPath], with: animation)
         }
         
-        func updateSection(section: Section<T>) {
-            guard let index = superclass.sections.index(of: section) else {return}
+        func updateSection(section: Section<T>?) {
+            guard let section = section, let index = superclass.sections.index(of: section) else {return}
             superclass.tableView.reloadSections(IndexSet(integer: index), with: .automatic)
+        }
+        
+        func scrollToTop(animated: Bool) {
+            superclass.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: animated)
         }
     }
     
     private lazy var tableView: AnimatingTableView = {
         let view = AnimatingTableView(animating: true)
         view.backgroundColor = UIColor.clear
-        view.delegate = self
-        view.dataSource = self
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.separatorStyle = self.separatorStyle
@@ -85,9 +87,9 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         view.alwaysBounceVertical = false
         view.contentInsetAdjustmentBehavior = .never
         view.panGestureRecognizer.isEnabled = false
-        view.tableFooterView = UIView()
         view.delegate = self
         view.dataSource = self
+        view.tableFooterView = UIView()
         view.clipsToBounds = true
         view.register(ErrorCell.self, forCellReuseIdentifier: ErrorCell.identifier)
         view.register(LoaderCell.self, forCellReuseIdentifier: LoaderCell.identifier)
@@ -155,9 +157,8 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     func setSections(sections: [Section<T>]) {
-        self.sections = sections
-        
         DispatchQueue.main.async {
+            self.sections = sections
             self.tableView.reloadData()
             
             if sections.first != nil && sections.first?.count() != 0 {
@@ -184,6 +185,10 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return sections[section].title != nil ? UITableView.automaticDimension: 0.0
+    }
+    
+    func scrollToTop(animated: Bool) {
+        tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: animated)
     }
     
     internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -213,11 +218,14 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
             guard let item = items[safe: indexPath.row] else {return UITableViewCell()}
             let cell = cellForItem(item, tableView: tableView, indexPath: indexPath)
             return cell
+        case .empty: return UITableViewCell()
         }
     }
     
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch sections[indexPath.section].state {
+        case .empty:
+            return 0
         case .error:
             if sections.count == 1 {
                 return tableView.frame.height
@@ -226,7 +234,7 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
             }
         case .loading:
             if sections.count == 1 {
-                return tableView.frame.height
+                return tableView.frame.height - tableView.adjustedContentInset.top - tableView.adjustedContentInset.bottom
             } else {
                 return LoaderCell.height
             }

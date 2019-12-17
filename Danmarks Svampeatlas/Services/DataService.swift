@@ -371,36 +371,37 @@ extension DataService {
     }
     
   func getSubstrateGroups(overrideOutdateError: Bool? = false, completion: @escaping (Result<[SubstrateGroup], AppError>) -> ()) {
-        CoreDataHelper.fetchSubstrateGroups(overrideOutdateWarning: overrideOutdateError, completion: { (result) in
+    
+    func sortAndComplete(substrateGroups: [SubstrateGroup]) {
+        let sortedSubstrateGroups = substrateGroups.sorted(by: {$0.id < $1.id})
+        completion(Result.Success(sortedSubstrateGroups))
+    }
+    
+        CoreDataHelper.fetchSubstrateGroups(overrideOutdateWarning: overrideOutdateError, completion: { [weak self] (result) in
             switch result {
             case .Success(let substrateGroups):
-                let sortedSubstrateGroups = substrateGroups.sorted(by: {$0.id < $1.id})
-                completion(Result.Success(sortedSubstrateGroups))
+                sortAndComplete(substrateGroups: substrateGroups)
             case .Error(let coreDataError):
                 switch coreDataError {
                 case .noEntries, .readError:
-                    downloadSubstrateGroups(completion: { (result) in
+                    self?.downloadSubstrateGroups(completion: { (result) in
                         switch result {
                         case .Error(let error):
                             completion(Result.Error(error))
                         case .Success(let substrateGroups):
-                            let sortedSubstrateGroups = substrateGroups.sorted(by: {$0.id < $1.id})
-                            completion(Result.Success(sortedSubstrateGroups))
+                            sortAndComplete(substrateGroups: substrateGroups)
                         }
                     })
-                    downloadSubstrateGroups(completion: completion)
                 case .contentOutdated:
-                    downloadSubstrateGroups(completion: { (result) in
+                    self?.downloadSubstrateGroups(completion: { (result) in
                         switch result {
                         case .Success(let substrateGroups):
-                            let sortedSubstrateGroups = substrateGroups.sorted(by: {$0.id < $1.id})
-                            completion(Result.Success(sortedSubstrateGroups))
+                            sortAndComplete(substrateGroups: substrateGroups)
                         case .Error(_):
-                            self.getSubstrateGroups(overrideOutdateError: true, completion: completion)
+                            self?.getSubstrateGroups(overrideOutdateError: true, completion: completion)
                             }
                     })
-                case .saveError:
-                    return
+                case .saveError: return
                 }
             }
         })

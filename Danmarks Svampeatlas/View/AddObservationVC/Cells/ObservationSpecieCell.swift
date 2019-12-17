@@ -160,16 +160,16 @@ class ObservationSpecieCell: UICollectionViewCell {
             }
             self.delegate?.pushVC(vc)
         }
-        
+    
         tableView.setSections(sections: [upperSection, middleSection, lowerSection])
         return tableView
     }()
     
     weak var delegate: NavigationDelegate?
     
-    private let upperSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
-    private let middleSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
-    private let lowerSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .items(items: []))
+    private let upperSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .empty)
+    private let middleSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .empty)
+    private let lowerSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .empty)
     
     private var newObservation: NewObservation? {
         didSet {
@@ -223,7 +223,8 @@ class ObservationSpecieCell: UICollectionViewCell {
     func configureCell(newObservation: NewObservation?) {
         self.newObservation = newObservation
         configureUpperSection()
-//        configurePredictions()
+        configurePredictions()
+        configureFavoritesSection()
     }
     
     

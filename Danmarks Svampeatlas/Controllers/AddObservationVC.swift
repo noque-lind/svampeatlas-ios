@@ -49,7 +49,9 @@ class AddObservationVC: UIViewController {
                     self.handleImageLocation(imageLocation: imageLocation, alternativeLocation: nil)
                 }
             }
-            self.presentVC(UINavigationController(rootViewController: vc))
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            self.presentVC(nav)
         }
         
         return view

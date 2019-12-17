@@ -109,39 +109,21 @@ struct CoreDataHelper {
         
     }
     
-    static func fetchAllFavoritedMushrooms() -> Result<[Mushroom], CoreDataError> {
-        let fetchRequest = NSFetchRequest<CDMushroom>(entityName: "CDMushroom")
-        do {
-            let cdMushrooms = try managedContext.fetch(fetchRequest)
-            let mushrooms = cdMushrooms.compactMap({Mushroom(from: $0)})
-            
-            guard mushrooms.count > 0 else {return Result.Error(CoreDataError.noEntries(category: .Mushrooms))}
-            return .Success(mushrooms)
-        } catch {
-            return .Error(.readError)
-        }
-    }
     
     static func fetchAllFavoritedMushrooms(completion: @escaping (Result<[Mushroom], CoreDataError>) -> ()) {
         CoreDataService.instance.persistentContainer.performBackgroundTask { (context) in
             do {
                 let cdMushrooms: [CDMushroom] = try context.fetch(CDMushroom.fetchRequest())
-                completion(.Success(cdMushrooms.compactMap({Mushroom(from: $0)})))
+                let mushrooms = cdMushrooms.compactMap({Mushroom(from: $0)})
+                
+                DispatchQueue.global(qos: .userInteractive).async {
+                    completion(.Success(mushrooms))
+                }
             } catch {
-                completion(.Error(.readError))
+                DispatchQueue.global(qos: .userInteractive).async {
+                    completion(.Error(.readError))
+                }
             }
-        }
-        
-        
-        let fetchRequest = NSFetchRequest<CDMushroom>(entityName: "CDMushroom")
-        do {
-            let cdMushrooms = try managedContext.fetch(fetchRequest)
-            let mushrooms = cdMushrooms.compactMap({Mushroom(from: $0)})
-            
-            guard mushrooms.count > 0 else {completion(Result.Error(CoreDataError.noEntries(category: .Mushrooms))); return}
-            completion(Result.Success(mushrooms))
-        } catch {
-            completion(Result.Error(CoreDataError.readError))
         }
     }
     
@@ -314,22 +296,29 @@ extension CoreDataHelper {
         return nil
     }
     
-    static func fetchSubstrateGroups(overrideOutdateWarning: Bool? = false, completion: (Result<[SubstrateGroup], CoreDataError>) -> ()) {
+    static func fetchSubstrateGroups(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[SubstrateGroup], CoreDataError>) -> ()) {
         if UserDefaultsHelper.shouldUpdateDatabase && overrideOutdateWarning == false {
             completion(Result.Error(CoreDataError.contentOutdated))
         } else {
-            let fetchRequest = NSFetchRequest<CDSubstrateGroup>(entityName: "CDSubstrateGroup")
-            
-            do {
-                let cdSubstrateGroups = try managedContext.fetch(fetchRequest)
-                let substrateGroups = cdSubstrateGroups.compactMap({SubstrateGroup(from: $0)})
-                
-                guard substrateGroups.count > 0 else {completion(Result.Error(CoreDataError.noEntries(category: .Substrate))); return}
-                completion(Result.Success(substrateGroups))
-            } catch {
-                print(error)
+            CoreDataService.instance.persistentContainer.performBackgroundTask { (context) in
+                do {
+                    let cdSubstrateGroups: [CDSubstrateGroup] = try context.fetch(CDSubstrateGroup.fetchRequest())
+                    let substrateGroups = cdSubstrateGroups.compactMap({SubstrateGroup(from: $0)})
+                    
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        if !substrateGroups.isEmpty {
+                            completion(.Success(substrateGroups))
+                        } else {
+                            completion(.Error(.noEntries(category: .Substrate)))
+                        }
+                    }
+                } catch {
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        completion(.Error(.readError))
+                    }
+                }
             }
-        }
+    }
     }
     
     static func fetchHosts(overrideOutdateWarning: Bool? = false, completion: (Result<[Host], CoreDataError>) -> ()) {

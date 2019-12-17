@@ -99,13 +99,13 @@ class CameraVC: UIViewController {
             avView.start()
         }
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
+        
+    override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
-               avView.stop()
         super.viewDidDisappear(animated)
     }
     
+
     private func setupView() {
         view.backgroundColor = UIColor.black
         view.addSubview(avView)
@@ -138,6 +138,7 @@ class CameraVC: UIViewController {
     }
     
     @objc private func onDismissPressed() {
+        avView.stop()
         dismiss(animated: true, completion: nil)
     }
     
@@ -282,6 +283,8 @@ extension CameraVC: CameraViewDelegate {
     }
     
     func textButtonPressed(state: CameraControlsView.State) {
+        avView.stop()
+        
         switch state {
         case .confirmation:
             if let imageURL = currentImageURL {

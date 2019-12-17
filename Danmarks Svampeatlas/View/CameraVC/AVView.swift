@@ -171,7 +171,7 @@ class AVView: UIView {
     }
     
     func stop() {
-        DispatchQueue.global(qos: .default).async {
+        DispatchQueue.global(qos: .background).async {
             self.captureSession.stopRunning()
         }
     }

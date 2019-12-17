@@ -77,7 +77,7 @@ class ObservationDetailsCell: UICollectionViewCell {
         return view
     }()
     
-    private let rows = [Categories]()
+    private let rows = Categories.allCases
     private weak var navigationDelegate: NavigationDelegate?
     private var newObservation: NewObservation?
     private var shouldClearObservationHost = false
@@ -264,15 +264,16 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
     fileprivate func getSubstrateGroups(forCell cell: TableViewPickerCell) {
         cell.tableViewState = .Loading
         
-        DataService.instance.getSubstrateGroups { (result) in
+        DataService.instance.getSubstrateGroups { [weak cell, weak self] (result) in
             switch result {
             case .Error(let error):
-                cell.tableViewState = .Error(error, {  recoveryAction in
-                    self.getSubstrateGroups(forCell: cell)
+                cell?.tableViewState = .Error(error, {  recoveryAction in
+                    guard let cell = cell else { return }
+                    self?.getSubstrateGroups(forCell: cell)
                 })
             case .Success(let substrateGroups):
                     let sections = substrateGroups.compactMap({TableViewPickerCell.Section.init(title: $0.dkName.capitalizeFirst(), cells: $0.substrates.compactMap({TableViewPickerCell.Section.CellType.substrateCell($0)}))})
-                cell.tableViewState = .Items(sections)
+                cell?.tableViewState = .Items(sections)
             }
         }
     }

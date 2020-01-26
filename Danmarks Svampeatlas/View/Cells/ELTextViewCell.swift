@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 class TextViewCell: UITableViewCell {
     

@@ -15,25 +15,22 @@ protocol ELPhotosManagerDelegate: NavigationDelegate {
     func assetFetchCanceled()
 }
 
-
-
-
 class ELPhotos: NSObject  {
     
     enum ELPhotosError: AppError {
         var errorDescription: String {
             switch self {
-            case .notAuthorized: return "Du har ikke givet appen tilladelse til at skrive og læse til dit fotobibliotek. Du kan ændre det i indstillinger, men bemærk at dette genstarter appen."
-            case .unknownSaveError: return "Der skete en ukendt fejl i forbindelse med at gemme billedet til dit fotoalbum."
-            case .unknownFetchError: return "Der skete en ukendt fejl i forbindelse med at få adgang til det valgte billede."
+            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_message", comment: "")
+            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_message", comment: "")
+            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_message", comment: "")
             }
         }
         
         var errorTitle: String {
             switch self {
-            case .notAuthorized: return "Mangler tilladelse"
-            case .unknownSaveError: return "Ukendt fejl"
-            case .unknownFetchError: return "Ukendt fejl"
+            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_title", comment: "")
+            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_title", comment: "")
+            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_title", comment: "")
             }
         }
         
@@ -166,9 +163,9 @@ extension ELPhotos: UIImagePickerControllerDelegate, UINavigationControllerDeleg
         PHImageManager.default().requestImageData(for: phAsset, options: requestOptions) { [weak self] (data, string, orientation, nil) in
             if let data = data {
                 switch ELFileManager.saveTempImage(imageData: data) {
-                case .Error(let error):
+                case .failure(let error):
                     self?.delegate?.error(.unknownFetchError)
-                case .Success(let url):
+                case .success(let url):
                     self?.delegate?.assetFetched(url)
                 }
             } else {

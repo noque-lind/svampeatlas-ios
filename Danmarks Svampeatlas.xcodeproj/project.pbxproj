@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2083452D22574C4300E86730 /* AVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2083452C22574C4300E86730 /* AVView.swift */; };
-		20D4C80A223A6A75006AA9E9 /* SessionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D4C809223A6A75006AA9E9 /* SessionServiceTests.swift */; };
 		20D4C810223A7962006AA9E9 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D4C80F223A7962006AA9E9 /* NavigationItem.swift */; };
 		4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0683D0207A581D00EB06D7 /* ResultsView.swift */; };
 		4A1B178120C3F6E200E1F1B2 /* ToxicityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */; };
@@ -25,7 +24,6 @@
 		4A40CD70209217B500F58F25 /* Observation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A40CD6F209217B500F58F25 /* Observation.swift */; };
 		4A40CD722093325100F58F25 /* ClusterPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A40CD712093325100F58F25 /* ClusterPinView.swift */; };
 		4A40CD772094CBF000F58F25 /* ClusterPinCalloutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A40CD762094CBF000F58F25 /* ClusterPinCalloutView.swift */; };
-		4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4A8044207CD48900041018 /* LocationBackground.swift */; };
 		4A4AE30B2070181000178BFB /* MushroomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30A2070181000178BFB /* MushroomCell.swift */; };
 		4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */; };
 		4A4E4CFF20AE00AD00B3F898 /* AppNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4E4CFE20AE00AD00B3F898 /* AppNavigationController.swift */; };
@@ -37,8 +35,6 @@
 		4A69BC822038D96500D3B88B /* SvampeAtlas.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC802038D96500D3B88B /* SvampeAtlas.xcdatamodeld */; };
 		4A69BC842038D96500D3B88B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A69BC832038D96500D3B88B /* Assets.xcassets */; };
 		4A69BC872038D96500D3B88B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A69BC852038D96500D3B88B /* LaunchScreen.storyboard */; };
-		4A69BC922038D96500D3B88B /* DanmarksSvampeAtlasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC912038D96500D3B88B /* DanmarksSvampeAtlasTests.swift */; };
-		4A69BC9D2038D96500D3B88B /* DanmarksSvampeAtlasUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BC9C2038D96500D3B88B /* DanmarksSvampeAtlasUITests.swift */; };
 		4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A69BCAB2039805100D3B88B /* Mushroom.swift */; };
 		4A70A5DD20D8E61E007B6214 /* CameraControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A70A5DC20D8E61E007B6214 /* CameraControlsView.swift */; };
 		4A72AB8620EE530900F9E45C /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A72AB8520EE530900F9E45C /* CoreDataHelper.swift */; };
@@ -71,17 +67,22 @@
 		DB0C5A13227898E70071B15C /* ObservationDetailsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */; };
 		DB12BC262135507F00FFA037 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB12BC252135507F00FFA037 /* User.swift */; };
 		DB12BC28213551FD00FFA037 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB12BC27213551FD00FFA037 /* UserView.swift */; };
+		DB1C86EF23B665A1009DB71C /* MushroomsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1C86EE23B665A1009DB71C /* MushroomsRepository.swift */; };
 		DB1F85532122F3ED00658619 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1F85522122F3ED00658619 /* Date+Extension.swift */; };
 		DB24AEA72281CBE40057DF82 /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB24AEA62281CBE40057DF82 /* CGFloat+Extension.swift */; };
 		DB24AEA92281D5E40057DF82 /* MapViewFilteringSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB24AEA82281D5E40057DF82 /* MapViewFilteringSettings.swift */; };
 		DB2A52CF216383E20000F483 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2A52CE216383E20000F483 /* UIImageView+Extension.swift */; };
 		DB2C55B5234A076E007FABE4 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2C55B4234A076E007FABE4 /* SectionHeaderView.swift */; };
+		DB2DC11A23D8BF1C00EE9BC4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DB2DC11C23D8BF1C00EE9BC4 /* Localizable.strings */; };
+		DB2DC12023D9A71600EE9BC4 /* LocalizableStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2DC11F23D9A71600EE9BC4 /* LocalizableStrings.swift */; };
 		DB2EC90C216D285F00B980A0 /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2EC90B216D285F00B980A0 /* Double+Extension.swift */; };
 		DB2ECE67219F666E0025DD85 /* GenericTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2ECE66219F666E0025DD85 /* GenericTableView.swift */; };
 		DB32B0B321E61B6F00514CCA /* TableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB32B0B221E61B6F00514CCA /* TableViewHeaderView.swift */; };
 		DB32B0B521E65DF200514CCA /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB32B0B421E65DF200514CCA /* LocationService.swift */; };
 		DB34AA072190678900D423DA /* CommentsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB34AA062190678900D423DA /* CommentsTableView.swift */; };
 		DB3C4929219AEF11001894B5 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C4928219AEF11001894B5 /* ReloadCell.swift */; };
+		DB402BB823D9EED90020D68B /* ELKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB402BB523D9EEC70020D68B /* ELKit.framework */; };
+		DB402BB923D9EED90020D68B /* ELKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DB402BB523D9EEC70020D68B /* ELKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB42E37221776EB8003C3585 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37121776EB8003C3585 /* UserService.swift */; };
 		DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37321777811003C3585 /* ProfileImageView.swift */; };
 		DB4AE10B22BE89DA006F6516 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4AE10A22BE89DA006F6516 /* SearchVC.swift */; };
@@ -89,8 +90,6 @@
 		DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C42180DFA9001874A6 /* MyPageVC.swift */; };
 		DB4F53C72181F569001874A6 /* MyPageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C62181F569001874A6 /* MyPageScrollView.swift */; };
 		DB59F55F232D2B5B005D5EA5 /* Collection+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */; };
-		DB5AA02D2376D81C00F5D780 /* ELKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB5AA02A2376D7D200F5D780 /* ELKit.framework */; };
-		DB5AA02E2376D81C00F5D780 /* ELKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DB5AA02A2376D7D200F5D780 /* ELKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB5E160A21AC452300F8C3FD /* NearbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E160921AC452300F8C3FD /* NearbyVC.swift */; };
 		DB5E88E8238D9431005339D4 /* CaptureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E88E7238D9431005339D4 /* CaptureButton.swift */; };
 		DB6437492295CCFA00BE7FF4 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6437482295CCFA00BE7FF4 /* SearchCell.swift */; };
@@ -110,18 +109,17 @@
 		DB6E9E31218A529700A6FB1C /* UserNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6E9E30218A529700A6FB1C /* UserNotification.swift */; };
 		DB77162E220C2F2200E71903 /* ELMultipartFormData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB77162D220C2F2200E71903 /* ELMultipartFormData.swift */; };
 		DB771632220C6A2500E71903 /* ELFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB771631220C6A2500E71903 /* ELFileManager.swift */; };
+		DB78CDA123DDEBC90014B0E6 /* Version 1 to 1.2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = DB78CDA023DDEBC90014B0E6 /* Version 1 to 1.2.xcmappingmodel */; };
 		DB7F04F022A941FF00785AF8 /* MushroomTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F04EF22A941FF00785AF8 /* MushroomTableView.swift */; };
 		DB7F04F222AAB19D00785AF8 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F04F122AAB19D00785AF8 /* MapVC.swift */; };
 		DB7F04F922AD099C00785AF8 /* CaviarDreams_Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */; };
 		DB893117232BCBEA000BDCD1 /* UIApplication+Urls.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */; };
 		DB89311A232BCE52000BDCD1 /* AboutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB893119232BCE52000BDCD1 /* AboutVC.swift */; };
 		DB897AFA21D27AD100E74C00 /* VegetationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB897AF921D27AD100E74C00 /* VegetationType.swift */; };
-		DB897AFC21D29E3700E74C00 /* InputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB897AFB21D29E3700E74C00 /* InputAccessoryView.swift */; };
 		DB897AFF21DD50DD00E74C00 /* ObservationDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB897AFE21DD50DD00E74C00 /* ObservationDetailsCell.swift */; };
 		DB897B0121DD5C1F00E74C00 /* ObservationSpecieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB897B0021DD5C1F00E74C00 /* ObservationSpecieCell.swift */; };
 		DB897B0321DD5C5A00E74C00 /* ObservationLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB897B0221DD5C5A00E74C00 /* ObservationLocationCell.swift */; };
 		DB8CC0DC2158288E00C958F0 /* NavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */; };
-		DB8CF0A3217B486700ADAFB0 /* ELTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0A2217B486700ADAFB0 /* ELTextField.swift */; };
 		DB8CF0A7217BA99200ADAFB0 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */; };
 		DB8CF0A9217BAA3800ADAFB0 /* GradientImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF0A8217BAA3800ADAFB0 /* GradientImageView.swift */; };
 		DB8CF12521B949ED00ACBF06 /* AddObservationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8CF12421B949ED00ACBF06 /* AddObservationVC.swift */; };
@@ -132,21 +130,29 @@
 		DB95F7EB21141BFF003F8C93 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */; };
 		DB96D7D3237C8F39005C7AF6 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB96D7D2237C8F39005C7AF6 /* ErrorView.swift */; };
 		DB96D7D8237D8597005C7AF6 /* CreditationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB96D7D7237D8597005C7AF6 /* CreditationCell.swift */; };
-		DB96D7DC237DA014005C7AF6 /* PhotoAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB96D7DB237DA014005C7AF6 /* PhotoAlbum.swift */; };
+		DB9B22E523C9DFCD0030469B /* VegetationTypeRespositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9B22E423C9DFCD0030469B /* VegetationTypeRespositoryTests.swift */; };
 		DB9F59952175F4D9007790D3 /* MapViewSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9F59942175F4D9007790D3 /* MapViewSettingsView.swift */; };
 		DBA0D96921F99F54001E9CA8 /* LocalityAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0D96821F99F54001E9CA8 /* LocalityAnnotationView.swift */; };
 		DBA0D96D21F9ACB3001E9CA8 /* LocalityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0D96C21F9ACB3001E9CA8 /* LocalityCell.swift */; };
 		DBA0D96F21F9CB25001E9CA8 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0D96E21F9CB25001E9CA8 /* UIImage+Extension.swift */; };
+		DBADEB1223D7888D002173EC /* CautionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBADEB1123D7888D002173EC /* CautionCell.swift */; };
 		DBB33A4321CC011700BCED22 /* PickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4221CC011700BCED22 /* PickerCell.swift */; };
 		DBB33A4521CE67E200BCED22 /* ELTextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */; };
+		DBB52C3F23DAFF38004A4CBA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DBB52C4123DAFF38004A4CBA /* InfoPlist.strings */; };
 		DBC30C8A21EE1A1900826FC6 /* TableViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8921EE1A1900826FC6 /* TableViewState.swift */; };
 		DBC30C8C21EE1F5B00826FC6 /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */; };
 		DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */; };
 		DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */; };
+		DBCCB0B023C36FF100DFB04F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCB0AF23C36FF100DFB04F /* Repository.swift */; };
+		DBCCB0B423C3702E00DFB04F /* VegetationTypeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCB0B323C3702E00DFB04F /* VegetationTypeRepository.swift */; };
+		DBCED36F23B9F65400D54A4E /* Danmarks_SvampeatlasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCED36E23B9F65400D54A4E /* Danmarks_SvampeatlasTests.swift */; };
+		DBCED37723B9F6A800D54A4E /* DatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCED37623B9F6A800D54A4E /* DatabaseTests.swift */; };
+		DBCED37923B9F9FB00D54A4E /* MushroomsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCED37823B9F9FB00D54A4E /* MushroomsRepositoryTests.swift */; };
+		DBCED37B23BA1AF700D54A4E /* SubstrateGroupsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCED37A23BA1AF700D54A4E /* SubstrateGroupsRepository.swift */; };
+		DBCED37D23BA209600D54A4E /* SubstrateGroupRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCED37C23BA209600D54A4E /* SubstrateGroupRepositoryTests.swift */; };
 		DBCFD9AC239263A600A9302F /* PhotoLibraryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCFD9AB239263A600A9302F /* PhotoLibraryButton.swift */; };
 		DBCFD9B123942F9700A9302F /* CameraControlsTextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCFD9B023942F9700A9302F /* CameraControlsTextButton.swift */; };
 		DBD27B24231DAB5300391CCF /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD27B23231DAB5300391CCF /* Image.swift */; };
-		DBD27B29231ECA5A00391CCF /* species.txt in Resources */ = {isa = PBXBuildFile; fileRef = DBD27B27231ECA5A00391CCF /* species.txt */; };
 		DBD27B2B231ECB2F00391CCF /* PredictionMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD27B2A231ECB2F00391CCF /* PredictionMatch.swift */; };
 		DBD5CCAD234A22B000EC09C7 /* ValidationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD5CCAC234A22B000EC09C7 /* ValidationView.swift */; };
 		DBD5CCB0234B81DD00EC09C7 /* LocationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD5CCAF234B81DD00EC09C7 /* LocationAnnotation.swift */; };
@@ -154,48 +160,41 @@
 		DBEE2858212441DB0017817A /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEE2857212441DB0017817A /* AppError.swift */; };
 		DBF33C6A22FB432300F383D4 /* CALayer+Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF33C6822FB432200F383D4 /* CALayer+Animate.swift */; };
 		DBF3EE85234D779100EB5DFE /* NewObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF3EE84234D779100EB5DFE /* NewObservation.swift */; };
-		DBF4F3C6232A41CC0042E7A8 /* TermsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF4F3C5232A41CC0042E7A8 /* TermsController.swift */; };
+		DBF4F3C6232A41CC0042E7A8 /* TermsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF4F3C5232A41CC0042E7A8 /* TermsVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4A69BC8E2038D96500D3B88B /* PBXContainerItemProxy */ = {
+		DB402BB423D9EEC70020D68B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4A69BC6E2038D96500D3B88B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4A69BC752038D96500D3B88B;
-			remoteInfo = SvampeAtlas;
-		};
-		4A69BC992038D96500D3B88B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4A69BC6E2038D96500D3B88B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4A69BC752038D96500D3B88B;
-			remoteInfo = SvampeAtlas;
-		};
-		DB5AA0292376D7D200F5D780 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */;
+			containerPortal = DB402BAF23D9EEC60020D68B /* ELKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DB2B772C229954E500082E52;
 			remoteInfo = ELKit;
 		};
-		DB5AA02B2376D7D200F5D780 /* PBXContainerItemProxy */ = {
+		DB402BB623D9EEC70020D68B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */;
+			containerPortal = DB402BAF23D9EEC60020D68B /* ELKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DB2B7735229954E500082E52;
 			remoteInfo = ELKitTests;
 		};
+		DBCED37123B9F65400D54A4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A69BC6E2038D96500D3B88B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A69BC752038D96500D3B88B;
+			remoteInfo = "Danmarks Svampeatlas";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		DB2B77822299D0A400082E52 /* Embed Frameworks */ = {
+		DB2DC12823D9ECC000EE9BC4 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				DB5AA02E2376D81C00F5D780 /* ELKit.framework in Embed Frameworks */,
+				DB402BB923D9EED90020D68B /* ELKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -205,7 +204,6 @@
 /* Begin PBXFileReference section */
 		2083452C22574C4300E86730 /* AVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVView.swift; sourceTree = "<group>"; };
 		20D4C807223A62B0006AA9E9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		20D4C809223A6A75006AA9E9 /* SessionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionServiceTests.swift; sourceTree = "<group>"; };
 		20D4C80F223A7962006AA9E9 /* NavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
 		4A0683D0207A581D00EB06D7 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 		4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToxicityView.swift; sourceTree = "<group>"; };
@@ -222,7 +220,6 @@
 		4A40CD6F209217B500F58F25 /* Observation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observation.swift; sourceTree = "<group>"; };
 		4A40CD712093325100F58F25 /* ClusterPinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterPinView.swift; sourceTree = "<group>"; };
 		4A40CD762094CBF000F58F25 /* ClusterPinCalloutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClusterPinCalloutView.swift; sourceTree = "<group>"; };
-		4A4A8044207CD48900041018 /* LocationBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationBackground.swift; sourceTree = "<group>"; };
 		4A4AE30A2070181000178BFB /* MushroomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MushroomCell.swift; sourceTree = "<group>"; };
 		4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowImageAnimationController.swift; sourceTree = "<group>"; };
 		4A4E4CFE20AE00AD00B3F898 /* AppNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNavigationController.swift; sourceTree = "<group>"; };
@@ -235,12 +232,6 @@
 		4A69BC812038D96500D3B88B /* SvampeAtlas.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SvampeAtlas.xcdatamodel; sourceTree = "<group>"; };
 		4A69BC832038D96500D3B88B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4A69BC862038D96500D3B88B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		4A69BC8D2038D96500D3B88B /* Danmarks SvampeatlasTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Danmarks SvampeatlasTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4A69BC912038D96500D3B88B /* DanmarksSvampeAtlasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmarksSvampeAtlasTests.swift; sourceTree = "<group>"; };
-		4A69BC932038D96500D3B88B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4A69BC982038D96500D3B88B /* Danmarks SvampeatlasUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Danmarks SvampeatlasUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4A69BC9C2038D96500D3B88B /* DanmarksSvampeAtlasUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmarksSvampeAtlasUITests.swift; sourceTree = "<group>"; };
-		4A69BC9E2038D96500D3B88B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A69BCAB2039805100D3B88B /* Mushroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mushroom.swift; sourceTree = "<group>"; };
 		4A70A5DC20D8E61E007B6214 /* CameraControlsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControlsView.swift; sourceTree = "<group>"; };
 		4A72AB8520EE530900F9E45C /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
@@ -273,18 +264,24 @@
 		DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationDetailsScrollView.swift; sourceTree = "<group>"; };
 		DB12BC252135507F00FFA037 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		DB12BC27213551FD00FFA037 /* UserView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
+		DB17731123BD38C000B64868 /* SvampeAtlas_1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SvampeAtlas_1.2.xcdatamodel; sourceTree = "<group>"; };
+		DB1C86EE23B665A1009DB71C /* MushroomsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomsRepository.swift; sourceTree = "<group>"; };
 		DB1F85522122F3ED00658619 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		DB24AEA62281CBE40057DF82 /* CGFloat+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
 		DB24AEA82281D5E40057DF82 /* MapViewFilteringSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewFilteringSettings.swift; sourceTree = "<group>"; };
 		DB2A52CE216383E20000F483 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		DB2C55B4234A076E007FABE4 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
+		DB2DC11B23D8BF1C00EE9BC4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DB2DC11D23D8BF7B00EE9BC4 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		DB2DC11E23D8BF7B00EE9BC4 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DB2DC11F23D9A71600EE9BC4 /* LocalizableStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizableStrings.swift; sourceTree = "<group>"; };
 		DB2EC90B216D285F00B980A0 /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		DB2ECE66219F666E0025DD85 /* GenericTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericTableView.swift; sourceTree = "<group>"; };
-		DB32B0B121E4F90800514CCA /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		DB32B0B221E61B6F00514CCA /* TableViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewHeaderView.swift; sourceTree = "<group>"; };
 		DB32B0B421E65DF200514CCA /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		DB34AA062190678900D423DA /* CommentsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableView.swift; sourceTree = "<group>"; };
 		DB3C4928219AEF11001894B5 /* ReloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadCell.swift; sourceTree = "<group>"; };
+		DB402BAF23D9EEC60020D68B /* ELKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ELKit.xcodeproj; path = ../../../ELKit/ELKit.xcodeproj; sourceTree = "<group>"; };
 		DB42E37121776EB8003C3585 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		DB42E37321777811003C3585 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
 		DB4AE10A22BE89DA006F6516 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
@@ -292,7 +289,6 @@
 		DB4F53C42180DFA9001874A6 /* MyPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageVC.swift; sourceTree = "<group>"; };
 		DB4F53C62181F569001874A6 /* MyPageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageScrollView.swift; sourceTree = "<group>"; };
 		DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
-		DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ELKit.xcodeproj; path = ../../../ELKit/ELKit.xcodeproj; sourceTree = "<group>"; };
 		DB5E160921AC452300F8C3FD /* NearbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyVC.swift; sourceTree = "<group>"; };
 		DB5E88E7238D9431005339D4 /* CaptureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureButton.swift; sourceTree = "<group>"; };
 		DB6437482295CCFA00BE7FF4 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
@@ -312,18 +308,17 @@
 		DB6E9E30218A529700A6FB1C /* UserNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotification.swift; sourceTree = "<group>"; };
 		DB77162D220C2F2200E71903 /* ELMultipartFormData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELMultipartFormData.swift; sourceTree = "<group>"; };
 		DB771631220C6A2500E71903 /* ELFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELFileManager.swift; sourceTree = "<group>"; };
+		DB78CDA023DDEBC90014B0E6 /* Version 1 to 1.2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "Version 1 to 1.2.xcmappingmodel"; sourceTree = "<group>"; };
 		DB7F04EF22A941FF00785AF8 /* MushroomTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomTableView.swift; sourceTree = "<group>"; };
 		DB7F04F122AAB19D00785AF8 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = CaviarDreams_Bold.ttf; sourceTree = "<group>"; };
 		DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Urls.swift"; sourceTree = "<group>"; };
 		DB893119232BCE52000BDCD1 /* AboutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVC.swift; sourceTree = "<group>"; };
 		DB897AF921D27AD100E74C00 /* VegetationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VegetationType.swift; sourceTree = "<group>"; };
-		DB897AFB21D29E3700E74C00 /* InputAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputAccessoryView.swift; sourceTree = "<group>"; };
 		DB897AFE21DD50DD00E74C00 /* ObservationDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationDetailsCell.swift; sourceTree = "<group>"; };
 		DB897B0021DD5C1F00E74C00 /* ObservationSpecieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationSpecieCell.swift; sourceTree = "<group>"; };
 		DB897B0221DD5C5A00E74C00 /* ObservationLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationLocationCell.swift; sourceTree = "<group>"; };
 		DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDelegate.swift; sourceTree = "<group>"; };
-		DB8CF0A2217B486700ADAFB0 /* ELTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELTextField.swift; sourceTree = "<group>"; };
 		DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		DB8CF0A8217BAA3800ADAFB0 /* GradientImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientImageView.swift; sourceTree = "<group>"; };
 		DB8CF12421B949ED00ACBF06 /* AddObservationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddObservationVC.swift; sourceTree = "<group>"; };
@@ -334,21 +329,35 @@
 		DB95F7EA21141BFF003F8C93 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		DB96D7D2237C8F39005C7AF6 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		DB96D7D7237D8597005C7AF6 /* CreditationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditationCell.swift; sourceTree = "<group>"; };
-		DB96D7DB237DA014005C7AF6 /* PhotoAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbum.swift; sourceTree = "<group>"; };
+		DB9B22E423C9DFCD0030469B /* VegetationTypeRespositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VegetationTypeRespositoryTests.swift; sourceTree = "<group>"; };
 		DB9F59942175F4D9007790D3 /* MapViewSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewSettingsView.swift; sourceTree = "<group>"; };
 		DBA0D96821F99F54001E9CA8 /* LocalityAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalityAnnotationView.swift; sourceTree = "<group>"; };
 		DBA0D96C21F9ACB3001E9CA8 /* LocalityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalityCell.swift; sourceTree = "<group>"; };
 		DBA0D96E21F9CB25001E9CA8 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		DBADEB1123D7888D002173EC /* CautionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CautionCell.swift; sourceTree = "<group>"; };
 		DBB33A4221CC011700BCED22 /* PickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerCell.swift; sourceTree = "<group>"; };
 		DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELTextViewCell.swift; sourceTree = "<group>"; };
+		DBB52C4023DAFF38004A4CBA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		DBB52C4723DB03D5004A4CBA /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		DBB52C4823DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		DBB52C4923DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DBB52C4A23DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DBC30C8921EE1A1900826FC6 /* TableViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewState.swift; sourceTree = "<group>"; };
 		DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELPhotos.swift; sourceTree = "<group>"; };
 		DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+OpenSettings.swift"; sourceTree = "<group>"; };
+		DBCCB0AF23C36FF100DFB04F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
+		DBCCB0B323C3702E00DFB04F /* VegetationTypeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VegetationTypeRepository.swift; sourceTree = "<group>"; };
+		DBCED36C23B9F65400D54A4E /* Danmarks SvampeatlasTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Danmarks SvampeatlasTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBCED36E23B9F65400D54A4E /* Danmarks_SvampeatlasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Danmarks_SvampeatlasTests.swift; sourceTree = "<group>"; };
+		DBCED37023B9F65400D54A4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DBCED37623B9F6A800D54A4E /* DatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseTests.swift; sourceTree = "<group>"; };
+		DBCED37823B9F9FB00D54A4E /* MushroomsRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomsRepositoryTests.swift; sourceTree = "<group>"; };
+		DBCED37A23BA1AF700D54A4E /* SubstrateGroupsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstrateGroupsRepository.swift; sourceTree = "<group>"; };
+		DBCED37C23BA209600D54A4E /* SubstrateGroupRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubstrateGroupRepositoryTests.swift; sourceTree = "<group>"; };
 		DBCFD9AB239263A600A9302F /* PhotoLibraryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryButton.swift; sourceTree = "<group>"; };
 		DBCFD9B023942F9700A9302F /* CameraControlsTextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlsTextButton.swift; sourceTree = "<group>"; };
 		DBD27B23231DAB5300391CCF /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
-		DBD27B27231ECA5A00391CCF /* species.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = species.txt; sourceTree = "<group>"; };
 		DBD27B2A231ECB2F00391CCF /* PredictionMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMatch.swift; sourceTree = "<group>"; };
 		DBD5CCAC234A22B000EC09C7 /* ValidationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationView.swift; sourceTree = "<group>"; };
 		DBD5CCAF234B81DD00EC09C7 /* LocationAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAnnotation.swift; sourceTree = "<group>"; };
@@ -357,7 +366,7 @@
 		DBF33C6322F436FD00F383D4 /* Danmarks Svampeatlas.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Danmarks Svampeatlas.entitlements"; sourceTree = "<group>"; };
 		DBF33C6822FB432200F383D4 /* CALayer+Animate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Animate.swift"; sourceTree = "<group>"; };
 		DBF3EE84234D779100EB5DFE /* NewObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewObservation.swift; sourceTree = "<group>"; };
-		DBF4F3C5232A41CC0042E7A8 /* TermsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsController.swift; sourceTree = "<group>"; };
+		DBF4F3C5232A41CC0042E7A8 /* TermsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -365,18 +374,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB5AA02D2376D81C00F5D780 /* ELKit.framework in Frameworks */,
+				DB402BB823D9EED90020D68B /* ELKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4A69BC8A2038D96500D3B88B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4A69BC952038D96500D3B88B /* Frameworks */ = {
+		DBCED36923B9F65400D54A4E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -526,22 +528,18 @@
 			isa = PBXGroup;
 			children = (
 				DB4B2ECF235B253D00698B36 /* LocalityHelper.gif */,
-				DBD27B27231ECA5A00391CCF /* species.txt */,
 				DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */,
 				DB0C5A0722746B140071B15C /* Silom.ttf */,
-				DB8CF0A2217B486700ADAFB0 /* ELTextField.swift */,
 				4A28AB8C20444B0300F21EEE /* AppProperties.swift */,
 				4A28AB862044413100F21EEE /* Constants.swift */,
 				4A95D5442057D7B500EBB2C5 /* ActivityIndicatorView.swift */,
 				4A4AE30C207020E900178BFB /* ShowImageAnimationController.swift */,
 				DB8CC0DB2158288E00C958F0 /* NavigationDelegate.swift */,
-				4A72AB8520EE530900F9E45C /* CoreDataHelper.swift */,
-				DB897AFB21D29E3700E74C00 /* InputAccessoryView.swift */,
 				DB77162D220C2F2200E71903 /* ELMultipartFormData.swift */,
 				DB771631220C6A2500E71903 /* ELFileManager.swift */,
 				DBD27B2A231ECB2F00391CCF /* PredictionMatch.swift */,
-				DB96D7DB237DA014005C7AF6 /* PhotoAlbum.swift */,
 				DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */,
+				DB2DC11F23D9A71600EE9BC4 /* LocalizableStrings.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -577,7 +575,7 @@
 				4A4E4CFE20AE00AD00B3F898 /* AppNavigationController.swift */,
 				DB7F04F122AAB19D00785AF8 /* MapVC.swift */,
 				DB4AE10A22BE89DA006F6516 /* SearchVC.swift */,
-				DBF4F3C5232A41CC0042E7A8 /* TermsController.swift */,
+				DBF4F3C5232A41CC0042E7A8 /* TermsVC.swift */,
 				DB893119232BCE52000BDCD1 /* AboutVC.swift */,
 			);
 			path = Controllers;
@@ -586,10 +584,9 @@
 		4A69BC6D2038D96500D3B88B = {
 			isa = PBXGroup;
 			children = (
-				DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */,
+				DB402BAF23D9EEC60020D68B /* ELKit.xcodeproj */,
 				4A69BC782038D96500D3B88B /* Danmarks Svampeatlas */,
-				4A69BC902038D96500D3B88B /* Danmarks Svampeatlas Tests */,
-				4A69BC9B2038D96500D3B88B /* Danmarks Svampeatlas UITests */,
+				DBCED36D23B9F65400D54A4E /* Danmarks SvampeatlasTests */,
 				4A69BC772038D96500D3B88B /* Products */,
 				DB2B777022995B9800082E52 /* Frameworks */,
 			);
@@ -599,8 +596,7 @@
 			isa = PBXGroup;
 			children = (
 				4A69BC762038D96500D3B88B /* Danmarks Svampeatlas.app */,
-				4A69BC8D2038D96500D3B88B /* Danmarks SvampeatlasTests.xctest */,
-				4A69BC982038D96500D3B88B /* Danmarks SvampeatlasUITests.xctest */,
+				DBCED36C23B9F65400D54A4E /* Danmarks SvampeatlasTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -608,6 +604,7 @@
 		4A69BC782038D96500D3B88B /* Danmarks Svampeatlas */ = {
 			isa = PBXGroup;
 			children = (
+				DB1C86ED23B66588009DB71C /* Repository */,
 				DBF33C6322F436FD00F383D4 /* Danmarks Svampeatlas.entitlements */,
 				DB8D172F211B290D00C38D2C /* Extensions */,
 				4A69457420456BCE0041824E /* Controllers */,
@@ -620,27 +617,11 @@
 				4A69BC832038D96500D3B88B /* Assets.xcassets */,
 				4A69BC852038D96500D3B88B /* LaunchScreen.storyboard */,
 				4A69BC802038D96500D3B88B /* SvampeAtlas.xcdatamodeld */,
+				DB78CDA023DDEBC90014B0E6 /* Version 1 to 1.2.xcmappingmodel */,
+				DB2DC11C23D8BF1C00EE9BC4 /* Localizable.strings */,
+				DBB52C4123DAFF38004A4CBA /* InfoPlist.strings */,
 			);
 			path = "Danmarks Svampeatlas";
-			sourceTree = "<group>";
-		};
-		4A69BC902038D96500D3B88B /* Danmarks Svampeatlas Tests */ = {
-			isa = PBXGroup;
-			children = (
-				4A69BC912038D96500D3B88B /* DanmarksSvampeAtlasTests.swift */,
-				4A69BC932038D96500D3B88B /* Info.plist */,
-				20D4C809223A6A75006AA9E9 /* SessionServiceTests.swift */,
-			);
-			path = "Danmarks Svampeatlas Tests";
-			sourceTree = "<group>";
-		};
-		4A69BC9B2038D96500D3B88B /* Danmarks Svampeatlas UITests */ = {
-			isa = PBXGroup;
-			children = (
-				4A69BC9C2038D96500D3B88B /* DanmarksSvampeAtlasUITests.swift */,
-				4A69BC9E2038D96500D3B88B /* Info.plist */,
-			);
-			path = "Danmarks Svampeatlas UITests";
 			sourceTree = "<group>";
 		};
 		4A69BCAA20397F8400D3B88B /* Model */ = {
@@ -668,6 +649,18 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		DB1C86ED23B66588009DB71C /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				4A72AB8520EE530900F9E45C /* CoreDataHelper.swift */,
+				DB1C86EE23B665A1009DB71C /* MushroomsRepository.swift */,
+				DBCED37A23BA1AF700D54A4E /* SubstrateGroupsRepository.swift */,
+				DBCCB0AF23C36FF100DFB04F /* Repository.swift */,
+				DBCCB0B323C3702E00DFB04F /* VegetationTypeRepository.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
 		DB24AEAA228340990057DF82 /* NearbyVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -683,6 +676,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DB402BB023D9EEC60020D68B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DB402BB523D9EEC70020D68B /* ELKit.framework */,
+				DB402BB723D9EEC70020D68B /* ELKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DB50B0CC2266484A002965C1 /* DetailsViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -692,15 +694,6 @@
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 			);
 			path = DetailsViewController;
-			sourceTree = "<group>";
-		};
-		DB5AA0252376D7D200F5D780 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DB5AA02A2376D7D200F5D780 /* ELKit.framework */,
-				DB5AA02C2376D7D200F5D780 /* ELKitTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		DB6E9E2B218A4CD700A6FB1C /* MyPageVC */ = {
@@ -730,6 +723,7 @@
 				DB6437482295CCFA00BE7FF4 /* SearchCell.swift */,
 				DBA0D96C21F9ACB3001E9CA8 /* LocalityCell.swift */,
 				DBB33A4221CC011700BCED22 /* PickerCell.swift */,
+				DBADEB1123D7888D002173EC /* CautionCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -738,7 +732,6 @@
 			isa = PBXGroup;
 			children = (
 				4A3061E02053F4840061E98F /* CustomTableView.swift */,
-				4A4A8044207CD48900041018 /* LocationBackground.swift */,
 			);
 			path = MushroomTableView;
 			sourceTree = "<group>";
@@ -763,6 +756,19 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		DBCED36D23B9F65400D54A4E /* Danmarks SvampeatlasTests */ = {
+			isa = PBXGroup;
+			children = (
+				DBCED36E23B9F65400D54A4E /* Danmarks_SvampeatlasTests.swift */,
+				DBCED37023B9F65400D54A4E /* Info.plist */,
+				DBCED37623B9F6A800D54A4E /* DatabaseTests.swift */,
+				DBCED37823B9F9FB00D54A4E /* MushroomsRepositoryTests.swift */,
+				DBCED37C23BA209600D54A4E /* SubstrateGroupRepositoryTests.swift */,
+				DB9B22E423C9DFCD0030469B /* VegetationTypeRespositoryTests.swift */,
+			);
+			path = "Danmarks SvampeatlasTests";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -773,7 +779,7 @@
 				4A69BC722038D96500D3B88B /* Sources */,
 				4A69BC732038D96500D3B88B /* Frameworks */,
 				4A69BC742038D96500D3B88B /* Resources */,
-				DB2B77822299D0A400082E52 /* Embed Frameworks */,
+				DB2DC12823D9ECC000EE9BC4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -784,41 +790,23 @@
 			productReference = 4A69BC762038D96500D3B88B /* Danmarks Svampeatlas.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4A69BC8C2038D96500D3B88B /* Danmarks SvampeatlasTests */ = {
+		DBCED36B23B9F65400D54A4E /* Danmarks SvampeatlasTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4A69BCA42038D96500D3B88B /* Build configuration list for PBXNativeTarget "Danmarks SvampeatlasTests" */;
+			buildConfigurationList = DBCED37323B9F65400D54A4E /* Build configuration list for PBXNativeTarget "Danmarks SvampeatlasTests" */;
 			buildPhases = (
-				4A69BC892038D96500D3B88B /* Sources */,
-				4A69BC8A2038D96500D3B88B /* Frameworks */,
-				4A69BC8B2038D96500D3B88B /* Resources */,
+				DBCED36823B9F65400D54A4E /* Sources */,
+				DBCED36923B9F65400D54A4E /* Frameworks */,
+				DBCED36A23B9F65400D54A4E /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4A69BC8F2038D96500D3B88B /* PBXTargetDependency */,
+				DBCED37223B9F65400D54A4E /* PBXTargetDependency */,
 			);
 			name = "Danmarks SvampeatlasTests";
-			productName = SvampeAtlasTests;
-			productReference = 4A69BC8D2038D96500D3B88B /* Danmarks SvampeatlasTests.xctest */;
+			productName = "Danmarks SvampeatlasTests";
+			productReference = DBCED36C23B9F65400D54A4E /* Danmarks SvampeatlasTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		4A69BC972038D96500D3B88B /* Danmarks SvampeatlasUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4A69BCA72038D96500D3B88B /* Build configuration list for PBXNativeTarget "Danmarks SvampeatlasUITests" */;
-			buildPhases = (
-				4A69BC942038D96500D3B88B /* Sources */,
-				4A69BC952038D96500D3B88B /* Frameworks */,
-				4A69BC962038D96500D3B88B /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4A69BC9A2038D96500D3B88B /* PBXTargetDependency */,
-			);
-			name = "Danmarks SvampeatlasUITests";
-			productName = SvampeAtlasUITests;
-			productReference = 4A69BC982038D96500D3B88B /* Danmarks SvampeatlasUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -826,7 +814,7 @@
 		4A69BC6E2038D96500D3B88B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0920;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1110;
 				ORGANIZATIONNAME = NaturhistoriskMuseum;
 				TargetAttributes = {
@@ -840,15 +828,8 @@
 							};
 						};
 					};
-					4A69BC8C2038D96500D3B88B = {
-						CreatedOnToolsVersion = 9.2;
-						LastSwiftMigration = 1000;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 4A69BC752038D96500D3B88B;
-					};
-					4A69BC972038D96500D3B88B = {
-						CreatedOnToolsVersion = 9.2;
-						LastSwiftMigration = 1000;
+					DBCED36B23B9F65400D54A4E = {
+						CreatedOnToolsVersion = 11.3;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 4A69BC752038D96500D3B88B;
 					};
@@ -862,38 +843,38 @@
 				en,
 				Base,
 				da,
+				cs,
 			);
 			mainGroup = 4A69BC6D2038D96500D3B88B;
 			productRefGroup = 4A69BC772038D96500D3B88B /* Products */;
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = DB5AA0252376D7D200F5D780 /* Products */;
-					ProjectRef = DB5AA0242376D7D200F5D780 /* ELKit.xcodeproj */;
+					ProductGroup = DB402BB023D9EEC60020D68B /* Products */;
+					ProjectRef = DB402BAF23D9EEC60020D68B /* ELKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
 			targets = (
 				4A69BC752038D96500D3B88B /* Danmarks Svampeatlas */,
-				4A69BC8C2038D96500D3B88B /* Danmarks SvampeatlasTests */,
-				4A69BC972038D96500D3B88B /* Danmarks SvampeatlasUITests */,
+				DBCED36B23B9F65400D54A4E /* Danmarks SvampeatlasTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		DB5AA02A2376D7D200F5D780 /* ELKit.framework */ = {
+		DB402BB523D9EEC70020D68B /* ELKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ELKit.framework;
-			remoteRef = DB5AA0292376D7D200F5D780 /* PBXContainerItemProxy */;
+			remoteRef = DB402BB423D9EEC70020D68B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		DB5AA02C2376D7D200F5D780 /* ELKitTests.xctest */ = {
+		DB402BB723D9EEC70020D68B /* ELKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = ELKitTests.xctest;
-			remoteRef = DB5AA02B2376D7D200F5D780 /* PBXContainerItemProxy */;
+			remoteRef = DB402BB623D9EEC70020D68B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -904,22 +885,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A69BC872038D96500D3B88B /* LaunchScreen.storyboard in Resources */,
-				DBD27B29231ECA5A00391CCF /* species.txt in Resources */,
+				DBB52C3F23DAFF38004A4CBA /* InfoPlist.strings in Resources */,
 				DB0C5A0822746B140071B15C /* Silom.ttf in Resources */,
+				DB2DC11A23D8BF1C00EE9BC4 /* Localizable.strings in Resources */,
 				DB4B2ED0235B253D00698B36 /* LocalityHelper.gif in Resources */,
 				DB7F04F922AD099C00785AF8 /* CaviarDreams_Bold.ttf in Resources */,
 				4A69BC842038D96500D3B88B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4A69BC8B2038D96500D3B88B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4A69BC962038D96500D3B88B /* Resources */ = {
+		DBCED36A23B9F65400D54A4E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -934,12 +909,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A69BC822038D96500D3B88B /* SvampeAtlas.xcdatamodeld in Sources */,
-				DB8CF0A3217B486700ADAFB0 /* ELTextField.swift in Sources */,
 				DB8CF12721B94CF400ACBF06 /* ObservationImagesView.swift in Sources */,
 				DB24AEA92281D5E40057DF82 /* MapViewFilteringSettings.swift in Sources */,
 				DB7F04F222AAB19D00785AF8 /* MapVC.swift in Sources */,
 				DB0C5A0A2275A6D00071B15C /* HeatAnnotationPinView.swift in Sources */,
 				DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */,
+				DBCCB0B023C36FF100DFB04F /* Repository.swift in Sources */,
 				DB6E9E2D218A4D5E00A6FB1C /* NotificationsTableView.swift in Sources */,
 				DB893117232BCBEA000BDCD1 /* UIApplication+Urls.swift in Sources */,
 				4AC5CA23204EA95B003ED3BE /* ImagesCollectionView.swift in Sources */,
@@ -948,7 +923,6 @@
 				DB897AFF21DD50DD00E74C00 /* ObservationDetailsCell.swift in Sources */,
 				DBA0D96D21F9ACB3001E9CA8 /* LocalityCell.swift in Sources */,
 				4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */,
-				4A4A8045207CD48900041018 /* LocationBackground.swift in Sources */,
 				DB32B0B321E61B6F00514CCA /* TableViewHeaderView.swift in Sources */,
 				4A8A18B720A1B5320063C83B /* RedlistView.swift in Sources */,
 				DB8CF0A9217BAA3800ADAFB0 /* GradientImageView.swift in Sources */,
@@ -963,12 +937,14 @@
 				DB12BC262135507F00FFA037 /* User.swift in Sources */,
 				DB0C5A1122785BE30071B15C /* MushroomDetailsScrollView.swift in Sources */,
 				DB68741D234CDBFD0038C5A0 /* PredictionResult.swift in Sources */,
+				DB2DC12023D9A71600EE9BC4 /* LocalizableStrings.swift in Sources */,
 				DB1F85532122F3ED00658619 /* Date+Extension.swift in Sources */,
 				DB24AEA72281CBE40057DF82 /* CGFloat+Extension.swift in Sources */,
 				4AD107BF20976E2D00BA04D0 /* ObservationCell.swift in Sources */,
 				DB42E37221776EB8003C3585 /* UserService.swift in Sources */,
 				DB897B0321DD5C5A00E74C00 /* ObservationLocationCell.swift in Sources */,
 				DB687420234CDF960038C5A0 /* AcceptedTaxon.swift in Sources */,
+				DBADEB1223D7888D002173EC /* CautionCell.swift in Sources */,
 				DB897B0121DD5C1F00E74C00 /* ObservationSpecieCell.swift in Sources */,
 				DBC30C8A21EE1A1900826FC6 /* TableViewState.swift in Sources */,
 				4AA1CC6A2086054200254EBB /* SimilarSpeciesView.swift in Sources */,
@@ -989,7 +965,6 @@
 				4A1F76012079606B0082B873 /* CameraVC.swift in Sources */,
 				4A4AE30D207020E900178BFB /* ShowImageAnimationController.swift in Sources */,
 				DB3C4929219AEF11001894B5 /* ReloadCell.swift in Sources */,
-				DB96D7DC237DA014005C7AF6 /* PhotoAlbum.swift in Sources */,
 				20D4C810223A7962006AA9E9 /* NavigationItem.swift in Sources */,
 				DB2A52CF216383E20000F483 /* UIImageView+Extension.swift in Sources */,
 				DB89311A232BCE52000BDCD1 /* AboutVC.swift in Sources */,
@@ -1014,6 +989,7 @@
 				4A80757020BD717100F958AC /* AppScrollView.swift in Sources */,
 				4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */,
 				DB08065F22FE1BD20018CCD7 /* GeoName.swift in Sources */,
+				DB1C86EF23B665A1009DB71C /* MushroomsRepository.swift in Sources */,
 				4A40CD772094CBF000F58F25 /* ClusterPinCalloutView.swift in Sources */,
 				DBF3EE85234D779100EB5DFE /* NewObservation.swift in Sources */,
 				DBB33A4321CC011700BCED22 /* PickerCell.swift in Sources */,
@@ -1034,11 +1010,13 @@
 				DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */,
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
 				DBCFD9B123942F9700A9302F /* CameraControlsTextButton.swift in Sources */,
+				DBCED37B23BA1AF700D54A4E /* SubstrateGroupsRepository.swift in Sources */,
 				DB64374B2296A3F700BE7FF4 /* Host.swift in Sources */,
-				DBF4F3C6232A41CC0042E7A8 /* TermsController.swift in Sources */,
+				DBF4F3C6232A41CC0042E7A8 /* TermsVC.swift in Sources */,
 				DBCFD9AC239263A600A9302F /* PhotoLibraryButton.swift in Sources */,
 				4A54F67220AB2C2F001C8EC8 /* ListView.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
+				DB78CDA123DDEBC90014B0E6 /* Version 1 to 1.2.xcmappingmodel in Sources */,
 				DBD27B2B231ECB2F00391CCF /* PredictionMatch.swift in Sources */,
 				DBB33A4521CE67E200BCED22 /* ELTextViewCell.swift in Sources */,
 				DB5E88E8238D9431005339D4 /* CaptureButton.swift in Sources */,
@@ -1054,7 +1032,6 @@
 				DB59F55F232D2B5B005D5EA5 /* Collection+Safe.swift in Sources */,
 				DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */,
 				DBA0D96F21F9CB25001E9CA8 /* UIImage+Extension.swift in Sources */,
-				DB897AFC21D29E3700E74C00 /* InputAccessoryView.swift in Sources */,
 				4AB6FA15207112F500870A46 /* SearchBar.swift in Sources */,
 				4A40CD722093325100F58F25 /* ClusterPinView.swift in Sources */,
 				DB68448F234D319C00CD0AE2 /* ErrorCell.swift in Sources */,
@@ -1069,39 +1046,30 @@
 				4AD43A0620529CF5001F6541 /* CategoryCell.swift in Sources */,
 				DB771632220C6A2500E71903 /* ELFileManager.swift in Sources */,
 				4A300A90208365DC003CB2A5 /* ObservationPinView.swift in Sources */,
+				DBCCB0B423C3702E00DFB04F /* VegetationTypeRepository.swift in Sources */,
 				DB7F04F022A941FF00785AF8 /* MushroomTableView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4A69BC892038D96500D3B88B /* Sources */ = {
+		DBCED36823B9F65400D54A4E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20D4C80A223A6A75006AA9E9 /* SessionServiceTests.swift in Sources */,
-				4A69BC922038D96500D3B88B /* DanmarksSvampeAtlasTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4A69BC942038D96500D3B88B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4A69BC9D2038D96500D3B88B /* DanmarksSvampeAtlasUITests.swift in Sources */,
+				DB9B22E523C9DFCD0030469B /* VegetationTypeRespositoryTests.swift in Sources */,
+				DBCED37723B9F6A800D54A4E /* DatabaseTests.swift in Sources */,
+				DBCED37923B9F9FB00D54A4E /* MushroomsRepositoryTests.swift in Sources */,
+				DBCED36F23B9F65400D54A4E /* Danmarks_SvampeatlasTests.swift in Sources */,
+				DBCED37D23BA209600D54A4E /* SubstrateGroupRepositoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4A69BC8F2038D96500D3B88B /* PBXTargetDependency */ = {
+		DBCED37223B9F65400D54A4E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4A69BC752038D96500D3B88B /* Danmarks Svampeatlas */;
-			targetProxy = 4A69BC8E2038D96500D3B88B /* PBXContainerItemProxy */;
-		};
-		4A69BC9A2038D96500D3B88B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4A69BC752038D96500D3B88B /* Danmarks Svampeatlas */;
-			targetProxy = 4A69BC992038D96500D3B88B /* PBXContainerItemProxy */;
+			targetProxy = DBCED37123B9F65400D54A4E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1110,9 +1078,30 @@
 			isa = PBXVariantGroup;
 			children = (
 				4A69BC862038D96500D3B88B /* Base */,
-				DB32B0B121E4F90800514CCA /* da */,
+				DB2DC11D23D8BF7B00EE9BC4 /* da */,
+				DBB52C4823DB0566004A4CBA /* cs */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		DB2DC11C23D8BF1C00EE9BC4 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DB2DC11B23D8BF1C00EE9BC4 /* en */,
+				DB2DC11E23D8BF7B00EE9BC4 /* da */,
+				DBB52C4923DB0566004A4CBA /* cs */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		DBB52C4123DAFF38004A4CBA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DBB52C4023DAFF38004A4CBA /* en */,
+				DBB52C4723DB03D5004A4CBA /* da */,
+				DBB52C4A23DB0566004A4CBA /* cs */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1234,16 +1223,15 @@
 		4A69BCA22038D96500D3B88B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Danmarks Svampeatlas/Danmarks Svampeatlas.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.noque.fungalatlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -1254,16 +1242,15 @@
 		4A69BCA32038D96500D3B88B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Danmarks Svampeatlas/Danmarks Svampeatlas.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.noque.fungalatlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -1271,69 +1258,42 @@
 			};
 			name = Release;
 		};
-		4A69BCA52038D96500D3B88B /* Debug */ = {
+		DBCED37423B9F65400D54A4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6LS2B9CMEB;
-				INFOPLIST_FILE = SvampeAtlasTests/Info.plist;
+				DEVELOPMENT_TEAM = 8XW2A3LKCS;
+				INFOPLIST_FILE = "Danmarks SvampeatlasTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.naturHistoriskMuseum.SvampeAtlasTests;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.noque.Danmarks-SvampeatlasTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Danmarks Svampeatlas.app/Danmarks Svampeatlas";
 			};
 			name = Debug;
 		};
-		4A69BCA62038D96500D3B88B /* Release */ = {
+		DBCED37523B9F65400D54A4E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6LS2B9CMEB;
-				INFOPLIST_FILE = SvampeAtlasTests/Info.plist;
+				DEVELOPMENT_TEAM = 8XW2A3LKCS;
+				INFOPLIST_FILE = "Danmarks SvampeatlasTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.naturHistoriskMuseum.SvampeAtlasTests;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.noque.Danmarks-SvampeatlasTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Danmarks Svampeatlas.app/Danmarks Svampeatlas";
-			};
-			name = Release;
-		};
-		4A69BCA82038D96500D3B88B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6LS2B9CMEB;
-				INFOPLIST_FILE = SvampeAtlasUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.naturHistoriskMuseum.SvampeAtlasUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SvampeAtlas;
-			};
-			name = Debug;
-		};
-		4A69BCA92038D96500D3B88B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6LS2B9CMEB;
-				INFOPLIST_FILE = SvampeAtlasUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.naturHistoriskMuseum.SvampeAtlasUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SvampeAtlas;
 			};
 			name = Release;
 		};
@@ -1358,20 +1318,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4A69BCA42038D96500D3B88B /* Build configuration list for PBXNativeTarget "Danmarks SvampeatlasTests" */ = {
+		DBCED37323B9F65400D54A4E /* Build configuration list for PBXNativeTarget "Danmarks SvampeatlasTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4A69BCA52038D96500D3B88B /* Debug */,
-				4A69BCA62038D96500D3B88B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4A69BCA72038D96500D3B88B /* Build configuration list for PBXNativeTarget "Danmarks SvampeatlasUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4A69BCA82038D96500D3B88B /* Debug */,
-				4A69BCA92038D96500D3B88B /* Release */,
+				DBCED37423B9F65400D54A4E /* Debug */,
+				DBCED37523B9F65400D54A4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1382,9 +1333,10 @@
 		4A69BC802038D96500D3B88B /* SvampeAtlas.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				DB17731123BD38C000B64868 /* SvampeAtlas_1.2.xcdatamodel */,
 				4A69BC812038D96500D3B88B /* SvampeAtlas.xcdatamodel */,
 			);
-			currentVersion = 4A69BC812038D96500D3B88B /* SvampeAtlas.xcdatamodel */;
+			currentVersion = DB17731123BD38C000B64868 /* SvampeAtlas_1.2.xcdatamodel */;
 			path = SvampeAtlas.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

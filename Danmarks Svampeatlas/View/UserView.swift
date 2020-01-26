@@ -101,8 +101,8 @@ class UserView: UIView {
     }
     
     func configureAsGuest() {
-        primaryLabel.text = "Svampeatlas"
-        secondaryLabel.text = "Log ind for at få den bedste oplevelse"
+        primaryLabel.text = NSLocalizedString("userView_guest_title", comment: "")
+        secondaryLabel.text = NSLocalizedString("userView_guest_message", comment: "")
         primaryLabel.isHidden = false
         secondaryLabel.isHidden = false
         profileImageView.configure(image: #imageLiteral(resourceName: "Images_Icon"))

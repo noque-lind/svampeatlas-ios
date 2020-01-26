@@ -109,8 +109,10 @@ class DetailsViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if let navigationBarFrame = self.navigationController?.navigationBar.frame {
-            additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
-            elNavigationBar.minHeight = navigationBarFrame.maxY
+            if additionalSafeAreaInsets != UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0) {
+                additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
+                elNavigationBar.minHeight = navigationBarFrame.maxY
+            }
 
             if scrollView?.contentInset.top != elNavigationBar.maxHeight {
                 scrollView?.contentInset.top = elNavigationBar.maxHeight
@@ -178,7 +180,6 @@ class DetailsViewController: UIViewController {
         
         switch detailsContent {
         case .mushroom(mushroom: let mushroom, let session, let takesSelection):
-            
             let scrollView: MushroomDetailsScrollView = {
                 let view = MushroomDetailsScrollView(session: session)
                 view.configure(mushroom, takesSelection: takesSelection != nil)
@@ -187,11 +188,10 @@ class DetailsViewController: UIViewController {
                 view.translatesAutoresizingMaskIntoConstraints = false
                 return view
             }()
-            
             self.scrollView = scrollView
             self.takesSelection = takesSelection
             self.images = mushroom.images
-            elNavigationBar.setTitle(title: mushroom.danishName ?? mushroom.fullName)
+            elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
             setupView()
             
         case .observation(observation: let observation, let showSpeciesView, let session):
@@ -205,8 +205,10 @@ class DetailsViewController: UIViewController {
                 return view
             }()
             self.scrollView = scrollView
+            
+            
             self.images = observation.images
-            elNavigationBar.setTitle(title: "Fund af: \(observation.speciesProperties.name)")
+            elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
             setupView()
         
         case .observationWithID(observationID: let observationID, showSpeciesView: let showSpeciesView, session: let session):
@@ -214,9 +216,9 @@ class DetailsViewController: UIViewController {
             DataService.instance.getObservation(withID: observationID) { [weak self] (result) in
                 DispatchQueue.main.async {
                     switch result {
-                    case .Error(let error):
+                    case .failure(let error):
                         self?.addError(error: error)
-                    case .Success(let observation):
+                    case .success(let observation):
                         let scrollView: ObservationDetailsScrollView = {
                             let view = ObservationDetailsScrollView(session: session)
                             view.configure(withObservation: observation, showSpeciesView: showSpeciesView)
@@ -228,7 +230,7 @@ class DetailsViewController: UIViewController {
                         
                         self?.scrollView = scrollView
                         self?.images = observation.images
-                       self?.elNavigationBar.setTitle(title: "Fund af: \(observation.speciesProperties.name)")
+                       self?.elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
                         self?.setupView()
                     }
                 }
@@ -241,9 +243,9 @@ class DetailsViewController: UIViewController {
             DataService.instance.getMushroom(withID: taxonID) { [weak self] (result) in
                 DispatchQueue.main.async { [weak self] in
                     switch result {
-                    case .Error(let error):
+                    case .failure(let error):
                         self?.addError(error: error)
-                    case .Success(let mushroom):
+                    case .success(let mushroom):
                         let scrollView: MushroomDetailsScrollView = {
                             let view = MushroomDetailsScrollView(session: nil)
                             view.configure(mushroom, takesSelection: takesSelection != nil)
@@ -255,7 +257,7 @@ class DetailsViewController: UIViewController {
                         
                         self?.scrollView = scrollView
                         self?.images = mushroom.images
-                        self?.elNavigationBar.setTitle(title: mushroom.danishName ?? mushroom.fullName)
+                        self?.elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
                         self?.setupView()
                     }
                 }
@@ -276,12 +278,11 @@ class DetailsViewController: UIViewController {
         spinner.stop()
         guard let scrollView = scrollView else {return}
         view.backgroundColor = UIColor.appSecondaryColour()
-        scrollView.contentInsetAdjustmentBehavior = .automatic
         view.addSubview(scrollView)
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-       
+
         if takesSelection != nil {
             view.addSubview(selectButton)
             selectButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -290,7 +291,7 @@ class DetailsViewController: UIViewController {
             selectButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60).isActive = true
             scrollView.bottomAnchor.constraint(equalTo: selectButton.topAnchor, constant: 0).isActive = true
         } else {
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -1).isActive = true
         }
         
         view.addSubview(elNavigationBar)

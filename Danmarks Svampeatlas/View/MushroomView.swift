@@ -183,7 +183,7 @@ class MushroomView: UIView {
         }
        
         
-        if let danishName =  mushroom.danishName {
+        if let danishName =  mushroom.localizedName {
             titleLabel.attributedText = nil
             titleLabel.font = UIFont.appPrimaryHightlighed()
             titleLabel.text = danishName
@@ -191,21 +191,21 @@ class MushroomView: UIView {
             titleLabel.attributedText = mushroom.fullName.italized(font: UIFont.appPrimaryHightlighed())
         }
         
-        secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil
-        secondaryLabel.isHidden = mushroom.danishName != nil ? false: true
+        secondaryLabel.attributedText = mushroom.localizedName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil
+        secondaryLabel.isHidden = mushroom.localizedName != nil ? false: true
         
         var informationArray = [(String, String)]()
         
         if let totalObservations = mushroom.statistics?.acceptedCount {
-            informationArray.append(("Antal danske fund:", "\(totalObservations)"))
+            informationArray.append((NSLocalizedString("mushroomView_numberOfRecords", comment: ""), "\(totalObservations)"))
         }
         
         if let latestAcceptedRecord = mushroom.statistics?.lastAcceptedRecord {
-            informationArray.append(("Seneste fund:", Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.medium) ?? ""))
+            informationArray.append((NSLocalizedString("mushroomView_latestObservation", comment: ""), Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.medium) ?? ""))
         }
         
         if let updatedAt = mushroom.updatedAt, informationArray.count < 2 {
-            informationArray.append(("Sidst opdateret d.:", Date(ISO8601String: updatedAt)?.convert(into: DateFormatter.Style.medium) ?? ""))
+            informationArray.append((NSLocalizedString("mushroomView_lastUpdate", comment: ""), Date(ISO8601String: updatedAt)?.convert(into: DateFormatter.Style.medium) ?? ""))
         }
         
         configureLowerStackView(informations: informationArray)

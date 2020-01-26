@@ -77,6 +77,8 @@ extension UIFont {
             return UIFont(name: "AvenirNext-MediumItalic", size: pointSize)!
         } else if self === UIFont.appPrimary() {
             return UIFont(name: "AvenirNext-Italic", size: pointSize)!
+        } else if self == UIFont.appTitle() {
+            return UIFontMetrics(forTextStyle: .title1).scaledFont(for: UIFont(name: "AvenirNext-Italic", size: pointSize)!)
         } else {
             return self
         }

@@ -288,6 +288,6 @@ class AppScrollView: UIScrollView {
             return stackView
         }()
         
-        addContent(title: "Information", content: stackView)
+        addContent(title: NSLocalizedString("appScrollView_informationHeaderTitle", comment: ""), content: stackView)
     }
 }

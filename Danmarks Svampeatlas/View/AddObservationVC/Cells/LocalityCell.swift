@@ -36,8 +36,8 @@ class LocalityCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
-            setSelectionState()
-        }
+                self.setSelectionState()
+            }
     }
     
     override init(frame: CGRect) {
@@ -71,5 +71,6 @@ class LocalityCell: UICollectionViewCell {
     
     func configureCell(locality: Locality) {
         label.text = locality.name
+        setSelectionState()
     }
 }

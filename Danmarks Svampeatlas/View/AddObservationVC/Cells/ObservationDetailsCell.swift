@@ -7,40 +7,7 @@
 //
 
 import UIKit
-
-//fileprivate class UnscrollTableView: UITableView {
-//
-//    init() {
-//        super.init(frame: .zero, style: .plain)
-//        NotificationCenter.default.removeObserver(self)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError()
-//    }
-//
-//
-//    override func setContentOffset(_ contentOffset: CGPoint, animated: Bool) {
-//        if disableAutomaticScrolling {
-//             //Does nothing, in order to not screw up managed configuration
-//        } else {
-//            super.setContentOffset(contentOffset, animated: animated)
-//        }
-//    }
-//
-//    private var disableAutomaticScrolling = false
-//
-//    @objc private func keyboardWillHide() {
-//        debugPrint("Disabling automatic tableView scrolling")
-//        disableAutomaticScrolling = true
-//    }
-//
-//    @objc private func keyboardDidHide() {
-//        disableAutomaticScrolling = false
-//    }
-//}
+import ELKit
 
 class ObservationDetailsCell: UICollectionViewCell {
     
@@ -250,10 +217,10 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
         
         DataService.instance.getVegetationTypes { (result) in
             switch result {
-            case .Success(let vegetationTypes):
+            case .success(let vegetationTypes):
                 cell.tableViewState = .Items([.init(title: nil, cells: vegetationTypes.compactMap({TableViewPickerCell.Section.CellType.vegetationTypeCell($0)}))])
 
-            case .Error(let error):
+            case .failure(let error):
                 cell.tableViewState = .Error(error, { recoveryAction in
                     self.getVegetationTypes(forCell: cell)
                 })
@@ -266,13 +233,13 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
         
         DataService.instance.getSubstrateGroups { [weak cell, weak self] (result) in
             switch result {
-            case .Error(let error):
+            case .failure(let error):
                 cell?.tableViewState = .Error(error, {  recoveryAction in
                     guard let cell = cell else { return }
                     self?.getSubstrateGroups(forCell: cell)
                 })
-            case .Success(let substrateGroups):
-                    let sections = substrateGroups.compactMap({TableViewPickerCell.Section.init(title: $0.dkName.capitalizeFirst(), cells: $0.substrates.compactMap({TableViewPickerCell.Section.CellType.substrateCell($0)}))})
+            case .success(let substrateGroups):
+                    let sections = substrateGroups.compactMap({TableViewPickerCell.Section.init(title: $0.name.capitalizeFirst(), cells: $0.substrates.compactMap({TableViewPickerCell.Section.CellType.substrateCell($0)}))})
                 cell?.tableViewState = .Items(sections)
             }
         }
@@ -281,9 +248,9 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
     fileprivate func getHosts(forCell cell: TableViewPickerCell) {
         DataService.instance.getPopularHosts { (result) in
             switch result {
-            case .Error(_):
+            case .failure(_):
                 cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell])])
-            case .Success(var hosts):
+            case .success(var hosts):
                 let selectedHosts = self.newObservation?.hosts ?? []
                 
                 let userHosts = hosts.filter({$0.userFound})
@@ -293,9 +260,9 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 
                 if userHosts.count != 0 {
                     let userCells = userHosts.compactMap({TableViewPickerCell.Section.CellType.hostCell($0, selectedHosts.contains($0))})
-                    cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell]), .init(title: nil, cells: userCells), .init(title: "Mest brugt", cells: favoriteCells)])
+                    cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell]), .init(title: nil, cells: userCells), .init(title: NSLocalizedString("observationDetailsCell_mostUsed", comment: ""), cells: favoriteCells)])
                 } else {
-                    cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell]), .init(title: "Mest brugt", cells: favoriteCells)])
+                    cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell]), .init(title: NSLocalizedString("observationDetailsCell_mostUsed", comment: ""), cells: favoriteCells)])
                 }
             }
         }
@@ -358,23 +325,31 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "selectorCell", for: indexPath) as! SettingCell
                 switch rows[realIndexPathRow] {
                 case .Date:
-                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Date"), description: "Dato:", content: newObservation!.observationDate.convert(into: DateFormatter.Style.medium, ignoreRecentFormatting: true))
+                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Date"), description: NSLocalizedString("observationDetailsCell_date", comment: ""), content: newObservation!.observationDate.convert(into: DateFormatter.Style.medium, ignoreRecentFormatting: true))
                     
                 case .Substrate:
                     var string = newObservation?.substrate?.isLocked == true  ? "🔒 ": ""
-                    string.append(newObservation?.substrate?.dkName ?? "*")
-                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Substrate"), description: "Substrat:", content: string)
+                        string.append(newObservation?.substrate?.name ?? "*")
+                    
+                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Substrate"), description: NSLocalizedString("observationDetailsCell_substrate", comment: ""), content: string)
                     
                 case .VegetationType:
                     var string = newObservation?.vegetationType?.isLocked == true ? "🔒 ": ""
-                    string.append(newObservation?.vegetationType?.dkName ?? "*")
-                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_VegetationType"), description: "Vegetationstype:", content: string)
+                        string.append(newObservation?.vegetationType?.name ?? "*")
+                
+                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_VegetationType"), description: NSLocalizedString("observationDetailsCell_vegetationType", comment: ""), content: string)
                 case .Host:
                     var string = newObservation?.lockedHosts == true ? "🔒 ": ""
                 
                     if let hosts = newObservation?.hosts, hosts.count != 0 {
                         for host in hosts {
-                            string.append(contentsOf: "\(host.dkName ?? ""), ")
+                            if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+                                string.append(contentsOf: "\(host.dkName ?? ""), ")
+                            } else {
+                                string.append(contentsOf: "\(host.latinName ?? ""), ")
+                            }
+                            
+                            
                         }
                         string.removeLast()
                         string.removeLast()
@@ -382,7 +357,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                         string = "-"
                     }
                     
-                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Host"), description: "Vært:", content: string)
+                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Host"), description: NSLocalizedString("observationDetailsCell_host", comment: ""), content: string)
                     
                 default: break
                 }
@@ -395,7 +370,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 
                 switch rows[realIndexPathRow] {
                 case .Notes:
-                    cell.configureCell(titleText: "Andre noter", placeholder: "Lugt melagtig ...", content: newObservation?.note, delegate: self)
+                    cell.configureCell(titleText: NSLocalizedString("observationDetailsCell_notes_title", comment: ""), placeholder: NSLocalizedString("observationDetailsCell_notes_message", comment: ""), content: newObservation?.note, delegate: self)
                     
                     cell.textView.didUpdateEntry = { [weak newObservation] entry in
                         newObservation?.note = entry
@@ -403,7 +378,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                     
                     
                 case .EcologyNotes:
-                    cell.configureCell(titleText: "Kommentarer om voksested", placeholder: "På sandjord blandt mos ...", content: newObservation?.ecologyNote, delegate: self)
+                    cell.configureCell(titleText: NSLocalizedString("observationDetailsCell_ecologyNotes_title", comment: ""), placeholder: NSLocalizedString("observationDetailsCell_ecologyNotes_message", comment: ""), content: newObservation?.ecologyNote, delegate: self)
                     
                     cell.textView.didUpdateEntry = { [weak newObservation] entry in
                         newObservation?.ecologyNote = entry
@@ -423,15 +398,5 @@ extension ObservationDetailsCell: ELTextViewDelegate {
         self.tableView.beginUpdates()
         self.tableView.endUpdates()
         UIView.setAnimationsEnabled(true)
-    }
-    
-    func didUpdateTextEntry(title: String, _ text: String) {
-        switch title {
-        case "Noter":
-            newObservation?.note = text
-        case "Økologi kommentarer":
-            newObservation?.ecologyNote = text
-        default: return
-        }
     }
 }

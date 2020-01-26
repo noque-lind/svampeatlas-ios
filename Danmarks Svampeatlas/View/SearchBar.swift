@@ -84,7 +84,7 @@ class SearchBar: UITextField {
         
         font = UIFont.appPrimaryHightlighed()
         textColor = UIColor.appWhite()
-        configurePlaceholder("Søg efter en art her ...")
+        configurePlaceholder(NSLocalizedString("searchBar_placeholder", comment: ""))
         
         clearButtonMode = .whileEditing
         tintColor = UIColor.appWhite()
@@ -146,7 +146,7 @@ extension SearchBar {
                 self.superview?.layoutIfNeeded()
                 self.backgroundColor = UIColor.appPrimaryColour().withAlphaComponent(0.9)
                 self.textColor = UIColor.appWhite().withAlphaComponent(1.0)
-                self.attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
+                self.attributedPlaceholder = NSAttributedString(string: NSLocalizedString("searchBar_placeholder", comment: ""), attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
             }
             isExpanded = true
         }
@@ -172,7 +172,7 @@ extension SearchBar {
             layer.mask = nil
             clipsToBounds = false
             textColor = UIColor.appWhite().withAlphaComponent(0.0)
-            attributedPlaceholder = NSAttributedString(string: "Søg efter en art her...", attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.0)])
+            attributedPlaceholder = NSAttributedString(string: NSLocalizedString("searchBar_placeholder", comment: ""), attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.0)])
             _ = self.resignFirstResponder()
             isExpanded = false
         }

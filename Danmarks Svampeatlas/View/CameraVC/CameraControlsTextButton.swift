@@ -10,9 +10,16 @@ import UIKit
 
 class CameraControlsTextButton: UIButton {
     
-    enum TextState: String {
-           case noPhoto = "Intet billede"
-           case usePhoto = "Brug billede"
+    enum TextState {
+           case noPhoto
+           case usePhoto
+        
+        var description: String {
+            switch self {
+            case .noPhoto: return NSLocalizedString("cameraControlTextButton_noPhoto", comment: "")
+            case .usePhoto: return NSLocalizedString("cameraControlTextButton_usePhoto", comment: "")
+            }
+        }
        }
     
     var pressed: (() -> ())?
@@ -43,6 +50,6 @@ class CameraControlsTextButton: UIButton {
     }
     
     func setState(state: TextState) {
-        setTitle(state.rawValue, for: [])
+        setTitle(state.description, for: [])
     }
 }

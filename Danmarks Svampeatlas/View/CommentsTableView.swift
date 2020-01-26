@@ -48,7 +48,7 @@ class CommentsTableView: GenericTableView<Comment> {
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "addCommentCell", for: indexPath) as! AddCommentCell
-            cell.configureCell(descriptionText: "Skriv en kommentar", placeholder: nil, content: nil, delegate: self)
+            cell.configureCell(descriptionText: NSLocalizedString("commentsTableView_cell_title", comment: ""), placeholder: nil, content: nil, delegate: self)
             cell.sendButtonTappedHandler = sendCommentHandler
             return cell
         }

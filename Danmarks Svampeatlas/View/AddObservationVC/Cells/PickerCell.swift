@@ -80,7 +80,7 @@ class SwitchHeaderView: UIView {
                let label = UILabel()
                 label.font = UIFont.appPrimaryHightlighed()
                 label.textColor = UIColor.appWhite()
-                label.text = "Husk mit valg"
+                label.text = NSLocalizedString("pickerCell_rememberChoice", comment: "")
                 return label
             }()
             
@@ -290,7 +290,12 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             switch section.cells[indexPath.row] {
             case .hostCell(let host, let selected):
                 tableView.allowsMultipleSelection = true
-                cell.textLabel?.text = "- \(host.dkName?.capitalizeFirst() ?? "") (\(host.latinName ?? ""))"
+                
+                if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+                     cell.textLabel?.text = "- \(host.dkName?.capitalizeFirst() ?? "") (\(host.latinName ?? ""))"
+                } else {
+                    cell.textLabel?.text = "- \(host.latinName?.capitalizeFirst() ?? "")"
+                }
                 
                 if selected {
                     tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
@@ -299,11 +304,14 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
                 
             case .substrateCell(let substrate):
                 tableView.allowsMultipleSelection = false
-                cell.textLabel?.text = "   - \(substrate.dkName)"
+                    cell.textLabel?.text = "   - \(substrate.name)"
+            
+                
                 return cell
             case .vegetationTypeCell(let vegetationType):
                 tableView.allowsMultipleSelection = false
-                cell.textLabel?.text = "- \(vegetationType.dkName)"
+                      cell.textLabel?.text = "- \(vegetationType.name)"
+                
                 return cell
             case .searchCell:
                 return cell

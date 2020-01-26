@@ -39,9 +39,9 @@ class ObservationDetailsScrollView: AppScrollView {
     }()
     
     @objc private func reportContentButtonPressed() {
-        let alertVC = UIAlertController(title: "Rapporter stødende indhold", message: "Finder du en kommentar, eller brugergeneret indhold stødende? Giv en begrundelse her, så kikker vi på det.", preferredStyle: .alert)
+        let alertVC = UIAlertController(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), message: NSLocalizedString("observationDetailsScrollView_rapportContent_message", comment: ""), preferredStyle: .alert)
         alertVC.addTextField { (textField) in
-            textField.placeholder = "Eg. stødende billeder"
+            textField.placeholder = NSLocalizedString("observationDetailsScrollView_rapportContent_placeholder", comment: "")
         }
         
         alertVC.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak self, weak session] (action) in
@@ -49,13 +49,13 @@ class ObservationDetailsScrollView: AppScrollView {
             guard let observationID = self?.observation?.id else {return}
             session?.reportOffensiveContent(observationID: observationID, comment: comment, completion: {
                 DispatchQueue.main.async {
-                    let notification = ELNotificationView.appNotification(style: .success, primaryText: "Mange tak", secondaryText: "Din rapportering er med til at gøre Svampeatlas et sikkert sted", location: .bottom)
+                    let notification = ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_title", comment: ""), secondaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_message", comment: ""), location: .bottom)
                     notification.show(animationType: .zoom)
                 }
             })
         }))
         
-        alertVC.addAction(UIAlertAction(title: "Afbryd", style: .cancel, handler: nil))
+        alertVC.addAction(UIAlertAction(title: NSLocalizedString("observationDetailsScrollView_rapportContent_abort", comment: ""), style: .cancel, handler: nil))
         customDelegate?.presentVC(alertVC)
     }
     
@@ -71,7 +71,7 @@ class ObservationDetailsScrollView: AppScrollView {
                 button.backgroundColor = UIColor.appPrimaryColour().withAlphaComponent(0.4)
                 button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
                 button.layer.cornerRadius = 5
-                button.setTitle("Rapporter stødende indhold", for: [])
+                button.setTitle(NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), for: [])
                 button.setTitleColor(UIColor.red, for: [])
                 button.titleLabel?.font = UIFont.appPrimaryHightlighed(customSize: 12)
             button.translatesAutoresizingMaskIntoConstraints = false
@@ -108,36 +108,36 @@ class ObservationDetailsScrollView: AppScrollView {
         
         
         configureHeader(title: observation.speciesProperties.name, subtitle: nil, user: observation.observedBy)
-        addText(title: "Kommentarer om voksested", text: observation.ecologyNote)
-        addText(title: "Andre noter", text: observation.note)
+        addText(title: NSLocalizedString("observationDetailsScrollView_ecologyNotes", comment: ""), text: observation.ecologyNote)
+        addText(title: NSLocalizedString("observationDetailsScrollView_notes", comment: ""), text: observation.note)
         
         var informationArray = [(String, String)]()
         
         switch observation.validationStatus {
         case .approved:
-            informationArray.append(("Valideringsstatus:", "Godkendt"))
+            informationArray.append((NSLocalizedString("observationDetailsScrollView_validationStatus", comment: ""), NSLocalizedString("observationDetailsScrollView_validationStatus_approved", comment: "")))
         case .rejected:
-            informationArray.append(("Valideringsstatus:", "Afvist"))
+        informationArray.append((NSLocalizedString("observationDetailsScrollView_validationStatus", comment: ""), NSLocalizedString("observationDetailsScrollView_validationStatus_declined", comment: "")))
         case .verifying:
-            informationArray.append(("Valideringsstatus:", "Valideres"))
+            informationArray.append((NSLocalizedString("observationDetailsScrollView_validationStatus", comment: ""), NSLocalizedString("observationDetailsScrollView_validationStatus_verifying", comment: "")))
         case .unknown:
-            informationArray.append(("Valideringsstatus:", "Vides ikke"))
+            informationArray.append((NSLocalizedString("observationDetailsScrollView_validationStatus", comment: ""), NSLocalizedString("observationDetailsScrollView_validationStatus_unknown", comment: "")))
         }
         
         if let observationDate = observation.date, observationDate != "" {
-            informationArray.append(("Fundets dato:", Date(ISO8601String: observationDate)?.convert(into: .medium, ignoreRecentFormatting: false, ignoreTime: true) ?? ""))
+            informationArray.append((NSLocalizedString("observationDetailsScrollView_observationDate", comment: ""), Date(ISO8601String: observationDate)?.convert(into: .medium, ignoreRecentFormatting: false, ignoreTime: true) ?? ""))
         }
         
         if let substrate = observation.substrate {
-            informationArray.append(("Substrat:", substrate.dkName))
+            informationArray.append((NSLocalizedString("observationDetailsScrollView_substrate", comment: ""), substrate.name))
         }
         
         if let vegetationType = observation.vegetationType {
-            informationArray.append(("Vegetationstype:", vegetationType.dkName))
+            informationArray.append((NSLocalizedString("observationDetailsScrollView_vegetationType", comment: ""), vegetationType.name))
         }
         
         if let locality = observation.location, locality != "" {
-            informationArray.append(("Lokalitet:", locality))
+            informationArray.append((NSLocalizedString("observationDetailsScrollView_location", comment: ""), locality))
         }
         
         
@@ -171,14 +171,14 @@ class ObservationDetailsScrollView: AppScrollView {
     
     private func configureSpeciesView(taxonID: Int?) {
         guard let taxonID = taxonID else {return}
-        addContent(title: "Art", content: mushroomView)
+        addContent(title: NSLocalizedString("observationDetailsScrollView_species", comment: ""), content: mushroomView)
         Spinner.start(onView: mushroomView)
         
         DataService.instance.getMushroom(withID: taxonID) { [weak mushroomView] (result) in
             switch result {
-            case .Error(_):
+            case .failure(_):
                 return
-            case .Success(let mushroom):
+            case .success(let mushroom):
                 DispatchQueue.main.sync { [weak mushroomView] in
                     Spinner.stop()
                     mushroomView?.configure(mushroom: mushroom)
@@ -189,7 +189,7 @@ class ObservationDetailsScrollView: AppScrollView {
     }
     
     private func configureComments(observationID: Int) {
-        addContent(title: "Kommentarer", content: commentsTableView)
+        addContent(title: NSLocalizedString("observationDetailsScrollView_comments", comment: ""), content: commentsTableView)
         
         commentsTableView.tableViewState = .Loading
         ELKeyboardHelper.instance.registerObject(view: commentsTableView)
@@ -197,14 +197,14 @@ class ObservationDetailsScrollView: AppScrollView {
         DataService.instance.getObservation(withID: observationID) { [weak commentsTableView] (result) in
             DispatchQueue.main.async { [weak commentsTableView] in
                 switch result {
-                case .Success(let observation):
+                case .success(let observation):
                     if (observation.comments.count > 0) || (commentsTableView?.allowComments ?? false) {
                         commentsTableView?.tableViewState = TableViewState.Items(observation.comments)
                     } else {
 //                     content?.removeFromSuperview()
                     }
                     
-                case .Error(let error):
+                case .failure(let error):
                     commentsTableView?.tableViewState = .Error(error, nil)
                 }
             }
@@ -216,10 +216,10 @@ class ObservationDetailsScrollView: AppScrollView {
             
             session?.uploadComment(observationID: observationID, comment: text, completion: { [weak commentsTableView] (result) in
                 switch result {
-                case .Error(let error):
+                case .failure(let error):
                     ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
                         .show(animationType: .fromBottom)
-                case .Success(let comment):
+                case .success(let comment):
                     currentComments.append(comment)
                     commentsTableView?.tableViewState = .Items(currentComments)
                 }

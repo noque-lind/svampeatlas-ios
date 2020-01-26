@@ -30,19 +30,19 @@ class AVView: UIView {
         var errorDescription: String {
             switch self {
             case .cameraError(let error): return "\(error.localizedDescription)"
-            case .permissionsError: return"Du kan give appen tilladelse til at bruge kameraet i indstillinger."
-            case .unknown: return "Det skete en ukendt fejl"
+            case .permissionsError: return NSLocalizedString("avViewError_permissionsError_message", comment: "")
+            case .unknown: return NSLocalizedString("avViewError_unknown_message", comment: "")
             }
         }
         
         var errorTitle: String {
             switch self {
             case .permissionsError:
-                return"Manglende tilladelse"
+                return NSLocalizedString("avViewError_permissionsError_title", comment: "")
             case .cameraError:
-                return "Kamera fejl"
+                return NSLocalizedString("avViewError_cameraError_title", comment: "")
             case .unknown:
-                return "Ukendt fejl"
+                return NSLocalizedString("avViewError_unknown_title", comment: "")
             }
         }
         
@@ -121,7 +121,7 @@ class AVView: UIView {
                     try self.addOutput()
                     layer.addSublayer(previewLayer)
                     
-                    DispatchQueue.global(qos: .default).async {
+                    DispatchQueue.global(qos: .userInitiated).async {
                         self.captureSession.startRunning()
                         self.previewLayer.session = self.captureSession
                     }
@@ -161,7 +161,7 @@ class AVView: UIView {
     
     func start() {
         if !captureSession.outputs.isEmpty && !captureSession.inputs.isEmpty {
-            DispatchQueue.global(qos: .default).async {
+            DispatchQueue.global(qos: .userInitiated).async {
                 self.captureSession.startRunning()
                 self.previewLayer.session = self.captureSession
             }
@@ -254,7 +254,7 @@ extension AVView: AVCapturePhotoCaptureDelegate {
             if let error = error {
                 self.delegate?.error(error: AVViewError.cameraError(error: error))
             } else {
-                self.captureSession.stopRunning()
+                self.stop()
                 
                 if let imageData = photo.fileDataRepresentation() {
                     self.delegate?.photoData(imageData)

@@ -135,6 +135,6 @@ class SimilarSpeciesCell: UICollectionViewCell {
 //        }
         
         
-        titleLabel.text = mushroom.danishName ?? mushroom.fullName
+        titleLabel.text = mushroom.localizedName ?? mushroom.fullName
     }
 }

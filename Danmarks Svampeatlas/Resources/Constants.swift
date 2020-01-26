@@ -9,118 +9,9 @@
 import UIKit
 import MapKit
 
-
-/*
- 
- https://svampe.databasen.org/api/observations/9358023/images
- [{
- "createdAt": "2019-01-09T16:26:04.000Z",
- "_id": 163758,
- "eventname": "Added image",
- "description": "2019-9358023_BJ4oljQGN was added to this record.",
- "user_id": 5,
- "observation_id": 9358023,
- "updatedAt": "2019-01-09T16:26:04.000Z"
- }]
- 
- 
- 
- 
- {
- "createdAt": "2019-01-09T10:11:58.000Z",
- "observationDateAccuracy": "day",
- "atlasUUID": "ffdb8590-13f6-11e9-b3ce-695d96b95c60",
- "_id": 9357979,
- "observationDate": "2019-01-09",
- "substrate_id": "28",
- "vegetationtype_id": "3",
- "ecologynote": "Test",
- "accuracy": 2500,
- "note": "Test",
- "os": "MacOS",
- "browser": "Safari",
- "locality_id": 10445,
- "decimalLatitude": 55.65125,
- "decimalLongitude": 12.57708,
- "primaryuser_id": 5,
- "geom": {
- "fn": "GeomFromText",
- "args": [
- "POINT (12.57708 55.65125)"
- ]
- },
- "updatedAt": "2019-01-09T10:11:58.000Z",
- "primarydetermination_id": 5744369
- }
- 
- 
- {
- "createdAt": "2019-01-09T10:11:58.000Z",
- "observationDateAccuracy": "day",
- "atlasUUID": "ffdb8590-13f6-11e9-b3ce-695d96b95c60",
- "_id": 9357979,
- "observationDate": "2019-01-09",
- "substrate_id": "28",
- "vegetationtype_id": "3",
- "ecologynote": "Test",
- "accuracy": 2500,
- "note": "Test",
- "os": "MacOS",
- "browser": "Safari",
- "locality_id": 10445,
- "decimalLatitude": 55.65125,
- "decimalLongitude": 12.57708,
- "primaryuser_id": 5,
- "geom": {
- "fn": "GeomFromText",
- "args": [
- "POINT (12.57708 55.65125)"
- ]
- },
- "updatedAt": "2019-01-09T10:11:58.000Z",
- "primarydetermination_id": 5744369
- }*/
-
-/*
- 
- {"observationDate":"2019-05-23","substrate_id":"28","vegetationtype_id":"5","accuracy":1000,"associatedOrganisms":[{"_id":1022,"createdAt":"2016-03-07T08:49:51.000Z","updatedAt":null,"DKname":"bøg","DKandLatinName":"bøg (Fagus)","Ectomycorrhizal":"0","Genus":1,"LatinName":"Fagus","LatinCode":"Fag","WoodySubstrate":"x","parent_id":null,"accepted_id":1022,"gbiftaxon_id":2874875,"defaultlist":true,"probability":110130}],"associatedOrganismImport":[],"users":[{"_id":2706,"Initialer":"emill","email":"emillind@me.com","provider":"local","name":"Emil Lind","Roles":[],"facebook":"161977228083409","preferred_language":"da"}],"os":"MacOS","browser":"Safari","determination":{"taxon_id":13003,"user_id":2706,"confidence":"sikker"},"locality_id":160,"decimalLatitude":55.10901525530758,"decimalLongitude":14.759445190429686,"primaryassociatedorganism_id":1022}
- 
- 
- POST FUND: https://svampe.databasen.org/api/observations
- 
- "createdAt": "2018-12-06T20:49:29.000Z",
- "observationDateAccuracy": "day",
- "atlasUUID": "6d0e2970-f998-11e8-9609-e76ff0de5fb8",
- "_id": 9353834,
- "observationDate": "2018-12-06",
- "substrate_id": "29",
- "vegetationtype_id": "10",
- "ecologynote": "Økologi test",
- "accuracy": 2500,
- "os": "MacOS",
- "browser": "Safari",
- "locality_id": 10465,
- "decimalLatitude": 55.67372,
- "decimalLongitude": 12.56844,
- "primaryuser_id": 5,
- "geom": {
- "fn": "GeomFromText",
- "args": [
- "POINT (12.56844 55.67372)"
- ]
- },
- "updatedAt": "2018-12-06T20:49:29.000Z",
- "primarydetermination_id": 5739287
- }
- 
- 
- */
-
-
 struct Utilities {
-    
-    static let PHOTOALBUMNAME = "Svampeatlas"
-    
+    static let PHOTOALBUMNAME = NSLocalizedString("utilities_photoAlbumName", comment: "")
+    static let SUPPORTEDLOCALE = "da-DK"
 }
 
 
@@ -292,9 +183,9 @@ struct API {
             switch self {
             case .attributes(presentInDenmark: let presentInDenmark):
                 if let presentInDenmark = presentInDenmark {
-                    return "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"valideringsrapport\",\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"spiselighedsrapport\", \"BeskrivelseUK\"],\"where\":\"{\\\"PresentInDK\\\":\(presentInDenmark)}\"}"
+                    return "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"valideringsrapport\",\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"bogtekst_gyldendal_en\", \"vernacular_name_GB\", \"spiselighedsrapport\"],\"where\":\"{\\\"PresentInDK\\\":\(presentInDenmark)}\"}"
                 } else {
-                    return "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"spiselighedsrapport\", \"BeskrivelseUK\"]}"
+                    return "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"spiselighedsrapport\", \"bogtekst_gyldendal_en\", \"vernacular_name_GB\"]}"
                 }
                 
             case .danishNames:
@@ -389,7 +280,11 @@ struct API {
             }
         }
         
-        return "{\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$Vernacularname_DK.vernacularname_dk$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+         return "{\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$Vernacularname_DK.vernacularname_dk$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+        } else {
+             return "{\"$or\":[{\"$attributes.vernacular_name_GB$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+        }
     }
     
     

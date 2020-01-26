@@ -23,22 +23,22 @@ enum NavigationItem {
     var title: String {
         switch self {
         case .loginVC:
-            return "Login"
+            return NSLocalizedString("navigationItem_loginVC", comment: "")
         case .myPageVC:
-            return "Min side"
+            return NSLocalizedString("navigationItem_myPageVC", comment: "")
         case .newObservationVC:
-            return "Nyt fund"
+            return NSLocalizedString("navigationItem_newObservationVC", comment: "")
         case .nearbyVC:
-            return "I nærheden"
+            return NSLocalizedString("navigationItem_nearbyVC", comment: "")
         case .mushroomsVC:
-            return "Svampebog"
+            return NSLocalizedString("navigationItem_mushroomsVC", comment: "")
         case .cameraVC:
-            return "Navneforslag"
+            return NSLocalizedString("navigationItem_cameraVC", comment: "")
 
             case .facebook:
-                return "Facebook"
+                return NSLocalizedString("navigationItem_facebook", comment: "")
         case .about:
-            return "Om"
+            return NSLocalizedString("navigationItem_about", comment: "")
         }
     }
     

@@ -6,14 +6,22 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-
+import Foundation
 
 struct SubstrateGroup {
     
     public private(set) var id: Int = 100
-    public private(set) var dkName: String
-    public private(set) var enName: String
+    let dkName: String
+    let enName: String
     public private(set) var substrates = [Substrate]()
+    
+    var name: String {
+        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+            return dkName
+        } else {
+            return enName
+        }
+    }
     
     init(from cdSubstrateGroup: CDSubstrateGroup) {
         self.dkName = cdSubstrateGroup.dkName ?? ""
@@ -60,9 +68,17 @@ struct SubstrateGroup {
 
 struct Substrate {
     public private(set) var id: Int
-    public private(set) var dkName: String
-    public private(set) var enName: String
+    let dkName: String
+    let enName: String
     public var isLocked: Bool = false
+    
+    var name: String {
+        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+            return dkName
+        } else {
+            return enName
+        }
+    }
     
     init(from cdSubstrate: CDSubstrate) {
         self.id = Int(cdSubstrate.id)

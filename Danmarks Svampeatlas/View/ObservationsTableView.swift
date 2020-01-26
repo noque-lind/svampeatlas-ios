@@ -36,7 +36,7 @@ class ObservationsTableView: GenericTableView<Observation> {
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "reloadCell", for: indexPath) as! ReloadCell
-            cell.configureCell(text: "Vis flere")
+            cell.configureCell(type: .showMore)
             return cell
         }
     }

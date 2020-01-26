@@ -10,6 +10,18 @@ import UIKit
 
 class ReloadCell: UITableViewCell {
     
+    enum ´Type {
+    case showMore
+        case tryAgain
+    
+        var description: String {
+            switch self {
+            case .showMore: return NSLocalizedString("reloadCell_showMore", comment: "")
+            case .tryAgain: return NSLocalizedString("reloadCell_tryAgain", comment: "")
+            }
+        }
+}
+    
     static let identifier = "ReloadCell"
     
     private var iconImageView: UIImageView = {
@@ -73,7 +85,7 @@ class ReloadCell: UITableViewCell {
 //        contentBackgroundView.bottomAnchor.constraint(equalTo: contentStackView.bottomAnchor, constant: 5).isActive = true
     }
     
-    func configureCell(text: String) {
-        label.text = text
+    func configureCell(type: ´Type) {
+        label.text = type.description
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15400" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19B88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CDHost" representedClassName="CDHost" syncable="YES" codeGenerationType="class">
         <attribute name="dkName" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -59,10 +59,10 @@
         <element name="CDHost" positionX="-225" positionY="162" width="128" height="120"/>
         <element name="CDImage" positionX="-54" positionY="9" width="128" height="118"/>
         <element name="CDMushroom" positionX="-299" positionY="27" width="128" height="150"/>
-        <element name="CDMushroomAttribute" positionX="-180" positionY="72" width="128" height="148"/>
+        <element name="CDMushroomAttribute" positionX="23.95703125" positionY="175.55078125" width="128" height="148"/>
         <element name="CDSubstrate" positionX="-68.4296875" positionY="363.34375" width="128" height="103"/>
         <element name="CDSubstrateGroup" positionX="-396.953125" positionY="378.44921875" width="128" height="88"/>
         <element name="CDUser" positionX="-180" positionY="81" width="128" height="120"/>
-        <element name="CDVegetationType" positionX="-225" positionY="162" width="128" height="90"/>
+        <element name="CDVegetationType" positionX="-261.64453125" positionY="228.81640625" width="128" height="90"/>
     </elements>
 </model>

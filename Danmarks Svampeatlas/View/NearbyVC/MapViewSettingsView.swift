@@ -260,7 +260,7 @@ class MapViewSettingsView: UIView {
     }
     
     private func configure() {
-        ageLabel.text = "\(mapViewFilteringSettings.age) år."
+        ageLabel.text = String.localizedStringWithFormat(NSLocalizedString("mapViewSettingsView_year", comment: ""), mapViewFilteringSettings.age)
         radiusLabel.text = "\((mapViewFilteringSettings.distance / 1000.0).rounded(toPlaces: 1)) km."
     }
     
@@ -319,7 +319,7 @@ fileprivate class ExpandedSettingsView: UIView {
     private var searchButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.appGreen()
-        button.setTitle("Ny søgning", for: [])
+        button.setTitle(NSLocalizedString("mapViewSettingsView_newSearch", comment: ""), for: [])
         button.titleLabel?.font = UIFont.appPrimaryHightlighed()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 40).isActive = true

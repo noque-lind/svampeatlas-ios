@@ -88,23 +88,23 @@ class RedlistView: UIView {
         case "LC", "NT":
             backgroundView.backgroundColor = UIColor.appGreen()
             if detailed {
-                detailsLabel.text = "Ikke en truet art"
+                detailsLabel.text = NSLocalizedString("redlistView_lcnt", comment: "")
             }
         case "CR", "EN":
             backgroundView.backgroundColor = UIColor.appRed()
             if detailed {
-                detailsLabel.text = "Truet art"
+                detailsLabel.text = NSLocalizedString("redlistView_cren", comment: "")
             }
         case "VU":
             backgroundView.backgroundColor = UIColor.appYellow()
             if detailed {
-                detailsLabel.text = "Sårbar art"
+                detailsLabel.text = NSLocalizedString("redlistView_vu", comment: "")
             }
         
         case "DD":
             backgroundView.backgroundColor = UIColor.gray
             if detailed {
-                detailsLabel.text = "Vides ikke"
+                detailsLabel.text = NSLocalizedString("redlistView_dd", comment: "")
             }
         default:
             backgroundView.backgroundColor = UIColor.clear

@@ -32,7 +32,7 @@ class MapViewFilteringSettings {
     
     var ageText: NSAttributedString {
         let pronoun = age < 2 ? "år": "år"
-        let text = "Fundets alder: ".normal()
+        let text = NSLocalizedString("mapViewFilteringSettings_ageOfSighting", comment: "").normal()
         text.append("\(age) \(pronoun)".highlighted())
         return text
     }

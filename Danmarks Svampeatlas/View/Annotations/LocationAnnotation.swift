@@ -11,9 +11,11 @@ import MapKit.MKAnnotationView
 
 class LocationPIn: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
+    var title: String?
     
     init(coordinate: CLLocationCoordinate2D) {
         self.coordinate = coordinate
+        self.title = NSLocalizedString("locationAnnotation_title", comment: "")
     }
 }
 
@@ -35,6 +37,6 @@ class LocationAnnotationView: MKAnnotationView {
         layer.shadowOpacity = Float.shadowOpacity()
         layer.shadowOffset = CGSize.shadowOffset()
         tintColor = UIColor.appPrimaryColour()
-        canShowCallout = false
+        canShowCallout = true
     }
 }

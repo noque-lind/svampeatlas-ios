@@ -12,7 +12,7 @@ import MapKit
 class NearbyVC: UIViewController {
     
     private lazy var categoryView: CategoryView<NewMapView.Categories> = {
-        let items = NewMapView.Categories.allCases.compactMap({Category<NewMapView.Categories>(type: $0, title: $0.rawValue)})
+        let items = NewMapView.Categories.allCases.compactMap({Category<NewMapView.Categories>(type: $0, title: $0.description)})
         let view = CategoryView<NewMapView.Categories>.init(categories: items, firstIndex: 0)
         
         view.categorySelected = { [unowned mapView] category in
@@ -113,11 +113,12 @@ class NearbyVC: UIViewController {
     }
     
     private func setupNavigationController() {
+        self.title = NSLocalizedString("nearbyVC_title", comment: "")
+        
         self.navigationController?.view.backgroundColor = UIColor.appPrimaryColour()
         self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
         self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
         self.navigationController?.navigationBar.isTranslucent = false
-        self.title = "I nærheden"
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
@@ -162,9 +163,9 @@ extension NearbyVC: LocationManagerDelegate {
             mapView?.shouldLoad = false
             
             switch result {
-            case .Error(let error):
+            case .failure(let error):
                 mapView?.showError(error: error, handler: nil)
-            case .Success(let observations):
+            case .success(let observations):
                 mapView?.addObservationAnnotations(observations: observations)
                 mapView?.addCirclePolygon(center: location.coordinate, radius: CLLocationDistance(self.mapViewFilteringSettings.distance))
             }

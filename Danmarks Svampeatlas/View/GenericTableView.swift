@@ -97,6 +97,12 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         return view
     }()
     
+    override var tintColor: UIColor! {
+        didSet {
+            tableView.tintColor = tintColor
+        }
+    }
+    
     var contentInset: UIEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0) {
         didSet {
             tableView.contentInset = contentInset
@@ -290,6 +296,12 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         tableView.register(ReloadCell.self, forCellReuseIdentifier: "reloadCell")
         return tableView
     }()
+
+    var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior = .never {
+        didSet {
+            tableView.contentInsetAdjustmentBehavior = contentInsetAdjustmentBehavior
+        }
+    }
     
     private var heightConstraint = NSLayoutConstraint()
     private var automaticallyAdjustHeight: Bool

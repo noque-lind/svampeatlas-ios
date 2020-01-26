@@ -12,10 +12,18 @@ import ELKit
 
 class AddObservationVC: UIViewController {
     
-    private enum ObservationCategories: String, CaseIterable {
-        case Species = "Art"
-        case Details = "Detajler"
-        case Location = "Lokalitet"
+    private enum ObservationCategories: CaseIterable {
+        case Species
+        case Details
+        case Location
+        
+        var description: String {
+            switch self {
+            case .Species: return NSLocalizedString("addObservationVC_observationCategories_species", comment: "")
+            case .Details: return NSLocalizedString("addObservationVC_observationCategories_details", comment: "")
+            case .Location: return NSLocalizedString("addObservationVC_observationCategories_location", comment: "")
+            }
+        }
     }
     
     private lazy var observationImagesView: ObservationImagesView = {
@@ -35,30 +43,30 @@ class AddObservationVC: UIViewController {
             }
         }
         
-        view.imageDeleted = { [unowned newObservation] imageURL in
-            newObservation.removeImage(imageURL: imageURL)
+        view.imageDeleted = { [weak newObservation] imageURL in
+            newObservation?.removeImage(imageURL: imageURL)
         }
         
-        view.onAddImageButtonPressed = { [unowned self, unowned view, unowned newObservation] in
+        view.onAddImageButtonPressed = { [weak self, weak view, weak newObservation] in
             let vc = CameraVC(cameraVCUsage: .imageCapture)
             vc.onImageCaptured = { imageURL in
-                newObservation.appendImage(imageURL: imageURL)
-                view.addImage(imageURL: imageURL)
+                newObservation?.appendImage(imageURL: imageURL)
+                view?.addImage(imageURL: imageURL)
                 
-                if let imageLocation = newObservation.returnImageLocationIfNecessary(imageURL: imageURL) {
-                    self.handleImageLocation(imageLocation: imageLocation, alternativeLocation: nil)
+                if let imageLocation = newObservation?.returnImageLocationIfNecessary(imageURL: imageURL) {
+                    self?.handleImageLocation(imageLocation: imageLocation, alternativeLocation: nil)
                 }
             }
             let nav = UINavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .fullScreen
-            self.presentVC(nav)
+            self?.presentVC(nav)
         }
         
         return view
     }()
     
     private lazy var categoryView: CategoryView<ObservationCategories> = {
-        let items = ObservationCategories.allCases.compactMap({Category<ObservationCategories>(type: $0, title: $0.rawValue)})
+        let items = ObservationCategories.allCases.compactMap({Category<ObservationCategories>(type: $0, title: $0.description)})
         let view = CategoryView<ObservationCategories>.init(categories: items, firstIndex: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 45).isActive = true
@@ -110,7 +118,6 @@ class AddObservationVC: UIViewController {
         }
         
         super.init(nibName: nil, bundle: nil)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -128,21 +135,13 @@ class AddObservationVC: UIViewController {
         setupView()
         configure()
         }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         
-        if newObservation.observationCoordinate == nil && newObservation.locality == nil {
-            locationManager.start()
-        }
-    }
-    
     deinit {
         debugPrint("AddObservationVC was deinited")
     }
     
     private func setupView() {
-        title = "Nyt fund"
+        title = NSLocalizedString("addObservationVC_title", comment: "")
     
         navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu)), animated: false)
         navigationItem.setRightBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload)), animated: false)
@@ -182,34 +181,38 @@ class AddObservationVC: UIViewController {
         observationImagesView.configure(imageURLS: newObservation.images)
         collectionView.reloadData()
         categoryView.moveSelector(toCellAtIndexPath: IndexPath.init(row: 0, section: 0))
+        locationManager.start()
     }
         
     private func reset() {
         newObservation = NewObservation()
         configure()
         collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
-        locationManager.start()
     }
     
     @objc private func beginObservationUpload() {
         switch newObservation.returnAsDictionary(user: session.user) {
-        case .Success(let dict):
+        case .success(let dict):
             Spinner.start(onView: self.navigationController?.view)
         
-            session.uploadObservation(dict: dict, imageURLS: newObservation.images) { [weak self] (result) in
+            session.uploadObservation(dict: dict, imageURLs: newObservation.images) { [weak self] (result) in
                 Spinner.stop()
                 DispatchQueue.main.async {
                 switch result {
-                case .Success(let observationID):
-                    ELNotificationView.appNotification(style: .success, primaryText: "Dit fund er blevet oprettet", secondaryText: "ID: \(observationID)", location: .bottom)
+                case .success(let observationID):
+                    ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: "ID: \(observationID)", location: .bottom)
                         .show(animationType: .fromBottom, onViewController: self)
-                case .Error(let error):
+                    self?.newObservation.images.forEach({ELFileManager.deleteImage(imageURL: $0)})
+                    self?.reset()
+                    
+                    
+                case .failure(let error):
                     ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
                         .show(animationType: .fromBottom, onViewController: self)
                 }
                 }
             }
-        case .Error(let error):
+        case .failure(let error):
             self.handleUncompleteObservation(newObservationError: error)
         }
     }
@@ -236,16 +239,19 @@ class AddObservationVC: UIViewController {
     
     private func handleImageLocation(imageLocation: CLLocation, alternativeLocation: CLLocation?) {
         ELNotificationView.appNotification(style: .action(backgroundColor: UIColor.appSecondaryColour(), actions: [
-        .positive("Ja, brug billedets placering", { [unowned newObservation, unowned self] in
+        .positive(NSLocalizedString("addObservationVC_useImageMetadata_positive", comment: ""), { [unowned newObservation, unowned self] in
             newObservation.observationCoordinate = imageLocation
+            print(imageLocation.timestamp)
+            newObservation.observationDate = imageLocation.timestamp
+            self.collectionView.reloadItems(at: [IndexPath(row: ObservationCategories.allCases.index(of: .Details)!, section: 0)])
             self.findLocality(location: imageLocation)
         }),
-        .negative("Nej", { [unowned newObservation, unowned self] in
+        .negative(NSLocalizedString("addObservationVC_useImageMetadata_negative", comment: ""), { [unowned newObservation, unowned self] in
             if let alternativeLocation = alternativeLocation {
                 newObservation.observationCoordinate = alternativeLocation
                            self.findLocality(location: alternativeLocation)
             }
-        })]), primaryText: "Forslag til placering", secondaryText: "Et tilføjet billede lader til at være blevet taget over 500 meter væk fra din nuværende placering. Vil du bruge billedets GPS-information i stedet for din nuværende placering?", location: .bottom)
+        })]), primaryText: NSLocalizedString("addObservationVC_useImageMetadata_title", comment: ""), secondaryText: NSLocalizedString("addObservationVC_useImageMetadata_message", comment: ""), location: .bottom)
         .show(animationType: .fromBottom, onViewController: self)
     }
 }
@@ -257,14 +263,14 @@ extension AddObservationVC: LocationManagerDelegate {
         switch error.recoveryAction {
         case .openSettings:
             notif = ELNotificationView.appNotification(style: .error(actions: [
-                .neutral(error.recoveryAction?.rawValue, {
+                .neutral(error.recoveryAction?.localizableText, {
                     UIApplication.openSettings()
                 })
             ]),location: .bottom)
             
         case .tryAgain:
             notif = ELNotificationView.appNotification(style: .error(actions: [
-                .neutral(error.recoveryAction?.rawValue, { [unowned locationManager] in
+                .neutral(error.recoveryAction?.localizableText, { [unowned locationManager] in
                     locationManager.start()
                 })
             ]), location: .bottom)
@@ -280,7 +286,7 @@ extension AddObservationVC: LocationManagerDelegate {
     private func findLocality(location: CLLocation) {
         DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self, weak locationManager, weak newObservation, weak collectionView] result in
             switch result {
-            case .Success(let localities):
+            case .success(let localities):
                 self?.localities = localities
                 
                 let closest = localities.min(by: {$0.location.distance(from: location) < $1.location.distance(from: location)})
@@ -292,15 +298,15 @@ extension AddObservationVC: LocationManagerDelegate {
                         if let currentCell = collectionView?.visibleCells.first as? ObservationLocationCell, let locationManager = locationManager, let newObservation = newObservation  {
                             currentCell.configureCell(locationManager: locationManager, newObservation: newObservation, localities: localities)
                         } else {
-                            ELNotificationView.appNotification(style: .Custom(color: UIColor.appSecondaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: "Fundets placering er blevet bestemt", secondaryText: "Navn: \(closest!.name) \nKoordinater: \(location.coordinate.latitude.rounded(toPlaces: 2)), \(location.coordinate.longitude.rounded(toPlaces: 2))", location: .bottom)
+                            ELNotificationView.appNotification(style: .Custom(color: UIColor.appSecondaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: NSLocalizedString("addObservationVC_localityFound_title", comment: ""), secondaryText: String.localizedStringWithFormat(NSLocalizedString("addObservationVC_localityFound_message", comment: ""), closest!.name, location.coordinate.longitude.rounded(toPlaces: 2), location.coordinate.latitude.rounded(toPlaces: 2)), location: .bottom)
                                 .show(animationType: .fromBottom, onViewController: self)
                         }
                     }
                 }
                 
-            case .Error(let error):
+            case .failure(let error):
                 DispatchQueue.main.async {
-                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: "Nærmeste placering kunne ikke findes.", secondaryText: error.errorDescription, location: .bottom)
+                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: NSLocalizedString("addObservationVC_localityFoundError_title", comment: ""), secondaryText: error.errorDescription, location: .bottom)
                         .show(animationType: .fromBottom, onViewController: self)
                 }
             }

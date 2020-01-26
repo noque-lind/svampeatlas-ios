@@ -54,17 +54,17 @@ extension Date {
             if days == 0 {
                 if let hours = components.hour, ignoreTime == false {
                     if hours == 0 {
-                        return "Lige nu"
+                        return NSLocalizedString("dateFormatting_rightNow", comment: "")
                     } else {
-                        return "\(hours) timer siden"
+                        return String.localizedStringWithFormat(NSLocalizedString("dateFormatting_hoursSince",comment: ""), hours)
                     }
                 } else {
-                    return "I dag"
+                    return NSLocalizedString("dateFormatting_today", comment: "")
                 }
             } else if days == 1 {
-                return "1 dag siden"
+                return NSLocalizedString("dateFormatting_1dayHasPassed", comment: "")
             } else {
-                return "\(days) dage siden"
+                return String.localizedStringWithFormat(NSLocalizedString("dateFormatting_daysPassed", comment: ""), days)
             }
         } else {
             return nil

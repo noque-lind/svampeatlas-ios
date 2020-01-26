@@ -53,15 +53,16 @@ class BaseCell: UITableViewCell {
         return stackView
     }()
     
-    fileprivate lazy var disclosureButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.clear
-        button.alpha = 1
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.imageView?.contentMode = .scaleAspectFit
-        button.setImage(#imageLiteral(resourceName: "Glyphs_DisclosureButton").withRenderingMode(UIImage.RenderingMode.alwaysTemplate), for: [])
-        return button
-    }()
+//    fileprivate lazy var disclosureButton: UIButton = {
+//        let button = UIButton()
+//        button.backgroundColor = UIColor.clear
+//        button.alpha = 1
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.imageView?.contentMode = .scaleAspectFit
+//        button.setImage(#imageLiteral(resourceName: "Glyphs_DisclosureButton").withRenderingMode(UIImage.RenderingMode.alwaysTemplate), for: [])
+//        button.tintColor = .appWhite()
+//        return button
+//    }()
     
     fileprivate var containerView: UIView = {
         let view = UIView()
@@ -74,11 +75,10 @@ class BaseCell: UITableViewCell {
     
     fileprivate var containerViewBottomConstraint: NSLayoutConstraint?
     
-    override var tintColor: UIColor! {
+    var _textColor: UIColor? {
         didSet {
-            titleLabel.textColor = tintColor
-            secondaryLabel.textColor = tintColor
-            disclosureButton.tintColor = tintColor
+            titleLabel.textColor = _textColor
+            secondaryLabel.textColor = _textColor
         }
     }
     
@@ -94,7 +94,7 @@ class BaseCell: UITableViewCell {
     fileprivate func setupView(leadingConstant: CGFloat = 8, trailingConstant: CGFloat = -8) {
         backgroundColor = UIColor.clear
         selectionStyle = .none
-        
+        _textColor = UIColor.appPrimaryColour()
         contentView.addSubview(containerView)
         containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: trailingConstant).isActive = true
         containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: leadingConstant).isActive = true
@@ -127,7 +127,6 @@ class UnknownSpeciesCellButton: BaseCell {
     override func setupView(leadingConstant: CGFloat = 8, trailingConstant: CGFloat = -8) {
         roundedImageView.isMasked = false
         containerView.backgroundColor = UIColor.appWhite()
-        tintColor = UIColor.appPrimaryColour()
         roundedImageView.tintColor = UIColor.appPrimaryColour()
         roundedImageView.layer.shadowOpacity = 0.0
         selectionStyle = .none
@@ -153,8 +152,8 @@ class UnknownSpeciesCellButton: BaseCell {
     }
     
     private func configure() {
-        titleLabel.text = "Ubestemt svamp"
-        secondaryLabel.text = "Klik her for at indlægge en ubestemt svamp - fælleskabet vil prøve at hjælpe med bestemmelsen"
+        titleLabel.text = NSLocalizedString("unknownSpeciesButton_title", comment: "")
+        secondaryLabel.text = NSLocalizedString("unknownSpeciesButton_message", comment: "")
         roundedImageView.isMasked = false
         roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Utils_Missing").withRenderingMode(.alwaysTemplate))
     }
@@ -182,7 +181,6 @@ class UnknownSpecieCell: BaseCell {
     override func setupView(leadingConstant: CGFloat, trailingConstant: CGFloat) {
         roundedImageView.isMasked = false
         containerView.backgroundColor = UIColor.appWhite()
-        tintColor = UIColor.appPrimaryColour()
         roundedImageView.tintColor = UIColor.appPrimaryColour()
         roundedImageView.layer.shadowOpacity = 0.0
         selectionStyle = .none
@@ -230,8 +228,9 @@ class ContainedResultCell: BaseCell {
         return "ContainedResultCell"
     }
     
-    private var toxicityView: ToxicityView = {
-        let view = ToxicityView()
+    private var toxicityView: ToxicityViewHolder = {
+        let view = ToxicityViewHolder()
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -248,7 +247,7 @@ class ContainedResultCell: BaseCell {
     override func setupView(leadingConstant: CGFloat, trailingConstant: CGFloat) {
         super.setupView(leadingConstant: leadingConstant, trailingConstant: trailingConstant)
         
-        tintColor = UIColor.appPrimaryColour()
+        tintColor = UIColor.appWhite()
         
         containerView.addSubview(roundedImageView)
         roundedImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
@@ -256,81 +255,63 @@ class ContainedResultCell: BaseCell {
         roundedImageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         roundedImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
-        containerView.addSubview(titleLabel)
-         titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24).isActive = true
-                titleLabel.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 8).isActive = true
-                titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8).isActive = true
-                titleLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
+    
+        let textStackView: UIStackView = {
+            let stackView = UIStackView()
+            stackView.spacing = 4
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            stackView.axis = .vertical
+            stackView.addArrangedSubview(titleLabel)
+            stackView.addArrangedSubview(secondaryLabel)
+            return stackView
+        }()
+
+        containerView.addSubview(textStackView)
+        textStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24).isActive = true
+        textStackView.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 8).isActive = true
+        textStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8).isActive = true
         
-        
-//        let textStackView: UIStackView = {
-//            let stackView = UIStackView()
-//            stackView.spacing = 4
-//            stackView.translatesAutoresizingMaskIntoConstraints = false
-//            stackView.axis = .vertical
-//            stackView.addArrangedSubview(titleLabel)
-//            stackView.addArrangedSubview(secondaryLabel)
-//            return stackView
-//        }()
-//
-//
-//        containerView.addSubview(textStackView)
-//        textStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24).isActive = true
-//        textStackView.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 8).isActive = true
-//        textStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8).isActive = true
-//        textStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
-        
-        
-//        let informationStackView: UIStackView = {
-//            let stackView = UIStackView()
-//           stackView.spacing = 4
-//            stackView.alignment = .leading
-//            stackView.setContentHuggingPriority(.required, for: .vertical)
-//            stackView.translatesAutoresizingMaskIntoConstraints = false
-//            stackView.axis = .vertical
-////            stackView.addArrangedSubview(toxicityView)
-//            return stackView
-//        }()
-//
-//
-//        containerView.addSubview(informationStackView)
-//        informationStackView.topAnchor.constraint(equalTo: textStackView.bottomAnchor, constant: 8).isActive = true
-//        informationStackView.leadingAnchor.constraint(equalTo: textStackView.leadingAnchor).isActive = true
-//        informationStackView.trailingAnchor.constraint(equalTo: textStackView.trailingAnchor).isActive = true
-//        informationStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
+    
+        containerView.addSubview(toxicityView)
+        toxicityView.topAnchor.constraint(equalTo: textStackView.bottomAnchor, constant: 8).isActive = true
+        toxicityView.leadingAnchor.constraint(equalTo: textStackView.leadingAnchor).isActive = true
+        toxicityView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -24).isActive = true
+        toxicityView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
     }
     
     func configureCell(mushroom: Mushroom) {
         if mushroom.isGenus {
-            var titleText = "Slægt: "
-            titleText.append(mushroom.danishName ?? mushroom.fullName)
+            var titleText = NSLocalizedString("containedResultCell_genus", comment: "")
+            titleText.append(mushroom.localizedName ?? mushroom.fullName)
             titleLabel.text = titleText
-            secondaryLabel.text = mushroom.danishName != nil ? mushroom.fullName: nil
-//            secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
+            secondaryLabel.text = mushroom.localizedName != nil ? mushroom.fullName: nil
+            secondaryLabel.attributedText = mushroom.localizedName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
             roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Utils_Genus").withRenderingMode(.alwaysTemplate))
             roundedImageView.tintColor = UIColor.appPrimaryColour()
         } else {
-            titleLabel.text = mushroom.danishName ?? mushroom.fullName
-             secondaryLabel.text = mushroom.danishName != nil ? mushroom.fullName: nil
-//            secondaryLabel.attributedText = mushroom.danishName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
+            titleLabel.text = mushroom.localizedName ?? mushroom.fullName
+             secondaryLabel.text = mushroom.localizedName != nil ? mushroom.fullName: nil
+            secondaryLabel.attributedText = mushroom.localizedName != nil ? mushroom.fullName.italized(font: secondaryLabel.font): nil
             roundedImageView.configureImage(url: mushroom.images?.first?.url)
         }
         
-        toxicityView.configure(mushroom.attributes?.eatability)
+        toxicityView.configure(isPoisonous: mushroom.attributes?.isPoisonous ?? false)
+        
+        toxicityView.superview?.sizeToFit()
 //        titleLabel.sizeToFit()
 //        secondaryLabel.sizeToFit()
     }
     
     override func prepareForReuse() {
         decimalValueLabel.isHidden = true
-        toxicityView.isHidden = true
+//        toxicityView.isHidden = true
         super.prepareForReuse()
     }
     
     func configureCell(mushroom: Mushroom, confidence: Double) {
         configureCell(mushroom: mushroom)
-        decimalValueLabel.isHidden = false
-        decimalValueLabel.text =  "Ligner visuelt: \((confidence * 100).rounded(toPlaces: 2))%"
+//        decimalValueLabel.isHidden = false
+//        decimalValueLabel.text =  "Ligner visuelt: \((confidence * 100).rounded(toPlaces: 2))%"
     }
 }
 
@@ -345,7 +326,7 @@ class SelectedSpecieCell: ContainedResultCell {
         label.textColor = UIColor.appWhite()
         label.font = UIFont.appPrimaryHightlighed()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Hvor sikker er du?"
+        label.text = NSLocalizedString("selectedSpeciesCell_question", comment: "")
         label.textAlignment = .center
         return label
     }()
@@ -397,11 +378,11 @@ class SelectedSpecieCell: ContainedResultCell {
     private func getLabelForConfidence(confidence: NewObservation.DeterminationConfidence, isGenus: Bool) -> String {
         switch confidence {
         case .confident:
-            return isGenus ? "Det er helt sikkert den her slægt": "Det er helt sikkert den her art"
+            return isGenus ? NSLocalizedString("selectedSpeciesCell_confident_genus", comment: ""): NSLocalizedString("selectedSpeciesCell_confident_species", comment: "")
         case .possible:
-            return isGenus ? "Det er muligvis denne slægt": "Det er muligvis denne art"
+            return isGenus ? NSLocalizedString("selectedSpeciesCell_possible_genus", comment: ""): NSLocalizedString("selectedSpeciesCell_possible_species", comment: "")
         case .likely:
-            return isGenus ? "Det er sandsynligvis denne slægt": "Det er sandsynligvis denne art"
+            return isGenus ? NSLocalizedString("selectedSpeciesCell_likely_genus", comment: ""): NSLocalizedString("selectedSpeciesCell_likely_species", comment: "")
         }
     }
 }

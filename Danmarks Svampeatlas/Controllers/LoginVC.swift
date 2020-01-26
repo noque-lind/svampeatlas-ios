@@ -23,16 +23,18 @@ class LoginVC: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 10
         
+
         let upperStackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
             stackView.spacing = 0
             
+    
             let upperLabel: UILabel = {
                 let label = UILabel()
                 label.font = UIFont.appPrimaryHightlighed()
                 label.textColor = UIColor.appWhite()
-                label.text = "Log ind på"
+                label.text = NSLocalizedString("loginVC_upperLabel", comment: "")
                 return label
             }()
             
@@ -41,7 +43,7 @@ class LoginVC: UIViewController {
                 label.font = UIFont.appTitle()
                 label.textColor = UIColor.appWhite()
                 label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-                label.text = "Danmarks svampeatlas"
+                label.text = NSLocalizedString("loginVC_lowerLabel",  comment: "")
                 return label
             }()
             
@@ -55,7 +57,7 @@ class LoginVC: UIViewController {
             label.font = UIFont.appPrimary()
             label.textColor = UIColor.appWhite()
             label.numberOfLines = 0
-            label.text = "Bidrag til viden om danske svampe ved at dele dine fund med andre, samt modtage valideringer af dine fund fra danmarks førende svampeeksperter."
+            label.text = NSLocalizedString("loginVC_detailsLabel",  comment: "")
             return label
         }()
         
@@ -69,7 +71,7 @@ class LoginVC: UIViewController {
         textField.font = UIFont.appPrimaryHightlighed()
         textField.textColor = UIColor.appWhite()
         textField.autocapitalizationType = .none
-        textField.placeholder = "Initialer"
+        textField.placeholder = NSLocalizedString("loginVC_initialsTextField_placeholder",  comment: "")
         textField.backgroundColor = UIColor.appSecondaryColour()
         textField.textContentType = .username
         textField.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -81,7 +83,7 @@ class LoginVC: UIViewController {
         let textField = ELTextField()
         textField.font = UIFont.appPrimaryHightlighed()
         textField.textColor = UIColor.appWhite()
-        textField.placeholder = "Kodeord"
+        textField.placeholder = NSLocalizedString("loginVC_passwordTextField_placeholder",  comment: "")
         textField.textContentType = .password
         textField.backgroundColor = UIColor.appSecondaryColour()
         textField.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -94,7 +96,7 @@ class LoginVC: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.appGreen()
-        button.setTitle("Log ind", for: [])
+        button.setTitle(NSLocalizedString("loginVC_loginButton",  comment: ""), for: [])
         button.layer.cornerRadius = CGFloat.cornerRadius()
         button.layer.shadowOpacity = Float.shadowOpacity()
         button.layer.shadowOffset = CGSize.shadowOffset()
@@ -108,7 +110,7 @@ class LoginVC: UIViewController {
     
     private lazy var createNewAccountButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Klik her for at oprette en ny konto", for: [])
+        button.setTitle(NSLocalizedString("loginVC_createNewAccountButton",  comment: ""), for: [])
         button.setTitleColor(UIColor.appWhite(), for: .normal)
         button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.titleLabel?.font = UIFont.appPrimary()
@@ -173,12 +175,6 @@ class LoginVC: UIViewController {
         gradientImageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         view.addConstraint(NSLayoutConstraint(item: gradientImageView, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.height, multiplier: 0.8, constant: 0.0))
         
-        view.addSubview(upperStackView)
-        upperStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        upperStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -((view.frame.height / 2) / 2)).isActive = true
-        upperStackView.alpha = 0
-        upperStackView.transform = CGAffineTransform(translationX: 0.0, y: -50)
-        
         
         let textFieldStackView: UIStackView = {
             let stackView = UIStackView()
@@ -197,26 +193,33 @@ class LoginVC: UIViewController {
         textFieldStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
         textFieldStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
         
+        view.addSubview(upperStackView)
+        upperStackView.leadingAnchor.constraint(equalTo: textFieldStackView.leadingAnchor).isActive = true
+        upperStackView.trailingAnchor.constraint(equalTo: textFieldStackView.trailingAnchor).isActive = true
+        upperStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -((view.frame.height / 2) / 2)).isActive = true
+        upperStackView.alpha = 0
+        upperStackView.transform = CGAffineTransform(translationX: 0.0, y: -50)
+        
         
         ELKeyboardHelper.instance.registerObject(view: passwordTextField)
     }
     
     @objc private func logInButtonPressed() {
-        guard let initials = initialsTextField.text, initials != "" else {initialsTextField.showError(message: "Du skal udfylde dit brugernavn"); return}
+        guard let initials = initialsTextField.text, initials != "" else {initialsTextField.showError(message: NSLocalizedString("loginVC_initialsTextField_error", comment: "")); return}
         
         
-        guard let password = passwordTextField.text, password != "" else {passwordTextField.showError(message: "Du skal skrive dit kodeord"); return}
+        guard let password = passwordTextField.text, password != "" else {passwordTextField.showError(message: NSLocalizedString("loginVC_passwordTextField_error", comment: "")); return}
         view.endEditing(true)
         Spinner.start(onView: view)
         
         Session.login(initials: initials, password: password) { (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .Success(let session):
+                case .success(let session):
                     guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
                     appDelegate.session = session
                     
-                case .Error(let error):
+                case .failure(let error):
                     DispatchQueue.main.async {
                         Spinner.stop()
                         ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .top)

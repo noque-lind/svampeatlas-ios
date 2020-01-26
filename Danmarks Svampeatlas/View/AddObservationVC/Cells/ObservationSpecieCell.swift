@@ -16,6 +16,7 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
         case unknownSpecies
         case unknownSpeciesButton
         case citation
+        case lowConfidence
     }
     
     var isAtTop: ((Bool) -> ())?
@@ -29,6 +30,8 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
         register(cellClass: SelectedSpecieCell.self, forCellReuseIdentifier: SelectedSpecieCell.identifier)
         register(cellClass: UnknownSpeciesCellButton.self, forCellReuseIdentifier: UnknownSpeciesCellButton.identifier)
         register(cellClass: CreditationCell.self, forCellReuseIdentifier: CreditationCell.identifier)
+        register(cellClass: CautionCell.self, forCellReuseIdentifier: CautionCell.identifier)
+        tintColor = .appWhite()
     }
     
     required init?(coder: NSCoder) {
@@ -47,6 +50,7 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
             }
             
             cell.accessoryType = .disclosureIndicator
+            cell.tintColor = UIColor.appWhite()
             return cell
             
         case .selectedMushroom(let mushroom, let confidence):
@@ -58,13 +62,7 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
             
         case .unknownSpecies:
             let cell = tableView.dequeueReusableCell(withIdentifier: UnknownSpecieCell.identifier, for: indexPath) as! UnknownSpecieCell
-            
-        
-            //            cell.deselectButtonPressed = { [unowned self] in
-            //                self.newObservation?.mushroom = nil
-            //                self.configureSpeciesSection()
-            //            }
-            
+           
             return cell
         case .unknownSpeciesButton:
             let cell = tableView.dequeueReusableCell(withIdentifier: UnknownSpeciesCellButton.identifier, for: indexPath) as! UnknownSpeciesCellButton
@@ -72,6 +70,10 @@ class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableVi
         case .citation:
             let cell = tableView.dequeueReusableCell(withIdentifier: CreditationCell.identifier, for: indexPath) as! CreditationCell
             cell.configureCell(creditation: .AINewObservation)
+            return cell
+        case .lowConfidence:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CautionCell.identifier, for: indexPath) as! CautionCell
+            cell.configureCell(type: .lowConfidence)
             return cell
         }
     }
@@ -108,11 +110,15 @@ class ObservationSpecieCell: UICollectionViewCell {
             }
         }
         
+        tableView.confidenceSelected = { [unowned newObservation] determinationConfidence in
+            newObservation?.determinationConfidence = determinationConfidence
+        }
+        
         tableView.didSelectItem = { [unowned self, unowned tableView] item, _ in
             let vc: UIViewController
             switch item {
             case .unknownSpeciesButton:
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id, takesSelection: (selected: false, title: "Vælg", handler: { (selected) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id, takesSelection: (selected: false, title: NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""), handler: { (selected) in
                     self.newObservation?.mushroom = Mushroom.genus()
                     self.configureUpperSection()
                     self.configurePredictions()
@@ -125,7 +131,7 @@ class ObservationSpecieCell: UICollectionViewCell {
                 })))
             case .selectableMushroom(let mushroom, _):
                 let selected = mushroom == self.newObservation?.mushroom
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: selected, title: selected ? "Fravælg": (mushroom.isGenus ? "Vælg slægt": "Vælg art"), handler: { (_) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: selected, title: selected ? "Fravælg": (mushroom.isGenus ? NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""): NSLocalizedString("observationSpeciesCell_chooseSpecies", comment: "")), handler: { (_) in
                     
                     if selected {
                         self.newObservation?.mushroom = nil
@@ -145,7 +151,7 @@ class ObservationSpecieCell: UICollectionViewCell {
                     }
                 })))
             case .selectedMushroom(let mushroom, _):
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: true, title: "Fravælg", handler: { (selected) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: true, title: NSLocalizedString("observationSpeciesCell_deselect", comment: ""), handler: { (selected) in
                     self.newObservation?.mushroom = nil
                     self.configureUpperSection()
                     
@@ -160,8 +166,6 @@ class ObservationSpecieCell: UICollectionViewCell {
             }
             self.delegate?.pushVC(vc)
         }
-    
-        tableView.setSections(sections: [upperSection, middleSection, lowerSection])
         return tableView
     }()
     
@@ -220,18 +224,19 @@ class ObservationSpecieCell: UICollectionViewCell {
         endEditing(true)
     }
     
-    func configureCell(newObservation: NewObservation?) {
+    func configureCell(newObservation: NewObservation) {
         self.newObservation = newObservation
         configureUpperSection()
         configurePredictions()
         configureFavoritesSection()
+        tableView.setSections(sections: [upperSection, middleSection, lowerSection])
     }
     
     
     private func configureUpperSection() {
         if let selectedMushroom = newObservation?.mushroom, let selectedDeterminationConfidence = newObservation?.determinationConfidence {
             hideSearchBar()
-            upperSection.setTitle(title: selectedMushroom.isGenus ? "Valgte slægt": "Valgte art")
+            upperSection.setTitle(title: selectedMushroom.isGenus ? NSLocalizedString("observationSpeciesCell_choosenGenus", comment: ""): NSLocalizedString("observationSpeciesCell_choosenSpecies", comment: ""))
             upperSection.setState(state: .items(items: [.selectedMushroom(selectedMushroom, selectedDeterminationConfidence)]))
         } else {
             showSearchBar()
@@ -241,19 +246,17 @@ class ObservationSpecieCell: UICollectionViewCell {
     }
     
     private func configureFavoritesSection() {
-        CoreDataHelper.fetchAllFavoritedMushrooms { [weak lowerSection] (result) in
-            switch result {
-            case .Error(_): return
-            case .Success(let mushrooms):
-                lowerSection?.setTitle(title: "Mine favoritter")
-                lowerSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
-            }
+        switch Database.instance.mushroomsRepository.fetchAll() {
+        case .failure(let error): return
+        case .success(let mushrooms):
+            lowerSection.setTitle(title: NSLocalizedString("observationSpeciesCell_myFavorites", comment: ""))
+            lowerSection.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
         }
     }
     
     private func configurePredictions() {
         searchBar.text = nil
-        middleSection.setTitle(title: "Navneforslag")
+        middleSection.setTitle(title: NSLocalizedString("observationSpeciesCell_predictionsHeader", comment: ""))
         
         if let predictionsState = newObservation?.predictionResultsState {
             switch predictionsState {
@@ -262,7 +265,20 @@ class ObservationSpecieCell: UICollectionViewCell {
             case .loading:
                 middleSection.setState(state: .loading)
             case .items(items: let items):
+               var highestConfidence = 0.0
+                           items.forEach { (predictionResult) in
+                               
+                               if predictionResult.score > highestConfidence {
+                                   highestConfidence = predictionResult.score * 100
+                               }
+                           }
+                
                 var items = items.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0.mushroom, $0.score)})
+               
+               if highestConfidence < 50.0 {
+                items.insert(.lowConfidence, at: 0)
+               }
+               
                 items.append(.citation)
                 middleSection.setState(state: .items(items: items))
             case .empty:
@@ -274,7 +290,7 @@ class ObservationSpecieCell: UICollectionViewCell {
 
 extension ObservationSpecieCell: CustomSearchBarDelegate {
     func newSearchEntry(entry: String) {
-        middleSection.setTitle(title: "Søgeresultater")
+        middleSection.setTitle(title: NSLocalizedString("observationSpeciesCell_searchResults", comment: ""))
         middleSection.setState(state: .loading)
         
         tableView.performUpdates(updates: { (updater) in
@@ -282,9 +298,9 @@ extension ObservationSpecieCell: CustomSearchBarDelegate {
         }) { [weak middleSection, weak tableView] in
             DataService.instance.getMushrooms(searchString: entry, speciesQueries: [.attributes(presentInDenmark: nil), .images(required: false), .danishNames, .redlistData, .statistics]) { (result) in
                 switch result {
-                case .Error(let appError):
+                case .failure(let appError):
                     middleSection?.setState(state: .error(error: appError, handler: nil))
-                case .Success(let mushrooms):
+                case .success(let mushrooms):
                     middleSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
                 }
                 

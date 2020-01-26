@@ -75,7 +75,7 @@ class ErrorView: UIView {
         secondaryLabel.text = error.errorDescription
         
         if let recoveryAction = error.recoveryAction, handler != nil {
-            actionButton.setTitle(recoveryAction.rawValue, for: [])
+            actionButton.setTitle(recoveryAction.localizableText, for: [])
             actionButton.isHidden = false
             self.handler = handler
             self.recoveryAction = recoveryAction

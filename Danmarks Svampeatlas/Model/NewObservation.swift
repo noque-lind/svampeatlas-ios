@@ -27,19 +27,19 @@ class NewObservation {
        
         var errorTitle: String {
             switch self {
-            case .noSubstrateGroup, .noVegetationType, .noMushroom: return "Manglende information"
-            case .noLocality: return "Hvor er du?"
-            case .noCoordinates: return "Ingen koordinater"
+            case .noSubstrateGroup, .noVegetationType, .noMushroom: return NSLocalizedString("newObservationError_missingInformation", comment: "")
+            case .noLocality: return NSLocalizedString("newObservationError_noLocality_title", comment: "")
+            case .noCoordinates: return NSLocalizedString("newObservationError_noCoordinates_title", comment: "")
             }
         }
         
         var errorDescription: String {
             switch self {
-            case .noMushroom: return "Du mangler at fortælle hvilken svampeart du har fundet. Hvis du ikke ved det, kan du trykke på knappen 'Ubestemt svamp'."
-            case .noSubstrateGroup: return "Du mangler at angive et substrat."
-            case .noVegetationType: return "Du mangler at angive en vegetationstype."
-            case .noCoordinates: return "DDine koordinater kunne ikke findes automatisk, så du skal selv angive fundets position."
-            case .noLocality: return "Dine koordinater er blevet bestemt, men det var ikke muligt at finde et nærliggende stedsnavn. Prøv venligst igen."
+            case .noMushroom: return NSLocalizedString("newObservationError_noMushroom_message", comment: "")
+            case .noSubstrateGroup: return NSLocalizedString("newObservationError_noSubstrateGroup_message", comment: "")
+            case .noVegetationType: return NSLocalizedString("newObservationError_noVegetationType_message", comment: "")
+            case .noCoordinates: return NSLocalizedString("newObservationError_noCoordinates_message", comment: "")
+            case .noLocality: return NSLocalizedString("newObservationError_noLocality_message", comment: "")
             }
         }
     }
@@ -116,9 +116,9 @@ class NewObservation {
         DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .Error(let error):
+                case .failure(let error):
                     self?.predictionResultsState = .error(error: error, handler: nil)
-                case .Success(let predictionResults):
+                case .success(let predictionResults):
                     self?.predictionResultsState = .items(items: predictionResults)
                 }
             }
@@ -159,6 +159,13 @@ class NewObservation {
         let latitudeRef = (gpsDict[String(kCGImagePropertyGPSLatitudeRef)] as? String)
         let longitudeRef = (gpsDict[String(kCGImagePropertyGPSLongitudeRef)] as? String)
         
+        var timeStamp: Date?
+        if let exif = (imageProperties[String(kCGImagePropertyExifDictionary)] as? [String: Any]), let timeStampDate = (exif[String(kCGImagePropertyExifDateTimeOriginal)] as? String) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+            dateFormatter.timeZone = TimeZone.current
+            timeStamp = dateFormatter.date(from: timeStampDate)
+        }
         if latitudeRef == "S" {
             latitude = -latitude
         }
@@ -167,13 +174,9 @@ class NewObservation {
             longitude = -longitude
         }
       
-       return CLLocation.init(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), altitude: altitude, horizontalAccuracy: accuracy, verticalAccuracy: accuracy, timestamp: Date())
+       return CLLocation.init(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), altitude: altitude, horizontalAccuracy: accuracy, verticalAccuracy: accuracy, timestamp: timeStamp ?? Date())
     }
-    
-//    private func setPredictionResultsState(state: TableViewState<PredictionResult>) {
-//        predictionResultsState = state
-//        predictionsResultsStateChanged?()
-//    }
+
     
     private func getDeterminationNotes(pickedMushroom: Mushroom) -> String {
         guard case Section<PredictionResult>.State.items(items: let predictionResults) = predictionResultsState, let predictionResult = predictionResults.first(where: {$0.mushroom == pickedMushroom}) else {return ""}
@@ -188,11 +191,11 @@ class NewObservation {
     }
     
     func returnAsDictionary(user: User) -> Result<[String: Any], Error> {
-        guard let mushroom = mushroom  else {return Result.Error(Error.noMushroom)}
-        guard let substrate = substrate else {return Result.Error(Error.noSubstrateGroup)}
-        guard let vegetationType = vegetationType else {return Result.Error(Error.noVegetationType)}
-        guard let locality = locality else {return Result.Error(Error.noLocality)}
-        guard let observationCoordinate = observationCoordinate else {return Result.Error(Error.noCoordinates)}
+        guard let mushroom = mushroom  else {return Result.failure(Error.noMushroom)}
+        guard let substrate = substrate else {return Result.failure(Error.noSubstrateGroup)}
+        guard let vegetationType = vegetationType else {return Result.failure(Error.noVegetationType)}
+        guard let locality = locality else {return Result.failure(Error.noLocality)}
+        guard let observationCoordinate = observationCoordinate else {return Result.failure(Error.noCoordinates)}
         
         var dict: [String: Any] = ["observationDate": observationDate.convert(into: "yyyy-MM-dd")]
         dict["os"] = "iOS"
@@ -231,6 +234,10 @@ class NewObservation {
         }
         
         
-        return Result.Success(dict)
+        return Result.success(dict)
+    }
+    
+    deinit {
+        images.forEach({ELFileManager.deleteImage(imageURL: $0)})
     }
 }

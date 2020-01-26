@@ -10,9 +10,17 @@ import Foundation
 
 struct VegetationType: Decodable {
     public private(set) var id: Int
-    public private(set) var dkName: String
-    public private(set) var enName: String
+    let dkName: String
+    let enName: String
     public var isLocked: Bool = false
+    
+    var name: String {
+        if Locale.preferredLanguages[0]  == Utilities.SUPPORTEDLOCALE {
+            return dkName
+        } else {
+            return enName
+        }
+    }
     
     private enum CodingKeys: String, CodingKey {
         case id = "_id"

@@ -10,8 +10,24 @@ import UIKit
 import CoreLocation.CLLocation
 
 enum Result<ReturnValue, ErrorType> {
-    case Error(ErrorType)
-    case Success(ReturnValue)
+    case failure(ErrorType)
+    case success(ReturnValue)
+    
+    func onSuccess(_ handler: (ReturnValue) -> ()) {
+        switch self {
+        case .success(let returnValue):
+            handler(returnValue)
+        case .failure: return
+        }
+    }
+    
+    func onFailure(_ handler: (ErrorType) -> ()) {
+        switch self {
+        case .success: return
+        case .failure(let errorType):
+            handler(errorType)
+        }
+    }
 }
 
 class DataService{
@@ -34,32 +50,32 @@ class DataService{
             switch self {
             case .decodingError(let error):
                 debugPrint(error)
-                return ""
+                return NSLocalizedString("dataServiceError_decodingError_message", comment: "")
             case .searchReponseEmpty:
-                return "Det du søgte efter kunne ikke findes, prøv at søg efter noget andet"
+                return NSLocalizedString("dataServiceError_searchResponseEmpty_message", comment: "")
             case .loginError:
-                return "Prøv nogle andre initialer eller et andet kodeord"
+                return NSLocalizedString("dataServiceError_loginError_message", comment: "")
             case .empty:
-                return "Tom"
+                return NSLocalizedString("dataServiceError_empty_message", comment: "")
             default:
-                return "Unhandled DataServiceError"
+                return NSLocalizedString("dataServiceError_unknown_message", comment: "")
             }
         }
         
         var errorTitle: String {
             switch self {
             case .searchReponseEmpty:
-                return "Fandt intet"
+                return NSLocalizedString("dataServiceError_searchResponseEmpty_title", comment: "")
             case .decodingError:
-                return "Fejl"
+                return NSLocalizedString("dataServiceError_decodingError_title", comment: "")
             case .encodingError:
-                return "Der skete en fejl med at "
+                return NSLocalizedString("dataServiceError_encodingError_title", comment: "")
             case .loginError:
-                return "Kunne ikke logge ind"
+                return NSLocalizedString("dataServiceError_loginError_title", comment: "")
             case .empty:
-                return "Tom"
+                return NSLocalizedString("dataServiceError_empty_title", comment: "")
             default:
-                return "Unhandled DataServiceError"
+                return NSLocalizedString("dataServiceError_unknown_title", comment: "")
             }
         }
     }
@@ -79,38 +95,38 @@ class DataService{
         var errorDescription: String {
             switch self {
             case .noInternet:
-                return "Du er ikke på internettet. Hvis du spørger din nabo sødt, må du måske bruge hans WiFi."
+                return NSLocalizedString("urlSessionError_noInternet_message", comment: "")
             case .invalidResponse:
-                return "Svaret jeg fik tilbage fra serveren, giver desværre ingen mening. Prøv igen"
+                return NSLocalizedString("urlSessionError_invalidResponse_message", comment: "")
             case .serverError:
-                return "Det lader til at der er et problem med serveren lige nu. Måske trænger den til et kram?"
+                return NSLocalizedString("urlSessionError_serverError_message", comment: "")
             case .timeout:
-                return "Det tog for lang tid før svaret nåede frem. Prøv igen, det kan være jeg var for utålmodig"
+                return NSLocalizedString("urlSessionError_timeout_message", comment: "")
             case .unknown:
-                return "Der skete en fejl, som jeg ikke ved hvorfor skete. Øv bøv."
+                return NSLocalizedString("urlSessionError_unknown_message", comment: "")
             case .unAuthorized:
-                return "Du er ikke logget på"
+                return NSLocalizedString("urlSessionError_unAuthorized_message", comment: "")
             case .payloadTooLarge:
-                return "Serveren kan ikke håndterere for stor data, prøv at send mindre."
+                return NSLocalizedString("urlSessionError_payloadTooLarge_message", comment: "")
             }
         }
         
         var errorTitle: String {
             switch self {
             case .noInternet:
-                return "Ingen internet"
+                return NSLocalizedString("urlSessionError_noInternet_title", comment: "")
             case .invalidResponse:
-                return "Ugyldigt svar"
+                return NSLocalizedString("urlSessionError_invalidResponse_title", comment: "")
             case .serverError:
-                return "Server fejl"
+                return NSLocalizedString("urlSessionError_serverError_title", comment: "")
             case .timeout:
-                return "Time-out"
+                return NSLocalizedString("urlSessionError_timeout_title", comment: "")
             case .unknown:
-                return "Ukendt fejl"
+                return NSLocalizedString("urlSessionError_unknown_title", comment: "")
             case .unAuthorized:
-                return "Uautoriseret"
+                return NSLocalizedString("urlSessionError_unAuthorized_title", comment: "")
             case .payloadTooLarge:
-                return "Anmodningen var for stor"
+                return NSLocalizedString("urlSessionError_payloadTooLarge_title", comment: "")
             }
         }
         
@@ -133,6 +149,8 @@ class DataService{
     //CLASS FUNCTIONS
     
     internal func createDataTaskRequest(url: String, method: String = "GET", data: Data? = nil, contentType: String? = nil, contentLenght: Int? = nil, token: String? = nil, completion: @escaping (Result<Data, URLSessionError>) -> ()) {
+        
+        print(url)
         var request = URLRequest(url: URL.init(string: url)!)
         request.timeoutInterval = 20
         request.httpMethod = method
@@ -155,11 +173,11 @@ class DataService{
             do {
     
                 let data = try self.handleURLSession(data: data, response: response, error: error)
-                completion(Result.Success(data))
+                completion(Result.success(data))
             } catch let error as URLSessionError {
-                completion(Result.Error(error))
+                completion(Result.failure(error))
             } catch {
-                completion(Result.Error(URLSessionError.unknown))
+                completion(Result.failure(URLSessionError.unknown))
             }
         }
         task.resume()
@@ -220,12 +238,12 @@ extension DataService {
                                           let mushrooms = try JSONDecoder().decode([Mushroom].self, from: data)
                                           
                                           if searchString != nil && mushrooms.count == 0 {
-                                              completion(Result.Error(DataServiceError.searchReponseEmpty))
+                                              completion(Result.failure(DataServiceError.searchReponseEmpty))
                                           } else {
-                                              completion(Result.Success(mushrooms))
+                                              completion(Result.success(mushrooms))
                                           }
                                       } catch {
-                                          completion(Result.Error(DataServiceError.decodingError(error)))
+                                          completion(Result.failure(DataServiceError.decodingError(error)))
                                       }
         }
         
@@ -237,9 +255,9 @@ extension DataService {
         } else {
             createDataTaskRequest(url: api) { (result) in
                        switch result {
-                       case .Error(let error):
-                           completion(Result.Error(error))
-                       case .Success(let data):
+                       case .failure(let error):
+                           completion(Result.failure(error))
+                       case .success(let data):
                         handleData(data: data)
                        }
                    }
@@ -249,14 +267,14 @@ extension DataService {
     func getMushroom(withID id: Int, completion: @escaping (Result<Mushroom, AppError>) -> ()) {
         createDataTaskRequest(url: API.Request.Mushroom(id: id).encodedURL) { (result) in
             switch result {
-            case .Error(let error):
-                completion(Result.Error(error))
-            case .Success(let data):
+            case .failure(let error):
+                completion(Result.failure(error))
+            case .success(let data):
                 do {
-                    guard let mushroom = try JSONDecoder().decode([Mushroom].self, from: data).first else {completion(Result.Error(DataServiceError.extractionError)); return}
-                    completion(Result.Success(mushroom))
+                    guard let mushroom = try JSONDecoder().decode([Mushroom].self, from: data).first else {completion(Result.failure(DataServiceError.extractionError)); return}
+                    completion(Result.success(mushroom))
                 } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
+                    completion(Result.failure(DataServiceError.decodingError(error)))
                 }
             }
         }
@@ -270,14 +288,14 @@ extension DataService {
     func getObservation(withID id: Int, completion: @escaping (Result<Observation, AppError>) -> ()) {
         createDataTaskRequest(url: API.observationWithIDURL(observationID: id)) { (result) in
             switch result {
-            case .Error(let error):
-                completion(Result.Error(error))
-            case .Success(let data):
+            case .failure(let error):
+                completion(Result.failure(error))
+            case .success(let data):
                 do {
                     let observation = try JSONDecoder().decode(Observation.self, from: data)
-                    completion(Result.Success(observation))
+                    completion(Result.success(observation))
                 } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
+                    completion(Result.failure(DataServiceError.decodingError(error)))
                 }
             }
         }
@@ -286,14 +304,14 @@ extension DataService {
     func getObservationsForMushroom(withID id: Int, limit: Int, offset: Int, completion: @escaping (Result<[Observation], AppError>) -> ()) {
         createDataTaskRequest(url: API.observationsURL(includeQueries: [.comments, .determinationView(taxonID: id), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: limit, offset: offset)) { (result) in
             switch result {
-            case .Error(let error):
-                completion(Result.Error(error))
-            case .Success(let data):
+            case .failure(let error):
+                completion(Result.failure(error))
+            case .success(let data):
                 do {
                     let observations = try JSONDecoder().decode([Observation].self, from: data)
-                    completion(Result.Success(observations))
+                    completion(Result.success(observations))
                 } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
+                    completion(Result.failure(DataServiceError.decodingError(error)))
                 }
             }
         }
@@ -303,14 +321,14 @@ extension DataService {
     func getObservationsWithin(geometry: API.Geometry, taxonID: Int? = nil, ageInYear: Int? = nil, completion: @escaping (Result<[Observation], AppError>) -> ()) {
         createDataTaskRequest(url: API.Request.Observation(geometry: geometry, ageInYear: ageInYear, include: [.comments, .determinationView(taxonID: taxonID), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: nil, offset: nil).encodedURL) { (result) in
             switch result {
-            case .Error(let error):
-                completion(Result.Error(error))
-            case .Success(let data):
+            case .failure(let error):
+                completion(Result.failure(error))
+            case .success(let data):
                 do {
                     let observations = try JSONDecoder().decode([Observation].self, from: data)
-                    completion(Result.Success(observations))
+                    completion(Result.success(observations))
                 } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
+                    completion(Result.failure(DataServiceError.decodingError(error)))
                 }
             }
         }
@@ -330,9 +348,9 @@ extension DataService {
         
         createDataTaskRequest(url: API.localitiesURL(coordinates: coordinates, radius: radius)) { (result) in
             switch result {
-            case .Error(let error):
-                completion(Result.Error(error))
-            case .Success(let data):
+            case .failure(let error):
+                completion(Result.failure(error))
+            case .success(let data):
                 do {
                     if radius != API.Radius.country {
                         let localities = try JSONDecoder().decode([Locality].self, from: data)
@@ -349,22 +367,22 @@ extension DataService {
                             case .largest: newRadius = .huge
                             case .huge: newRadius = .huger
                             case .huger: newRadius = .hugest
-                            case .hugest: if localities.count != 0 {completion(Result.Success(localities)); return} else { newRadius = .country}
+                            case .hugest: if localities.count != 0 {completion(Result.success(localities)); return} else { newRadius = .country}
                             case .country: return
                             }
                             
                             self.getLocalitiesNearby(coordinates: coordinates, radius: newRadius, completion: completion)
                         } else {
-                            completion(Result.Success(localities))
+                            completion(Result.success(localities))
                         }
                     } else {
-                        guard let geoName = (try JSONDecoder().decode(GeoNames.self, from: data)).geonames.first else {completion(Result.Error(DataServiceError.extractionError)); return}
+                        guard let geoName = (try JSONDecoder().decode(GeoNames.self, from: data)).geonames.first else {completion(Result.failure(DataServiceError.extractionError)); return}
                         
                         
-                        completion(Result.Success([Locality(id: geoName.geonameId, name: "\(geoName.name), \(geoName.countryCode)", latitude: Double(geoName.lat)!, longitude: Double(geoName.lng)!, geoName: geoName)]))
+                        completion(Result.success([Locality(id: geoName.geonameId, name: "\(geoName.name), \(geoName.countryCode)", latitude: Double(geoName.lat)!, longitude: Double(geoName.lng)!, geoName: geoName)]))
                     }
                 } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
+                    completion(Result.failure(DataServiceError.decodingError(error)))
                 }
             }
         }
@@ -374,45 +392,42 @@ extension DataService {
     
     func sortAndComplete(substrateGroups: [SubstrateGroup]) {
         let sortedSubstrateGroups = substrateGroups.sorted(by: {$0.id < $1.id})
-        completion(Result.Success(sortedSubstrateGroups))
+        completion(Result.success(sortedSubstrateGroups))
     }
     
-        CoreDataHelper.fetchSubstrateGroups(overrideOutdateWarning: overrideOutdateError, completion: { [weak self] (result) in
-            switch result {
-            case .Success(let substrateGroups):
-                sortAndComplete(substrateGroups: substrateGroups)
-            case .Error(let coreDataError):
-                switch coreDataError {
-                case .noEntries, .readError:
-                    self?.downloadSubstrateGroups(completion: { (result) in
-                        switch result {
-                        case .Error(let error):
-                            completion(Result.Error(error))
-                        case .Success(let substrateGroups):
-                            sortAndComplete(substrateGroups: substrateGroups)
-                        }
-                    })
-                case .contentOutdated:
-                    self?.downloadSubstrateGroups(completion: { (result) in
-                        switch result {
-                        case .Success(let substrateGroups):
-                            sortAndComplete(substrateGroups: substrateGroups)
-                        case .Error(_):
-                            self?.getSubstrateGroups(overrideOutdateError: true, completion: completion)
-                            }
-                    })
-                case .saveError: return
+    switch Database.instance.substrateGroupsRepository.fetchAll() {
+    case .success(let substrateGroups): sortAndComplete(substrateGroups: substrateGroups)
+    case .failure(let error):
+        switch error {
+        case .noEntries, .readError:
+            downloadSubstrateGroups(completion: { (result) in
+                switch result {
+                case .failure(let error):
+                    completion(Result.failure(error))
+                case .success(let substrateGroups):
+                    sortAndComplete(substrateGroups: substrateGroups)
                 }
-            }
-        })
+            })
+        case .contentOutdated:
+            downloadSubstrateGroups(completion: { (result) in
+                switch result {
+                case .success(let substrateGroups):
+                    sortAndComplete(substrateGroups: substrateGroups)
+                case .failure(_):
+                    self.getSubstrateGroups(overrideOutdateError: true, completion: completion)
+                    }
+            })
+        case .saveError, .initError: return
+        }
+    }
     }
     
     private func downloadSubstrateGroups(completion: @escaping (Result<[SubstrateGroup], AppError>) -> ()) {
         createDataTaskRequest(url: API.substrateURL()) { (result) in
             switch result {
-            case .Success(let data):
+            case .success(let data):
                 
-                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: Any]] else {completion(Result.Error(DataServiceError.extractionError)); return}
+                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
                 
                 var substrateGroups = [SubstrateGroup]()
                 
@@ -428,10 +443,10 @@ extension DataService {
                 
         
                 CoreDataHelper.saveSubstrateGroups(substrateGroups: substrateGroups)
-                completion(Result.Success(substrateGroups))
+                completion(Result.success(substrateGroups))
                 
-            case .Error(let error):
-                completion(Result.Error(error))
+            case .failure(let error):
+                completion(Result.failure(error))
             }
         }
     }
@@ -439,32 +454,32 @@ extension DataService {
     func getVegetationTypes(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[VegetationType], AppError>) -> ()) {
         CoreDataHelper.fetchVegetationTypes(overrideOutdateWarning: overrideOutdateWarning, completion: { (result) in
             switch result {
-            case .Success(let vegetationTypes):
+            case .success(let vegetationTypes):
                 let sortedVegetationTypes = vegetationTypes.sorted(by: {$0.id < $1.id})
-                completion(Result.Success(sortedVegetationTypes))
-            case .Error(let coreDataError):
+                completion(Result.success(sortedVegetationTypes))
+            case .failure(let coreDataError):
                 switch coreDataError {
                 case .noEntries, .readError:
                     downloadVegetationTypes(completion: { (result) in
                         switch result {
-                        case .Error(let error):
-                            completion(Result.Error(error))
-                        case .Success(let vegetationTypes):
+                        case .failure(let error):
+                            completion(Result.failure(error))
+                        case .success(let vegetationTypes):
                             let sortedVegetationTypes = vegetationTypes.sorted(by: {$0.id < $1.id})
-                            completion(Result.Success(sortedVegetationTypes))
+                            completion(Result.success(sortedVegetationTypes))
                         }
                     })
                 case .contentOutdated:
                     downloadVegetationTypes(completion: { (result) in
                         switch result {
-                        case .Success(let vegetationTypes):
+                        case .success(let vegetationTypes):
                             let sortedVegetationTypes = vegetationTypes.sorted(by: {$0.id < $1.id})
-                            completion(Result.Success(sortedVegetationTypes))
-                        case .Error(_):
+                            completion(Result.success(sortedVegetationTypes))
+                        case .failure(_):
                             self.getVegetationTypes(overrideOutdateWarning: true, completion: completion)
                         }
                     })
-                case .saveError:
+                case .saveError, .initError:
                     return
                 }
             }
@@ -475,8 +490,8 @@ extension DataService {
     private func downloadVegetationTypes(completion: @escaping (Result<[VegetationType], AppError>) -> ()) {
         createDataTaskRequest(url: API.vegetationTypeURL(), completion: { (result) in
             switch result {
-            case .Success(let data):
-                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: Any]] else {completion(Result.Error(DataServiceError.extractionError)); return}
+            case .success(let data):
+                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
                 
                 var vegetationTypes = [VegetationType]()
                 
@@ -484,10 +499,10 @@ extension DataService {
                     guard let id = object["_id"] as? Int, let name_uk = object["name_uk"] as? String, let name = object["name"] as? String else {continue}
                     vegetationTypes.append(VegetationType(id: id, dkName: name, enName: name_uk))
                 }
-                completion(Result.Success(vegetationTypes))
+                completion(Result.success(vegetationTypes))
                 CoreDataHelper.saveVegetationTypes(vegetationTypes: vegetationTypes)
-            case .Error(let error):
-                completion(Result.Error(error))
+            case .failure(let error):
+                completion(Result.failure(error))
             }
         })
     }
@@ -496,32 +511,32 @@ extension DataService {
     func getPopularHosts(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[Host], AppError>) -> ()) {
         CoreDataHelper.fetchHosts(overrideOutdateWarning: overrideOutdateWarning) { (result) in
             switch result {
-            case .Success(let hosts):
+            case .success(let hosts):
                 let sortedHosts = hosts.sorted(by: {$0.probability > $1.probability})
-                completion(Result.Success(sortedHosts))
-            case .Error(let coreDataError):
+                completion(Result.success(sortedHosts))
+            case .failure(let coreDataError):
                 switch coreDataError {
                 case .noEntries, .readError:
                     downloadHosts(shouldSave: true, completion: { (result) in
                         switch result {
-                        case .Error(let error):
-                            completion(Result.Error(error))
-                        case .Success(let hosts):
+                        case .failure(let error):
+                            completion(Result.failure(error))
+                        case .success(let hosts):
                             let sortedHosts = hosts.sorted(by: {$0.probability > $1.probability})
-                            completion(Result.Success(sortedHosts))
+                            completion(Result.success(sortedHosts))
                         }
                     })
                 case .contentOutdated:
                     downloadHosts(shouldSave: true, completion: { (result) in
                         switch result {
-                        case .Error(_):
+                        case .failure(_):
                             self.getPopularHosts(overrideOutdateWarning: true, completion: completion)
-                        case .Success(let hosts):
+                        case .success(let hosts):
                             let sortedHosts = hosts.sorted(by: {$0.probability > $1.probability})
-                            completion(Result.Success(sortedHosts))
+                            completion(Result.success(sortedHosts))
                         }
                     })
-                case .saveError: return
+                case .saveError, .initError: return
                 }
             }
         }
@@ -530,20 +545,20 @@ extension DataService {
     func downloadHosts(shouldSave: Bool, searchString: String? = nil, completion: @escaping (Result<[Host], AppError>) -> ()) {
         createDataTaskRequest(url: API.Request.Hosts(searchString: searchString).encodedURL, completion: { (result) in
             switch result {
-            case .Success(let data):
+            case .success(let data):
                 do {
                     let hosts = try JSONDecoder().decode([Host].self, from: data)
-                    completion(Result.Success(hosts))
+                    completion(Result.success(hosts))
                     
                     if shouldSave {
                         CoreDataHelper.saveHost(hosts: hosts)
                     }
                 } catch {
-                    completion(Result.Error(DataServiceError.decodingError(error)))
+                    completion(Result.failure(DataServiceError.decodingError(error)))
                 }
                 
-            case .Error(let error):
-                completion(Result.Error(error))
+            case .failure(let error):
+                completion(Result.failure(error))
             }
         })
     }
@@ -555,7 +570,7 @@ extension DataService {
     }
     
     func getImage(forUrl uri: String, size: ImageSize, completion: @escaping (UIImage, String) -> Void) {
-        if let image = ELFileManager.getImage(withURL: uri) {
+        if let image = ELFileManager.getMushroomImage(withURL: uri) {
             completion(image, uri)
         } else if let image = imagesCache.object(forKey: NSString(string: "\(size.rawValue)\(uri)")) {
             completion(image, uri)
@@ -585,14 +600,14 @@ extension DataService {
                    let data = try! JSONSerialization.data(withJSONObject: parameters, options: [])
             self.createDataTaskRequest(url: API.Post.imagePredict(speciesQueries: [.attributes(presentInDenmark: nil), .danishNames, .images(required: false), .redlistData, .statistics, .acceptedTaxon]).encodedURL, method: "POST", data: data, contentType: "application/json", contentLenght: nil, token: nil) { (result) in
                        switch result {
-                       case .Error(let error):
-                           completion(Result.Error(error))
-                       case .Success(let data):
+                       case .failure(let error):
+                           completion(Result.failure(error))
+                       case .success(let data):
                            do {
                                let predictionResults = try JSONDecoder().decode([PredictionResult].self, from: data)
-                               completion(Result.Success(predictionResults))
+                               completion(Result.success(predictionResults))
                            } catch {
-                               completion(Result.Error(DataServiceError.decodingError(error)))
+                               completion(Result.failure(DataServiceError.decodingError(error)))
                            }
                    }
                }

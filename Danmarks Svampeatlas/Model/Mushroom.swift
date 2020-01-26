@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CoreData
 
 struct Mushroom: Decodable, Equatable {
     static func == (lhs: Mushroom, rhs: Mushroom) -> Bool {
@@ -26,9 +27,15 @@ struct Mushroom: Decodable, Equatable {
     private var redlistData: [RedlistData]?
     private var _images: [Image]?
     
-    var danishName: String? {
+    var localizedName: String? {
         get {
-            return vernacularNameDK?.vernacularname_dk?.capitalizeFirst()
+            if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+                guard let vernacularname_dk = vernacularNameDK?.vernacularname_dk, vernacularname_dk != "" else {return nil}
+                return vernacularname_dk.capitalizeFirst()
+            } else {
+                guard let vernacularNameEN = attributes?.vernacularNameEN, vernacularNameEN != "" else {return nil}
+                return vernacularNameEN.capitalizeFirst()
+            }
         }
     }
     
@@ -45,7 +52,7 @@ struct Mushroom: Decodable, Equatable {
     var isGenus: Bool {
         return rankName == "gen."
     }
-
+    
     private enum CodingKeys: String, CodingKey {
         case id = "_id"
         case fullName = "FullName"
@@ -61,7 +68,8 @@ struct Mushroom: Decodable, Equatable {
         case statistics = "Statistics"
     }
     
-    private init(id: Int, fullName: String) {
+    private init(id: Int, fullName: String, isGenus: Bool) {
+        self.rankName = "gen."
         self.id = id
         self.fullName = fullName
     }
@@ -83,11 +91,11 @@ struct Mushroom: Decodable, Equatable {
     
     init(from cdMushroom: CDMushroom) {
         id = Int(cdMushroom.id)
-        fullName = cdMushroom.fullName ?? "Uventet fejl"
+        fullName = cdMushroom.fullName ?? "[...]"
         vernacularNameDK = VernacularNameDK(vernacularname_dk: cdMushroom.danishName, source: nil)
         updatedAt = cdMushroom.updatedAt
         redlistData = [RedlistData(status: cdMushroom.redlistStatus)]
-        attributes = Attributes(presentInDenmark: nil, diagnosis: cdMushroom.attributes?.diagnosis, similarities: cdMushroom.attributes?.similarities, ecology: cdMushroom.attributes?.ecology, eatability: cdMushroom.attributes?.eatability, description: cdMushroom.attributes?.mDescription, englishDescription: nil, tipsForValidation: cdMushroom.attributes?.tipsForValidation)
+        attributes = Attributes(presentInDenmark: nil, similarities: cdMushroom.attributes?.similarities, ecology: cdMushroom.attributes?.ecology, eatability: cdMushroom.attributes?.eatability, tipsForValidation: cdMushroom.attributes?.tipsForValidation, vernacularNameEN: cdMushroom.attributes?.vernacularNameEN, diagnosis: cdMushroom.attributes?.diagnosis, diagnosisEn: cdMushroom.attributes?.mDescriptionEN)
         
         if let cdImages = cdMushroom.images?.allObjects as? [CDImage], cdImages.count != 0 {
             _images = [Image]()
@@ -99,51 +107,112 @@ struct Mushroom: Decodable, Equatable {
     }
     
     static func genus() -> Mushroom {
-        return Mushroom(id: 60212, fullName: "Fungi Sp.")
+        return Mushroom(id: 60212, fullName: "Fungi Sp.", isGenus: true)
     }
 }
 
-
-
-
 struct Attributes: Decodable {
     public private(set) var presentInDenmark: Bool?
-    public private(set) var diagnosis: String?
-    public private(set) var similarities: String?
-    public private(set) var ecology: String?
-    public private(set) var eatability: String?
-    public private(set) var description: String?
-    public private(set) var englishDescription: String?
-    public private(set) var tipsForValidation: String?
+    private let _similarities: String?
+    private let _ecology: String?
+    private let _eatability: String?
+    private let _tipsForValidation: String?
+    fileprivate let vernacularNameEN: String?
+    fileprivate let _diagnosis: String?
+    fileprivate let _diagnosisEn: String?
     
+    var description: String? {
+        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+            return _diagnosis
+        } else {
+            return _diagnosisEn
+        }
+    }
+    
+    var eatability: String? {
+        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+            return _eatability
+        } else {
+            return nil
+        }
+    }
+    
+    var similarities: String? {
+        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+            return _similarities
+        } else {
+            return nil
+        }
+    }
+    
+    var ecology: String? {
+        print(Locale.preferredLanguages[0])
+        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+            return _ecology
+        } else {
+            return nil
+        }
+    }
+    
+    var tipsForValidation: String? {
+        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+            return _tipsForValidation
+        } else {
+            return nil
+        }
+    }
+    
+    var isPoisonous: Bool {
+        if let eatability = _eatability, eatability.lowercased().contains("giftig") && !eatability.lowercased().contains("ikke giftig") {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    init(presentInDenmark: Bool?, similarities: String?, ecology: String?, eatability: String?, tipsForValidation: String?, vernacularNameEN: String?, diagnosis: String?, diagnosisEn: String?) {
+        self.presentInDenmark = presentInDenmark
+        self._similarities = similarities
+        self._ecology = ecology
+        self._eatability = eatability
+        self._tipsForValidation = tipsForValidation
+        self.vernacularNameEN = vernacularNameEN
+        self._diagnosis = diagnosis
+        self._diagnosisEn = diagnosisEn
+    }
+    
+    func toDatabase(cdMushroom: CDMushroom, context: NSManagedObjectContext) {
+        let cdAttributes = NSEntityDescription.insertNewObject(forEntityName: "CDMushroomAttribute", into: context)  as! CDMushroomAttribute
+        cdAttributes.diagnosis = _diagnosis
+        cdAttributes.mDescriptionEN = _diagnosisEn
+        cdAttributes.vernacularNameEN = vernacularNameEN
+        cdAttributes.ecology = _ecology
+        cdAttributes.similarities = _similarities
+        cdAttributes.tipsForValidation = _tipsForValidation
+        cdAttributes.eatability = _eatability
+        cdAttributes.mushroom = cdMushroom
+
+    }
     
     private enum CodingKeys: String, CodingKey {
         case presentInDenmark = "PresentInDK"
-        case diagnosis = "diagnose"
-        case similarities = "forvekslingsmuligheder"
-        case ecology = "oekologi"
-        case eatability = "spiselighedsrapport"
-        case description = "beskrivelse"
-        case englishDescription = "BeskrivelseUK"
-        case tipsForValidation = "valideringsrapport"
+        case _similarities = "forvekslingsmuligheder"
+        case _ecology = "oekologi"
+        case _eatability = "spiselighedsrapport"
+        case _diagnosis = "diagnose"
+        case _diagnosisEn = "bogtekst_gyldendal_en"
+        case _tipsForValidation = "valideringsrapport"
+        case vernacularNameEN = "vernacular_name_GB"
     }
 }
 
 enum ToxicityLevel: String {
     case toxic = "GIFTIG"
-    case eatable = "SPISELIG"
-    case cautious = "VÆR FORSIGTIG"
     
-    static func createRandom() -> ToxicityLevel {
-       let random = arc4random_uniform(3)
-        switch random {
-        case 0:
-            return ToxicityLevel.cautious
-        case 1:
-            return ToxicityLevel.eatable
-        default:
-            return ToxicityLevel.eatable
     
+    var description: String {
+        switch self {
+        case .toxic: return NSLocalizedString("toxicityLevel_poisonous", comment: "")
         }
     }
 }

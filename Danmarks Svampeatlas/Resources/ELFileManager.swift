@@ -28,69 +28,55 @@ struct ELFileManager {
             case .imageSavingError: return .tryAgain
             }
         }
-        
-        
+    
         case imageSavingError
         
     }
     
-    
-    fileprivate static func getImageName(forImageWithOriginalURL originalURL: String) -> String? {
-        guard let dict = UserDefaults.standard.dictionary(forKey: "fileManagerDict"), let name = dict[originalURL] as? String else {return nil}
-        return name
-    }
-    
-    fileprivate static func storeOriginalURL(originalURL: String, for imageName: String) {
-        if var dict = UserDefaults.standard.dictionary(forKey: "fileManagerDict") {
-            dict[originalURL] = imageName
-            UserDefaults.standard.set(dict, forKey: "fileManagerDict")
-        } else {
-            UserDefaults.standard.set([originalURL: imageName], forKey: "fileManagerDict")
-        }
-    }
-    
+
     static func saveTempImage(imageData: Data) -> Result<URL, ELFileManagerError> {
         let temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo().globallyUniqueString)
         do {
             try imageData.write(to: temporaryDirectory, options: .atomic)
-            return Result.Success(temporaryDirectory)
+            return Result.success(temporaryDirectory)
         } catch {
-            return Result.Error(.imageSavingError)
+            return Result.failure(.imageSavingError)
         }
     }
     
-    static func deleteImage(imageURL: URL) {
-        try? FileManager.default.removeItem(at: imageURL)
+    static func deleteImage(imageURL url: URL) {
+        try? FileManager.default.removeItem(at: url)
     }
     
     fileprivate static func DocumentsDir() -> URL {
-          return FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first!
-        
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+          return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
     
-    static func fileExists(withURL url: String) -> Bool {
-        guard let imageName = getImageName(forImageWithOriginalURL: url) else {return false}
+    
+    
+    
+    static func mushroomImageExists(withURL url: String) -> Bool {
+        guard let imageName = UserDefaultsHelper.getImageName(forUrl: url) else {return false}
         return FileManager.default.fileExists(atPath: DocumentsDir().appendingPathComponent(imageName).absoluteString)
     }
     
-    static func saveImage(image: UIImage, url: String) {
-        
+    static func saveMushroomImage(image: UIImage, url: String) {
         let imageName = UUID().uuidString + ".png"
-        storeOriginalURL(originalURL: url, for: imageName)
+        UserDefaultsHelper.saveImageName(forUrl: url, imageName: imageName)
     
-        let data = image.pngData()
-    
-        
-        do {
-            try data!.write(to: DocumentsDir().appendingPathComponent(imageName))
-        } catch {
-            debugPrint(error)
+        if let data = image.pngData() {
+            try? data.write(to: DocumentsDir().appendingPathComponent(imageName))
         }
     }
     
-    static func getImage(withURL url: String) -> UIImage? {
-        guard let imageName = getImageName(forImageWithOriginalURL: url) else {return nil}
+    static func deleteMushroomImage(withUrl url: String) {
+        guard let imageName = UserDefaultsHelper.getImageName(forUrl: url) else {return}
+        try? FileManager.default.removeItem(at: DocumentsDir().appendingPathComponent(imageName))
+        UserDefaultsHelper.removeImageName(forUrl: url)
+    }
+    
+    static func getMushroomImage(withURL url: String) -> UIImage? {
+        guard let imageName = UserDefaultsHelper.getImageName(forUrl: url) else {return nil}
         
         do {
             let data = try Data(contentsOf: DocumentsDir().appendingPathComponent(imageName))

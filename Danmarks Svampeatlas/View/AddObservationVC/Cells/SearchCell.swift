@@ -63,7 +63,7 @@ class SearchCell: UITableViewCell {
             label.textColor = UIColor.appPrimaryColour()
             label.translatesAutoresizingMaskIntoConstraints = false
             label.textAlignment = .center
-            label.text = "Søg på en vært her 👇"
+            label.text = NSLocalizedString("searchCell_title", comment: "")
             return label
         }()
         

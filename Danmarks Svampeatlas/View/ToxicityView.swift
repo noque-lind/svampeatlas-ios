@@ -8,6 +8,45 @@
 
 import UIKit
 
+class ToxicityViewHolder: UIView {
+    
+    private lazy var toxicityView: ToxicityView = {
+       let view = ToxicityView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    var heightConstraint = NSLayoutConstraint()
+    
+    init() {
+        super.init(frame: .zero)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
+    private func setupView() {
+        backgroundColor = .clear
+        heightConstraint = heightAnchor.constraint(equalToConstant: 0)
+    }
+    
+    func configure(isPoisonous: Bool) {
+        if isPoisonous {
+            heightConstraint.isActive = false
+            addSubview(toxicityView)
+            toxicityView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+            toxicityView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            toxicityView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+                } else {
+            toxicityView.removeFromSuperview()
+            heightConstraint.isActive = true
+                }
+    }
+    
+}
+
 class ToxicityView: UIView {
 
     private lazy var imageView: UIImageView = {
@@ -25,12 +64,18 @@ class ToxicityView: UIView {
         label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
         label.setContentHuggingPriority(.required, for: .horizontal)
-        label.setContentCompressionResistancePriority(.required, for: .horizontal)
-        label.text = "Giftig"
+        label.setContentHuggingPriority(.required, for: .vertical)
+//        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        label.text = NSLocalizedString("toxicityLevel_poisonous", comment: "")
         label.textAlignment = .center
         return label
     }()
     
+    override func sizeToFit() {
+        label.sizeToFit()
+    }
+    
+
     
     init() {
         super.init(frame: CGRect.zero)
@@ -43,7 +88,8 @@ class ToxicityView: UIView {
     
     private func setupView() {
         setContentHuggingPriority(.required, for: .horizontal)
-        setContentCompressionResistancePriority(.required, for: .horizontal)
+        setContentHuggingPriority(.required, for: .vertical)
+        setContentCompressionResistancePriority(.required, for: .vertical)
         
         layer.cornerRadius = CGFloat.cornerRadius()
         backgroundColor = UIColor.red
@@ -60,11 +106,11 @@ class ToxicityView: UIView {
         label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
     }
     
-    func configure(_ toxicityReport: String?) {
-        if let toxicityReport = toxicityReport, toxicityReport.lowercased().contains("giftig") {
-            self.isHidden = false
-        } else {
-            self.isHidden = true
-        }
-}
+    func configure(isPoisonous: Bool) {
+        if isPoisonous {
+            isHidden = false
+                } else {
+           isHidden = true
+            }
+    }
 }

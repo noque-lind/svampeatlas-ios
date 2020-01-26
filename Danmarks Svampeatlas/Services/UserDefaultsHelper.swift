@@ -115,4 +115,25 @@ struct UserDefaultsHelper {
     static func setSaveImages(_ value: Bool) {
         UserDefaults.standard.set(value, forKey: "")
     }
+    
+    static func removeImageName(forUrl url: String) {
+        guard var dict = UserDefaults.standard.dictionary(forKey: "fileManagerDict") else {return}
+        dict.removeValue(forKey: url)
+        UserDefaults.standard.set(dict, forKey: "fileManagerDict")
+    }
+        
+    static func saveImageName(forUrl url: String, imageName: String) {
+        if var dict = UserDefaults.standard.dictionary(forKey: "fileManagerDict") {
+            dict[url] = imageName
+            UserDefaults.standard.set(dict, forKey: "fileManagerDict")
+        } else {
+            UserDefaults.standard.set([url: imageName], forKey: "fileManagerDict")
+        }
+    }
+    
+    static func getImageName(forUrl url: String) -> String? {
+        guard let dict = UserDefaults.standard.dictionary(forKey: "fileManagerDict") else {return nil}
+        guard let url = dict[url] as? String else {return nil}
+        return url
+    }
 }

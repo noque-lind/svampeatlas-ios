@@ -88,7 +88,7 @@ class CameraVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
         
         if case .mlPredict = usage, !UserDefaultsHelper.hasAcceptedmagePredictionTerms {
-            let vc = TermsController(terms: .mlPredict)
+            let vc = TermsVC(terms: .mlPredict)
             presentVC(vc)
             
             vc.wasDismissed = { [unowned avView] in
@@ -139,6 +139,11 @@ class CameraVC: UIViewController {
     
     @objc private func onDismissPressed() {
         avView.stop()
+        
+        if let imageURL = currentImageURL {
+            ELFileManager.deleteImage(imageURL: imageURL)
+        }
+        
         dismiss(animated: true, completion: nil)
     }
     
@@ -197,19 +202,19 @@ class CameraVC: UIViewController {
     }
     
     @objc private func informationButtonPressed() {
-        presentVC(TermsController(terms: .cameraHelper))
+        presentVC(TermsVC(terms: .cameraHelper))
     }
     
     private func handleImageSaving(photoData: Data) {
         if !UserDefaultsHelper.hasBeenAskedToSaveImages {
             ELNotificationView.appNotification(style: .action(backgroundColor: UIColor.appPrimaryColour(), actions: [
-                .positive("Ja, gem billederne", { [unowned elPhotos] in
+                .positive(NSLocalizedString("cameraVC_shouldSaveImagesPrompt_message_positive", comment: ""), { [unowned elPhotos] in
                     UserDefaultsHelper.saveImages = true
                     elPhotos.saveImage(photoData: photoData, inAlbum: Utilities.PHOTOALBUMNAME)
                 }),
-                .negative("Nej", {
+                .negative(NSLocalizedString("cameraVC_shouldSaveImagesPrompt_message_negative", comment: ""), {
                     UserDefaultsHelper.saveImages = false
-                })]), primaryText: "Skal dine billeder gemmes?", secondaryText: "Hvis du er interesseret, kan vi oprette et album til de billeder du tager i denne app.", location: .top)
+                })]), primaryText: NSLocalizedString("cameraVC_shouldSaveImagesPrompt_title", comment: ""), secondaryText: NSLocalizedString("cameraVC_shouldSaveImagesPrompt_message", comment: ""), location: .top)
                 .show(animationType: .fromTop, onViewController: self)
                  UserDefaultsHelper.hasBeenAskedToSaveImages = true
         } else {
@@ -223,9 +228,9 @@ class CameraVC: UIViewController {
         guard let image = UIImage.init(url: imageURL) else {return}
            DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
                switch result {
-               case .Error(let error):
+               case .failure(let error):
                    self?.cameraView.showError(error: error)
-               case .Success(let predictions):
+               case .success(let predictions):
                    self?.cameraView.showResults(results: predictions)
                }
            }
@@ -317,7 +322,7 @@ extension CameraVC: CameraViewDelegate {
         switch usage {
         case .mlPredict(session: let session):
             if let session = session {
-                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom, session: session, takesSelection: (selected: false, title: "Nyt fund", handler: { [unowned self] (selected) in
+                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom, session: session, takesSelection: (selected: false, title: NSLocalizedString("detailsVC_newSightingPrompt", comment: ""), handler: { [unowned self] (selected) in
                     self.createNewObservationRecord(imageURL: self.currentImageURL, mushroom: predictionResult.mushroom, predictionResults: predictionResults, session: session)
                 }))), animated: true)
                 
@@ -342,9 +347,9 @@ extension CameraVC: AVViewDelegate {
         handleImageSaving(photoData: photoData)
         
         switch ELFileManager.saveTempImage(imageData: photoData) {
-        case .Success(let url):
+        case .success(let url):
             handleImage(url)
-        case .Error(let error):
+        case .failure(let error):
             showCameraError(error: error)
         }
     }
@@ -373,7 +378,7 @@ extension CameraVC: ELPhotosManagerDelegate {
         
         // If the user has choosen to save images to the photo library, but haven't allowed the app access, this error will show every time they take an image. This error is not fatal, hence shown as a notification.
         
-             ELNotificationView.appNotification(style: .error(actions: [.neutral(error.recoveryAction?.rawValue, {
+        ELNotificationView.appNotification(style: .error(actions: [.neutral(error.recoveryAction?.localizableText, {
                        switch error.recoveryAction {
                        case .openSettings: UIApplication.openSettings()
                        default: return

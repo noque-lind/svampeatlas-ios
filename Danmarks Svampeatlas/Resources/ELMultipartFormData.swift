@@ -18,10 +18,11 @@ struct ELMultipartFormData {
         let data: Data
         let mimeType: String
         
-        init?(withImage image: UIImage, forKey key: String) {
+        init?(withImage imageURL: URL, forKey key: String) {
             self.key = key
             self.mimeType = "image/jpeg"
             self.filename = "photo-\(Date().convert(into: DateFormatter.Style.full)).jpg"
+            guard let image = UIImage.init(url: imageURL) else {return nil}
             guard let data = image.rotate().jpegData(sizeInMB: 0.6) else {return nil}
             self.data = data
         }

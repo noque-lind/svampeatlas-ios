@@ -21,6 +21,7 @@ class ResultsTableView: ELTableView<ResultsTableView.Item> {
         case result(predictionResult: PredictionResult)
         case tryAgain
         case creditation
+        case lowConfidence
     }
     
     var scrollViewDidScroll: ((UIScrollView) -> ())?
@@ -31,6 +32,7 @@ class ResultsTableView: ELTableView<ResultsTableView.Item> {
         register(cellClass: ContainedResultCell.self, forCellReuseIdentifier: ContainedResultCell.identifier)
         register(cellClass: ReloadCell.self, forCellReuseIdentifier: ReloadCell.identifier)
         register(cellClass: CreditationCell.self, forCellReuseIdentifier: CreditationCell.identifier)
+        register(cellClass: CautionCell.self, forCellReuseIdentifier: CautionCell.identifier)
     }
     
     required init?(coder: NSCoder) {
@@ -48,11 +50,15 @@ class ResultsTableView: ELTableView<ResultsTableView.Item> {
             
         case .tryAgain:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReloadCell.identifier, for: indexPath) as! ReloadCell
-            cell.configureCell(text: "Prøv igen")
+            cell.configureCell(type: .tryAgain)
             return cell
         case .creditation:
             let cell = tableView.dequeueReusableCell(withIdentifier: CreditationCell.identifier, for: indexPath) as! CreditationCell
             cell.configureCell(creditation: .AI)
+            return cell
+        case .lowConfidence:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CautionCell.identifier, for: indexPath) as! CautionCell
+            cell.configureCell(type: .lowConfidence)
             return cell
         }
     }
@@ -61,7 +67,7 @@ class ResultsTableView: ELTableView<ResultsTableView.Item> {
         switch item {
         case .tryAgain:
             return LoaderCell.height
-        case .result, .creditation:
+        case .result, .creditation, .lowConfidence:
             return UITableView.automaticDimension
         }
     }
@@ -185,8 +191,8 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
         self.results = results
         
         if results.count > 0 {
-            headerLabel.text = "Vi har \(results.count) forslag til dig"
-            secondaryLabel.text = "Bemærk at disse forslag er vejledende og aldrig må stå alene, hvis du ønsker at spise de svampe du har fundet."
+            headerLabel.text = String.localizedStringWithFormat(NSLocalizedString("resultsView_header_title", comment: ""), results.count)
+            secondaryLabel.text = NSLocalizedString("resultsView_header_message", comment: "")
             secondaryLabel.textColor = UIColor.red
         } else {
             headerLabel.text = "Øv"
@@ -211,7 +217,23 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
             tableView.setSections(sections: [.init(title: nil, state: .error(error: error, handler: nil))])
             self.error = nil
         } else {
-            tableView.setSections(sections: [.init(title: nil, state: .items(items: results.compactMap({ResultsTableView.Item.result(predictionResult: $0)}))), .init(title: nil, state: .items(items: [.creditation, .tryAgain]))])
+            var highestConfidence = 0.0
+            results.forEach { (predictionResult) in
+                
+                if predictionResult.score > highestConfidence {
+                    highestConfidence = predictionResult.score * 100
+                }
+            }
+            
+            var items = results.compactMap({ResultsTableView.Item.result(predictionResult: $0)})
+            items.append(.creditation)
+            items.append(.tryAgain)
+            
+            if highestConfidence < 50.0 {
+                items.insert(.lowConfidence, at: 0)
+            }
+            
+            tableView.setSections(sections: [.init(title: nil, state: .items(items: items))])
         }
         
         UIView.animate(withDuration: 0.2) {

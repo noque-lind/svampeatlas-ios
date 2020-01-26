@@ -13,7 +13,9 @@ class MushroomDetailsScrollView: AppScrollView {
     
     private lazy var observationsTableView: ObservationsTableView = {
         let tableView = ObservationsTableView(automaticallyAdjustHeight: true)
+        tableView.contentInsetAdjustmentBehavior = .automatic
         tableView.tableView.separatorColor = UIColor.appPrimaryColour()
+        
         return tableView
     }()
     
@@ -54,35 +56,41 @@ class MushroomDetailsScrollView: AppScrollView {
     
     func configure(_ mushroom: Mushroom, takesSelection: Bool) {
         self.mushroom = mushroom
-        configureHeader(title: mushroom.danishName != nil ? NSAttributedString(string: mushroom.danishName!, attributes: [NSAttributedString.Key.font: UIFont.appTitle()]): mushroom.fullName.italized(font: UIFont.appTitle()), subtitle: mushroom.danishName != nil ? mushroom.fullName.italized(font: UIFont.appPrimary()): nil, user: nil)
+        if let localizedName = mushroom.localizedName {
+            configureHeader(title: NSAttributedString(string: localizedName, attributes: [.font: UIFont.appTitle()]), subtitle: mushroom.fullName.italized(font: .appPrimary()), user: nil)
+        } else {
+            configureHeader(title: mushroom.fullName.italized(font: .appTitle()), subtitle: nil, user: nil)
+        }
+        
         
         if takesSelection {
-            addText(title: "Valideringstips", text: mushroom.attributes?.tipsForValidation)
+            addText(title: NSLocalizedString("mushroomDetailsScrollView_validationTips", comment: ""), text: mushroom.attributes?.tipsForValidation)
         }
         
-        addText(title: "Beskrivelse", text: mushroom.attributes?.diagnosis)
-        addText(title: "Spiselighedsrapport", text: mushroom.attributes?.eatability)
-        addText(title: "Økologi", text: mushroom.attributes?.ecology)
-        addText(title: "Forvekslingsmuligheder", text: mushroom.attributes?.similarities)
-        
+        addText(title: NSLocalizedString("mushroomDetailsScrollView_description", comment: ""), text: mushroom.attributes?.description)
+        addText(title: NSLocalizedString("mushroomDetailsScrollView_eatability", comment: ""), text: mushroom.attributes?.eatability)
+        addText(title: NSLocalizedString("mushroomDetailsScrollView_ecology", comment: ""), text: mushroom.attributes?.ecology)
+        addText(title: NSLocalizedString("mushroomDetailsScrollView_similarities", comment: ""), text: mushroom.attributes?.similarities)
+//
         var informationArray = [(String, String)]()
         if let totalObservations = mushroom.statistics?.acceptedCount {
-            informationArray.append(("Accepterede fund:", "\(totalObservations)"))
+            informationArray.append((NSLocalizedString("mushroomDetailsScrollView_acceptedRecords", comment: ""), "\(totalObservations)"))
         }
-        
+
         if let latestAcceptedRecord = mushroom.statistics?.lastAcceptedRecord {
-            informationArray.append(("Seneste accepteret fund: ", Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.long) ?? ""))
+            informationArray.append((NSLocalizedString("mushroomDetailsScrollView_latestAcceptedRecord", comment: ""), Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.long) ?? ""))
         }
+       
         if let updatedAt = mushroom.updatedAt {
-            informationArray.append(("Sidst opdateret d.:", Date(ISO8601String: updatedAt)?.convert(into: DateFormatter.Style.medium) ?? ""))
+            informationArray.append((NSLocalizedString("mushroomDetailsScrollView_latestUpdated", comment: ""), Date(ISO8601String: updatedAt)?.convert(into: DateFormatter.Style.medium) ?? ""))
         }
         addInformation(information: informationArray)
-        configureRedlistAndToxicity(redlistStatus: mushroom.redlistStatus, toxicityReport: mushroom.attributes?.eatability)
+        configureRedlistAndToxicity(redlistStatus: mushroom.redlistStatus, isPoisonous: mushroom.attributes?.isPoisonous)
         configureHeatMap(taxonID: mushroom.id)
         configureLatestObservationsView(taxonID: mushroom.id)
     }
     
-    private func configureRedlistAndToxicity(redlistStatus: String?, toxicityReport: String?) {
+    private func configureRedlistAndToxicity(redlistStatus: String?, isPoisonous: Bool?) {
         let stackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
@@ -91,7 +99,7 @@ class MushroomDetailsScrollView: AppScrollView {
             
             let toxicityView: ToxicityView = {
                 let view = ToxicityView()
-                view.configure(toxicityReport)
+                view.configure(isPoisonous: isPoisonous ?? false)
                 return view
             }()
             
@@ -110,26 +118,28 @@ class MushroomDetailsScrollView: AppScrollView {
     }
     
     private func configureHeatMap(taxonID: Int) {
-        addContent(title: "Fund i nærheden", content: heatMap)
+        addContent(title: NSLocalizedString("mushroomDetailsScrollView_heatMap", comment: ""), content: heatMap)
         heatMap.shouldLoad = true
         
         if locationManager.permissionsNotDetermined {
             heatMap.showError(error: LocationManager.LocationManagerError.permissionsUndetermined) { [unowned locationManager] _ in
                 locationManager.start()
             }
+        } else {
+            locationManager.start()
         }
     }
     
     private func configureLatestObservationsView(taxonID: Int) {
-        addContent(title: "Seneste observationer", content: observationsTableView)
+        addContent(title: NSLocalizedString("mushroomDetailsScrollView_latestObservations", comment: ""), content: observationsTableView)
         
         observationsTableView.tableViewState = .Loading
         
         DataService.instance.getObservationsForMushroom(withID: taxonID, limit: 15, offset: 0) { [weak observationsTableView] (result) in
             switch result {
-            case .Error(let error):
+            case .failure(let error):
                 observationsTableView?.tableViewState = .Error(error, nil)
-            case .Success(let observations):
+            case .success(let observations):
                 observationsTableView?.tableViewState = .Paging(items: observations, max: nil)
             }
         }
@@ -140,9 +150,9 @@ class MushroomDetailsScrollView: AppScrollView {
             
             DataService.instance.getObservationsForMushroom(withID: taxonID, limit: 15, offset: offset, completion: { [weak tableView] (result) in
                 switch result {
-                case .Error(let error):
+                case .failure(let error):
                     tableView?.tableViewState = .Error(error, nil)
-                case .Success(let observations):
+                case .success(let observations):
                     allObservations.append(contentsOf: observations)
                     
                     if observations.count < 15 {
@@ -188,12 +198,12 @@ extension MushroomDetailsScrollView: LocationManagerDelegate {
             heatMap?.shouldLoad = false
             
             switch result {
-            case .Success(let observations):
+            case .success(let observations):
                 DispatchQueue.main.async {
                 heatMap?.addObservationAnnotations(observations: observations)
                 }
                
-            case .Error(let error):
+            case .failure(let error):
                 heatMap?.showError(error: error)
             }
     }

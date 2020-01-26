@@ -52,7 +52,7 @@ class SearchVC: UIViewController {
         view.searchBarDelegate = self
         view.isHidden = false
         view.alpha = 1.0
-        view.configurePlaceholder("Søg efter en vært her ...")
+        view.configurePlaceholder(NSLocalizedString("searchVC_searchBar_placeholder", comment: ""))
         return view
     }()
     
@@ -80,7 +80,7 @@ class SearchVC: UIViewController {
    private lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Annuller", for: [])
+        button.setTitle(NSLocalizedString("searchVC_cancelButton", comment: ""), for: [])
         button.titleLabel?.font = UIFont.appPrimaryHightlighed()
         button.backgroundColor = UIColor.appSecondaryColour()
         button.setTitleColor(UIColor.appThird(), for: [])
@@ -156,9 +156,9 @@ extension SearchVC: CustomSearchBarDelegate {
     func newSearchEntry(entry: String) {
         DataService.instance.downloadHosts(shouldSave: false, searchString: entry) { [weak tableView] (result) in
             switch result {
-            case .Error(let error):
+            case .failure(let error):
                 tableView?.tableViewState = .Error(error, nil)
-            case .Success(let hosts):
+            case .success(let hosts):
                 tableView?.tableViewState = .Items(hosts)
             }
         }

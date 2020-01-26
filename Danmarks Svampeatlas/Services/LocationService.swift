@@ -36,30 +36,30 @@ class LocationManager: NSObject {
         var errorDescription: String {
             switch self {
             case .badAccuracy:
-                return "Det var ikke muligt at finde din lokation med en tilstrækkelig sikkerhed."
+                return NSLocalizedString("locationManagerError_badAccuracy_message", comment: "")
             case .permissionDenied:
-                return "Du har afvist at appen skal kunne tilgå din GPS lokation, hvilket den skal kunne for at vise dig den her data."
+                return NSLocalizedString("locationManagerError_permissionDenied_message", comment: "")
             case .networkError:
-                return "Det lader til at der skete en netværks fejl med din telefons GPS-komponent."
+                return NSLocalizedString("locationManagerError_networkError_message", comment: "")
             case .unknown:
-                return "Der skete en ukendt fejl i forsøget på at finde din GPS lokation."
+                return NSLocalizedString("locationManagerError_unknown_message", comment: "")
             case .permissionsUndetermined:
-                return "For at vise dig den her data, skal appen kunne finde ud af hvor du er."
+                return NSLocalizedString("locationManagerError_permissionsUndetermined_message", comment: "")
             }
         }
         
         var errorTitle: String {
             switch self {
             case .permissionDenied:
-                return "Manglende tilladelse"
+                return NSLocalizedString("locationManagerError_permissionDenied_title", comment: "")
             case .badAccuracy:
-                return "Utilstrækelig nøjagtighed"
+                return NSLocalizedString("locationManagerError_badAccuracy_title", comment: "")
             case .networkError:
-                return "Netværksfejl"
+                return NSLocalizedString("locationManagerError_networkError_title", comment: "")
             case .unknown:
-                return "Ukendt fejl"
+                return NSLocalizedString("locationManagerError_unknown_title", comment: "")
             case .permissionsUndetermined:
-                return "Hvor er du henne?"
+                return NSLocalizedString("locationManagerError_permissionsUndetermined_title", comment: "")
             }
         }
         
@@ -71,7 +71,14 @@ class LocationManager: NSObject {
     }
     
     private var locationManager: CLLocationManager?
-    private var state: State = .stopped
+    private var state: State = .stopped {
+        didSet {
+            switch state {
+            case .locating: locationManager?.startUpdatingLocation()
+            case .stopped: locationManager?.stopUpdatingLocation()
+            }
+        }
+    }
     
     weak var delegate: LocationManagerDelegate? = nil
     private var previousAccuracy: Double = 0.0
@@ -96,12 +103,13 @@ class LocationManager: NSObject {
     
     private func startUpdatingLocation() {
         if state == .stopped {
-            locationManager?.startUpdatingLocation()
             state = .locating
             
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10) { [weak self] in
                 if self?.state == State.locating {
                   self?.stopServiceAndSendLocation()
+                } else {
+                  self?.locationManager = nil
                 }
             }
         }
@@ -110,7 +118,6 @@ class LocationManager: NSObject {
     private func stopServiceAndSendLocation() {
         guard state != .stopped else {return}
         state = .stopped
-        locationManager?.stopUpdatingLocation()
         locationManager = nil
         
         
@@ -139,6 +146,7 @@ extension LocationManager: CLLocationManagerDelegate {
     
     internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = CLError.Code.init(rawValue: (error as NSError).code) {
+            state = .stopped
             switch error {
             case .network: delegate?.locationInaccessible(error: .networkError)
             default: delegate?.locationInaccessible(error: .unknown)

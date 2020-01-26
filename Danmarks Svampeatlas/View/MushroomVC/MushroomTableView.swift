@@ -40,7 +40,7 @@ class MushroomTableView: ELTableView<MushroomTableView.Item> {
             return cell
         case .loadMore:
             let cell = tableView.dequeueReusableCell(withIdentifier: ReloadCell.identifier, for: indexPath) as! ReloadCell
-            cell.configureCell(text: "Vis flere")
+            cell.configureCell(type: .showMore)
             return cell
         }
     }
@@ -66,7 +66,7 @@ class MushroomTableView: ELTableView<MushroomTableView.Item> {
         }
         
         action.backgroundColor = UIColor.white.withAlphaComponent(0.0)
-        action.image = CoreDataHelper.mushroomAlreadyFavorited(mushroom: mushroom) ? #imageLiteral(resourceName: "Icons_Utils_Favorite_DeMake"): #imageLiteral(resourceName: "Icons_Utils_Favorite_Make")
+        action.image = Database.instance.mushroomsRepository.exists(mushroom: mushroom) ? #imageLiteral(resourceName: "Icons_Utils_Favorite_DeMake"): #imageLiteral(resourceName: "Icons_Utils_Favorite_Make")
         return UISwipeActionsConfiguration(actions: [action])
     }
     

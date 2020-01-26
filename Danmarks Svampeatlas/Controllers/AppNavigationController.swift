@@ -39,21 +39,6 @@ class AppNavigationController: UINavigationController {
         appNavigationBar.bottomAnchor.constraint(equalTo: self.navigationBar.bottomAnchor).isActive = true
         
         self.setNavigationBarHidden(true, animated: false)
-        
-        
-//        let navigationBar = UINavigationBar()
-//        self.
-//        navigationBar.backgroundColor = UIColor.red
-//        
-//        view.backgroundColor = UIColor.appPrimaryColour()
-//        navigationBar.tintColor = UIColor.appWhite()
-//        navigationBar.barTintColor = UIColor.appPrimaryColour()
-//        navigationBar.isTranslucent = false
-//        navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appHeader()]
-//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-//        navigationItem.setLeftBarButton(menuButton, animated: false)
-//        navigationBar.shadowImage = UIImage()
     }
 
 }

@@ -27,12 +27,19 @@ protocol CustomMapViewDelegate: class {
 
 class NewMapView: UIView {
     
-    enum Categories: String, CaseIterable {
-        case regular = "Standard"
-        case satelite = "Luftfoto"
-        case topography = "Topografisk"
+    enum Categories: CaseIterable {
+        case regular
+        case satelite
+        case topography
+        
+        var description: String {
+            switch self {
+            case .regular: return NSLocalizedString("mapViewCategories_regular", comment: "")
+            case .satelite: return NSLocalizedString("mapViewCategories_satelite", comment: "")
+            case .topography: return NSLocalizedString("mapViewCategories_topographical", comment: "")
     }
-    
+        }
+    }
     enum MapViewType {
         case observations(detailed: Bool)
         case localities
@@ -44,6 +51,7 @@ class NewMapView: UIView {
         if #available(iOS 13.0, *) {
             mapView.overrideUserInterfaceStyle = .light
         } else {}
+        mapView.insetsLayoutMarginsFromSafeArea = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.showsUserLocation = self.showsUserLocation
         mapView.register(HeatAnnotationView.self, forAnnotationViewWithReuseIdentifier: "heatAnnotationView")
@@ -91,7 +99,8 @@ class NewMapView: UIView {
     private let mapViewType: MapViewType
     private var observations: [Observation]?
     private var localities: [Locality]?
-
+    private var selectedAnnotation: MKAnnotation?
+        
     private var locationAnnotation: LocationPIn? {
         didSet {
             if let oldValue = oldValue {
@@ -213,6 +222,15 @@ class NewMapView: UIView {
     func setRegionToShowAnnotations() {
         mapView.showAnnotations(mapView.annotations, animated: true)
     }
+    
+    func showSelectedAnnotationAndLocationAnnotation() {
+        switch mapViewType {
+        case .localities:
+            guard let annotation = mapView.selectedAnnotations.first, let second = locationAnnotation else {return}
+            mapView.showAnnotations([annotation, second], animated: true)
+        default: return
+        }
+    }
 
     func setRegion(center: CLLocationCoordinate2D, span: MKCoordinateSpan = MKCoordinateSpan.init(latitudeDelta: CLLocationDistance.init(0.0035), longitudeDelta: CLLocationDistance.init(0.0035)), selectAnnotationAtCoordinate: Bool = false, animated: Bool) {
         let region = MKCoordinateRegion.init(center: center, span: span)
@@ -259,11 +277,14 @@ class NewMapView: UIView {
     
     func addLocationAnnotation(button: UIButton) -> LocationPIn {
         errorView = nil
-        let coordinate = mapView.convert(CGPoint(x: button.frame.midX, y: button.frame.maxY), toCoordinateFrom: button.superview)
+        print(button.frame)
+        print(button.bounds)
+        let imageView = button.convert(button.imageView?.frame ?? button.frame, to: button.superview)
+        let coordinate = mapView.convert(CGPoint(x: button.frame.midX, y: imageView.maxY), toCoordinateFrom: button.superview)
         let annotation = LocationPIn(coordinate: coordinate)
-               mapView.addAnnotation(annotation)
-               locationAnnotation = annotation
-               return annotation
+        mapView.addAnnotation(annotation)
+        locationAnnotation = annotation
+        return annotation
     }
     
     func addObservationAnnotations(observations: [Observation]) {
@@ -425,9 +446,17 @@ extension NewMapView: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        if let selectedAnnotation = selectedAnnotation {
+            mapView.view(for: selectedAnnotation)?.isSelected = false
+        }
+        
         if let localityAnnotation = view.annotation as? LocalityAnnotation {
             localityPicked?(localityAnnotation.locality)
+            selectedAnnotation = view.annotation
             view.isSelected = true
+            
+        } else if let selectedAnnotation = selectedAnnotation, view.annotation is LocationPIn {
+            mapView.view(for: selectedAnnotation)?.isSelected = true
         }
     }
     
@@ -437,10 +466,6 @@ extension NewMapView: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         delegate?.mapViewWillStopRegionChangeAnimated(animated: animated)
-    }
-    
-    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-        view.isSelected = false
     }
 }
 

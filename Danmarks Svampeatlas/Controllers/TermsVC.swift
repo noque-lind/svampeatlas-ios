@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TermsController: UIViewController {
+class TermsVC: UIViewController {
     
     enum Terms {
         case mlPredict
@@ -35,7 +35,7 @@ class TermsController: UIViewController {
     private let acceptButton: UIButton = {
         let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.setTitle("Forstået", for: [])
+        view.setTitle(NSLocalizedString("termsVC_dismissButton", comment: ""), for: [])
         view.titleLabel?.font = UIFont.appTitle()
         view.heightAnchor.constraint(equalToConstant: 70).isActive = true
         view.backgroundColor = UIColor.appGreen()
@@ -162,34 +162,16 @@ class TermsController: UIViewController {
     private func configure() {
         switch terms {
         case .mlPredict:
-            header.configure(text: "Automatisk billedgenkendelse - du skal acceptere vores betingelser.")
+            header.configure(text: NSLocalizedString("termsVC_mlPredict_title", comment: ""))
             
-            textView.text = """
-            Brug af automatisk billedegenkendelse kan aldrig være helt præcis, og det er derfor vigtigt at systemet bruges med endnu mere kritisk sans end din svampebog. Spis aldrig svampe uden at søge hjælp fra svampekyndige mennesker. Danmarks Svampeatlas og Noque ApS frasiger sig ethvert ansvar for eventuelle forgiftninger eller andre sundhedsskadelige forhold.
-            
-            Systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas. Systemet er baseret på kunstig intelligens og er trænet med alle de fotos I har biddraget med til Svampeatlasset. Jo mere du bidrager med observationer og gode billeder, jo bedre vil vi kunne udvikle teknologien i fremtiden.
-            
-            Dette system er stadig i udviklingsfase og vi vil meget gerne have jeres feedback så det kan laves endnu bedre i fremtiden. Start en tråd på vores Facebook gruppe, eller send en mail til app@noque.dk
-            """
+            textView.text = NSLocalizedString("termsVC_mlPredict_message", comment: "")
         case .localityHelper:
-            header.configure(text: "Sådan justerer du dit funds lokation")
+            header.configure(text: NSLocalizedString("termsVC_localityHelper_title", comment: ""))
             imageView.loadGif(name: "LocalityHelper")
             imageView.heightAnchor.constraint(equalToConstant: 276).isActive = true
         case .cameraHelper:
-            header.configure(text: "Sådan tager du de bedste billeder")
-            textView.text = """
-            Når du fotografere svampe til bestemmelse så husk følgende:
-            
-                - At fotografere i bredformat (vandret). Tjek at din telefon ikke har rotationslås aktiveret
-            
-                - At få både unge og gamle frugtlegemer med på foto (hvis muligt)
-            
-                - At vise både hat, lameller og evt. slør. læg et par svampe ned - både unge og gamle
-            
-                - At fotografere i medlys (ikke modlys) og skygge for direkte sollys, fx med din egen krop
-            
-                - Fotografere du rørhatte så skær gerne et frugtlegeme igennem på langs
-            """
+            header.configure(text: NSLocalizedString("termsVC_cameraHelper_title", comment: ""))
+            textView.text = NSLocalizedString("termsVC_cameraHelper_message", comment: "")
         }
     }
     
@@ -203,15 +185,4 @@ class TermsController: UIViewController {
         wasDismissed?()
         dismiss(animated: true, completion: nil)
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }

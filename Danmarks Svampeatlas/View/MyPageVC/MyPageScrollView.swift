@@ -39,13 +39,13 @@ class MyPageScrollView: UIScrollView {
     
     private lazy var notificationsCountLabel: SectionHeaderView = {
         let view = SectionHeaderView()
-        view.configure(text: "Notifikationer")
+        view.configure(text: NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))
         return view
     }()
     
     private lazy var observationsCountLabel: SectionHeaderView = {
         let view = SectionHeaderView()
-        view.configure(text: "Observationer")
+        view.configure(text: NSLocalizedString("myPageScrollView_observationsHeader", comment: ""))
         return view
     }()
     
@@ -100,7 +100,7 @@ class MyPageScrollView: UIScrollView {
             label.textColor = UIColor.appWhite()
             label.translatesAutoresizingMaskIntoConstraints = false
             label.textAlignment = .center
-            label.text = "Log ud"
+            label.text = NSLocalizedString("myPageScrollView_logout", comment: "")
             label.heightAnchor.constraint(equalToConstant: 30).isActive = true
             return label
         }()
@@ -166,18 +166,18 @@ class MyPageScrollView: UIScrollView {
             notificationsTableView.tableViewState = .Loading
             session.getNotificationCount { [weak self, weak notificationsCountLabel, weak session, weak notificationsTableView] (result) in
             switch result {
-            case .Success(let count):
+            case .success(let count):
                 self?.notificationsCount = count
                 
                 DispatchQueue.main.async { [weak notificationsCountLabel] in
-                    notificationsCountLabel?.configure(text: "\(count) Notifikationer")
+                    notificationsCountLabel?.configure(text: "\(count) \(NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))")
                 }
                 
                 session?.getUserNotifications(limit: ((count <= 4) ? count: 4), offset: 0, completion: { [weak notificationsTableView] (result) in
                     switch result {
-                    case .Error(let error):
+                    case .failure(let error):
                         notificationsTableView?.tableViewState = .Error(error, nil)
-                    case .Success(let notifications):
+                    case .success(let notifications):
                         if notifications.count < count {
                             notificationsTableView?.tableViewState = .Paging(items: notifications, max: count)
                         } else {
@@ -185,7 +185,7 @@ class MyPageScrollView: UIScrollView {
                         }
                     }
                 })
-            case .Error(let error):
+            case .failure(let error):
                 notificationsTableView?.tableViewState = .Error(error, nil)
             }
         }
@@ -195,9 +195,9 @@ class MyPageScrollView: UIScrollView {
             
             session.getUserNotifications(limit: (max! >= offset + 8) ? offset + 8: max!, offset: offset, completion: { (result) in
                 switch result {
-                case .Error(let error):
+                case .failure(let error):
                     tableView.tableViewState = .Error(error, nil)
-                case .Success(let notifications):
+                case .success(let notifications):
                     if notifications.count >= max! {
                         tableView.tableViewState = .Items(notifications)
                     } else {
@@ -216,7 +216,7 @@ class MyPageScrollView: UIScrollView {
                 self.notificationsTableView.tableViewState = .Error(Session.SessionError.noNotifications, nil)
             }
            
-            self.notificationsCountLabel.configure(text: "\(self.notificationsCount) Notifikationer")
+            self.notificationsCountLabel.configure(text: "\(self.notificationsCount) \(NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))")
             self.session.markNotificationAsRead(notificationID: usernotification.observationID)
             self.navigationDelegate?.pushVC(DetailsViewController(detailsContent: .observationWithID(observationID: usernotification.observationID, showSpeciesView: true, session: self.session)))
         }
@@ -234,9 +234,9 @@ class MyPageScrollView: UIScrollView {
             tableView.tableViewState = .Loading
             session?.getObservations(limit: (max! <= 15 ? max!: 15), offset: offset, completion: { (result) in
                 switch result {
-                case .Error(let error):
+                case .failure(let error):
                     tableView.tableViewState = .Error(error, nil)
-                case .Success(let observations):
+                case .success(let observations):
                     allObservations.append(contentsOf: observations)
                     if let max = max, allObservations.count >= max{
                          tableView.tableViewState = .Items(allObservations)
@@ -250,17 +250,17 @@ class MyPageScrollView: UIScrollView {
         
         session.getObservationsCount { [weak self] (result) in
             switch result {
-            case .Error(let error):
+            case .failure(let error):
                 self?.observationsTableView.tableViewState = .Error(error, nil)
-            case .Success(let count):
+            case .success(let count):
                 DispatchQueue.main.async {
-                    self?.observationsCountLabel.configure(text: "\(count) Observationer")
+                    self?.observationsCountLabel.configure(text: "\(count) \(NSLocalizedString("myPageScrollView_observationsHeader", comment: ""))")
                 }
                 self?.session.getObservations(limit: 15, offset: 0, completion: { (result) in
                     switch result {
-                    case .Error(let error):
+                    case .failure(let error):
                         self?.observationsTableView.tableViewState = .Error(error, nil)
-                    case .Success(let observations):
+                    case .success(let observations):
                         if observations.count == count {
                             self?.observationsTableView.tableViewState = .Items(observations)
                         } else {

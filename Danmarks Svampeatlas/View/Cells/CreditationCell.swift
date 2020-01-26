@@ -51,13 +51,9 @@ class CreditationCell: UITableViewCell {
     func configureCell(creditation: Creditation) {
         switch creditation {
         case .AI:
-            label.text = """
-Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.
-"""
+            label.text = NSLocalizedString("creditationCell_ai", comment: "")
         case .AINewObservation:
-            label.text = """
-            Disse navneforslag er baseret på det første billede du har tilføjet til dette fund. Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.
-"""
+            label.text = NSLocalizedString("creditationCell_aiNewObservation", comment: "")
         }
     }
 }

@@ -8,11 +8,22 @@
 
 import Foundation
 
-public enum RecoveryAction: String {
-    case openSettings = "Åben indstillinger"
-    case tryAgain = "Prøv igen"
-    case login = "Log ind"
-    case activate = "Aktivér"
+
+public enum RecoveryAction {
+    case openSettings
+    case tryAgain
+    case login
+    case activate
+    
+    var localizableText: String {
+        switch self {
+        case .openSettings: return LocalizableStrings.RecoveryAction.openSettings
+        case .login: return LocalizableStrings.RecoveryAction.login
+        case .activate: return LocalizableStrings.RecoveryAction.activate
+        case .tryAgain: return LocalizableStrings.RecoveryAction.tryAgain
+        }
+    }
+    
 }
 
 public protocol AppError: Error {

@@ -241,6 +241,14 @@ class NewMapView: UIView {
         mapView.selectAnnotation(annotation, animated: false)
     }
     
+    func setRegion(center: CLLocationCoordinate2D) {
+        if mapView.region.span.latitudeDelta < 0.05 {
+             mapView.setRegion(MKCoordinateRegion.init(center: center, span: mapView.region.span), animated: true)
+        } else {
+            mapView.setRegion(MKCoordinateRegion.init(center: center, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)), animated: true)
+        }
+    }
+    
     func selectAnnotationAtCoordinate(_ coordinate: CLLocationCoordinate2D) {
         guard let annotation = mapView.annotations.first(where: {$0.coordinate.distance(to: coordinate) == 0}) else {return}
         mapView.selectAnnotation(annotation, animated: false)

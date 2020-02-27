@@ -175,13 +175,17 @@ class ObservationLocationCell: UICollectionViewCell {
         collectionView.reloadData()
         mapView.clearAnnotations()
         mapView.addLocalityAnnotations(localities: localities)
-        if let observationLocation = newObservation.observationCoordinate {
-            mapView.addLocationAnnotation(location: observationLocation.coordinate)
+        
+        if let locality = newObservation.locality {
+            didSelectLocality(locality: locality)
         }
         
-        guard let locality = newObservation.locality else {return}
-        self.didSelectLocality(locality: locality)
-        mapView.showSelectedAnnotationAndLocationAnnotation()
+        if let observationLocation = newObservation.observationCoordinate {
+            mapView.addLocationAnnotation(location: observationLocation.coordinate)
+            mapView.setRegion(center: observationLocation.coordinate)
+            mapView.selectAnnotationAtCoordinate(observationLocation.coordinate)
+        }
+        
         }
 }
 

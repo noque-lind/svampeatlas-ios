@@ -314,6 +314,14 @@ extension AddObservationVC: LocationManagerDelegate {
     }
     
     func locationRetrieved(location: CLLocation) {
+        // If horizontalAccuracy is 0, it means that it is a Location object created manually on the locality page, thus it should not ask the user wether the image metadata should be used.
+        
+        guard location.horizontalAccuracy > 0 else {
+            newObservation.observationCoordinate = location
+            findLocality(location: location)
+            return
+        }
+        
         if let imageLocation = newObservation.returnImageLocationIfNecessary(location: location) {
             handleImageLocation(imageLocation: imageLocation, alternativeLocation: location)
         } else {

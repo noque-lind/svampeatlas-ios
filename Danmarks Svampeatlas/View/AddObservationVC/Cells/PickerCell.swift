@@ -291,7 +291,7 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             case .hostCell(let host, let selected):
                 tableView.allowsMultipleSelection = true
                 
-                if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+                if Utilities.isDanish() {
                      cell.textLabel?.text = "- \(host.dkName?.capitalizeFirst() ?? "") (\(host.latinName ?? ""))"
                 } else {
                     cell.textLabel?.text = "- \(host.latinName?.capitalizeFirst() ?? "")"

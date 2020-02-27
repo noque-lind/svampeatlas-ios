@@ -29,7 +29,7 @@ struct Mushroom: Decodable, Equatable {
     
     var localizedName: String? {
         get {
-            if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+            if Utilities.isDanish() {
                 guard let vernacularname_dk = vernacularNameDK?.vernacularname_dk, vernacularname_dk != "" else {return nil}
                 return vernacularname_dk.capitalizeFirst()
             } else {
@@ -122,7 +122,7 @@ struct Attributes: Decodable {
     fileprivate let _diagnosisEn: String?
     
     var description: String? {
-        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
             return _diagnosis
         } else {
             return _diagnosisEn
@@ -130,7 +130,7 @@ struct Attributes: Decodable {
     }
     
     var eatability: String? {
-        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
             return _eatability
         } else {
             return nil
@@ -138,7 +138,7 @@ struct Attributes: Decodable {
     }
     
     var similarities: String? {
-        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
             return _similarities
         } else {
             return nil
@@ -147,7 +147,7 @@ struct Attributes: Decodable {
     
     var ecology: String? {
         print(Locale.preferredLanguages[0])
-        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
             return _ecology
         } else {
             return nil
@@ -155,7 +155,7 @@ struct Attributes: Decodable {
     }
     
     var tipsForValidation: String? {
-        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
             return _tipsForValidation
         } else {
             return nil

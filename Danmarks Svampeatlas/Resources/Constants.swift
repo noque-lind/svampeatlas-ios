@@ -11,9 +11,16 @@ import MapKit
 
 struct Utilities {
     static let PHOTOALBUMNAME = NSLocalizedString("utilities_photoAlbumName", comment: "")
-    static let SUPPORTEDLOCALE = "da-DK"
+    
+    static func isDanish() -> Bool {
+        if Locale.preferredLanguages[0].contains("da") {
+            return true
+        } else {
+            return false
+            }
 }
-
+}
+    
 
 struct API {
     
@@ -280,7 +287,7 @@ struct API {
             }
         }
         
-        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
          return "{\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$Vernacularname_DK.vernacularname_dk$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
         } else {
              return "{\"$or\":[{\"$attributes.vernacular_name_GB$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"

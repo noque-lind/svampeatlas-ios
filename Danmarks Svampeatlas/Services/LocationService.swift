@@ -81,7 +81,6 @@ class LocationManager: NSObject {
     }
     
     weak var delegate: LocationManagerDelegate? = nil
-    private var previousAccuracy: Double = 0.0
     private var latestLocation: CLLocation?
     
     var permissionsNotDetermined: Bool {
@@ -135,10 +134,8 @@ class LocationManager: NSObject {
 extension LocationManager: CLLocationManagerDelegate {
     
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last, location.horizontalAccuracy >= 0, location.timestamp.timeIntervalSinceNow < 5 else {return}
-        
-        latestLocation = location
-        
+        guard let location = locations.last, location.horizontalAccuracy >= 0, location.timestamp.timeIntervalSinceNow > -5  else {return}
+                latestLocation = location
         if location.horizontalAccuracy <= manager.desiredAccuracy {
             stopServiceAndSendLocation()
         }

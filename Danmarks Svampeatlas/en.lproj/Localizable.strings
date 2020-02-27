@@ -31,12 +31,12 @@
 //NewObservationError
 "newObservationError_missingInformation" = "Missing information";
 "newObservationError_noLocality_title" = "Where are you?";
-"newObservationError_noLocality_message" = "Your coordinates have been determined, althrough it was not possible to find an appropiate location name. Please try again.";
+"newObservationError_noLocality_message" = "Your coordinates have been determined, although it was not possible to find an appropiate location name. Please try again.";
 "newObservationError_noCoordinates_title" = "No coordinates";
-"newObservationError_noCoordinates_message" = "Your coodinates could not be automatically detemrined, så you need to specify the location for your observation yourself.";
+"newObservationError_noCoordinates_message" = "Your coodinates could not be automatically determined, you have to specify the location manually.";
 "newObservationError_noSubstrateGroup_message" = "You need to specify a substrate";
 "newObservationError_noVegetationType_message" = "You need to specify a vegetationtype";
-"newObservationError_noMushroom_message" = "You need to specify what you have found. If you are not sure, you can press the butten 'Unkown species'.";
+"newObservationError_noMushroom_message" = "You need to specify what you have found. If you are not sure, just press the 'Unkown species' button.";
 
 // DatabaseError
 "databaseError_initError_title" = "Database error";
@@ -45,7 +45,7 @@
 "databaseError_contentOutdated_message" = "The stored data is outdated";
 "databaseError_noEntries_title" = "Found nothing";
 "databaseError_noEntries_message" = "There was no saved data";
-"databaseError_noEntries_favoritedMushrooms_message" = "You don't have any saved favorites. Du kan make a mushroom a favorite by swiping it to the left.";
+"databaseError_noEntries_favoritedMushrooms_message" = "You don't have any favorited mushrooms. By swiping left, you can a mushroom as a favorite.";
 "databaseError_readError_title" = "Read error";
 "databaseError_readError_message" = "An error occured while reading data from the disk";
 "databaseError_saveError_title" = "Save error";
@@ -231,7 +231,6 @@
 //ObservationSpeciesCell
 "observationSpeciesCell_chooseSpecies" = "Choose species";
 "observationSpeciesCell_chooseGenus" = "Choose genus";
-"observationSpeciesCell_deselect" = "Deselect";
 "observationSpeciesCell_choosenSpecies" = "Choosen species";
 "observationSpeciesCell_choosenGenus" = "Choosen genus";
 "observationSpeciesCell_deselect" = "Deselect";

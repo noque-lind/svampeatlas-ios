@@ -16,7 +16,7 @@ struct SubstrateGroup {
     public private(set) var substrates = [Substrate]()
     
     var name: String {
-        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
             return dkName
         } else {
             return enName
@@ -73,7 +73,7 @@ struct Substrate {
     public var isLocked: Bool = false
     
     var name: String {
-        if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
             return dkName
         } else {
             return enName

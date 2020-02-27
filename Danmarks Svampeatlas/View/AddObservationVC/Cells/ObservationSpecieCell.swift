@@ -131,7 +131,7 @@ class ObservationSpecieCell: UICollectionViewCell {
                 })))
             case .selectableMushroom(let mushroom, _):
                 let selected = mushroom == self.newObservation?.mushroom
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: selected, title: selected ? "Fravælg": (mushroom.isGenus ? NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""): NSLocalizedString("observationSpeciesCell_chooseSpecies", comment: "")), handler: { (_) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: selected, title: selected ? NSLocalizedString("observationSpeciesCell_deselect", comment: ""): (mushroom.isGenus ? NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""): NSLocalizedString("observationSpeciesCell_chooseSpecies", comment: "")), handler: { (_) in
                     
                     if selected {
                         self.newObservation?.mushroom = nil

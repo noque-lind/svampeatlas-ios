@@ -154,7 +154,7 @@
 "elPhotosError_unknownFetchError_message" = "Der skete en ukendt fejl i forbindelse med at få adgang til det valgte billede.";
 
 //Dataservice
-"dataServiceError_searchResponseEmpty_title" = "Fandt intent";
+"dataServiceError_searchResponseEmpty_title" = "Fandt intet";
 "dataServiceError_searchResponseEmpty_message" = "Det du søgte efter kunne ikke findes, prøv at søg efter noget andet";
 "dataServiceError_loginError_title" = "Log ind fejl";
 "dataServiceError_loginError_message" = "Prøv nogle andre initialer eller et andet kodeord";
@@ -234,7 +234,6 @@
 "observationSpeciesCell_deselect" = "Fravælg";
 "observationSpeciesCell_choosenSpecies" = "Valgte art";
 "observationSpeciesCell_choosenGenus" = "Valgte slægt";
-"observationSpeciesCell_deselect" = "Fravælg";
 
 "observationSpeciesCell_predictionsHeader" = "Navneforslag";
 "observationSpeciesCell_searchResults" = "Søgeresultater";

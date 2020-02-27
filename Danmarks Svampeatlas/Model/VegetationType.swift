@@ -15,7 +15,7 @@ struct VegetationType: Decodable {
     public var isLocked: Bool = false
     
     var name: String {
-        if Locale.preferredLanguages[0]  == Utilities.SUPPORTEDLOCALE {
+        if Utilities.isDanish() {
             return dkName
         } else {
             return enName

@@ -13,13 +13,13 @@ struct ELFileManager {
     enum ELFileManagerError: AppError {
         var errorDescription: String {
             switch self {
-            case .imageSavingError: return "Der skete en fejl i forbindelse med at gemme billedet til telefonens midlertidige lagerplads."
+            case .imageSavingError: return NSLocalizedString("elFileManagerError_imageSavingError_message", comment: "")
             }
         }
         
         var errorTitle: String {
             switch self {
-            case .imageSavingError: return "Gemme fejl"
+            case .imageSavingError: return NSLocalizedString("elFileManagerError_imageSavingError_title", comment: "")
             }
         }
         

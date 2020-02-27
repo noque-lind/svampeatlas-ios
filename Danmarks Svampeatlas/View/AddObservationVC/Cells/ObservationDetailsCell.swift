@@ -343,7 +343,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 
                     if let hosts = newObservation?.hosts, hosts.count != 0 {
                         for host in hosts {
-                            if Locale.preferredLanguages[0] == Utilities.SUPPORTEDLOCALE {
+                            if Utilities.isDanish() {
                                 string.append(contentsOf: "\(host.dkName ?? ""), ")
                             } else {
                                 string.append(contentsOf: "\(host.latinName ?? ""), ")

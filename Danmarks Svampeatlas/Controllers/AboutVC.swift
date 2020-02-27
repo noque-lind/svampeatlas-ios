@@ -34,6 +34,7 @@ class AboutVC: UIViewController {
         let contentStackView: UIStackView = {
             func createImageViewWithImage(image: UIImage) -> UIImageView {
                 let imageView = UIImageView(image: image)
+                imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
                 imageView.contentMode = .scaleAspectFit
                 return imageView
             }
@@ -82,6 +83,7 @@ class AboutVC: UIViewController {
             stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_KU")))
             stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_Aage V. Jensen")))
             stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_Svampekundskabens fremme")))
+            stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_fifteenJune")))
             stackView.addArrangedSubview(createText(title: NSLocalizedString("aboutVC_recognition_title", comment: ""), message: NSLocalizedString("aboutVC_recognition_message", comment: "")
 ))
             

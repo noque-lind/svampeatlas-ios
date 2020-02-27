@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,24 +17,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="bWg-Wi-Zhn">
-                                <rect key="frame" x="32" y="311" width="350" height="274"/>
+                                <rect key="frame" x="32" y="200" width="350" height="496"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Images_Sponsors_KU" translatesAutoresizingMaskIntoConstraints="NO" id="Ju3-37-XI7">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="70"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="350" height="100"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="70" id="9bO-1y-WQB"/>
+                                            <constraint firstAttribute="height" constant="100" id="9bO-1y-WQB"/>
                                         </constraints>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Images_Sponsors_Aage V. Jensen" translatesAutoresizingMaskIntoConstraints="NO" id="Zvm-2s-NEj">
-                                        <rect key="frame" x="0.0" y="102" width="350" height="70"/>
+                                        <rect key="frame" x="0.0" y="132" width="350" height="100"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="70" id="r1w-id-uHe"/>
+                                            <constraint firstAttribute="height" constant="100" id="r1w-id-uHe"/>
                                         </constraints>
                                     </imageView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Images_Sponsors_Svampekundskabens fremme" translatesAutoresizingMaskIntoConstraints="NO" id="8nX-Ua-LGg">
-                                        <rect key="frame" x="0.0" y="204" width="350" height="70"/>
+                                        <rect key="frame" x="0.0" y="264" width="350" height="100"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="70" id="tfY-Om-IA1"/>
+                                            <constraint firstAttribute="height" constant="100" id="tfY-Om-IA1"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Images_Sponsors_fifteenJune" translatesAutoresizingMaskIntoConstraints="NO" id="F33-k7-S3f">
+                                        <rect key="frame" x="0.0" y="396" width="350" height="100"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="QEr-sg-JCg"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -67,5 +73,6 @@
         <image name="Images_Sponsors_Aage V. Jensen" width="170" height="50"/>
         <image name="Images_Sponsors_KU" width="170" height="50"/>
         <image name="Images_Sponsors_Svampekundskabens fremme" width="170" height="50"/>
+        <image name="Images_Sponsors_fifteenJune" width="170" height="50"/>
     </resources>
 </document>

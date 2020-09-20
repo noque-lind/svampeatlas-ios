@@ -370,7 +370,7 @@ class SelectedSpecieCell: ContainedResultCell {
     func configureCell(mushroom: Mushroom, confidence: NewObservation.DeterminationConfidence) {
         isGenus = mushroom.isGenus
         picker.reloadAllComponents()
-        picker.selectRow(confidences.index(of: confidence) ?? 0, inComponent: 0, animated: false)
+        picker.selectRow(confidences.firstIndex(of: confidence) ?? 0, inComponent: 0, animated: false)
         super.configureCell(mushroom: mushroom)
     }
     

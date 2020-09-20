@@ -67,7 +67,7 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         }
         
         func updateSection(section: Section<T>?) {
-            guard let section = section, let index = superclass.sections.index(of: section) else {return}
+            guard let section = section, let index = superclass.sections.firstIndex(of: section) else {return}
             superclass.tableView.reloadSections(IndexSet(integer: index), with: .automatic)
         }
         

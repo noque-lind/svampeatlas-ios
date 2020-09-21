@@ -9,7 +9,7 @@
 import UIKit
 
 class NavigationCell: UITableViewCell {
-
+    
     private lazy var gradientView: CAGradientLayer = {
       let gradient = CAGradientLayer()
         gradient.startPoint = CGPoint(x: 0, y: 1)

@@ -15,7 +15,7 @@ class NavigationVC: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = UIColor.clear
-        tableView.register(NavigationCell.self, forCellReuseIdentifier: "navigationCell")
+        tableView.register(NavigationCell.self, forCellReuseIdentifier: String(describing: NavigationCell.self))
         tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
@@ -71,9 +71,9 @@ class NavigationVC: UIViewController {
     
     private var navigationItems: [[NavigationItem]] {
         if session != nil {
-            return [[.myPageVC, .newObservationVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .facebook]]
+            return [[.myPageVC, .newObservationVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .settings, .facebook]]
         } else {
-            return [[.loginVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .facebook]]
+            return [[.loginVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .settings, .facebook]]
         }
     }
     
@@ -164,7 +164,7 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: false)
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "navigationCell", for: indexPath) as! NavigationCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NavigationCell.self), for: indexPath) as! NavigationCell
         cell.configureCell(navigationItem: navigationItems[indexPath.section][indexPath.row])
         return cell
     }
@@ -211,6 +211,8 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
             return
         case .about:
             vc = AboutVC()
+        case .settings:
+            vc = SettingsVC()
         }
         
         self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: vc), overrideTypeCheckIgnore: overrideTypeCheckIgnore)

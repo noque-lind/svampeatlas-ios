@@ -21,6 +21,7 @@
 "navigationItem_cameraVC" = "Navneforslag";
 "navigationItem_facebook" = "Facebook";
 "navigationItem_about" = "Om";
+"navigationItem_settings" = "Indstillinger";
 
 //ToxicityLevels
 "toxicityLevel_poisonous" = "Giftig";

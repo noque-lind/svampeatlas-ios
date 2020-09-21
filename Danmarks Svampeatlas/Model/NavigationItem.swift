@@ -17,6 +17,7 @@ enum NavigationItem {
     case mushroomsVC
     case cameraVC
     case facebook
+    case settings
     case about
     
     
@@ -34,7 +35,8 @@ enum NavigationItem {
             return NSLocalizedString("navigationItem_mushroomsVC", comment: "")
         case .cameraVC:
             return NSLocalizedString("navigationItem_cameraVC", comment: "")
-
+        case .settings:
+            return NSLocalizedString("navigationItem_settings", comment: "")
             case .facebook:
                 return NSLocalizedString("navigationItem_facebook", comment: "")
         case .about:
@@ -60,6 +62,8 @@ enum NavigationItem {
             return #imageLiteral(resourceName: "Icons_MenuIcons_Facebook")
         case .about:
             return #imageLiteral(resourceName: "Icons_MenuIcons_About")
+        case .settings:
+            return UIImage(named: "Icons_MenuIcons_Settings")!
         }
     }
     

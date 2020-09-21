@@ -15,7 +15,7 @@ protocol ResultsViewDelegate: class {
 }
 
 
-class ResultsTableView: ELTableView<ResultsTableView.Item> {
+class ResultsTableView: ELTableViewOld<ResultsTableView.Item> {
     
     enum Item {
         case result(predictionResult: PredictionResult)

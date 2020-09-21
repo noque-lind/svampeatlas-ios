@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -89,6 +89,9 @@
 		DB4B2ED0235B253D00698B36 /* LocalityHelper.gif in Resources */ = {isa = PBXBuildFile; fileRef = DB4B2ECF235B253D00698B36 /* LocalityHelper.gif */; };
 		DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C42180DFA9001874A6 /* MyPageVC.swift */; };
 		DB4F53C72181F569001874A6 /* MyPageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C62181F569001874A6 /* MyPageScrollView.swift */; };
+		DB53F04A25192BB1000F3038 /* LanguageSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB53F04925192BB1000F3038 /* LanguageSettingCell.swift */; };
+		DB53F04E25192C36000F3038 /* SettingsInformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB53F04D25192C36000F3038 /* SettingsInformationCell.swift */; };
+		DB53F05225193372000F3038 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = DB53F05125193372000F3038 /* Then */; };
 		DB59F55F232D2B5B005D5EA5 /* Collection+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */; };
 		DB5E160A21AC452300F8C3FD /* NearbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E160921AC452300F8C3FD /* NearbyVC.swift */; };
 		DB5E88E8238D9431005339D4 /* CaptureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E88E7238D9431005339D4 /* CaptureButton.swift */; };
@@ -113,6 +116,7 @@
 		DB7F04F022A941FF00785AF8 /* MushroomTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F04EF22A941FF00785AF8 /* MushroomTableView.swift */; };
 		DB7F04F222AAB19D00785AF8 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F04F122AAB19D00785AF8 /* MapVC.swift */; };
 		DB7F04F922AD099C00785AF8 /* CaviarDreams_Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */; };
+		DB81C8AE2519275F006E45B9 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB81C8AD2519275F006E45B9 /* SettingsVC.swift */; };
 		DB893117232BCBEA000BDCD1 /* UIApplication+Urls.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */; };
 		DB89311A232BCE52000BDCD1 /* AboutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB893119232BCE52000BDCD1 /* AboutVC.swift */; };
 		DB897AFA21D27AD100E74C00 /* VegetationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB897AF921D27AD100E74C00 /* VegetationType.swift */; };
@@ -139,6 +143,7 @@
 		DBB33A4321CC011700BCED22 /* PickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4221CC011700BCED22 /* PickerCell.swift */; };
 		DBB33A4521CE67E200BCED22 /* ELTextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */; };
 		DBB52C3F23DAFF38004A4CBA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DBB52C4123DAFF38004A4CBA /* InfoPlist.strings */; };
+		DBBFBF1A2517D07200B99470 /* NewTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBFBF192517D07200B99470 /* NewTableView.swift */; };
 		DBC30C8A21EE1A1900826FC6 /* TableViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8921EE1A1900826FC6 /* TableViewState.swift */; };
 		DBC30C8C21EE1F5B00826FC6 /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */; };
 		DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */; };
@@ -288,6 +293,8 @@
 		DB4B2ECF235B253D00698B36 /* LocalityHelper.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = LocalityHelper.gif; sourceTree = "<group>"; };
 		DB4F53C42180DFA9001874A6 /* MyPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageVC.swift; sourceTree = "<group>"; };
 		DB4F53C62181F569001874A6 /* MyPageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageScrollView.swift; sourceTree = "<group>"; };
+		DB53F04925192BB1000F3038 /* LanguageSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSettingCell.swift; sourceTree = "<group>"; };
+		DB53F04D25192C36000F3038 /* SettingsInformationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsInformationCell.swift; sourceTree = "<group>"; };
 		DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
 		DB5E160921AC452300F8C3FD /* NearbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyVC.swift; sourceTree = "<group>"; };
 		DB5E88E7238D9431005339D4 /* CaptureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureButton.swift; sourceTree = "<group>"; };
@@ -312,6 +319,7 @@
 		DB7F04EF22A941FF00785AF8 /* MushroomTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomTableView.swift; sourceTree = "<group>"; };
 		DB7F04F122AAB19D00785AF8 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = CaviarDreams_Bold.ttf; sourceTree = "<group>"; };
+		DB81C8AD2519275F006E45B9 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Urls.swift"; sourceTree = "<group>"; };
 		DB893119232BCE52000BDCD1 /* AboutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVC.swift; sourceTree = "<group>"; };
 		DB897AF921D27AD100E74C00 /* VegetationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VegetationType.swift; sourceTree = "<group>"; };
@@ -342,6 +350,7 @@
 		DBB52C4823DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		DBB52C4923DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DBB52C4A23DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		DBBFBF192517D07200B99470 /* NewTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTableView.swift; sourceTree = "<group>"; };
 		DBC30C8921EE1A1900826FC6 /* TableViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewState.swift; sourceTree = "<group>"; };
 		DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
 		DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELPhotos.swift; sourceTree = "<group>"; };
@@ -375,6 +384,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB402BB823D9EED90020D68B /* ELKit.framework in Frameworks */,
+				DB53F05225193372000F3038 /* Then in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,6 +464,7 @@
 		4A0775CA20443D5200DD5AF0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				DB53F04525192B8D000F3038 /* SettingsVC */,
 				DB7F04ED22A941ED00785AF8 /* MushroomVC */,
 				DB6E9E2B218A4CD700A6FB1C /* MyPageVC */,
 				DB24AEAA228340990057DF82 /* NearbyVC */,
@@ -577,6 +588,7 @@
 				DB4AE10A22BE89DA006F6516 /* SearchVC.swift */,
 				DBF4F3C5232A41CC0042E7A8 /* TermsVC.swift */,
 				DB893119232BCE52000BDCD1 /* AboutVC.swift */,
+				DB81C8AD2519275F006E45B9 /* SettingsVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -692,8 +704,26 @@
 				DB0C5A1022785BE30071B15C /* MushroomDetailsScrollView.swift */,
 				DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
+				DBBFBF192517D07200B99470 /* NewTableView.swift */,
 			);
 			path = DetailsViewController;
+			sourceTree = "<group>";
+		};
+		DB53F04525192B8D000F3038 /* SettingsVC */ = {
+			isa = PBXGroup;
+			children = (
+				DB53F04825192B96000F3038 /* Cells */,
+			);
+			path = SettingsVC;
+			sourceTree = "<group>";
+		};
+		DB53F04825192B96000F3038 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				DB53F04925192BB1000F3038 /* LanguageSettingCell.swift */,
+				DB53F04D25192C36000F3038 /* SettingsInformationCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		DB6E9E2B218A4CD700A6FB1C /* MyPageVC */ = {
@@ -786,6 +816,9 @@
 			dependencies = (
 			);
 			name = "Danmarks Svampeatlas";
+			packageProductDependencies = (
+				DB53F05125193372000F3038 /* Then */,
+			);
 			productName = SvampeAtlas;
 			productReference = 4A69BC762038D96500D3B88B /* Danmarks Svampeatlas.app */;
 			productType = "com.apple.product-type.application";
@@ -846,6 +879,9 @@
 				cs,
 			);
 			mainGroup = 4A69BC6D2038D96500D3B88B;
+			packageReferences = (
+				DB53F05025193372000F3038 /* XCRemoteSwiftPackageReference "Then" */,
+			);
 			productRefGroup = 4A69BC772038D96500D3B88B /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -913,6 +949,8 @@
 				DB24AEA92281D5E40057DF82 /* MapViewFilteringSettings.swift in Sources */,
 				DB7F04F222AAB19D00785AF8 /* MapVC.swift in Sources */,
 				DB0C5A0A2275A6D00071B15C /* HeatAnnotationPinView.swift in Sources */,
+				DB53F04A25192BB1000F3038 /* LanguageSettingCell.swift in Sources */,
+				DBBFBF1A2517D07200B99470 /* NewTableView.swift in Sources */,
 				DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */,
 				DBCCB0B023C36FF100DFB04F /* Repository.swift in Sources */,
 				DB6E9E2D218A4D5E00A6FB1C /* NotificationsTableView.swift in Sources */,
@@ -937,6 +975,7 @@
 				DB12BC262135507F00FFA037 /* User.swift in Sources */,
 				DB0C5A1122785BE30071B15C /* MushroomDetailsScrollView.swift in Sources */,
 				DB68741D234CDBFD0038C5A0 /* PredictionResult.swift in Sources */,
+				DB53F04E25192C36000F3038 /* SettingsInformationCell.swift in Sources */,
 				DB2DC12023D9A71600EE9BC4 /* LocalizableStrings.swift in Sources */,
 				DB1F85532122F3ED00658619 /* Date+Extension.swift in Sources */,
 				DB24AEA72281CBE40057DF82 /* CGFloat+Extension.swift in Sources */,
@@ -1038,6 +1077,7 @@
 				DB897AFA21D27AD100E74C00 /* VegetationType.swift in Sources */,
 				DB8CC0DC2158288E00C958F0 /* NavigationDelegate.swift in Sources */,
 				DB95F7EB21141BFF003F8C93 /* ProgressBarView.swift in Sources */,
+				DB81C8AE2519275F006E45B9 /* SettingsVC.swift in Sources */,
 				4A4AE30B2070181000178BFB /* MushroomCell.swift in Sources */,
 				DB8D1733211C975600C38D2C /* CLLocationCoordinate2D+DistanceFrom.swift in Sources */,
 				4A28AB8B2044454200F21EEE /* GradientView.swift in Sources */,
@@ -1217,7 +1257,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1232,7 +1273,10 @@
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.noque.fungalatlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1251,7 +1295,10 @@
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.noque.fungalatlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1269,7 +1316,11 @@
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks SvampeatlasTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.noque.Danmarks-SvampeatlasTests";
@@ -1289,7 +1340,11 @@
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks SvampeatlasTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.noque.Danmarks-SvampeatlasTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1330,6 +1385,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DB53F05025193372000F3038 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DB53F05125193372000F3038 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB53F05025193372000F3038 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		4A69BC802038D96500D3B88B /* SvampeAtlas.xcdatamodeld */ = {

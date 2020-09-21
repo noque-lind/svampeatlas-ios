@@ -42,13 +42,13 @@ protocol ELTableViewUpdater {
     func updateSection(section: Section<T>)
 }
 
-class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
+class ELTableViewOld<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         
     class Updater {
         
-        private var superclass: ELTableView
+        private var superclass: ELTableViewOld
         
-        init(superclass: ELTableView) {
+        init(superclass: ELTableViewOld) {
             self.superclass = superclass
         }
         
@@ -200,7 +200,7 @@ class ELTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let title = sections[section].title else {return nil}
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.identifier) as! SectionHeaderView
-        headerView.configure(text: title)
+        headerView.configure(title: title)
         return headerView
     }
     

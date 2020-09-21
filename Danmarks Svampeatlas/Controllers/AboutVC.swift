@@ -42,7 +42,7 @@ class AboutVC: UIViewController {
             func createText(title: String, message: String) -> UIStackView {
                 let header: SectionHeaderView = {
                     let view = SectionHeaderView()
-                    view.configure(text: title)
+                    view.configure(title: title)
                     return view
                 }()
                 

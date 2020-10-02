@@ -55,28 +55,35 @@ class SettingCell: UITableViewCell {
     private func setupView() {
         selectionStyle = .none
         backgroundColor = UIColor.clear
-        contentView.addSubview(iconImageView)
-        iconImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
-        iconImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         
         let stackView: UIStackView = {
             let view = UIStackView()
             view.translatesAutoresizingMaskIntoConstraints = false
             view.axis = .horizontal
+            view.spacing = 8
+            view.alignment = .center
+            view.clipsToBounds = false
+            view.addArrangedSubview(iconImageView)
             view.addArrangedSubview(descriptionLabel)
             view.addArrangedSubview(contentLabel)
             return view
         }()
         
         contentView.addSubview(stackView)
-        stackView.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
         stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
         stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16).isActive = true
         stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
     }
     
-    func configureCell(icon: UIImage, description: String, content: String) {
-        iconImageView.image = icon
+    func configureCell(icon: UIImage?, description: String, content: String) {
+        if icon != nil {
+            iconImageView.image = icon
+            iconImageView.isHidden = false
+        } else {
+            iconImageView.isHidden = true
+        }
+       
         descriptionLabel.text = description
         contentLabel.text = content
     }

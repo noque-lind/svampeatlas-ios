@@ -71,6 +71,7 @@ class NotificationCell: UITableViewCell {
         profileImageView.reset()
         
         let primaryText = NSMutableAttributedString(string: notification.triggerName, attributes: [NSAttributedString.Key.font: UIFont.appPrimaryHightlighed()])
+        primaryText.append(NSAttributedString.init(string: " "))
         
         switch notification.eventType {
         case "COMMENT_ADDED":

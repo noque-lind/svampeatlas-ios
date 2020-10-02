@@ -89,7 +89,7 @@
 		DB4B2ED0235B253D00698B36 /* LocalityHelper.gif in Resources */ = {isa = PBXBuildFile; fileRef = DB4B2ECF235B253D00698B36 /* LocalityHelper.gif */; };
 		DB4F53C52180DFA9001874A6 /* MyPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C42180DFA9001874A6 /* MyPageVC.swift */; };
 		DB4F53C72181F569001874A6 /* MyPageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4F53C62181F569001874A6 /* MyPageScrollView.swift */; };
-		DB53F04A25192BB1000F3038 /* LanguageSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB53F04925192BB1000F3038 /* LanguageSettingCell.swift */; };
+		DB53F04A25192BB1000F3038 /* SettingCellOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB53F04925192BB1000F3038 /* SettingCellOld.swift */; };
 		DB53F04E25192C36000F3038 /* SettingsInformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB53F04D25192C36000F3038 /* SettingsInformationCell.swift */; };
 		DB53F05225193372000F3038 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = DB53F05125193372000F3038 /* Then */; };
 		DB59F55F232D2B5B005D5EA5 /* Collection+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */; };
@@ -293,7 +293,7 @@
 		DB4B2ECF235B253D00698B36 /* LocalityHelper.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = LocalityHelper.gif; sourceTree = "<group>"; };
 		DB4F53C42180DFA9001874A6 /* MyPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageVC.swift; sourceTree = "<group>"; };
 		DB4F53C62181F569001874A6 /* MyPageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageScrollView.swift; sourceTree = "<group>"; };
-		DB53F04925192BB1000F3038 /* LanguageSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSettingCell.swift; sourceTree = "<group>"; };
+		DB53F04925192BB1000F3038 /* SettingCellOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellOld.swift; sourceTree = "<group>"; };
 		DB53F04D25192C36000F3038 /* SettingsInformationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsInformationCell.swift; sourceTree = "<group>"; };
 		DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
 		DB5E160921AC452300F8C3FD /* NearbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyVC.swift; sourceTree = "<group>"; };
@@ -720,7 +720,7 @@
 		DB53F04825192B96000F3038 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				DB53F04925192BB1000F3038 /* LanguageSettingCell.swift */,
+				DB53F04925192BB1000F3038 /* SettingCellOld.swift */,
 				DB53F04D25192C36000F3038 /* SettingsInformationCell.swift */,
 			);
 			path = Cells;
@@ -949,7 +949,7 @@
 				DB24AEA92281D5E40057DF82 /* MapViewFilteringSettings.swift in Sources */,
 				DB7F04F222AAB19D00785AF8 /* MapVC.swift in Sources */,
 				DB0C5A0A2275A6D00071B15C /* HeatAnnotationPinView.swift in Sources */,
-				DB53F04A25192BB1000F3038 /* LanguageSettingCell.swift in Sources */,
+				DB53F04A25192BB1000F3038 /* SettingCellOld.swift in Sources */,
 				DBBFBF1A2517D07200B99470 /* NewTableView.swift in Sources */,
 				DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */,
 				DBCCB0B023C36FF100DFB04F /* Repository.swift in Sources */,

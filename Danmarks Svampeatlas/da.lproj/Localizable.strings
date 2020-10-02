@@ -365,4 +365,7 @@
 //CommentsTableView
 "commentsTableView_cell_title" = "Skriv en kommentar";
 
-
+"settingsInformationCell_message" = "Her har du mulighed for at finjustere din app oplevelse. Lige nu kan du ikke så meget, men der kommer flere muligheder til, jo mere vi kan fornemme i har brug for.";
+"settings_general_header" = "Generelt";
+"settingsCell_language" = "Sprog";
+"settingsCell_database" = "Ryd offline indhold";

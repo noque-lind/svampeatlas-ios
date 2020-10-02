@@ -30,7 +30,6 @@ class SettingsInformationCell: UITableViewCell {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = UIColor.appPrimaryColour()
             view.layer.cornerRadius = CGFloat.cornerRadius()
-            view.layer.shadowOpacity = Float.shadowOpacity()
             
             let titleLabel = UILabel().then({
                 $0.font = UIFont.appPrimary()
@@ -38,7 +37,7 @@ class SettingsInformationCell: UITableViewCell {
                 $0.textAlignment = .center
                 $0.numberOfLines = 0
                 $0.textColor = .appWhite()
-                $0.text = "Hej du der som har bevæget dig her ind. Her har du mulighed for at finjustere din app oplevelse. Lige nu kan du ikke så meget, men der kommer flere muligheder til, jo mere vi kan fornemme i har brug for."
+                $0.text = NSLocalizedString("settingsInformationCell_message", comment: "")
             })
             
             view.addSubview(titleLabel)
@@ -50,8 +49,8 @@ class SettingsInformationCell: UITableViewCell {
         }()
         
         contentView.addSubview(view)
-        view.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+        view.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16).isActive = true
+        view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
         view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
         view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
     }

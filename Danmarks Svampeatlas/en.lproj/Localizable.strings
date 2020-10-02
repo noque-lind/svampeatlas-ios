@@ -365,5 +365,8 @@
 //CommentsTableView
 "commentsTableView_cell_title" = "Write a comment";
 
-
-
+//
+"settingsInformationCell_message" = "This is where you are able to adjust this app so that it fits your needs. For now, you are not able to do much, but more options will come, if we fint that it is needed.";
+"settingsCell_language" = "Language";
+"settingsCell_database" = "Clear database";
+"settings_general_header" = "General";

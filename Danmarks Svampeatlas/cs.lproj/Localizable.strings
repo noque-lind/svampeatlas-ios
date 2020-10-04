@@ -406,6 +406,8 @@
 /* (No Comment) */
 "navigationItem_newObservationVC" = "Nové pozorování";
 
+"navigationItem_settings" = "Nastavení";
+
 /* NearbyVC */
 "nearbyVC_title" = "Nedaleko";
 

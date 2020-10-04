@@ -162,15 +162,15 @@ class TermsVC: UIViewController {
     private func configure() {
         switch terms {
         case .mlPredict:
-            header.configure(text: NSLocalizedString("termsVC_mlPredict_title", comment: ""))
+            header.configure(title: NSLocalizedString("termsVC_mlPredict_title", comment: ""))
             
             textView.text = NSLocalizedString("termsVC_mlPredict_message", comment: "")
         case .localityHelper:
-            header.configure(text: NSLocalizedString("termsVC_localityHelper_title", comment: ""))
+            header.configure(title: NSLocalizedString("termsVC_localityHelper_title", comment: ""))
             imageView.loadGif(name: "LocalityHelper")
             imageView.heightAnchor.constraint(equalToConstant: 276).isActive = true
         case .cameraHelper:
-            header.configure(text: NSLocalizedString("termsVC_cameraHelper_title", comment: ""))
+            header.configure(title: NSLocalizedString("termsVC_cameraHelper_title", comment: ""))
             textView.text = NSLocalizedString("termsVC_cameraHelper_message", comment: "")
         }
     }

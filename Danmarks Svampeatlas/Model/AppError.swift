@@ -9,7 +9,7 @@
 import Foundation
 
 
-public enum RecoveryAction {
+public enum mRecoveryAction {
     case openSettings
     case tryAgain
     case login
@@ -29,5 +29,5 @@ public enum RecoveryAction {
 public protocol AppError: Error {
     var errorDescription: String { get }
     var errorTitle: String { get }
-    var recoveryAction: RecoveryAction? { get }
+    var recoveryAction: mRecoveryAction? { get }
 }

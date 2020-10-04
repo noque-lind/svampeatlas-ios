@@ -191,7 +191,7 @@ class NewMapView: UIView {
         }
     }
     
-    func showError(error: AppError, handler: ((RecoveryAction?) -> ())? = nil) {
+    func showError(error: AppError, handler: ((mRecoveryAction?) -> ())? = nil) {
         shouldLoad = false
         
         DispatchQueue.main.async {

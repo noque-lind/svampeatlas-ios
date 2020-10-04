@@ -34,7 +34,7 @@ class ELPhotos: NSObject  {
             }
         }
         
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             switch self {
             case .notAuthorized: return .openSettings
             case .unknownSaveError: return .tryAgain
@@ -76,6 +76,7 @@ class ELPhotos: NSObject  {
                    }
                case .denied, .restricted, .notDetermined:
                     completion(nil)
+        case .limited: return
                }
     }
     
@@ -91,6 +92,7 @@ class ELPhotos: NSObject  {
                     picker.modalPresentationStyle = .fullScreen
                     picker.delegate = self
                     delegate?.presentVC(picker)
+            case .limited: return
             }
             }
         }
@@ -120,6 +122,7 @@ class ELPhotos: NSObject  {
                         }
                     }
                 }
+            case .limited: return
             }
         }
     }

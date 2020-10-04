@@ -205,7 +205,7 @@ class AppScrollView: UIScrollView {
                 
                 let header: SectionHeaderView = {
                    let view = SectionHeaderView()
-                    view.configure(text: title)
+                    view.configure(title: title)
                     return view
                 }()
                 

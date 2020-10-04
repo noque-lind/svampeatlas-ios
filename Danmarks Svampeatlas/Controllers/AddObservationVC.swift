@@ -72,7 +72,7 @@ class AddObservationVC: UIViewController {
         view.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         view.categorySelected = { [unowned collectionView, unowned self] category in
-            guard let index = ObservationCategories.allCases.index(of: category) else {return}
+            guard let index = ObservationCategories.allCases.firstIndex(of: category) else {return}
             collectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
             self.view.endEditing(true)
         }
@@ -243,7 +243,7 @@ class AddObservationVC: UIViewController {
             newObservation.observationCoordinate = imageLocation
             print(imageLocation.timestamp)
             newObservation.observationDate = imageLocation.timestamp
-            self.collectionView.reloadItems(at: [IndexPath(row: ObservationCategories.allCases.index(of: .Details)!, section: 0)])
+            self.collectionView.reloadItems(at: [IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Details)!, section: 0)])
             self.findLocality(location: imageLocation)
         }),
         .negative(NSLocalizedString("addObservationVC_useImageMetadata_negative", comment: ""), { [unowned newObservation, unowned self] in

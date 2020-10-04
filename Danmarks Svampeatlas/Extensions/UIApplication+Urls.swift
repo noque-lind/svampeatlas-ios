@@ -23,5 +23,10 @@ extension UIApplication {
             }
         }
     }
+
+    class func openAppSettings() {
+        let settingsURL = URL(string: UIApplication.openSettingsURLString)!
+        UIApplication.shared.open(settingsURL)
+    }
 }
 

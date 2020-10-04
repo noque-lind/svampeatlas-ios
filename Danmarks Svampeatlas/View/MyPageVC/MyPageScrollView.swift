@@ -9,6 +9,9 @@
 import UIKit
 import ELKit
 
+
+
+
 class MyPageScrollView: UIScrollView {
     
     private lazy var contentStackView: UIStackView = {
@@ -39,13 +42,13 @@ class MyPageScrollView: UIScrollView {
     
     private lazy var notificationsCountLabel: SectionHeaderView = {
         let view = SectionHeaderView()
-        view.configure(text: NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))
+        view.configure(title: NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))
         return view
     }()
     
     private lazy var observationsCountLabel: SectionHeaderView = {
         let view = SectionHeaderView()
-        view.configure(text: NSLocalizedString("myPageScrollView_observationsHeader", comment: ""))
+        view.configure(title: NSLocalizedString("myPageScrollView_observationsHeader", comment: ""))
         return view
     }()
     
@@ -170,7 +173,7 @@ class MyPageScrollView: UIScrollView {
                 self?.notificationsCount = count
                 
                 DispatchQueue.main.async { [weak notificationsCountLabel] in
-                    notificationsCountLabel?.configure(text: "\(count) \(NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))")
+                    notificationsCountLabel?.configure(title: "\(count) \(NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))")
                 }
                 
                 session?.getUserNotifications(limit: ((count <= 4) ? count: 4), offset: 0, completion: { [weak notificationsTableView] (result) in
@@ -216,7 +219,7 @@ class MyPageScrollView: UIScrollView {
                 self.notificationsTableView.tableViewState = .Error(Session.SessionError.noNotifications, nil)
             }
            
-            self.notificationsCountLabel.configure(text: "\(self.notificationsCount) \(NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))")
+            self.notificationsCountLabel.configure(title: "\(self.notificationsCount) \(NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))")
             self.session.markNotificationAsRead(notificationID: usernotification.observationID)
             self.navigationDelegate?.pushVC(DetailsViewController(detailsContent: .observationWithID(observationID: usernotification.observationID, showSpeciesView: true, session: self.session)))
         }
@@ -254,7 +257,7 @@ class MyPageScrollView: UIScrollView {
                 self?.observationsTableView.tableViewState = .Error(error, nil)
             case .success(let count):
                 DispatchQueue.main.async {
-                    self?.observationsCountLabel.configure(text: "\(count) \(NSLocalizedString("myPageScrollView_observationsHeader", comment: ""))")
+                    self?.observationsCountLabel.configure(title: "\(count) \(NSLocalizedString("myPageScrollView_observationsHeader", comment: ""))")
                 }
                 self?.session.getObservations(limit: 15, offset: 0, completion: { (result) in
                     switch result {

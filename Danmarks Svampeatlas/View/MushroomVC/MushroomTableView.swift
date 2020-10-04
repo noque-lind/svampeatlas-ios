@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MushroomTableView: ELTableView<MushroomTableView.Item> {
+class MushroomTableView: ELTableViewOld<MushroomTableView.Item> {
     
     enum Item {
         case mushroom(Mushroom)

@@ -22,7 +22,7 @@ class Section<T>: Hashable {
     enum State {
         case items(items: [T])
         case loading
-        case error(error: AppError, handler: ((RecoveryAction?) -> ())? = nil)
+        case error(error: AppError, handler: ((mRecoveryAction?) -> ())? = nil)
         case empty
     }
     
@@ -85,7 +85,7 @@ class Section<T>: Hashable {
 
 enum TableViewState<T> {
     case Loading
-    case Error(AppError, ((RecoveryAction?) ->())?)
+    case Error(AppError, ((mRecoveryAction?) ->())?)
     case Items([T])
     case Paging(items: [T], max: Int?)
     case Empty

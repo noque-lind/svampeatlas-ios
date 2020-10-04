@@ -38,7 +38,7 @@ class ErrorCell: UITableViewCell {
         errorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     
-    func configure(error: AppError, handler: ((RecoveryAction?) -> ())?) {
+    func configure(error: AppError, handler: ((mRecoveryAction?) -> ())?) {
         errorView.configure(error: error, handler: handler)
     }
 }

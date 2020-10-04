@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddObservationMushroomTableView: ELTableView<AddObservationMushroomTableView.Item> {
+class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTableView.Item> {
     
     enum Item {
         case selectedMushroom(Mushroom, NewObservation.DeterminationConfidence)

@@ -42,7 +42,7 @@ class DataService{
         case unhandled
         case empty
         
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             return nil
         }
         
@@ -130,7 +130,7 @@ class DataService{
             }
         }
         
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             switch self {
             case .unAuthorized: return .login
             default: return .tryAgain

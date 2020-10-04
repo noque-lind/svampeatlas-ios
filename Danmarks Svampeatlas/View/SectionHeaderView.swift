@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import ELKit
 
-class SectionHeaderView: UITableViewHeaderFooterView {
+class SectionHeaderView: UITableViewHeaderFooterView, ELSectionHeaderCell {
     
     static let identifier = "SectionHeaderView"
     
@@ -73,7 +74,7 @@ class SectionHeaderView: UITableViewHeaderFooterView {
         stackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
-    func configure(text: String) {
+    func configure(title text: String) {
         label.text = text
     }
 }

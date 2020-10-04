@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 class ErrorView: UIView {
     
@@ -36,8 +37,8 @@ class ErrorView: UIView {
         return button
     }()
     
-    private var handler: ((RecoveryAction?) -> ())?
-    private var recoveryAction: RecoveryAction?
+    private var handler: ((mRecoveryAction?) -> ())?
+    private var recoveryAction: mRecoveryAction?
     
     init() {
         super.init(frame: CGRect.zero)
@@ -70,7 +71,7 @@ class ErrorView: UIView {
         handler?(recoveryAction)
     }
     
-    func configure(error: AppError, handler: ((RecoveryAction?) -> ())?) {
+    func configure(error: AppError, handler: ((mRecoveryAction?) -> ())?) {
         mainLabel.text = error.errorTitle
         secondaryLabel.text = error.errorDescription
         

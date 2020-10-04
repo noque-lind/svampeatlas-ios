@@ -74,7 +74,7 @@ class SettingsVC: UIViewController {
         _ = GradientView().then({
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
-            ELSnap.snapView($0, toSuperview: view)
+            ELSnap.snapView($0, toSuperview: view, ignoreSafeAreaInsets: true)
         })
         
         view.addSubview(tableView)

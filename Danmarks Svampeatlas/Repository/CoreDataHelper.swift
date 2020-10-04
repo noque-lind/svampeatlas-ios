@@ -12,7 +12,7 @@ import CoreData
 import ELKit
 
 enum CoreDataError: AppError {
-    var recoveryAction: RecoveryAction? {
+    var recoveryAction: mRecoveryAction? {
         switch self {
         case .initError:
             return .tryAgain

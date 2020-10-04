@@ -14,7 +14,7 @@ class NewObservation {
     
     enum Error: AppError {
         
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             return nil
         }
         

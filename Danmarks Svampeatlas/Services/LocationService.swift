@@ -23,7 +23,7 @@ class LocationManager: NSObject {
     
     enum LocationManagerError: AppError {
         
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             switch self {
             case .permissionDenied:
                 return .openSettings

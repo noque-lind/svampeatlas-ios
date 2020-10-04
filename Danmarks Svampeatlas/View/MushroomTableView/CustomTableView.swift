@@ -87,7 +87,7 @@ class AppTableView: UITableView {
         }
     }
     
-    func showError(_ appError: AppError, handler: ((RecoveryAction?) -> ())?) {
+    func showError(_ appError: AppError, handler: ((mRecoveryAction?) -> ())?) {
         DispatchQueue.main.async {
             let view = ErrorView()
             view.configure(error: appError, handler: handler)

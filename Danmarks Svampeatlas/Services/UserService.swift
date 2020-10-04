@@ -18,7 +18,7 @@ protocol SessionDelegate: class {
 class Session {
     
     enum SessionError: AppError {
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             switch self {
             case .notLoggedIn, .tokenInvalid:
                 return .login

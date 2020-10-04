@@ -8,6 +8,7 @@
 
 import UIKit
 import ELKit
+import Then
 
 enum DetailsContent {
     case mushroomWithID(taxonID: Int, takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))?)
@@ -89,6 +90,11 @@ class DetailsViewController: UIViewController {
         return view
     }()
     
+//    private lazy var mushroomDetailsViewModel = MushroomDetailsViewModel(id: 0).then({
+//        $0.mushroom.observe { [weak tableView] (state) in
+//            <#code#>
+//        }
+//    })
     private let detailsContent: DetailsContent
     private var viewDidLayout: Bool = false
     
@@ -99,6 +105,10 @@ class DetailsViewController: UIViewController {
     
     init(detailsContent: DetailsContent) {
         self.detailsContent = detailsContent
+//        switch detailsContent {
+//        case .mushroomWithID(taxonID: let id, takesSelection: nil): self.mushroomDetailsViewModel = MushroomDetailsViewModel(id: id)
+//        default: break
+//        }
         super.init(nibName: nil, bundle: nil)
     }
     

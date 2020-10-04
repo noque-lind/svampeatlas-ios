@@ -19,7 +19,7 @@ protocol AVViewDelegate: class {
 class AVView: UIView {
     
     enum AVViewError: AppError {
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             switch self {
             case .permissionsError:
                 return .openSettings

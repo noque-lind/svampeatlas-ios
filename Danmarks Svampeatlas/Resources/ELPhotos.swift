@@ -34,7 +34,7 @@ class ELPhotos: NSObject  {
             }
         }
         
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             switch self {
             case .notAuthorized: return .openSettings
             case .unknownSaveError: return .tryAgain

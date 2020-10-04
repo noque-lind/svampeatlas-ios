@@ -23,7 +23,7 @@ struct ELFileManager {
             }
         }
         
-        var recoveryAction: RecoveryAction? {
+        var recoveryAction: mRecoveryAction? {
             switch self {
             case .imageSavingError: return .tryAgain
             }

@@ -57,6 +57,7 @@
 		4ADF2B08207A5D9700C76276 /* ResultCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADF2B07207A5D9700C76276 /* ResultCells.swift */; };
 		4AEE2F37204551B600D20C2D /* RoundedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEE2F36204551B600D20C2D /* RoundedImageView.swift */; };
 		DB06C72221F35A66007E096F /* UserDefaultsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB06C72121F35A66007E096F /* UserDefaultsHelper.swift */; };
+		DB07F04D252880FA00966371 /* MushroomDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB07F04C252880FA00966371 /* MushroomDetailsViewModel.swift */; };
 		DB08065F22FE1BD20018CCD7 /* GeoName.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB08065E22FE1BD20018CCD7 /* GeoName.swift */; };
 		DB0A74D521F8C51700FC0E81 /* Locality.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0A74D421F8C51700FC0E81 /* Locality.swift */; };
 		DB0C5A0822746B140071B15C /* Silom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB0C5A0722746B140071B15C /* Silom.ttf */; };
@@ -92,6 +93,7 @@
 		DB53F04A25192BB1000F3038 /* SettingCellOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB53F04925192BB1000F3038 /* SettingCellOld.swift */; };
 		DB53F04E25192C36000F3038 /* SettingsInformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB53F04D25192C36000F3038 /* SettingsInformationCell.swift */; };
 		DB53F05225193372000F3038 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = DB53F05125193372000F3038 /* Then */; };
+		DB5438FE25274C8A00ECCB22 /* CellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5438FD25274C8A00ECCB22 /* CellProvider.swift */; };
 		DB59F55F232D2B5B005D5EA5 /* Collection+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */; };
 		DB5E160A21AC452300F8C3FD /* NearbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E160921AC452300F8C3FD /* NearbyVC.swift */; };
 		DB5E88E8238D9431005339D4 /* CaptureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5E88E7238D9431005339D4 /* CaptureButton.swift */; };
@@ -259,6 +261,7 @@
 		4ADF2B07207A5D9700C76276 /* ResultCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultCells.swift; sourceTree = "<group>"; };
 		4AEE2F36204551B600D20C2D /* RoundedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedImageView.swift; sourceTree = "<group>"; };
 		DB06C72121F35A66007E096F /* UserDefaultsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsHelper.swift; sourceTree = "<group>"; };
+		DB07F04C252880FA00966371 /* MushroomDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomDetailsViewModel.swift; sourceTree = "<group>"; };
 		DB08065E22FE1BD20018CCD7 /* GeoName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoName.swift; sourceTree = "<group>"; };
 		DB0A74D421F8C51700FC0E81 /* Locality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locality.swift; sourceTree = "<group>"; };
 		DB0C5A0722746B140071B15C /* Silom.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Silom.ttf; sourceTree = "<group>"; };
@@ -295,6 +298,7 @@
 		DB4F53C62181F569001874A6 /* MyPageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPageScrollView.swift; sourceTree = "<group>"; };
 		DB53F04925192BB1000F3038 /* SettingCellOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellOld.swift; sourceTree = "<group>"; };
 		DB53F04D25192C36000F3038 /* SettingsInformationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsInformationCell.swift; sourceTree = "<group>"; };
+		DB5438FD25274C8A00ECCB22 /* CellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellProvider.swift; sourceTree = "<group>"; };
 		DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Safe.swift"; sourceTree = "<group>"; };
 		DB5E160921AC452300F8C3FD /* NearbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyVC.swift; sourceTree = "<group>"; };
 		DB5E88E7238D9431005339D4 /* CaptureButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureButton.swift; sourceTree = "<group>"; };
@@ -702,9 +706,11 @@
 			children = (
 				4A80756F20BD717100F958AC /* AppScrollView.swift */,
 				DB0C5A1022785BE30071B15C /* MushroomDetailsScrollView.swift */,
-				DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
 				DBBFBF192517D07200B99470 /* NewTableView.swift */,
+				DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */,
+				DB5438FD25274C8A00ECCB22 /* CellProvider.swift */,
+				DB07F04C252880FA00966371 /* MushroomDetailsViewModel.swift */,
 			);
 			path = DetailsViewController;
 			sourceTree = "<group>";
@@ -984,6 +990,7 @@
 				DB897B0321DD5C5A00E74C00 /* ObservationLocationCell.swift in Sources */,
 				DB687420234CDF960038C5A0 /* AcceptedTaxon.swift in Sources */,
 				DBADEB1223D7888D002173EC /* CautionCell.swift in Sources */,
+				DB5438FE25274C8A00ECCB22 /* CellProvider.swift in Sources */,
 				DB897B0121DD5C1F00E74C00 /* ObservationSpecieCell.swift in Sources */,
 				DBC30C8A21EE1A1900826FC6 /* TableViewState.swift in Sources */,
 				4AA1CC6A2086054200254EBB /* SimilarSpeciesView.swift in Sources */,
@@ -1026,6 +1033,7 @@
 				4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */,
 				4AD43A0420529BDF001F6541 /* CategoryView.swift in Sources */,
 				4A80757020BD717100F958AC /* AppScrollView.swift in Sources */,
+				DB07F04D252880FA00966371 /* MushroomDetailsViewModel.swift in Sources */,
 				4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */,
 				DB08065F22FE1BD20018CCD7 /* GeoName.swift in Sources */,
 				DB1C86EF23B665A1009DB71C /* MushroomsRepository.swift in Sources */,

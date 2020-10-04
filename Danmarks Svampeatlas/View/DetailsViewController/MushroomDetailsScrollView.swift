@@ -10,6 +10,7 @@ import UIKit
 import MapKit
 
 class MushroomDetailsScrollView: AppScrollView {
+
     
     private lazy var observationsTableView: ObservationsTableView = {
         let tableView = ObservationsTableView(automaticallyAdjustHeight: true)

@@ -7,17 +7,21 @@
 //
 
 import UIKit
+import ELKit
 
 class CategoryCell: UICollectionViewCell {
     
-    private var label: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.appWhite().withAlphaComponent(0.7)
-        label.font = UIFont.appPrimary()
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let label = UILabel().then({
+        $0.textColor = UIColor.appWhite().withAlphaComponent(0.7)
+        $0.font = UIFont.appPrimary()
+        $0.textAlignment = .center
+    })
+    
+    private let spinner = UIActivityIndicatorView().then({
+        $0.translatesAutoresizingMaskIntoConstraints = true
+        $0.style = .white
+        $0.hidesWhenStopped = true
+    })
     
     override var isSelected: Bool {
         didSet {
@@ -40,13 +44,19 @@ class CategoryCell: UICollectionViewCell {
     
     private func setupView() {
         contentView.addSubview(label)
-        label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        label.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        ELSnap.snapView(label, toSuperview: contentView)
+        contentView.addSubview(spinner)
+        ELSnap.snapView(spinner, toSuperview: contentView)
     }
     
-    func configureCell(title: String) {
+    func configureCell(title: String, loading: Bool) {
         label.text = title
+        if loading {
+            spinner.startAnimating()
+            label.isHidden = true
+        } else {
+            spinner.stopAnimating()
+            label.isHidden = false
+        }
     }
 }

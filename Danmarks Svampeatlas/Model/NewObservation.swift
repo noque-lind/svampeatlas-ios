@@ -24,12 +24,14 @@ class NewObservation {
         case noVegetationType
         case noLocality
         case noCoordinates
+        case lowAccuracy(accurracy: Double)
        
         var errorTitle: String {
             switch self {
             case .noSubstrateGroup, .noVegetationType, .noMushroom: return NSLocalizedString("newObservationError_missingInformation", comment: "")
             case .noLocality: return NSLocalizedString("newObservationError_noLocality_title", comment: "")
             case .noCoordinates: return NSLocalizedString("newObservationError_noCoordinates_title", comment: "")
+            case .lowAccuracy: return NSLocalizedString("Low accuracy", comment: "")
             }
         }
         
@@ -40,6 +42,7 @@ class NewObservation {
             case .noVegetationType: return NSLocalizedString("newObservationError_noVegetationType_message", comment: "")
             case .noCoordinates: return NSLocalizedString("newObservationError_noCoordinates_message", comment: "")
             case .noLocality: return NSLocalizedString("newObservationError_noLocality_message", comment: "")
+            case .lowAccuracy(let accurracy): return String(format: NSLocalizedString("The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?", comment: ""), accurracy.rounded(toPlaces: 2))
             }
         }
     }
@@ -154,8 +157,8 @@ class NewObservation {
         guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String: Any] else { return nil }
         guard let gpsDict = imageProperties[String(kCGImagePropertyGPSDictionary)] as? [String: Any] else { return nil }
         guard var latitude = gpsDict[String(kCGImagePropertyGPSLatitude)] as? Double, var longitude = gpsDict[String(kCGImagePropertyGPSLongitude)] as? Double else {return nil}
-        let altitude = (gpsDict[String(kCGImagePropertyGPSAltitude)] as? Double) ?? -1
-        let accuracy = (gpsDict[String(kCGImagePropertyGPSDOP)] as? Double) ?? -1
+        let accuracy = ((gpsDict[String(kCGImagePropertyGPSHPositioningError)] as? Double) ?? (gpsDict[String(kCGImagePropertyGPSDOP)] as? Double)) ?? -1
+        let altitude = (gpsDict[String(kCGImagePropertyGPSAltitude)] as? Double) ?? 0
         let latitudeRef = (gpsDict[String(kCGImagePropertyGPSLatitudeRef)] as? String)
         let longitudeRef = (gpsDict[String(kCGImagePropertyGPSLongitudeRef)] as? String)
         
@@ -190,12 +193,16 @@ class NewObservation {
         return String(string.dropLast(2))
     }
     
-    func returnAsDictionary(user: User) -> Result<[String: Any], Error> {
+    func returnAsDictionary(user: User, overrideLowAccuracy: Bool) -> Result<[String: Any], Error> {
         guard let mushroom = mushroom  else {return Result.failure(Error.noMushroom)}
         guard let substrate = substrate else {return Result.failure(Error.noSubstrateGroup)}
         guard let vegetationType = vegetationType else {return Result.failure(Error.noVegetationType)}
         guard let locality = locality else {return Result.failure(Error.noLocality)}
         guard let observationCoordinate = observationCoordinate else {return Result.failure(Error.noCoordinates)}
+        if !overrideLowAccuracy {
+            guard observationCoordinate.horizontalAccuracy <= 500 else {return Result.failure(Error.lowAccuracy(accurracy: observationCoordinate.horizontalAccuracy))}
+        }
+       
         
         var dict: [String: Any] = ["observationDate": observationDate.convert(into: "yyyy-MM-dd")]
         dict["os"] = "iOS"

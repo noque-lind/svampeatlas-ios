@@ -11,6 +11,9 @@ import UIKit
 class PickerViewCell: UITableViewCell {
     private lazy var datePicker: UIDatePicker = {
         let view = UIDatePicker()
+        if #available(iOS 13.4, *) {
+            view.preferredDatePickerStyle = UIDatePickerStyle.wheels
+        }
         view.datePickerMode = .date
         view.tintColor = UIColor.appPrimaryColour()
         view.setValue(UIColor.appPrimaryColour(), forKeyPath: "textColor")

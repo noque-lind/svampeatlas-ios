@@ -79,13 +79,24 @@
 "addObservationVC_useImageMetadata_positive" = "Ja, brug billedets informationer";
 "addObservationVC_useImageMetadata_negative" = "Nej";
 "addObservationVC_useImageMetadata_title" = "Forslag til placering";
-"addObservationVC_useImageMetadata_message" = "Et tilføjet billede lader til at være blevet taget over 500 meter væk fra observationens nuværende placering. Vil du bruge billedets GPS-information og dato i stedet for?";
+"addObservationVC_useImageMetadata_message" = "Et tilføjet billede har en anden placering og tid, end den nuværende. Vil du bruge billedets GPS-information og dato i stedet for?\n\nBilledets GPS-Præcision: %@ m";
 "addObservationVC_localityFound_title" = "Fundets placering er blevet bestemt";
-"addObservationVC_localityFound_message" = "Navn: %@\nKoordinater: %.02f - %.02f";
+"addObservationVC_localityFound_message" = "Navn: %@\nKoordinater: %.02f - %.02f\nPræcision: %.02f m.";
 "addObservationVC_localityFoundError_title" = "Nærmeste placering kunne ikke findes.";
+
+//ObservationLocationCell
+"observationLocationCell_precision" = "Præcision: %.02f m";
 
 // NearbyVC
 "nearbyVC_title" = "I nærheden";
+"Precision %0.2f m." = "Præcision %0.2f m.";
+"Low accuracy" = "Upræcis observationsplacering";
+"The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "Den nuværende præcision er: %0.2f m, hvilket er for upræcist. Vil du bruge din nuværende placering i stedet for?";
+"Yes, find my current location" = "Ja, find min nuværende placering";
+"No, continue with the upload" = "Nej, fortsæt med at uploade";
+"Cancel upload" = "Annuller upload";
+
+"Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded" = "Men der opstod en fejl i forbindelse med at uploade et eller flere billeder. %d ud af %d billeder er blevet uploaded";
 
 
 // MushroomVC

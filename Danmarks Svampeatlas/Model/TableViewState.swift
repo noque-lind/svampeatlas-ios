@@ -47,7 +47,7 @@ class Section<T>: Hashable {
     
     func count() -> Int {
         switch state {
-        case .error(_):
+        case .error:
             return 1
         case .items(items: let items):
             return items.count

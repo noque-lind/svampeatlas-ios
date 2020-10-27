@@ -73,7 +73,6 @@ class ImageCell: UICollectionViewCell {
         gradient.startPoint = CGPoint(x: 0, y: 0.8)
         gradient.endPoint = CGPoint(x: 0, y: 1)
         gradient.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
-//        gradient.frame = image.bounds
         return gradient
     }()
     
@@ -92,20 +91,11 @@ class ImageCell: UICollectionViewCell {
     }
     
     private func setupView() {
-        
-        
-        
         addSubview(imageView)
         imageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         imageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-        
-//        authorLabel.font = UIFont.appText(customSize: 12)
-//        authorLabel.textColor = UIColor.white
-//        setupAuthorGradient()
-//        image.layer.mask = gradient
     }
     
    @objc func pan(sender: UIPanGestureRecognizer) {
@@ -115,24 +105,10 @@ class ImageCell: UICollectionViewCell {
         imageView.transform = imageView.transform.translatedBy(x: currentScale * translation.x, y: currentScale * translation.y)
         sender.setTranslation(CGPoint.zero, in: imageView.superview)
     }
-    
-//
-//
-//        if self.isZooming && sender.state == .began {
-//            self.originalImageCenter = sender.view?.center
-//        } else if self.isZooming && sender.state == .changed {
-//            let translation = sender.translation(in: self)
-//            if let view = sender.view {
-////                view.center = CGPoint(x:view.center.x + translation.x,
-////                                      y:view.center.y + translation.y)
-//            }
-//
-//        }
     }
     
     
 @objc func pinch(sender:UIPinchGestureRecognizer) {
-        
         if sender.state == .began {
             let currentScale = imageView.frame.size.width / imageView.bounds.size.width
             let newScale = currentScale*sender.scale
@@ -164,27 +140,12 @@ class ImageCell: UICollectionViewCell {
             }
             
         } else if sender.state == .ended || sender.state == .failed || sender.state == .cancelled {
-            let currentScale = imageView.frame.size.width / imageView.bounds.size.width
-//            if currentScale == 1 {
-//                self.isZooming = false
-//            }
-    
             UIView.animate(withDuration: 0.3, animations: {
                 self.imageView.transform = CGAffineTransform.identity
-//                self.imageView.center = center
             }, completion: { _ in
                 self.isZooming = false
             })
         }
         
-    }
-    
-    
-    private func setupAuthorGradient() {
-//       image.addSubview(authorGradientView)
-//        authorGradientView.leadingAnchor.constraint(equalTo: image.leadingAnchor).isActive = true
-//        authorGradientView.trailingAnchor.constraint(equalTo: image.trailingAnchor).isActive = true
-//        authorGradientView.bottomAnchor.constraint(equalTo: image.bottomAnchor).isActive = true
-//        authorGradientView.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
 }

@@ -32,7 +32,7 @@
 "aboutVC_title" = "O aplikaci";
 
 /* (No Comment) */
-"addObservationVC_localityFound_message" = "Název: %@\nPoloha: %.02f - %.02f";
+"addObservationVC_localityFound_message" = "Název: %@\nPoloha: %.02f - %.02f\nAccuracy: %.02f m";
 
 /* (No Comment) */
 "addObservationVC_localityFound_title" = "Místo vašeho pozorování bylo určeno";
@@ -56,7 +56,19 @@
 "addObservationVC_title" = "Nové pozorování";
 
 /* (No Comment) */
-"addObservationVC_useImageMetadata_message" = "Zdá se, že přidaný obrázek byl pořízen více než 500 metrů od aktuálního umístění pozorování. Chcete použít informace o GPS a datu z obrázku?";
+"addObservationVC_useImageMetadata_message" = "Zdá se, že přidaný obrázek byl pořízen více než 500 metrů od aktuálního umístění pozorování. Chcete použít informace o GPS a datu z obrázku?\n\nImage GPS-Precision: %@ m.";
+
+//ObservationLocationCell
+"observationLocationCell_precision" = "Precision: %.02f m";
+"Precision %0.2f m." = "Precision %0.2f m.";
+"Low accuracy" = "Low accuracy";
+"The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?";
+"Yes, find my current location" = "Yes, find my current location";
+"No, continue with the upload" = "No, continue with the upload";
+"Cancel upload" = "Cancel upload";
+
+"Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded" = "Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded";
+
 
 /* (No Comment) */
 "addObservationVC_useImageMetadata_negative" = "Ne";

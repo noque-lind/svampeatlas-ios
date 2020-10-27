@@ -19,6 +19,36 @@ enum DetailsContent {
 
 class DetailsViewController: UIViewController {
     
+    enum Item {
+        case header(observation: Observation)
+    }
+    
+    class CellProvider: ELTableViewCellProvider {
+        typealias CellItem = Item
+        
+        func registerCells(tableView: UITableView) {
+            tableView.register(ObservationDetailHeaderCell.self, forCellReuseIdentifier: String(describing: ObservationDetailHeaderCell.self))
+        }
+        
+        func cellForItem(_ item: DetailsViewController.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+            switch item {
+            case .header(observation: let observation):
+                return tableView.dequeueReusableCell(withIdentifier: String(describing: ObservationDetailHeaderCell.self), for: indexPath).then({
+                    ($0 as? ObservationDetailHeaderCell)?.configure(observation: observation)
+                })
+            }
+        }
+        
+        func heightForItem(_ item: DetailsViewController.Item, tableView: UITableView, indexPath: IndexPath) -> CGFloat {
+            UITableView.automaticDimension
+        }
+    }
+    
+    private lazy var tableView = ELTableView<Item, CellProvider>.build(provider: CellProvider()).then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    })
+    
+    
     private lazy var backgroundView: ErrorView = {
         let view = ErrorView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -184,95 +214,108 @@ class DetailsViewController: UIViewController {
     }
     
     private func prepareView() {
-        view.backgroundColor = UIColor.appSecondaryColour()
-        spinner.addTo(view: view)
-        spinner.start()
+        view.backgroundColor = .appSecondaryColour()
+        view.do({
+            $0.addSubview(tableView)
+        })
+        ELSnap.snapView(tableView, toSuperview: view)
         
         switch detailsContent {
-        case .mushroom(mushroom: let mushroom, let session, let takesSelection):
-            let scrollView: MushroomDetailsScrollView = {
-                let view = MushroomDetailsScrollView(session: session)
-                view.configure(mushroom, takesSelection: takesSelection != nil)
-                view.customDelegate = self
-                view.delegate = self
-                view.translatesAutoresizingMaskIntoConstraints = false
-                return view
-            }()
-            self.scrollView = scrollView
-            self.takesSelection = takesSelection
-            self.images = mushroom.images
-            elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
-            setupView()
-            
-        case .observation(observation: let observation, let showSpeciesView, let session):
-            
-            let scrollView: ObservationDetailsScrollView = {
-                let view = ObservationDetailsScrollView(session: session)
-                view.configure(withObservation: observation, showSpeciesView: showSpeciesView)
-                view.customDelegate = self
-                view.delegate = self
-                view.translatesAutoresizingMaskIntoConstraints = false
-                return view
-            }()
-            self.scrollView = scrollView
-            
-            
-            self.images = observation.images
-            elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
-            setupView()
-        
-        case .observationWithID(observationID: let observationID, showSpeciesView: let showSpeciesView, session: let session):
-            
-            DataService.instance.getObservation(withID: observationID) { [weak self] (result) in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .failure(let error):
-                        self?.addError(error: error)
-                    case .success(let observation):
-                        let scrollView: ObservationDetailsScrollView = {
-                            let view = ObservationDetailsScrollView(session: session)
-                            view.configure(withObservation: observation, showSpeciesView: showSpeciesView)
-                            view.customDelegate = self
-                            view.delegate = self
-                            view.translatesAutoresizingMaskIntoConstraints = false
-                            return view
-                        }()
-                        
-                        self?.scrollView = scrollView
-                        self?.images = observation.images
-                       self?.elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
-                        self?.setupView()
-                    }
-                }
-            }
-            
-            
-        case .mushroomWithID(taxonID: let taxonID, let takesSelection):
-            self.takesSelection = takesSelection
-            
-            DataService.instance.getMushroom(withID: taxonID) { [weak self] (result) in
-                DispatchQueue.main.async { [weak self] in
-                    switch result {
-                    case .failure(let error):
-                        self?.addError(error: error)
-                    case .success(let mushroom):
-                        let scrollView: MushroomDetailsScrollView = {
-                            let view = MushroomDetailsScrollView(session: nil)
-                            view.configure(mushroom, takesSelection: takesSelection != nil)
-                            view.customDelegate = self
-                            view.delegate = self
-                            view.translatesAutoresizingMaskIntoConstraints = false
-                            return view
-                        }()
-                        
-                        self?.scrollView = scrollView
-                        self?.images = mushroom.images
-                        self?.elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
-                        self?.setupView()
-                    }
-                }
-            }
+        case .observation(observation: let observation, showSpeciesView: _, session: _):
+            tableView.setSections(sections: [.init(title: nil, state: .items(items: [.header(observation: observation)]))])
+        default: return
         }
+        
+        
+//        view.backgroundColor = UIColor.appSecondaryColour()
+//        spinner.addTo(view: view)
+//        spinner.start()
+//
+//        switch detailsContent {
+//        case .mushroom(mushroom: let mushroom, let session, let takesSelection):
+//            let scrollView: MushroomDetailsScrollView = {
+//                let view = MushroomDetailsScrollView(session: session)
+//                view.configure(mushroom, takesSelection: takesSelection != nil)
+//                view.customDelegate = self
+//                view.delegate = self
+//                view.translatesAutoresizingMaskIntoConstraints = false
+//                return view
+//            }()
+//            self.scrollView = scrollView
+//            self.takesSelection = takesSelection
+//            self.images = mushroom.images
+//            elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
+//            setupView()
+//
+//        case .observation(observation: let observation, let showSpeciesView, let session):
+//
+//            let scrollView: ObservationDetailsScrollView = {
+//                let view = ObservationDetailsScrollView(session: session)
+//                view.configure(withObservation: observation, showSpeciesView: showSpeciesView)
+//                view.customDelegate = self
+//                view.delegate = self
+//                view.translatesAutoresizingMaskIntoConstraints = false
+//                return view
+//            }()
+//            self.scrollView = scrollView
+//
+//
+//            self.images = observation.images
+//            elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
+//            setupView()
+//
+//        case .observationWithID(observationID: let observationID, showSpeciesView: let showSpeciesView, session: let session):
+//
+//            DataService.instance.getObservation(withID: observationID) { [weak self] (result) in
+//                DispatchQueue.main.async {
+//                    switch result {
+//                    case .failure(let error):
+//                        self?.addError(error: error)
+//                    case .success(let observation):
+//                        let scrollView: ObservationDetailsScrollView = {
+//                            let view = ObservationDetailsScrollView(session: session)
+//                            view.configure(withObservation: observation, showSpeciesView: showSpeciesView)
+//                            view.customDelegate = self
+//                            view.delegate = self
+//                            view.translatesAutoresizingMaskIntoConstraints = false
+//                            return view
+//                        }()
+//
+//                        self?.scrollView = scrollView
+//                        self?.images = observation.images
+//                       self?.elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
+//                        self?.setupView()
+//                    }
+//                }
+//            }
+//
+//
+//        case .mushroomWithID(taxonID: let taxonID, let takesSelection):
+//            self.takesSelection = takesSelection
+//
+//            DataService.instance.getMushroom(withID: taxonID) { [weak self] (result) in
+//                DispatchQueue.main.async { [weak self] in
+//                    switch result {
+//                    case .failure(let error):
+//                        self?.addError(error: error)
+//                    case .success(let mushroom):
+//                        let scrollView: MushroomDetailsScrollView = {
+//                            let view = MushroomDetailsScrollView(session: nil)
+//                            view.configure(mushroom, takesSelection: takesSelection != nil)
+//                            view.customDelegate = self
+//                            view.delegate = self
+//                            view.translatesAutoresizingMaskIntoConstraints = false
+//                            return view
+//                        }()
+//
+//                        self?.scrollView = scrollView
+//                        self?.images = mushroom.images
+//                        self?.elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
+//                        self?.setupView()
+//                    }
+//                }
+//            }
+//        }
     }
     
     private func addError(error: AppError) {

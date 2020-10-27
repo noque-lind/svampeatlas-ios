@@ -11,20 +11,24 @@ import MapKit
 
 class ObservationLocationCell: UICollectionViewCell {
     
-    private lazy var retryButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        button.addTarget(self, action: #selector(getNearbyLocalities), for: UIControl.Event.touchUpInside)
+    private lazy var retryButton = UIButton().then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        $0.addTarget(self, action: #selector(getNearbyLocalities), for: UIControl.Event.touchUpInside)
         let size: CGFloat = 40
-        button.widthAnchor.constraint(equalToConstant: size).isActive = true
-        button.heightAnchor.constraint(equalToConstant: size).isActive = true
+        $0.widthAnchor.constraint(equalToConstant: size).isActive = true
+        $0.heightAnchor.constraint(equalToConstant: size).isActive = true
         let inset = (size / 2) - 14
-        button.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        button.setImage(#imageLiteral(resourceName: "Glyphs_Reload"), for: [])
-        button.layer.cornerRadius = CGFloat.cornerRadius()
-        return button
-    }()
+        $0.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        $0.setImage(#imageLiteral(resourceName: "Glyphs_Reload"), for: [])
+        $0.layer.cornerRadius = CGFloat.cornerRadius()
+    })
+    
+    private lazy var precisionLabel = UILabel().then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.textColor = .appWhite()
+        $0.font = UIFont.appPrimary()
+    })
     
     private lazy var annotationButton: UIButton = {
         let button = UIButton()
@@ -57,9 +61,7 @@ class ObservationLocationCell: UICollectionViewCell {
     }()
     
     private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let view = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        let view = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout().then({$0.scrollDirection = .horizontal}))
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.delegate = self
@@ -95,18 +97,41 @@ class ObservationLocationCell: UICollectionViewCell {
         backgroundColor = UIColor.clear
         
         contentView.addSubview(collectionView)
-        collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        collectionView.do({
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            $0.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        })
         
         contentView.addSubview(retryButton)
-        retryButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-        retryButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+        retryButton.do({
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
+            $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+        })
         
         contentView.addSubview(annotationButton)
-        annotationButton.topAnchor.constraint(equalTo: retryButton.bottomAnchor, constant: 8).isActive = true
-        annotationButton.centerXAnchor.constraint(equalTo: retryButton.centerXAnchor).isActive = true
+        annotationButton.do({
+            $0.topAnchor.constraint(equalTo: retryButton.bottomAnchor, constant: 8).isActive = true
+            $0.centerXAnchor.constraint(equalTo: retryButton.centerXAnchor).isActive = true
+        })
+        
+        let precisionView = UIView().then({
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+            $0.layer.cornerRadius = CGFloat.cornerRadius()
+            $0.addSubview(precisionLabel)
+            precisionLabel.topAnchor.constraint(equalTo: $0.topAnchor, constant: 2).isActive = true
+            precisionLabel.bottomAnchor.constraint(equalTo: $0.bottomAnchor, constant: -2).isActive = true
+            precisionLabel.leadingAnchor.constraint(equalTo: $0.leadingAnchor, constant: 4).isActive = true
+            precisionLabel.trailingAnchor.constraint(equalTo: $0.trailingAnchor, constant: -4).isActive = true
+        })
+        
+        contentView.addSubview(precisionView)
+        precisionView.do({
+            $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
+        })
     }
     
     @objc private func getNearbyLocalities() {
@@ -131,7 +156,7 @@ class ObservationLocationCell: UICollectionViewCell {
         case .ended:
             annotationButton.backgroundColor = UIColor.appGreen().withAlphaComponent(0.5)
             let annotation = mapView.addLocationAnnotation(button: annotationButton)
-            locationManager?.delegate?.locationRetrieved(location: CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude))
+            locationManager?.state.set(.foundLocation(location: CLLocation(coordinate: annotation.coordinate, altitude: -1, horizontalAccuracy: CLLocationAccuracy(mapView.zoom), verticalAccuracy: -1, timestamp: Date())))
             annotationButton.transform = CGAffineTransform.identity
         default:
             return
@@ -139,14 +164,14 @@ class ObservationLocationCell: UICollectionViewCell {
     }
     
     @objc private func annotationButtonPressed() {
-            delegate?.presentVC(TermsVC(terms: .localityHelper))
+        delegate?.presentVC(TermsVC(terms: .localityHelper))
     }
     
     private func didSelectLocality(locality: Locality) {
         self.newObservation?.locality = locality
         guard let row = self.localities.firstIndex(of: locality) else {return}
-            self.collectionView.selectItem(at: IndexPath(row: row, section: 0), animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
-            self.mapView.selectAnnotationAtCoordinate(locality.location.coordinate)
+        self.collectionView.selectItem(at: IndexPath(row: row, section: 0), animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
+        self.mapView.selectAnnotationAtCoordinate(locality.location.coordinate)
     }
     
     
@@ -171,7 +196,7 @@ class ObservationLocationCell: UICollectionViewCell {
         self.locationManager = locationManager
         self.newObservation = newObservation
         self.localities = localities
-       
+        
         collectionView.reloadData()
         mapView.clearAnnotations()
         mapView.addLocalityAnnotations(localities: localities)
@@ -182,11 +207,12 @@ class ObservationLocationCell: UICollectionViewCell {
         
         if let observationLocation = newObservation.observationCoordinate {
             mapView.addLocationAnnotation(location: observationLocation.coordinate)
+            precisionLabel.text = String.localizedStringWithFormat(NSLocalizedString("Precision %0.2f m.", comment: ""), observationLocation.horizontalAccuracy.rounded(toPlaces: 2))
+            mapView.addCirclePolygon(center: observationLocation.coordinate, radius: observationLocation.horizontalAccuracy, setRegion: false, clearPrevious: true)
             mapView.setRegion(center: observationLocation.coordinate)
             mapView.selectAnnotationAtCoordinate(observationLocation.coordinate)
         }
-        
-        }
+    }
 }
 
 

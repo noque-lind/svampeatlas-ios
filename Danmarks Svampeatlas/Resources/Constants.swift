@@ -13,11 +13,20 @@ struct Utilities {
     static let PHOTOALBUMNAME = NSLocalizedString("utilities_photoAlbumName", comment: "")
     
     static func isDanish() -> Bool {
-        if Locale.preferredLanguages[0].contains("da") {
+        if Locale.current.identifier.contains("da") {
             return true
         } else {
             return false
-            }
+        }
+//        print(Locale.current.languageCode)
+//        print(Locale.preferredLanguages)
+//        print(Locale.current)
+//
+//        if Locale.preferredLanguages[0].contains("da") || Locale.preferredLanguages[0].contains("dk") {
+//            return true
+//        } else {
+//            return false
+//            }
 }
 }
     

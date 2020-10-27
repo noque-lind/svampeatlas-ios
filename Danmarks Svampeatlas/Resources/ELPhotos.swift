@@ -77,7 +77,9 @@ class ELPhotos: NSObject  {
                case .denied, .restricted, .notDetermined:
                     completion(nil)
         case .limited: return
-               }
+        @unknown default:
+            return
+        }
     }
     
     func showPhotoLibrary() {
@@ -86,13 +88,14 @@ class ELPhotos: NSObject  {
             switch authorization {
             case .notDetermined, .restricted, .denied:
                     self?.delegate?.error(.notAuthorized)
-            case .authorized:
+            case .authorized, .limited:
                     let picker = UIImagePickerController()
                     picker.sourceType = .photoLibrary
                     picker.modalPresentationStyle = .fullScreen
                     picker.delegate = self
                     delegate?.presentVC(picker)
-            case .limited: return
+            @unknown default:
+                return
             }
             }
         }
@@ -105,7 +108,7 @@ class ELPhotos: NSObject  {
                 DispatchQueue.main.async {
                     delegate?.error(.notAuthorized)
                 }
-            case .authorized:
+            case .authorized, .limited:
                 self?.dispatchQueue.sync {
                     if let album = self?.fetchAlbumWithName(albumName) {
                         self?.saveImageInAlbum(photoData: photoData, album)
@@ -122,7 +125,8 @@ class ELPhotos: NSObject  {
                         }
                     }
                 }
-            case .limited: return
+            @unknown default:
+                return
             }
         }
     }

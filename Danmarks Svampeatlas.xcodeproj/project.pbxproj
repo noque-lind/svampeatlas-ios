@@ -119,6 +119,7 @@
 		DB7F04F222AAB19D00785AF8 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7F04F122AAB19D00785AF8 /* MapVC.swift */; };
 		DB7F04F922AD099C00785AF8 /* CaviarDreams_Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */; };
 		DB81C8AE2519275F006E45B9 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB81C8AD2519275F006E45B9 /* SettingsVC.swift */; };
+		DB830A22253C565900223D3A /* AddObservationVCViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB830A21253C565900223D3A /* AddObservationVCViewModel.swift */; };
 		DB893117232BCBEA000BDCD1 /* UIApplication+Urls.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */; };
 		DB89311A232BCE52000BDCD1 /* AboutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB893119232BCE52000BDCD1 /* AboutVC.swift */; };
 		DB897AFA21D27AD100E74C00 /* VegetationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB897AF921D27AD100E74C00 /* VegetationType.swift */; };
@@ -142,6 +143,8 @@
 		DBA0D96D21F9ACB3001E9CA8 /* LocalityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0D96C21F9ACB3001E9CA8 /* LocalityCell.swift */; };
 		DBA0D96F21F9CB25001E9CA8 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0D96E21F9CB25001E9CA8 /* UIImage+Extension.swift */; };
 		DBADEB1223D7888D002173EC /* CautionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBADEB1123D7888D002173EC /* CautionCell.swift */; };
+		DBB285002548697500719E08 /* ObservationDetailHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB284FF2548697500719E08 /* ObservationDetailHeaderCell.swift */; };
+		DBB2850525486B2D00719E08 /* DeterminationStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB2850425486B2D00719E08 /* DeterminationStatusView.swift */; };
 		DBB33A4321CC011700BCED22 /* PickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4221CC011700BCED22 /* PickerCell.swift */; };
 		DBB33A4521CE67E200BCED22 /* ELTextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */; };
 		DBB52C3F23DAFF38004A4CBA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DBB52C4123DAFF38004A4CBA /* InfoPlist.strings */; };
@@ -324,6 +327,7 @@
 		DB7F04F122AAB19D00785AF8 /* MapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVC.swift; sourceTree = "<group>"; };
 		DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = CaviarDreams_Bold.ttf; sourceTree = "<group>"; };
 		DB81C8AD2519275F006E45B9 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		DB830A21253C565900223D3A /* AddObservationVCViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddObservationVCViewModel.swift; sourceTree = "<group>"; };
 		DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Urls.swift"; sourceTree = "<group>"; };
 		DB893119232BCE52000BDCD1 /* AboutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVC.swift; sourceTree = "<group>"; };
 		DB897AF921D27AD100E74C00 /* VegetationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VegetationType.swift; sourceTree = "<group>"; };
@@ -347,6 +351,8 @@
 		DBA0D96C21F9ACB3001E9CA8 /* LocalityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalityCell.swift; sourceTree = "<group>"; };
 		DBA0D96E21F9CB25001E9CA8 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		DBADEB1123D7888D002173EC /* CautionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CautionCell.swift; sourceTree = "<group>"; };
+		DBB284FF2548697500719E08 /* ObservationDetailHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationDetailHeaderCell.swift; sourceTree = "<group>"; };
+		DBB2850425486B2D00719E08 /* DeterminationStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeterminationStatusView.swift; sourceTree = "<group>"; };
 		DBB33A4221CC011700BCED22 /* PickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerCell.swift; sourceTree = "<group>"; };
 		DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELTextViewCell.swift; sourceTree = "<group>"; };
 		DBB52C4023DAFF38004A4CBA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -504,6 +510,7 @@
 				DBD5CCAC234A22B000EC09C7 /* ValidationView.swift */,
 				DB684489234D189100CD0AE2 /* InformationView.swift */,
 				DB96D7D2237C8F39005C7AF6 /* ErrorView.swift */,
+				DBB2850425486B2D00719E08 /* DeterminationStatusView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -620,6 +627,7 @@
 		4A69BC782038D96500D3B88B /* Danmarks Svampeatlas */ = {
 			isa = PBXGroup;
 			children = (
+				DB830A1E253C564100223D3A /* ViewModels */,
 				DB1C86ED23B66588009DB71C /* Repository */,
 				DBF33C6322F436FD00F383D4 /* Danmarks Svampeatlas.entitlements */,
 				DB8D172F211B290D00C38D2C /* Extensions */,
@@ -711,6 +719,7 @@
 				DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */,
 				DB5438FD25274C8A00ECCB22 /* CellProvider.swift */,
 				DB07F04C252880FA00966371 /* MushroomDetailsViewModel.swift */,
+				DBB284FF2548697500719E08 /* ObservationDetailHeaderCell.swift */,
 			);
 			path = DetailsViewController;
 			sourceTree = "<group>";
@@ -748,6 +757,14 @@
 				DB7F04EF22A941FF00785AF8 /* MushroomTableView.swift */,
 			);
 			path = MushroomVC;
+			sourceTree = "<group>";
+		};
+		DB830A1E253C564100223D3A /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				DB830A21253C565900223D3A /* AddObservationVCViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		DB897AFD21DD506F00E74C00 /* Cells */ = {
@@ -958,6 +975,7 @@
 				DB53F04A25192BB1000F3038 /* SettingCellOld.swift in Sources */,
 				DBBFBF1A2517D07200B99470 /* NewTableView.swift in Sources */,
 				DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */,
+				DBB2850525486B2D00719E08 /* DeterminationStatusView.swift in Sources */,
 				DBCCB0B023C36FF100DFB04F /* Repository.swift in Sources */,
 				DB6E9E2D218A4D5E00A6FB1C /* NotificationsTableView.swift in Sources */,
 				DB893117232BCBEA000BDCD1 /* UIApplication+Urls.swift in Sources */,
@@ -968,6 +986,7 @@
 				DBA0D96D21F9ACB3001E9CA8 /* LocalityCell.swift in Sources */,
 				4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */,
 				DB32B0B321E61B6F00514CCA /* TableViewHeaderView.swift in Sources */,
+				DB830A22253C565900223D3A /* AddObservationVCViewModel.swift in Sources */,
 				4A8A18B720A1B5320063C83B /* RedlistView.swift in Sources */,
 				DB8CF0A9217BAA3800ADAFB0 /* GradientImageView.swift in Sources */,
 				4A1B178120C3F6E200E1F1B2 /* ToxicityView.swift in Sources */,
@@ -1093,6 +1112,7 @@
 				DB687422234CE0760038C5A0 /* VerncularNameDK.swift in Sources */,
 				4AD43A0620529CF5001F6541 /* CategoryCell.swift in Sources */,
 				DB771632220C6A2500E71903 /* ELFileManager.swift in Sources */,
+				DBB285002548697500719E08 /* ObservationDetailHeaderCell.swift in Sources */,
 				4A300A90208365DC003CB2A5 /* ObservationPinView.swift in Sources */,
 				DBCCB0B423C3702E00DFB04F /* VegetationTypeRepository.swift in Sources */,
 				DB7F04F022A941FF00785AF8 /* MushroomTableView.swift in Sources */,
@@ -1277,7 +1297,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Danmarks Svampeatlas/Danmarks Svampeatlas.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1285,7 +1305,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.noque.fungalatlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1299,7 +1319,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Danmarks Svampeatlas/Danmarks Svampeatlas.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -1307,7 +1327,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.noque.fungalatlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

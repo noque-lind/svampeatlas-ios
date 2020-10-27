@@ -206,7 +206,8 @@ class AVView: UIView {
             String(kCGImagePropertyGPSLongitude): longitude,
             String(kCGImagePropertyGPSLongitudeRef): longitudeRef,
             String(kCGImagePropertyGPSTimeStamp): location.timestamp.timeIntervalSince1970,
-            String(kCGImagePropertyGPSDOP): location.horizontalAccuracy
+            String(kCGImagePropertyGPSDOP): location.horizontalAccuracy,
+            String(kCGImagePropertyGPSHPositioningError): location.horizontalAccuracy
         ]]
         }
         

@@ -52,14 +52,38 @@ class NearbyVC: UIViewController {
         view.onAnnotationRelease = { [unowned self] (annotationButton) in
             self.mapView.shouldLoad = true
             let pointAnnotation = self.mapView.addLocationAnnotation(button: annotationButton)
-            self.locationRetrieved(location: CLLocation.init(latitude: pointAnnotation.coordinate.latitude, longitude: pointAnnotation.coordinate.longitude))
+            self.locationManager.state.set(.foundLocation(location: CLLocation.init(latitude: pointAnnotation.coordinate.latitude, longitude: pointAnnotation.coordinate.longitude)))
         }
         return view
     }()
     
     private lazy var locationManager: LocationManager = {
        let manager = LocationManager()
-        manager.delegate = self
+        manager.state.observe(listener: { [weak mapViewFilteringSettings, weak manager, weak mapView] state in
+            switch state {
+            case .stopped: return
+            case .locating: mapView?.shouldLoad = true
+            case .error(error: let error):
+                mapView?.showError(error: error, handler: { (recoveryAction) in
+                    switch recoveryAction {
+                    case .openSettings: UIApplication.openAppSettings()
+                    default: manager?.start()
+                    }
+                })
+            case .foundLocation(location: let location):
+                guard let mapViewFilteringSettings = mapViewFilteringSettings else {return}
+                DataService.instance.getObservationsWithin(geometry: API.Geometry(coordinate: location.coordinate, radius: CLLocationDistance(mapViewFilteringSettings.distance), type: .circle), ageInYear: mapViewFilteringSettings.age) { [weak mapView] (result) in
+                    mapView?.shouldLoad = false
+                    switch result {
+                    case .failure(let error):
+                        mapView?.showError(error: error, handler: nil)
+                    case .success(let observations):
+                        mapView?.addObservationAnnotations(observations: observations)
+                        mapView?.addCirclePolygon(center: location.coordinate, radius: CLLocationDistance(self.mapViewFilteringSettings.distance))
+                    }
+                }
+            }
+        })
         return manager
     }()
     
@@ -139,36 +163,5 @@ extension NearbyVC: CustomMapViewDelegate {
             self.toolBarView.alpha = 0.2
         }
         
-    }
-}
-
-extension NearbyVC: LocationManagerDelegate {
-    func locationInaccessible(error: LocationManager.LocationManagerError) {
-        mapView.showError(error: error) { (recoveryAction) in
-            guard let recoveryAction = recoveryAction else {return}
-            switch recoveryAction {
-            case .openSettings:
-                if let bundleId = Bundle.main.bundleIdentifier,
-                                  let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-                                  UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                              }
-                
-            default: return
-            }
-        }
-    }
-    
-    func locationRetrieved(location: CLLocation) {
-        DataService.instance.getObservationsWithin(geometry: API.Geometry(coordinate: location.coordinate, radius: CLLocationDistance(mapViewFilteringSettings.distance), type: .circle), ageInYear: mapViewFilteringSettings.age) { [weak mapView] (result) in
-            mapView?.shouldLoad = false
-            
-            switch result {
-            case .failure(let error):
-                mapView?.showError(error: error, handler: nil)
-            case .success(let observations):
-                mapView?.addObservationAnnotations(observations: observations)
-                mapView?.addCirclePolygon(center: location.coordinate, radius: CLLocationDistance(self.mapViewFilteringSettings.distance))
-            }
-        }
     }
 }

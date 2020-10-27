@@ -52,7 +52,6 @@ class AddObservationVC: UIViewController {
             vc.onImageCaptured = { imageURL in
                 newObservation?.appendImage(imageURL: imageURL)
                 view?.addImage(imageURL: imageURL)
-                
                 if let imageLocation = newObservation?.returnImageLocationIfNecessary(imageURL: imageURL) {
                     self?.handleImageLocation(imageLocation: imageLocation, alternativeLocation: nil)
                 }
@@ -70,7 +69,6 @@ class AddObservationVC: UIViewController {
         let view = CategoryView<ObservationCategories>.init(categories: items, firstIndex: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        
         view.categorySelected = { [unowned collectionView, unowned self] category in
             guard let index = ObservationCategories.allCases.firstIndex(of: category) else {return}
             collectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
@@ -101,7 +99,47 @@ class AddObservationVC: UIViewController {
     
     private lazy var locationManager: LocationManager = {
         let manager = LocationManager()
-        manager.delegate = self
+        manager.state.observe(listener: { [weak manager, weak categoryView, weak self] state in
+            categoryView?.setCategoryLoadingState(category: Category(type: ObservationCategories.Location, title: ObservationCategories.Location.description), loading: false)
+            switch state {
+            case .stopped: return
+            case .error(error: let error):
+                let notif: ELNotificationView
+                switch error.recoveryAction {
+                case .openSettings:
+                notif = ELNotificationView.appNotification(style: .error(actions: [
+                                           .neutral(error.recoveryAction?.localizableText, {
+                                               UIApplication.openSettings()
+                                           })
+                                       ]),location: .bottom)
+                default:
+                    notif = ELNotificationView.appNotification(style: .error(actions: [
+                                               .neutral(error.recoveryAction?.localizableText, { [weak manager] in
+                                                   manager?.start()
+                                               })
+                                           ]), location: .bottom)
+                   
+                }
+                notif.configure(primaryText: error.errorTitle, secondaryText: error.errorDescription)
+                notif.show(animationType: .fromBottom)
+            case .locating: categoryView?.setCategoryLoadingState(category: Category(type: ObservationCategories.Location, title: ObservationCategories.Location.description), loading: true)
+            case .foundLocation(location: let location):
+                // If horizontalAccuracy is 0, it means that it is a Location object created manually on the locality page, thus it should not ask the user wether the image metadata should be used.
+                
+                guard location.horizontalAccuracy > 0 else {
+                    self?.newObservation.observationCoordinate = location
+                    self?.findLocality(location: location)
+                    return
+                }
+                
+                if let imageLocation = self?.newObservation.returnImageLocationIfNecessary(location: location) {
+                    self?.handleImageLocation(imageLocation: imageLocation, alternativeLocation: location)
+                } else {
+                    self?.newObservation.observationCoordinate = location
+                    self?.findLocality(location: location)
+                }
+            }
+        })
         return manager
     }()
     
@@ -136,10 +174,6 @@ class AddObservationVC: UIViewController {
         configure()
         }
         
-    deinit {
-        debugPrint("AddObservationVC was deinited")
-    }
-    
     private func setupView() {
         title = NSLocalizedString("addObservationVC_title", comment: "")
     
@@ -190,8 +224,8 @@ class AddObservationVC: UIViewController {
         collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
     }
     
-    @objc private func beginObservationUpload() {
-        switch newObservation.returnAsDictionary(user: session.user) {
+    @objc private func beginObservationUpload(overrideLowAccuracy: Bool = false) {
+        switch newObservation.returnAsDictionary(user: session.user, overrideLowAccuracy: overrideLowAccuracy) {
         case .success(let dict):
             Spinner.start(onView: self.navigationController?.view)
         
@@ -199,9 +233,15 @@ class AddObservationVC: UIViewController {
                 Spinner.stop()
                 DispatchQueue.main.async {
                 switch result {
-                case .success(let observationID):
-                    ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: "ID: \(observationID)", location: .bottom)
-                        .show(animationType: .fromBottom, onViewController: self)
+                case .success(let data):
+                    if data.uploadedImagesCount == self?.newObservation.images.count {
+                        ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: "ID: \(data.observationID)", location: .bottom)
+                            .show(animationType: .fromBottom, onViewController: self)
+                    } else {
+                        ELNotificationView.appNotification(style: .warning(actions: nil), primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), data.uploadedImagesCount, self?.newObservation.images.count ?? 0), location: .bottom)
+                            .show(animationType: .fromBottom, onViewController: self)
+                    }
+                    
                     self?.newObservation.images.forEach({ELFileManager.deleteImage(imageURL: $0)})
                     self?.reset()
                     
@@ -220,9 +260,7 @@ class AddObservationVC: UIViewController {
     private func handleUncompleteObservation(newObservationError error: NewObservation.Error) {
         var indexPath: IndexPath
 
-        let notificationView = ELNotificationView(style: .error(actions: nil), attributes: ELNotificationView.Attributes.appAttributes())
-        notificationView.configure(primaryText: error.errorTitle, secondaryText: error.errorDescription)
-    
+        var notificationView = ELNotificationView(style: .error(actions: nil), attributes: ELNotificationView.Attributes.appAttributes())
         switch error {
         case .noMushroom:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Species)! , section: 0)
@@ -230,8 +268,19 @@ class AddObservationVC: UIViewController {
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Details)! , section: 0)
         case .noLocality, .noCoordinates:
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)! , section: 0)
+        case .lowAccuracy:
+            notificationView = ELNotificationView(style: .action(backgroundColor: UIColor.appYellow(), actions: [
+            .positive(NSLocalizedString("Yes, find my current location", comment: ""), { [weak locationManager] in
+                locationManager?.start()
+            }),
+            .neutral(NSLocalizedString("No, continue with the upload", comment: ""), { [weak self] in
+                self?.beginObservationUpload(overrideLowAccuracy: true)
+            }),
+                .negative(NSLocalizedString("Cancel upload", comment: ""), {})
+            ]), attributes: ELNotificationView.Attributes.appAttributes())
+            indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)!, section: 0)
         }
-        
+        notificationView.configure(primaryText: error.errorTitle, secondaryText: error.errorDescription)
         notificationView.show(animationType: .fromBottom ,queuePosition: .front, onViewController: self)
         categoryView.moveSelector(toCellAtIndexPath: indexPath)
         collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
@@ -241,7 +290,6 @@ class AddObservationVC: UIViewController {
         ELNotificationView.appNotification(style: .action(backgroundColor: UIColor.appSecondaryColour(), actions: [
         .positive(NSLocalizedString("addObservationVC_useImageMetadata_positive", comment: ""), { [unowned newObservation, unowned self] in
             newObservation.observationCoordinate = imageLocation
-            print(imageLocation.timestamp)
             newObservation.observationDate = imageLocation.timestamp
             self.collectionView.reloadItems(at: [IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Details)!, section: 0)])
             self.findLocality(location: imageLocation)
@@ -251,40 +299,18 @@ class AddObservationVC: UIViewController {
                 newObservation.observationCoordinate = alternativeLocation
                            self.findLocality(location: alternativeLocation)
             }
-        })]), primaryText: NSLocalizedString("addObservationVC_useImageMetadata_title", comment: ""), secondaryText: NSLocalizedString("addObservationVC_useImageMetadata_message", comment: ""), location: .bottom)
+        })]), primaryText: NSLocalizedString("addObservationVC_useImageMetadata_title", comment: ""), secondaryText: String(format: NSLocalizedString("addObservationVC_useImageMetadata_message", comment:""), "\(imageLocation.horizontalAccuracy.rounded(toPlaces: 2))"), location: .bottom)
         .show(animationType: .fromBottom, onViewController: self)
     }
 }
 
-extension AddObservationVC: LocationManagerDelegate {
-    func locationInaccessible(error: LocationManager.LocationManagerError) {
-        let notif: ELNotificationView
-        
-        switch error.recoveryAction {
-        case .openSettings:
-            notif = ELNotificationView.appNotification(style: .error(actions: [
-                .neutral(error.recoveryAction?.localizableText, {
-                    UIApplication.openSettings()
-                })
-            ]),location: .bottom)
-            
-        case .tryAgain:
-            notif = ELNotificationView.appNotification(style: .error(actions: [
-                .neutral(error.recoveryAction?.localizableText, { [unowned locationManager] in
-                    locationManager.start()
-                })
-            ]), location: .bottom)
-        
-        default:
-            notif = ELNotificationView.appNotification(style: .error(actions: nil), location: .bottom)
-        }
-        
-        notif.configure(primaryText: error.errorTitle, secondaryText: error.errorDescription)
-        notif.show(animationType: .fromBottom)
-    }
-    
+extension AddObservationVC {
     private func findLocality(location: CLLocation) {
-        DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self, weak locationManager, weak newObservation, weak collectionView] result in
+        categoryView.setCategoryLoadingState(category: Category(type: ObservationCategories.Location, title: ObservationCategories.Location.description), loading: true)
+        DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self, weak locationManager, weak newObservation, weak collectionView, weak categoryView] result in
+            DispatchQueue.main.async {
+                categoryView?.setCategoryLoadingState(category: Category(type: ObservationCategories.Location, title: ObservationCategories.Location.description), loading: false)
+            }
             switch result {
             case .success(let localities):
                 self?.localities = localities
@@ -298,7 +324,7 @@ extension AddObservationVC: LocationManagerDelegate {
                         if let currentCell = collectionView?.visibleCells.first as? ObservationLocationCell, let locationManager = locationManager, let newObservation = newObservation  {
                             currentCell.configureCell(locationManager: locationManager, newObservation: newObservation, localities: localities)
                         } else {
-                            ELNotificationView.appNotification(style: .Custom(color: UIColor.appSecondaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: NSLocalizedString("addObservationVC_localityFound_title", comment: ""), secondaryText: String.localizedStringWithFormat(NSLocalizedString("addObservationVC_localityFound_message", comment: ""), closest!.name, location.coordinate.longitude.rounded(toPlaces: 2), location.coordinate.latitude.rounded(toPlaces: 2)), location: .bottom)
+                            ELNotificationView.appNotification(style: .Custom(color: UIColor.appSecondaryColour(), image: #imageLiteral(resourceName: "Icons_Map_LocalityPin_Normal")), primaryText: NSLocalizedString("addObservationVC_localityFound_title", comment: ""), secondaryText: String.localizedStringWithFormat(NSLocalizedString("addObservationVC_localityFound_message", comment: ""), closest!.name, location.coordinate.longitude.rounded(toPlaces: 2), location.coordinate.latitude.rounded(toPlaces: 2), location.horizontalAccuracy.rounded(toPlaces: 2)), location: .bottom)
                                 .show(animationType: .fromBottom, onViewController: self)
                         }
                     }
@@ -310,23 +336,6 @@ extension AddObservationVC: LocationManagerDelegate {
                         .show(animationType: .fromBottom, onViewController: self)
                 }
             }
-        }
-    }
-    
-    func locationRetrieved(location: CLLocation) {
-        // If horizontalAccuracy is 0, it means that it is a Location object created manually on the locality page, thus it should not ask the user wether the image metadata should be used.
-        
-        guard location.horizontalAccuracy > 0 else {
-            newObservation.observationCoordinate = location
-            findLocality(location: location)
-            return
-        }
-        
-        if let imageLocation = newObservation.returnImageLocationIfNecessary(location: location) {
-            handleImageLocation(imageLocation: imageLocation, alternativeLocation: location)
-        } else {
-            newObservation.observationCoordinate = location
-            findLocality(location: location)
         }
     }
 }

@@ -247,7 +247,7 @@ class ObservationSpecieCell: UICollectionViewCell {
     
     private func configureFavoritesSection() {
         switch Database.instance.mushroomsRepository.fetchAll() {
-        case .failure(let error): return
+        case .failure: return
         case .success(let mushrooms):
             lowerSection.setTitle(title: NSLocalizedString("observationSpeciesCell_myFavorites", comment: ""))
             lowerSection.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))

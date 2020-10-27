@@ -123,7 +123,7 @@ class Session {
         DataService.instance.postComment(taxonID: observationID, comment: comment, token: token, completion: completion)
     }
     
-    func uploadObservation(dict: [String: Any], imageURLs: [URL], completion: @escaping (Result<Int, AppError>) -> ()) {
+    func uploadObservation(dict: [String: Any], imageURLs: [URL], completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
         DataService.instance.postObservation(dict: dict, imageURLs: imageURLs, token: token, completion: completion)
     }
     
@@ -326,7 +326,7 @@ extension Session: SessionDelegate {
             }
                     }
         
-        func postObservation(dict: [String: Any], imageURLs: [URL], token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
+        func postObservation(dict: [String: Any], imageURLs: [URL], token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
         
             do {
                 let data = try JSONSerialization.data(withJSONObject: dict, options: [])
@@ -345,8 +345,8 @@ extension Session: SessionDelegate {
                             switch result {
                             case .failure(let error):
                                 completion(Result.failure(error))
-                            case .success(_):
-                                completion(Result.success(observationID))
+                            case .success(let uploadedCount):
+                                completion(Result.success((observationID: observationID, uploadedImagesCount: uploadedCount)))
                             }
                         })
                     }

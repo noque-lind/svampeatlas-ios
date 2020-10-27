@@ -10,8 +10,6 @@ import UIKit
 import MapKit
 
 class MushroomDetailsScrollView: AppScrollView {
-
-    
     private lazy var observationsTableView: ObservationsTableView = {
         let tableView = ObservationsTableView(automaticallyAdjustHeight: true)
         tableView.contentInsetAdjustmentBehavior = .automatic
@@ -32,7 +30,36 @@ class MushroomDetailsScrollView: AppScrollView {
     
     private lazy var locationManager: LocationManager = {
         let manager = LocationManager()
-        manager.delegate = self
+        manager.state.observe(listener: { [weak heatMap, weak manager, weak self] state in
+            switch state {
+            case .stopped: return
+            case .error(error: let error):
+                heatMap?.showError(error: error, handler: { (handler) in
+                    switch handler {
+                    case .openSettings: UIApplication.openSettings()
+                    default: manager?.start()
+                    }
+                })
+            case .locating: heatMap?.shouldLoad = true
+            case .foundLocation(location: let location):
+                guard let taxonID = self?.mushroom?.id else {return}
+                let geometry = API.Geometry(coordinate: location.coordinate, radius: 80000.0, type: .rectangle)
+               let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: geometry.radius, longitudinalMeters: geometry.radius)
+               heatMap?.setRegion(region: region, selectAnnotationAtCenter: false, animated: false)
+                           DataService.instance.getObservationsWithin(geometry: geometry, taxonID: taxonID) { [weak heatMap] (result) in
+                               heatMap?.shouldLoad = false
+                               switch result {
+                               case .success(let observations):
+                                   DispatchQueue.main.async {
+                                   heatMap?.addObservationAnnotations(observations: observations)
+                                   }
+               
+                               case .failure(let error):
+                                   heatMap?.showError(error: error)
+                               }
+                       }
+            }
+        })
         return manager
     }()
     
@@ -168,45 +195,5 @@ class MushroomDetailsScrollView: AppScrollView {
         observationsTableView.didSelectItem = { [weak self] item in
             self?.customDelegate?.pushVC(DetailsViewController(detailsContent: .observation(observation: item, showSpeciesView: false, session: self?.session)))
         }
-    }
-}
-
-extension MushroomDetailsScrollView: LocationManagerDelegate {
-    func locationInaccessible(error: LocationManager.LocationManagerError) {
-        heatMap.showError(error: error) { (recoveryAction) in
-            guard let recoveryAction = recoveryAction else {return}
-            switch recoveryAction {
-            case .openSettings:
-                if let bundleId = Bundle.main.bundleIdentifier,
-                               let url = URL(string: "\(UIApplication.openSettingsURLString)&path=LOCATION/\(bundleId)") {
-                               UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                           }
-                
-            default: return
-            }
-        }
-    }
-    
-    func locationRetrieved(location: CLLocation) {
-        guard let taxonID = mushroom?.id else {return}
-        let geometry = API.Geometry(coordinate: location.coordinate, radius: 80000.0, type: .rectangle)
-        
-        let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: geometry.radius, longitudinalMeters: geometry.radius)
-        
-        heatMap.setRegion(region: region, selectAnnotationAtCenter: false, animated: false)
-        
-        DataService.instance.getObservationsWithin(geometry: geometry, taxonID: taxonID) { [weak heatMap] (result) in
-            heatMap?.shouldLoad = false
-            
-            switch result {
-            case .success(let observations):
-                DispatchQueue.main.async {
-                heatMap?.addObservationAnnotations(observations: observations)
-                }
-               
-            case .failure(let error):
-                heatMap?.showError(error: error)
-            }
-    }
     }
 }

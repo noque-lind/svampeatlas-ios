@@ -49,7 +49,6 @@ class DataService{
         var errorDescription: String {
             switch self {
             case .decodingError(let error):
-                debugPrint(error)
                 return NSLocalizedString("dataServiceError_decodingError_message", comment: "")
             case .searchReponseEmpty:
                 return NSLocalizedString("dataServiceError_searchResponseEmpty_message", comment: "")
@@ -149,8 +148,6 @@ class DataService{
     //CLASS FUNCTIONS
     
     internal func createDataTaskRequest(url: String, method: String = "GET", data: Data? = nil, contentType: String? = nil, contentLenght: Int? = nil, token: String? = nil, completion: @escaping (Result<Data, URLSessionError>) -> ()) {
-        
-        print(url)
         var request = URLRequest(url: URL.init(string: url)!)
         request.timeoutInterval = 20
         request.httpMethod = method
@@ -233,8 +230,7 @@ extension DataService {
         
         func handleData(data: Data) {
             do {
-                                       self.mushroomCache.setObject(NSData(data: data), forKey: NSString(string: api))
-                                          
+                                       
                                           let mushrooms = try JSONDecoder().decode([Mushroom].self, from: data)
                                           
                                           if searchString != nil && mushrooms.count == 0 {
@@ -427,7 +423,7 @@ extension DataService {
             switch result {
             case .success(let data):
                 
-                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
+                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
                 
                 var substrateGroups = [SubstrateGroup]()
                 
@@ -491,7 +487,7 @@ extension DataService {
         createDataTaskRequest(url: API.vegetationTypeURL(), completion: { (result) in
             switch result {
             case .success(let data):
-                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
+                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
                 
                 var vegetationTypes = [VegetationType]()
                 
@@ -595,7 +591,7 @@ extension DataService {
     }
     
     func getImagePredictions(image: UIImage, completion: @escaping (Result<[PredictionResult], AppError>) -> ()) {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .default).async {
              let parameters = ["instances": [["image_in": ["b64": image.rotate().toBase64()]]]] as [String : Any]
                    let data = try! JSONSerialization.data(withJSONObject: parameters, options: [])
             self.createDataTaskRequest(url: API.Post.imagePredict(speciesQueries: [.attributes(presentInDenmark: nil), .danishNames, .images(required: false), .redlistData, .statistics, .acceptedTaxon]).encodedURL, method: "POST", data: data, contentType: "application/json", contentLenght: nil, token: nil) { (result) in

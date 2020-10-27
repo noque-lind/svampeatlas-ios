@@ -7,19 +7,22 @@
 //
 
 import MapKit
+import ELKit
 
 protocol LocationManagerDelegate: class {
     func locationInaccessible(error: LocationManager.LocationManagerError)
+    func locationManagerIsLocating()
     func locationRetrieved(location: CLLocation)
 }
 
 class LocationManager: NSObject {
     
-    enum State {
-        case locating
+    enum State: Equatable {
         case stopped
+        case locating
+        case foundLocation(location: CLLocation)
+        case error(error: LocationManagerError)
     }
-    
     
     enum LocationManagerError: AppError {
         
@@ -71,22 +74,14 @@ class LocationManager: NSObject {
     }
     
     private var locationManager: CLLocationManager?
-    private var state: State = .stopped {
-        didSet {
-            switch state {
-            case .locating: locationManager?.startUpdatingLocation()
-            case .stopped: locationManager?.stopUpdatingLocation()
-            }
-        }
-    }
-    
-    weak var delegate: LocationManagerDelegate? = nil
+    let state: ELListener<State> = ELListener(State.stopped)
     private var latestLocation: CLLocation?
     
     var permissionsNotDetermined: Bool {
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
             return true
+
         default:
             return false
         }
@@ -96,46 +91,45 @@ class LocationManager: NSObject {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.activityType = CLActivityType.other
-        locationManager?.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        
+        locationManager?.desiredAccuracy = 65
+        locationManager?.requestWhenInUseAuthorization()
     }
     
     private func startUpdatingLocation() {
-        if state == .stopped {
-            state = .locating
-            
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10) { [weak self] in
-                if self?.state == State.locating {
-                  self?.stopServiceAndSendLocation()
-                } else {
-                  self?.locationManager = nil
-                }
+        state.set(State.locating)
+        locationManager?.startUpdatingLocation()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10) { [weak self] in
+            if self?.state.value == State.locating {
+              self?.stopServiceAndSendLocation()
+            } else {
+              self?.locationManager = nil
             }
         }
     }
     
     private func stopServiceAndSendLocation() {
-        guard state != .stopped else {return}
-        state = .stopped
-        locationManager = nil
-        
-        
-        DispatchQueue.main.async {
-            if let location = self.latestLocation {
-                self.delegate?.locationRetrieved(location: location)
-                self.latestLocation = nil
-            } else {
-                self.delegate?.locationInaccessible(error: .badAccuracy)
+        switch state.value {
+        case .foundLocation, .stopped, .error:
+            return
+        case .locating:
+            DispatchQueue.main.async {
+                if let location = self.latestLocation, location.horizontalAccuracy <= kCLLocationAccuracyHundredMeters {
+                    self.state.set(.foundLocation(location: location))
+                    self.latestLocation = nil
+                } else {
+                    self.state.set(.error(error: .badAccuracy))
+                }
             }
         }
+        self.locationManager = nil
     }
 }
 
 extension LocationManager: CLLocationManagerDelegate {
     
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last, location.horizontalAccuracy >= 0, location.timestamp.timeIntervalSinceNow > -5  else {return}
-                latestLocation = location
+        guard let location = locations.last, location.horizontalAccuracy >= 0, location.timestamp.timeIntervalSinceNow > -2  else {return}
+            latestLocation = location
         if location.horizontalAccuracy <= manager.desiredAccuracy {
             stopServiceAndSendLocation()
         }
@@ -143,10 +137,10 @@ extension LocationManager: CLLocationManagerDelegate {
     
     internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = CLError.Code.init(rawValue: (error as NSError).code) {
-            state = .stopped
             switch error {
-            case .network: delegate?.locationInaccessible(error: .networkError)
-            default: delegate?.locationInaccessible(error: .unknown)
+            case .network:
+                state.set(.error(error: .networkError))
+            default: state.set(.error(error: .unknown))
             }
         }
     }
@@ -158,7 +152,9 @@ extension LocationManager: CLLocationManagerDelegate {
         case .authorizedAlways, .authorizedWhenInUse:
             startUpdatingLocation()
         case .denied, .restricted:
-            delegate?.locationInaccessible(error: .permissionDenied)
+            state.set(.error(error: .permissionDenied))
+        @unknown default:
+            state.set(.error(error: .permissionsUndetermined))
         }
     }
 }

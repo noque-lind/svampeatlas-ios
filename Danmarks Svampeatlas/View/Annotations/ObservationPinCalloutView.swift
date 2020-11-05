@@ -54,10 +54,9 @@ class ObservationPinCalloutView: UIView {
         return true
     }
     
-    private var wasPressed: ((_ observation: Observation) -> ())?
+    var wasPressed: ((_ observation: Observation) -> ())?
     
-    init(withImage: Bool, wasPressed: ((_ observation: Observation) -> ())?) {
-        self.wasPressed = wasPressed
+    init(withImage: Bool) {
         self.withImage = withImage
         super.init(frame: CGRect.zero)
         setupView()

@@ -9,11 +9,6 @@
 import UIKit
 import ELKit
 
-extension ELTableView {
-    static func build(provider: Providor) -> ELTableView<T, Providor> {
-        return ELTableViewBuilder.init(cellProvidor: provider).setSectionHeaderCell(cellClass: SectionHeaderView.self).build()
-    }
-}
 
 class SettingsVC: UIViewController {
     

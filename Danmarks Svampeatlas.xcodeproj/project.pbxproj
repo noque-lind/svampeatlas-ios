@@ -64,8 +64,6 @@
 		DB0C5A0A2275A6D00071B15C /* HeatAnnotationPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C5A092275A6D00071B15C /* HeatAnnotationPinView.swift */; };
 		DB0C5A0C2275A75E0071B15C /* ClusteredHeatAnnotationPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C5A0B2275A75E0071B15C /* ClusteredHeatAnnotationPinView.swift */; };
 		DB0C5A0F2277056A0071B15C /* OnboardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C5A0E2277056A0071B15C /* OnboardingVC.swift */; };
-		DB0C5A1122785BE30071B15C /* MushroomDetailsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C5A1022785BE30071B15C /* MushroomDetailsScrollView.swift */; };
-		DB0C5A13227898E70071B15C /* ObservationDetailsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */; };
 		DB12BC262135507F00FFA037 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB12BC252135507F00FFA037 /* User.swift */; };
 		DB12BC28213551FD00FFA037 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB12BC27213551FD00FFA037 /* UserView.swift */; };
 		DB1C86EF23B665A1009DB71C /* MushroomsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1C86EE23B665A1009DB71C /* MushroomsRepository.swift */; };
@@ -82,6 +80,8 @@
 		DB32B0B521E65DF200514CCA /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB32B0B421E65DF200514CCA /* LocationService.swift */; };
 		DB34AA072190678900D423DA /* CommentsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB34AA062190678900D423DA /* CommentsTableView.swift */; };
 		DB3C4929219AEF11001894B5 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C4928219AEF11001894B5 /* ReloadCell.swift */; };
+		DB3EF6952550A40E000D9F51 /* ELTableView+build.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF6942550A40E000D9F51 /* ELTableView+build.swift */; };
+		DB3EF69E2550AF5F000D9F51 /* MapViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF69D2550AF5F000D9F51 /* MapViewCell.swift */; };
 		DB402BB823D9EED90020D68B /* ELKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB402BB523D9EEC70020D68B /* ELKit.framework */; };
 		DB402BB923D9EED90020D68B /* ELKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DB402BB523D9EEC70020D68B /* ELKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB42E37221776EB8003C3585 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37121776EB8003C3585 /* UserService.swift */; };
@@ -145,12 +145,14 @@
 		DBADEB1223D7888D002173EC /* CautionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBADEB1123D7888D002173EC /* CautionCell.swift */; };
 		DBB285002548697500719E08 /* ObservationDetailHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB284FF2548697500719E08 /* ObservationDetailHeaderCell.swift */; };
 		DBB2850525486B2D00719E08 /* DeterminationStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB2850425486B2D00719E08 /* DeterminationStatusView.swift */; };
+		DBB2850925487C3200719E08 /* TextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB2850825487C3200719E08 /* TextCell.swift */; };
 		DBB33A4321CC011700BCED22 /* PickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4221CC011700BCED22 /* PickerCell.swift */; };
 		DBB33A4521CE67E200BCED22 /* ELTextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */; };
 		DBB52C3F23DAFF38004A4CBA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DBB52C4123DAFF38004A4CBA /* InfoPlist.strings */; };
-		DBBFBF1A2517D07200B99470 /* NewTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBBFBF192517D07200B99470 /* NewTableView.swift */; };
 		DBC30C8A21EE1A1900826FC6 /* TableViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8921EE1A1900826FC6 /* TableViewState.swift */; };
 		DBC30C8C21EE1F5B00826FC6 /* SettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */; };
+		DBC9E74B254B0544003A0EE1 /* MushroomDetailHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC9E74A254B0544003A0EE1 /* MushroomDetailHeaderCell.swift */; };
+		DBC9E752254B0C76003A0EE1 /* InformationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC9E751254B0C76003A0EE1 /* InformationCell.swift */; };
 		DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */; };
 		DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */; };
 		DBCCB0B023C36FF100DFB04F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCB0AF23C36FF100DFB04F /* Repository.swift */; };
@@ -271,8 +273,6 @@
 		DB0C5A092275A6D00071B15C /* HeatAnnotationPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatAnnotationPinView.swift; sourceTree = "<group>"; };
 		DB0C5A0B2275A75E0071B15C /* ClusteredHeatAnnotationPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusteredHeatAnnotationPinView.swift; sourceTree = "<group>"; };
 		DB0C5A0E2277056A0071B15C /* OnboardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingVC.swift; sourceTree = "<group>"; };
-		DB0C5A1022785BE30071B15C /* MushroomDetailsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomDetailsScrollView.swift; sourceTree = "<group>"; };
-		DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationDetailsScrollView.swift; sourceTree = "<group>"; };
 		DB12BC252135507F00FFA037 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		DB12BC27213551FD00FFA037 /* UserView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		DB17731123BD38C000B64868 /* SvampeAtlas_1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SvampeAtlas_1.2.xcdatamodel; sourceTree = "<group>"; };
@@ -292,6 +292,8 @@
 		DB32B0B421E65DF200514CCA /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		DB34AA062190678900D423DA /* CommentsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableView.swift; sourceTree = "<group>"; };
 		DB3C4928219AEF11001894B5 /* ReloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadCell.swift; sourceTree = "<group>"; };
+		DB3EF6942550A40E000D9F51 /* ELTableView+build.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ELTableView+build.swift"; sourceTree = "<group>"; };
+		DB3EF69D2550AF5F000D9F51 /* MapViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCell.swift; sourceTree = "<group>"; };
 		DB402BAF23D9EEC60020D68B /* ELKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ELKit.xcodeproj; path = ../../../ELKit/ELKit.xcodeproj; sourceTree = "<group>"; };
 		DB42E37121776EB8003C3585 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		DB42E37321777811003C3585 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 		DBADEB1123D7888D002173EC /* CautionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CautionCell.swift; sourceTree = "<group>"; };
 		DBB284FF2548697500719E08 /* ObservationDetailHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationDetailHeaderCell.swift; sourceTree = "<group>"; };
 		DBB2850425486B2D00719E08 /* DeterminationStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeterminationStatusView.swift; sourceTree = "<group>"; };
+		DBB2850825487C3200719E08 /* TextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCell.swift; sourceTree = "<group>"; };
 		DBB33A4221CC011700BCED22 /* PickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerCell.swift; sourceTree = "<group>"; };
 		DBB33A4421CE67E200BCED22 /* ELTextViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELTextViewCell.swift; sourceTree = "<group>"; };
 		DBB52C4023DAFF38004A4CBA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -360,9 +363,10 @@
 		DBB52C4823DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		DBB52C4923DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DBB52C4A23DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		DBBFBF192517D07200B99470 /* NewTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTableView.swift; sourceTree = "<group>"; };
 		DBC30C8921EE1A1900826FC6 /* TableViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewState.swift; sourceTree = "<group>"; };
 		DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
+		DBC9E74A254B0544003A0EE1 /* MushroomDetailHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomDetailHeaderCell.swift; sourceTree = "<group>"; };
+		DBC9E751254B0C76003A0EE1 /* InformationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationCell.swift; sourceTree = "<group>"; };
 		DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELPhotos.swift; sourceTree = "<group>"; };
 		DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+OpenSettings.swift"; sourceTree = "<group>"; };
 		DBCCB0AF23C36FF100DFB04F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
@@ -712,14 +716,11 @@
 		DB50B0CC2266484A002965C1 /* DetailsViewController */ = {
 			isa = PBXGroup;
 			children = (
+				DBC9E750254B0C6B003A0EE1 /* Cells */,
 				4A80756F20BD717100F958AC /* AppScrollView.swift */,
-				DB0C5A1022785BE30071B15C /* MushroomDetailsScrollView.swift */,
 				4AC5CA22204EA95B003ED3BE /* ImagesCollectionView.swift */,
-				DBBFBF192517D07200B99470 /* NewTableView.swift */,
-				DB0C5A12227898E70071B15C /* ObservationDetailsScrollView.swift */,
 				DB5438FD25274C8A00ECCB22 /* CellProvider.swift */,
 				DB07F04C252880FA00966371 /* MushroomDetailsViewModel.swift */,
-				DBB284FF2548697500719E08 /* ObservationDetailHeaderCell.swift */,
 			);
 			path = DetailsViewController;
 			sourceTree = "<group>";
@@ -805,8 +806,21 @@
 				DB59F55E232D2B5B005D5EA5 /* Collection+Safe.swift */,
 				DB8FE83423805BC0002D837C /* UINavigationController+AppConfiguration.swift */,
 				DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */,
+				DB3EF6942550A40E000D9F51 /* ELTableView+build.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		DBC9E750254B0C6B003A0EE1 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				DBC9E751254B0C76003A0EE1 /* InformationCell.swift */,
+				DBB2850825487C3200719E08 /* TextCell.swift */,
+				DBC9E74A254B0544003A0EE1 /* MushroomDetailHeaderCell.swift */,
+				DBB284FF2548697500719E08 /* ObservationDetailHeaderCell.swift */,
+				DB3EF69D2550AF5F000D9F51 /* MapViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		DBCED36D23B9F65400D54A4E /* Danmarks SvampeatlasTests */ = {
@@ -973,7 +987,6 @@
 				DB7F04F222AAB19D00785AF8 /* MapVC.swift in Sources */,
 				DB0C5A0A2275A6D00071B15C /* HeatAnnotationPinView.swift in Sources */,
 				DB53F04A25192BB1000F3038 /* SettingCellOld.swift in Sources */,
-				DBBFBF1A2517D07200B99470 /* NewTableView.swift in Sources */,
 				DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */,
 				DBB2850525486B2D00719E08 /* DeterminationStatusView.swift in Sources */,
 				DBCCB0B023C36FF100DFB04F /* Repository.swift in Sources */,
@@ -998,7 +1011,7 @@
 				4A3061E12053F4840061E98F /* CustomTableView.swift in Sources */,
 				4A69457820456CD60041824E /* SideMenuStaticCell.swift in Sources */,
 				DB12BC262135507F00FFA037 /* User.swift in Sources */,
-				DB0C5A1122785BE30071B15C /* MushroomDetailsScrollView.swift in Sources */,
+				DB3EF69E2550AF5F000D9F51 /* MapViewCell.swift in Sources */,
 				DB68741D234CDBFD0038C5A0 /* PredictionResult.swift in Sources */,
 				DB53F04E25192C36000F3038 /* SettingsInformationCell.swift in Sources */,
 				DB2DC12023D9A71600EE9BC4 /* LocalizableStrings.swift in Sources */,
@@ -1046,7 +1059,6 @@
 				DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */,
 				4A72AB8620EE530900F9E45C /* CoreDataHelper.swift in Sources */,
 				DB2C55B5234A076E007FABE4 /* SectionHeaderView.swift in Sources */,
-				DB0C5A13227898E70071B15C /* ObservationDetailsScrollView.swift in Sources */,
 				DB679392214CF659003B34B2 /* String+Extension.swift in Sources */,
 				DB96D7D3237C8F39005C7AF6 /* ErrorView.swift in Sources */,
 				4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */,
@@ -1055,11 +1067,13 @@
 				DB07F04D252880FA00966371 /* MushroomDetailsViewModel.swift in Sources */,
 				4AC5CA1D204E889E003ED3BE /* ImageCell.swift in Sources */,
 				DB08065F22FE1BD20018CCD7 /* GeoName.swift in Sources */,
+				DBC9E74B254B0544003A0EE1 /* MushroomDetailHeaderCell.swift in Sources */,
 				DB1C86EF23B665A1009DB71C /* MushroomsRepository.swift in Sources */,
 				4A40CD772094CBF000F58F25 /* ClusterPinCalloutView.swift in Sources */,
 				DBF3EE85234D779100EB5DFE /* NewObservation.swift in Sources */,
 				DBB33A4321CC011700BCED22 /* PickerCell.swift in Sources */,
 				4A28AB84204440FB00F21EEE /* DataService.swift in Sources */,
+				DB3EF6952550A40E000D9F51 /* ELTableView+build.swift in Sources */,
 				4AC5CA1F204E8DB0003ED3BE /* ImagesPageControl.swift in Sources */,
 				4A28AB872044413100F21EEE /* Constants.swift in Sources */,
 				DB2ECE67219F666E0025DD85 /* GenericTableView.swift in Sources */,
@@ -1067,6 +1081,7 @@
 				DBDEE48B219601DB0047C788 /* CommentCell.swift in Sources */,
 				DBD5CCB0234B81DD00EC09C7 /* LocationAnnotation.swift in Sources */,
 				DB8D1731211B293E00C38D2C /* Array+MergeElements.swift in Sources */,
+				DBB2850925487C3200719E08 /* TextCell.swift in Sources */,
 				DBA0D96921F99F54001E9CA8 /* LocalityAnnotationView.swift in Sources */,
 				DB77162E220C2F2200E71903 /* ELMultipartFormData.swift in Sources */,
 				DB96D7D8237D8597005C7AF6 /* CreditationCell.swift in Sources */,
@@ -1075,6 +1090,7 @@
 				DBD5CCAD234A22B000EC09C7 /* ValidationView.swift in Sources */,
 				DBCAA6A7238AD7E200744EA1 /* ELPhotos.swift in Sources */,
 				4AC5CA1B204E84C2003ED3BE /* DetailsViewController.swift in Sources */,
+				DBC9E752254B0C76003A0EE1 /* InformationCell.swift in Sources */,
 				DBCFD9B123942F9700A9302F /* CameraControlsTextButton.swift in Sources */,
 				DBCED37B23BA1AF700D54A4E /* SubstrateGroupsRepository.swift in Sources */,
 				DB64374B2296A3F700BE7FF4 /* Host.swift in Sources */,

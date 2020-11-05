@@ -17,6 +17,18 @@ protocol LocationManagerDelegate: class {
 
 class LocationManager: NSObject {
     
+    enum Accuracy {
+        case high
+        case low
+        
+        var value: CLLocationAccuracy {
+            switch self {
+            case .high: return kCLLocationAccuracyHundredMeters
+            case .low: return kCLLocationAccuracyThreeKilometers
+            }
+        }
+    }
+    
     enum State: Equatable {
         case stopped
         case locating
@@ -24,9 +36,8 @@ class LocationManager: NSObject {
         case error(error: LocationManagerError)
     }
     
-    enum LocationManagerError: AppError {
-        
-        var recoveryAction: mRecoveryAction? {
+    enum LocationManagerError: AppError, ELError {
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .permissionDenied:
                 return .openSettings
@@ -36,7 +47,8 @@ class LocationManager: NSObject {
             }
         }
         
-        var errorDescription: String {
+        
+        var message: String {
             switch self {
             case .badAccuracy:
                 return NSLocalizedString("locationManagerError_badAccuracy_message", comment: "")
@@ -51,7 +63,7 @@ class LocationManager: NSObject {
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .permissionDenied:
                 return NSLocalizedString("locationManagerError_permissionDenied_title", comment: "")
@@ -73,6 +85,7 @@ class LocationManager: NSObject {
         case unknown
     }
     
+    private let accuracy: Accuracy
     private var locationManager: CLLocationManager?
     let state: ELListener<State> = ELListener(State.stopped)
     private var latestLocation: CLLocation?
@@ -87,11 +100,18 @@ class LocationManager: NSObject {
         }
     }
     
+    init(accuracy: Accuracy = .high) {
+        self.accuracy = accuracy
+    }
+    
     func start() {
         locationManager = CLLocationManager()
         locationManager?.delegate = self
         locationManager?.activityType = CLActivityType.other
-        locationManager?.desiredAccuracy = 65
+        switch accuracy {
+        case .high: locationManager?.desiredAccuracy = 65
+        case .low: locationManager?.desiredAccuracy = accuracy.value
+        }
         locationManager?.requestWhenInUseAuthorization()
     }
     
@@ -113,7 +133,7 @@ class LocationManager: NSObject {
             return
         case .locating:
             DispatchQueue.main.async {
-                if let location = self.latestLocation, location.horizontalAccuracy <= kCLLocationAccuracyHundredMeters {
+                if let location = self.latestLocation, location.horizontalAccuracy <=  self.accuracy.value {
                     self.state.set(.foundLocation(location: location))
                     self.latestLocation = nil
                 } else {
@@ -128,10 +148,23 @@ class LocationManager: NSObject {
 extension LocationManager: CLLocationManagerDelegate {
     
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last, location.horizontalAccuracy >= 0, location.timestamp.timeIntervalSinceNow > -2  else {return}
+        guard let location = locations.last, location.horizontalAccuracy >= 0 else {return}
+        if location.horizontalAccuracy <= manager.desiredAccuracy {
+            
+            
+            
+        }
+        
+        if accuracy == .high && location.timestamp.timeIntervalSinceNow > -2 {
             latestLocation = location
         if location.horizontalAccuracy <= manager.desiredAccuracy {
             stopServiceAndSendLocation()
+        }
+        } else if accuracy == .low {
+            latestLocation = location
+        if location.horizontalAccuracy <= manager.desiredAccuracy {
+            stopServiceAndSendLocation()
+        }
         }
     }
     

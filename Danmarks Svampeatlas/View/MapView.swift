@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import ELKit
 
 
 extension MKCoordinateRegion {
@@ -204,7 +205,7 @@ class NewMapView: UIView {
         }
     }
     
-    func showError(error: AppError, handler: ((mRecoveryAction?) -> ())? = nil) {
+    func showError(error: AppError, handler: ((RecoveryAction?) -> ())? = nil) {
         shouldLoad = false
         
         DispatchQueue.main.async {
@@ -306,26 +307,28 @@ class NewMapView: UIView {
     }
     
     func addObservationAnnotations(observations: [Observation]) {
-        DispatchQueue.main.async {
             switch self.mapViewType {
         case .observations(detailed: let detailed):
-            self.errorView = nil
+            DispatchQueue.main.async {
+                self.errorView = nil
+            }
+            
+            DispatchQueue.global(qos: .default).async { [weak self] in
+                guard let self = self else {return}
                 guard let originalElements = self.observations?.returnOriginalElements(newElements: observations), originalElements.count > 0 else {debugPrint("No new items."); return}
                 self.observations?.append(contentsOf: originalElements)
-                
+
                 var annotations = [ObservationPin]()
                 for observation in originalElements {
                     let observationPin = ObservationPin(coordinate: CLLocationCoordinate2D.init(latitude: observation.coordinates.last!, longitude: observation.coordinates.first!), identifier: "observationPin", observation: observation, detailed: detailed)
                     annotations.append(observationPin)
                 }
-                
-                
+
+
                     self.mapView.addAnnotations(annotations)
-              
+            }
         case .localities:
             return
-        }
-            
         }
     }
     
@@ -386,7 +389,9 @@ extension NewMapView: MKMapViewDelegate {
         } else if let clusterPin = annotation as? MKClusterAnnotation {
             if let clusterPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterPinView") as? ClusterPinView {
                 clusterPinView.annotation = clusterPin
-                clusterPinView.showObservation = observationPicked
+                clusterPinView.showObservation = { [weak self] (observation) in
+                    self?.observationPicked?(observation)
+                }
                 return clusterPinView
             }
         } else if let localityAnnotation = annotation as? LocalityAnnotation {
@@ -430,23 +435,25 @@ extension NewMapView: MKMapViewDelegate {
             if observationPin.observation.images?.first != nil {
                 var observationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "observationPinViewWithImage") as? ObservationPinView
                 observationPinView?.annotation = observationPin
-                observationPinView?.wasPressed = observationPicked
-                
+               
                 if observationPinView == nil {
                     observationPinView = ObservationPinView(annotation: observationPin, reuseIdentifier: "observationPinViewWithImage", withImage: true)
-                    observationPinView?.wasPressed = observationPicked
                 }
-                
+                observationPinView?.wasPressed = { [weak self] (observation) in
+                    self?.observationPicked?(observation)
+                }
                 observationPinView?.clusteringIdentifier = "clusterAnnotationView"
                 return observationPinView
             } else {
                 var observationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "observationPinView") as? ObservationPinView
                 observationPinView?.annotation = observationPin
-                observationPinView?.wasPressed = observationPicked
                 
                 if observationPinView == nil {
                     observationPinView = ObservationPinView(annotation: observationPin, reuseIdentifier: "observationPinView", withImage: false)
-                     observationPinView?.wasPressed = observationPicked
+                }
+                
+                observationPinView?.wasPressed = { [weak self] (observation) in
+                    self?.observationPicked?(observation)
                 }
                 
                 observationPinView?.clusteringIdentifier = "clusterAnnotationView"

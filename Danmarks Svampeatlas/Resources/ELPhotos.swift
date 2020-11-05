@@ -8,6 +8,7 @@
 
 import UIKit
 import Photos
+import ELKit
 
 protocol ELPhotosManagerDelegate: NavigationDelegate {
     func error(_ error: ELPhotos.ELPhotosError)
@@ -18,23 +19,7 @@ protocol ELPhotosManagerDelegate: NavigationDelegate {
 class ELPhotos: NSObject  {
     
     enum ELPhotosError: AppError {
-        var errorDescription: String {
-            switch self {
-            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_message", comment: "")
-            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_message", comment: "")
-            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_message", comment: "")
-            }
-        }
-        
-        var errorTitle: String {
-            switch self {
-            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_title", comment: "")
-            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_title", comment: "")
-            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_title", comment: "")
-            }
-        }
-        
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .notAuthorized: return .openSettings
             case .unknownSaveError: return .tryAgain
@@ -42,6 +27,23 @@ class ELPhotos: NSObject  {
             }
         }
         
+        var message: String {
+            switch self {
+            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_message", comment: "")
+            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_message", comment: "")
+            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_message", comment: "")
+            }
+        }
+        
+        var title: String {
+            switch self {
+            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_title", comment: "")
+            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_title", comment: "")
+            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_title", comment: "")
+            }
+        }
+        
+    
         case notAuthorized
         case unknownSaveError
         case unknownFetchError

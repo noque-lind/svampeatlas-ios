@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ELKit
 
 class Section<T>: Hashable {
     
@@ -22,7 +23,7 @@ class Section<T>: Hashable {
     enum State {
         case items(items: [T])
         case loading
-        case error(error: AppError, handler: ((mRecoveryAction?) -> ())? = nil)
+        case error(error: AppError, handler: ((RecoveryAction?) -> ())? = nil)
         case empty
     }
     
@@ -85,7 +86,7 @@ class Section<T>: Hashable {
 
 enum TableViewState<T> {
     case Loading
-    case Error(AppError, ((mRecoveryAction?) ->())?)
+    case Error(AppError, ((RecoveryAction?) ->())?)
     case Items([T])
     case Paging(items: [T], max: Int?)
     case Empty

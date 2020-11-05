@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol ObservationDetailHeaderCellDelegate: class {
+    func moreButtonPressed()
+}
+
 class ObservationDetailHeaderCell: UITableViewCell {
     
     private lazy var actionButton = UIButton(type: .roundedRect).then({
@@ -18,6 +22,7 @@ class ObservationDetailHeaderCell: UITableViewCell {
         $0.layer.cornerRadius = 30 / 2
         $0.setImage(#imageLiteral(resourceName: "Glyphs_Neutral"), for: [])
         $0.tintColor = .appWhite()
+        $0.addTarget(self, action: #selector(actionButtonPressed), for: .touchUpInside)
     })
     
     private lazy var idLabel = UILabel().then({
@@ -27,7 +32,7 @@ class ObservationDetailHeaderCell: UITableViewCell {
     })
     
     private lazy var primaryLabel = UILabel().then({
-        $0.font = .appPrimaryHightlighed()
+        $0.font = .appTitle()
         $0.textColor = .appWhite()
         $0.numberOfLines = 0
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -43,6 +48,12 @@ class ObservationDetailHeaderCell: UITableViewCell {
     private lazy var determinationView = DeterminationStatusView().then({
         $0.translatesAutoresizingMaskIntoConstraints = false
     })
+    
+    @objc private func actionButtonPressed() {
+        delegate?.moreButtonPressed()
+    }
+    
+    weak var delegate: ObservationDetailHeaderCellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -70,13 +81,13 @@ class ObservationDetailHeaderCell: UITableViewCell {
         })
         
         idLabel.do({
-            $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16).isActive = true
+            $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32).isActive = true
             $0.leadingAnchor.constraint(equalTo: primaryLabel.leadingAnchor).isActive = true
             $0.trailingAnchor.constraint(equalTo: primaryLabel.trailingAnchor).isActive = true
         })
         
         primaryLabel.do({
-            $0.topAnchor.constraint(equalTo: idLabel.bottomAnchor, constant: 16).isActive = true
+            $0.topAnchor.constraint(equalTo: idLabel.bottomAnchor, constant: 0).isActive = true
             $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
             $0.trailingAnchor.constraint(equalTo: actionButton.leadingAnchor, constant: 16).isActive = true
         })
@@ -90,8 +101,8 @@ class ObservationDetailHeaderCell: UITableViewCell {
         determinationView.do({
             $0.leadingAnchor.constraint(equalTo: primaryLabel.leadingAnchor).isActive = true
             $0.trailingAnchor.constraint(equalTo: primaryLabel.trailingAnchor).isActive = true
-            $0.topAnchor.constraint(equalTo: secondaryLabel.bottomAnchor, constant: 32).isActive = true
-            $0.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
+            $0.topAnchor.constraint(equalTo: secondaryLabel.bottomAnchor, constant: 16).isActive = true
+            $0.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -32).isActive = true
         })
     }
     

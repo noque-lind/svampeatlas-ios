@@ -322,12 +322,12 @@ extension CameraVC: CameraViewDelegate {
         switch usage {
         case .mlPredict(session: let session):
             if let session = session {
-                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom, session: session, takesSelection: (selected: false, title: NSLocalizedString("detailsVC_newSightingPrompt", comment: ""), handler: { [unowned self] (selected) in
+                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom), session: session, takesSelection: (selected: false, title: NSLocalizedString("detailsVC_newSightingPrompt", comment: ""), handler: { [unowned self] (selected) in
                     self.createNewObservationRecord(imageURL: self.currentImageURL, mushroom: predictionResult.mushroom, predictionResults: predictionResults, session: session)
-                }))), animated: true)
+                })), animated: true)
                 
             } else {
-                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom, session: session, takesSelection: nil)), animated: true)
+                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom), session: nil), animated: true)
             }
         default: return
         }
@@ -383,7 +383,7 @@ extension CameraVC: ELPhotosManagerDelegate {
                        case .openSettings: UIApplication.openSettings()
                        default: return
                        }
-                })]), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .top)
+                })]), primaryText: error.title, secondaryText: error.message, location: .top)
                 .show(animationType: .fromTop)
         }
 }

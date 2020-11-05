@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ELKit
 
 
 public enum mRecoveryAction {
@@ -26,8 +27,8 @@ public enum mRecoveryAction {
     
 }
 
-public protocol AppError: Error {
-    var errorDescription: String { get }
-    var errorTitle: String { get }
-    var recoveryAction: mRecoveryAction? { get }
+public protocol AppError: ELError {
+    var message: String { get }
+    var title: String { get }
+    var recoveryAction: RecoveryAction? { get }
 }

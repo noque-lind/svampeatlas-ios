@@ -9,12 +9,13 @@
 import UIKit
 import MapKit
 import ImageIO
+import ELKit
 
 class NewObservation {
     
     enum Error: AppError {
         
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             return nil
         }
         
@@ -26,7 +27,7 @@ class NewObservation {
         case noCoordinates
         case lowAccuracy(accurracy: Double)
        
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .noSubstrateGroup, .noVegetationType, .noMushroom: return NSLocalizedString("newObservationError_missingInformation", comment: "")
             case .noLocality: return NSLocalizedString("newObservationError_noLocality_title", comment: "")
@@ -35,7 +36,7 @@ class NewObservation {
             }
         }
         
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .noMushroom: return NSLocalizedString("newObservationError_noMushroom_message", comment: "")
             case .noSubstrateGroup: return NSLocalizedString("newObservationError_noSubstrateGroup_message", comment: "")

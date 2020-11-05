@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 
 class AnimatingTableView: UITableView {
@@ -87,7 +88,7 @@ class AppTableView: UITableView {
         }
     }
     
-    func showError(_ appError: AppError, handler: ((mRecoveryAction?) -> ())?) {
+    func showError(_ appError: AppError, handler: ((RecoveryAction?) -> ())?) {
         DispatchQueue.main.async {
             let view = ErrorView()
             view.configure(error: appError, handler: handler)

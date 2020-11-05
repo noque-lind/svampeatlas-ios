@@ -118,7 +118,7 @@ class ObservationSpecieCell: UICollectionViewCell {
             let vc: UIViewController
             switch item {
             case .unknownSpeciesButton:
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id, takesSelection: (selected: false, title: NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""), handler: { (selected) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id), session: nil, takesSelection: (selected: false, title: NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""), handler: { (selected) in
                     self.newObservation?.mushroom = Mushroom.genus()
                     self.configureUpperSection()
                     self.configurePredictions()
@@ -128,10 +128,10 @@ class ObservationSpecieCell: UICollectionViewCell {
                         updater.updateSection(section: self.middleSection)
                         updater.scrollToTop(animated: true)
                     })
-                })))
+                }))
             case .selectableMushroom(let mushroom, _):
                 let selected = mushroom == self.newObservation?.mushroom
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: selected, title: selected ? NSLocalizedString("observationSpeciesCell_deselect", comment: ""): (mushroom.isGenus ? NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""): NSLocalizedString("observationSpeciesCell_chooseSpecies", comment: "")), handler: { (_) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom), session: nil, takesSelection: (selected: selected, title: selected ? NSLocalizedString("observationSpeciesCell_deselect", comment: ""): (mushroom.isGenus ? NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""): NSLocalizedString("observationSpeciesCell_chooseSpecies", comment: "")), handler: { (_) in
                     
                     if selected {
                         self.newObservation?.mushroom = nil
@@ -149,9 +149,9 @@ class ObservationSpecieCell: UICollectionViewCell {
                     }) {
                         tableView.scrollToTop(animated: true)
                     }
-                })))
+                }))
             case .selectedMushroom(let mushroom, _):
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: nil, takesSelection: (selected: true, title: NSLocalizedString("observationSpeciesCell_deselect", comment: ""), handler: { (selected) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom), session: nil, takesSelection: (selected: true, title: NSLocalizedString("observationSpeciesCell_deselect", comment: ""), handler: { (selected) in
                     self.newObservation?.mushroom = nil
                     self.configureUpperSection()
                     
@@ -159,7 +159,7 @@ class ObservationSpecieCell: UICollectionViewCell {
                         updater.updateSection(section: self.upperSection)
                         updater.scrollToTop(animated: true)
                     })
-                })))
+                }))
                 
             default:
                 return

@@ -28,7 +28,7 @@ class NearbyVC: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         
         view.observationPicked = {[weak self] observation in
-            self?.navigationController?.pushViewController(DetailsViewController(detailsContent: .observation(observation: observation, showSpeciesView: true, session: self?.session)), animated: true)
+            self?.navigationController?.pushViewController(DetailsViewController(detailsContent: .observation(observation: observation, showSpeciesView: true), session: self?.session), animated: true)
         }
         
         view.delegate = self
@@ -59,27 +59,28 @@ class NearbyVC: UIViewController {
     
     private lazy var locationManager: LocationManager = {
        let manager = LocationManager()
-        manager.state.observe(listener: { [weak mapViewFilteringSettings, weak manager, weak mapView] state in
+        manager.state.observe(listener: { [weak self, weak manager] state in
             switch state {
             case .stopped: return
-            case .locating: mapView?.shouldLoad = true
+            case .locating: self?.mapView.shouldLoad = true
             case .error(error: let error):
-                mapView?.showError(error: error, handler: { (recoveryAction) in
+                self?.mapView.showError(error: error, handler: { (recoveryAction) in
                     switch recoveryAction {
                     case .openSettings: UIApplication.openAppSettings()
                     default: manager?.start()
                     }
                 })
             case .foundLocation(location: let location):
-                guard let mapViewFilteringSettings = mapViewFilteringSettings else {return}
-                DataService.instance.getObservationsWithin(geometry: API.Geometry(coordinate: location.coordinate, radius: CLLocationDistance(mapViewFilteringSettings.distance), type: .circle), ageInYear: mapViewFilteringSettings.age) { [weak mapView] (result) in
-                    mapView?.shouldLoad = false
+                guard let mapViewFilteringSettings = self?.mapViewFilteringSettings else {return}
+                DataService.instance.getObservationsWithin(geometry: API.Geometry(coordinate: location.coordinate, radius: CLLocationDistance(mapViewFilteringSettings.distance), type: .circle), ageInYear: mapViewFilteringSettings.age) { (result) in
+                    self?.mapView.shouldLoad = false
                     switch result {
                     case .failure(let error):
-                        mapView?.showError(error: error, handler: nil)
+                        self?.mapView.showError(error: error, handler: nil)
                     case .success(let observations):
-                        mapView?.addObservationAnnotations(observations: observations)
-                        mapView?.addCirclePolygon(center: location.coordinate, radius: CLLocationDistance(self.mapViewFilteringSettings.distance))
+                        self?.mapView.addObservationAnnotations(observations: observations)
+                        guard let mapViewFilteringSettings = self?.mapViewFilteringSettings else {return}
+                        self?.mapView.addCirclePolygon(center: location.coordinate, radius: CLLocationDistance(mapViewFilteringSettings.distance))
                     }
                 }
             }

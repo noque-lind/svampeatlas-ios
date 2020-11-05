@@ -7,23 +7,25 @@
 //
 
 import UIKit
+import ELKit
 
 struct ELFileManager {
     
     enum ELFileManagerError: AppError {
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .imageSavingError: return NSLocalizedString("elFileManagerError_imageSavingError_message", comment: "")
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .imageSavingError: return NSLocalizedString("elFileManagerError_imageSavingError_title", comment: "")
             }
         }
         
-        var recoveryAction: mRecoveryAction? {
+
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .imageSavingError: return .tryAgain
             }

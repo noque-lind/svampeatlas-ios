@@ -53,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             if url.pathComponents.contains("taxon") {
                 guard let taxonID = Int(url.lastPathComponent) else {return false}
-                let detailsViewController = DetailsViewController(detailsContent: .mushroomWithID(taxonID: Int(taxonID), takesSelection: nil))
+                let detailsViewController = DetailsViewController(detailsContent: .mushroomWithID(taxonID: Int(taxonID)), session: session)
                 
                 if onboarding {
                     awaitingController = detailsViewController

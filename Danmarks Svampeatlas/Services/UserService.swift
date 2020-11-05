@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit.UIImage
+import ELKit
 
 
 
@@ -18,7 +19,7 @@ protocol SessionDelegate: class {
 class Session {
     
     enum SessionError: AppError {
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .notLoggedIn, .tokenInvalid:
                 return .login
@@ -27,7 +28,7 @@ class Session {
         }
         
     
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .notLoggedIn:
                 return NSLocalizedString("sessionError_notLoggedIn_message", comment: "")
@@ -40,7 +41,7 @@ class Session {
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .notLoggedIn:
                 return NSLocalizedString("sessionError_notLoggedIn_title", comment: "")

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation.CLLocation
+import ELKit
 
 enum Result<ReturnValue, ErrorType> {
     case failure(ErrorType)
@@ -42,11 +43,11 @@ class DataService{
         case unhandled
         case empty
         
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             return nil
         }
         
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .decodingError(let error):
                 return NSLocalizedString("dataServiceError_decodingError_message", comment: "")
@@ -61,7 +62,7 @@ class DataService{
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .searchReponseEmpty:
                 return NSLocalizedString("dataServiceError_searchResponseEmpty_title", comment: "")
@@ -91,7 +92,7 @@ class DataService{
         case payloadTooLarge
         
         
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .noInternet:
                 return NSLocalizedString("urlSessionError_noInternet_message", comment: "")
@@ -110,7 +111,7 @@ class DataService{
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .noInternet:
                 return NSLocalizedString("urlSessionError_noInternet_title", comment: "")
@@ -129,7 +130,7 @@ class DataService{
             }
         }
         
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .unAuthorized: return .login
             default: return .tryAgain

@@ -120,7 +120,7 @@ class AddObservationVC: UIViewController {
                                            ]), location: .bottom)
                    
                 }
-                notif.configure(primaryText: error.errorTitle, secondaryText: error.errorDescription)
+                notif.configure(primaryText: error.title, secondaryText: error.message)
                 notif.show(animationType: .fromBottom)
             case .locating: categoryView?.setCategoryLoadingState(category: Category(type: ObservationCategories.Location, title: ObservationCategories.Location.description), loading: true)
             case .foundLocation(location: let location):
@@ -157,6 +157,7 @@ class AddObservationVC: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
     }
+
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
@@ -247,7 +248,7 @@ class AddObservationVC: UIViewController {
                     
                     
                 case .failure(let error):
-                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom)
                         .show(animationType: .fromBottom, onViewController: self)
                 }
                 }
@@ -280,7 +281,7 @@ class AddObservationVC: UIViewController {
             ]), attributes: ELNotificationView.Attributes.appAttributes())
             indexPath = IndexPath(row: ObservationCategories.allCases.firstIndex(of: .Location)!, section: 0)
         }
-        notificationView.configure(primaryText: error.errorTitle, secondaryText: error.errorDescription)
+        notificationView.configure(primaryText: error.title, secondaryText: error.message)
         notificationView.show(animationType: .fromBottom ,queuePosition: .front, onViewController: self)
         categoryView.moveSelector(toCellAtIndexPath: indexPath)
         collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
@@ -332,7 +333,7 @@ extension AddObservationVC {
                 
             case .failure(let error):
                 DispatchQueue.main.async {
-                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: NSLocalizedString("addObservationVC_localityFoundError_title", comment: ""), secondaryText: error.errorDescription, location: .bottom)
+                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: NSLocalizedString("addObservationVC_localityFoundError_title", comment: ""), secondaryText: error.message, location: .bottom)
                         .show(animationType: .fromBottom, onViewController: self)
                 }
             }

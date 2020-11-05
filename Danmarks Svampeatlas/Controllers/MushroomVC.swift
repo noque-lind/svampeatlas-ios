@@ -107,7 +107,7 @@ class MushroomVC: UIViewController {
                 }
 
             case .mushroom(let mushroom):
-                self?.navigationController?.pushViewController(DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom, session: self?.session, takesSelection: nil)), animated: true)
+                self?.navigationController?.pushViewController(DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom), session: self?.session), animated: true)
 
             }
         }
@@ -125,7 +125,7 @@ class MushroomVC: UIViewController {
                 Database.instance.mushroomsRepository.delete(mushroom: mushroom) { (result) in
                     switch result {
                     case .failure(let error):
-                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom)
                             .show(animationType: .fromBottom, onViewController: self)
                     case .success:
                         guard let selectedItemType = self?.categoryView.selectedItem.type, case Categories.favorites = selectedItemType else {
@@ -141,7 +141,7 @@ class MushroomVC: UIViewController {
                 Database.instance.mushroomsRepository.save(items: [mushroom]) { (result) in
                     switch result {
                     case .failure(let error):
-                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .bottom)
+                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom)
                         .show(animationType: .fromBottom, onViewController: self)
                     case .success:
                         ELNotificationView.appNotification(style: .success, primaryText: String.localizedStringWithFormat(NSLocalizedString("mushroomVC_favoriteSucces_title", comment: ""), mushroom.localizedName ?? mushroom.fullName), secondaryText: NSLocalizedString("mushroomVC_favoriteSucces_message", comment: ""), location: .bottom)

@@ -75,14 +75,14 @@ class CommentCell: UITableViewCell {
 //        profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
 //
         contentView.addSubview(upperStackView)
-        upperStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
+        upperStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
         upperStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        upperStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        upperStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
         
         contentView.addSubview(contentLabel)
         contentLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor).isActive = true
         contentLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
-        contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
+        contentLabel.trailingAnchor.constraint(equalTo: upperStackView.trailingAnchor).isActive = true
         contentLabel.topAnchor.constraint(equalTo: upperStackView.bottomAnchor, constant: 4).isActive = true
     }
     

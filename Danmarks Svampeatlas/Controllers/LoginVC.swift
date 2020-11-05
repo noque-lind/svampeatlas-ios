@@ -222,7 +222,7 @@ class LoginVC: UIViewController {
                 case .failure(let error):
                     DispatchQueue.main.async {
                         Spinner.stop()
-                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.errorTitle, secondaryText: error.errorDescription, location: .top)
+                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .top)
                             .show(animationType: .fromTop)
                     }
                 }

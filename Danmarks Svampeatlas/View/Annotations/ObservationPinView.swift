@@ -122,7 +122,10 @@ class ObservationPinView: MKAnnotationView {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         if selected {
-            calloutView = ObservationPinCalloutView(withImage: withImage, wasPressed: wasPressed)
+            calloutView = ObservationPinCalloutView(withImage: withImage)
+            calloutView?.wasPressed = { [weak self] (observation) in
+                self?.wasPressed?(observation)
+            }
             addSubview(calloutView!)
             calloutView!.translatesAutoresizingMaskIntoConstraints = false
             if withImage {

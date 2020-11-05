@@ -9,57 +9,52 @@
 import UIKit
 import ELKit
 import Then
+import MapKit
 
 enum DetailsContent {
-    case mushroomWithID(taxonID: Int, takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))?)
-    case mushroom(mushroom : Mushroom, session: Session?, takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))?)
-    case observation(observation: Observation, showSpeciesView: Bool, session: Session?)
-    case observationWithID(observationID: Int, showSpeciesView: Bool, session: Session?)
+    case mushroomWithID(taxonID: Int)
+    case mushroom(mushroom : Mushroom)
+    case observation(observation: Observation, showSpeciesView: Bool)
+    case observationWithID(observationID: Int, showSpeciesView: Bool)
 }
 
 class DetailsViewController: UIViewController {
     
     enum Item {
-        case header(observation: Observation)
+        case observationHeader(observation: Observation)
+        case mushroomHeader(mushroom: Mushroom)
+        case text(text: String)
+        case informationView(information: [(String, String)])
+        case observation(observation: Observation)
+        case heatMap(userRegion: MKCoordinateRegion, observations: [Observation])
+        case observationLocation(observation: Observation)
+        case comment(comment: Comment)
+        case addComment(session: Session)
+        case mushroom(mushroom: Mushroom)
     }
+
     
-    class CellProvider: ELTableViewCellProvider {
-        typealias CellItem = Item
-        
-        func registerCells(tableView: UITableView) {
-            tableView.register(ObservationDetailHeaderCell.self, forCellReuseIdentifier: String(describing: ObservationDetailHeaderCell.self))
-        }
-        
-        func cellForItem(_ item: DetailsViewController.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
+    private lazy var tableView = ELTableView<Item, CellProvider>.build(provider: CellProvider().then({$0.delegate = self})).then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.separatorStyle = .none
+        $0.scrollDelegate = self
+        $0.didSelectItem.observe { [weak self] (item, indexPath) in
             switch item {
-            case .header(observation: let observation):
-                return tableView.dequeueReusableCell(withIdentifier: String(describing: ObservationDetailHeaderCell.self), for: indexPath).then({
-                    ($0 as? ObservationDetailHeaderCell)?.configure(observation: observation)
-                })
+            case .mushroom(mushroom: let mushroom):
+                self?.navigationController?.pushViewController(DetailsViewController.init(detailsContent: .mushroom(mushroom: mushroom), session: self?.session), animated: true)
+            case .observation(observation: let observation):
+                self?.navigationController?.pushViewController(DetailsViewController.init(detailsContent: .observation(observation: observation, showSpeciesView: false), session: self?.session), animated: true)
+            case .observationLocation(observation: let observation):
+                guard let latitude = observation.coordinates.last, let longitude = observation.coordinates.first else {return}
+                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                let mapVC = MapVC()
+                    mapVC.mapView.addLocationAnnotation(location: coordinate)
+                    mapVC.mapView.setRegion(center: coordinate, zoomMetres: 50000)
+                self?.navigationController?.pushViewController(mapVC, animated: true)
+            default: return
             }
         }
-        
-        func heightForItem(_ item: DetailsViewController.Item, tableView: UITableView, indexPath: IndexPath) -> CGFloat {
-            UITableView.automaticDimension
-        }
-    }
-    
-    private lazy var tableView = ELTableView<Item, CellProvider>.build(provider: CellProvider()).then({
-        $0.translatesAutoresizingMaskIntoConstraints = false
     })
-    
-    
-    private lazy var backgroundView: ErrorView = {
-        let view = ErrorView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private lazy var spinner: Spinner = {
-       let spinner = Spinner()
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        return spinner
-    }()
     
     private lazy var imagesCollectionView: ImagesCollectionView = {
         let collectionView = ImagesCollectionView(imageContentMode: UIView.ContentMode.scaleAspectFill)
@@ -83,8 +78,23 @@ class DetailsViewController: UIViewController {
         return view
     }()
     
-    private var scrollView: AppScrollView?
-    
+    private lazy var viewModel: DetailsViewControllerViewModel = {
+        let vm: DetailsViewControllerViewModel
+        
+        switch detailsContent {
+        case .mushroom(mushroom: let mushroom):
+            vm = .init(mushroom: mushroom)
+        case .observation(observation: let observation, showSpeciesView: let showSpeciesView):
+            vm = .init(observation: observation, showSpecies: showSpeciesView)
+        case .mushroomWithID(taxonID: let id):
+            vm = .init(mushroomID: id)
+        case .observationWithID(observationID: let id, showSpeciesView: let showSpeciesView):
+            vm = .init(observationID: id, showSpecies: showSpeciesView)
+        }
+        
+        return vm
+    }()
+        
     private lazy var selectButton: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -120,32 +130,35 @@ class DetailsViewController: UIViewController {
         return view
     }()
     
-//    private lazy var mushroomDetailsViewModel = MushroomDetailsViewModel(id: 0).then({
-//        $0.mushroom.observe { [weak tableView] (state) in
-//            <#code#>
-//        }
-//    })
     private let detailsContent: DetailsContent
     private var viewDidLayout: Bool = false
+    private var session: Session?
+    private var takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))?
     
     let interactor = showImageAnimationInteractor()
     
-    var images: [Image]?
-    var takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))?
+    var images: [Image]? {
+        didSet {
+             if let images = images {
+                    elNavigationBar.setContentView(view: imagesCollectionView, ignoreSafeAreaLayoutGuide: true, maxHeight: 300)
+                    tableView.contentInset.top = elNavigationBar.maxHeight
+                    imagesCollectionView.configure(images: images)
+             }
+        }
+    }
+   
     
-    init(detailsContent: DetailsContent) {
+    init(detailsContent: DetailsContent, session: Session?, takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))? = nil) {
+        self.session = session
+        self.takesSelection = takesSelection
         self.detailsContent = detailsContent
-//        switch detailsContent {
-//        case .mushroomWithID(taxonID: let id, takesSelection: nil): self.mushroomDetailsViewModel = MushroomDetailsViewModel(id: id)
-//        default: break
-//        }
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    
+        
     override func viewWillLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if let navigationBarFrame = self.navigationController?.navigationBar.frame {
@@ -154,11 +167,12 @@ class DetailsViewController: UIViewController {
                 elNavigationBar.minHeight = navigationBarFrame.maxY
             }
 
-            if scrollView?.contentInset.top != elNavigationBar.maxHeight {
-                scrollView?.contentInset.top = elNavigationBar.maxHeight
-                scrollView?.scrollIndicatorInsets.top = elNavigationBar.maxHeight
-                scrollView?.contentInset.bottom = view.safeAreaInsets.bottom
-                scrollView?.scrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
+            if tableView.contentInset.top != elNavigationBar.maxHeight {
+                tableView.contentInset.top = elNavigationBar.maxHeight
+                tableView.contentInset.bottom = view.safeAreaInsets.bottom
+                tableView.performUpdates { (updater) in
+                    updater.scrollToTop(animated: false)
+                }
             }
         }
         }
@@ -166,197 +180,246 @@ class DetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = ""
         prepareView()
+        setupView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.view.backgroundColor = nil
-        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
-        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.backgroundColor = nil
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+        self.navigationController?.appConfiguration(translucent: true)
         super.viewWillAppear(animated)
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-         super.viewDidAppear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.view.backgroundColor = nil
-        self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
-        self.navigationController?.navigationBar.barTintColor = UIColor.appPrimaryColour()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.backgroundColor = nil
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
-        
-        self.eLRevealViewController()?.delegate = self
-//        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-//        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-    }
+
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if images != nil {
             imagesCollectionView.invalidate()
         }
-        
-//        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
-//        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
-    
-    
+
     deinit {
         debugPrint("DetailsViewController was deinited correctly")
     }
-    
+        
     private func prepareView() {
-        view.backgroundColor = .appSecondaryColour()
+        switch detailsContent {
+        case .observation, .observationWithID:
+            setupAsObservationDetails()
+        case .mushroom, .mushroomWithID:
+            setupAsMushroomDetails()
+        }
+        setupView()
+    }
+    
+
+    private func setupView() {
+        view.backgroundColor = UIColor.appSecondaryColour()
         view.do({
             $0.addSubview(tableView)
+            $0.addSubview(elNavigationBar)
         })
-        ELSnap.snapView(tableView, toSuperview: view)
+        tableView.do({
+            $0.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            $0.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            $0.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        })
         
-        switch detailsContent {
-        case .observation(observation: let observation, showSpeciesView: _, session: _):
-            tableView.setSections(sections: [.init(title: nil, state: .items(items: [.header(observation: observation)]))])
-        default: return
-        }
-        
-        
-//        view.backgroundColor = UIColor.appSecondaryColour()
-//        spinner.addTo(view: view)
-//        spinner.start()
-//
-//        switch detailsContent {
-//        case .mushroom(mushroom: let mushroom, let session, let takesSelection):
-//            let scrollView: MushroomDetailsScrollView = {
-//                let view = MushroomDetailsScrollView(session: session)
-//                view.configure(mushroom, takesSelection: takesSelection != nil)
-//                view.customDelegate = self
-//                view.delegate = self
-//                view.translatesAutoresizingMaskIntoConstraints = false
-//                return view
-//            }()
-//            self.scrollView = scrollView
-//            self.takesSelection = takesSelection
-//            self.images = mushroom.images
-//            elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
-//            setupView()
-//
-//        case .observation(observation: let observation, let showSpeciesView, let session):
-//
-//            let scrollView: ObservationDetailsScrollView = {
-//                let view = ObservationDetailsScrollView(session: session)
-//                view.configure(withObservation: observation, showSpeciesView: showSpeciesView)
-//                view.customDelegate = self
-//                view.delegate = self
-//                view.translatesAutoresizingMaskIntoConstraints = false
-//                return view
-//            }()
-//            self.scrollView = scrollView
-//
-//
-//            self.images = observation.images
-//            elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
-//            setupView()
-//
-//        case .observationWithID(observationID: let observationID, showSpeciesView: let showSpeciesView, session: let session):
-//
-//            DataService.instance.getObservation(withID: observationID) { [weak self] (result) in
-//                DispatchQueue.main.async {
-//                    switch result {
-//                    case .failure(let error):
-//                        self?.addError(error: error)
-//                    case .success(let observation):
-//                        let scrollView: ObservationDetailsScrollView = {
-//                            let view = ObservationDetailsScrollView(session: session)
-//                            view.configure(withObservation: observation, showSpeciesView: showSpeciesView)
-//                            view.customDelegate = self
-//                            view.delegate = self
-//                            view.translatesAutoresizingMaskIntoConstraints = false
-//                            return view
-//                        }()
-//
-//                        self?.scrollView = scrollView
-//                        self?.images = observation.images
-//                       self?.elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
-//                        self?.setupView()
-//                    }
-//                }
-//            }
-//
-//
-//        case .mushroomWithID(taxonID: let taxonID, let takesSelection):
-//            self.takesSelection = takesSelection
-//
-//            DataService.instance.getMushroom(withID: taxonID) { [weak self] (result) in
-//                DispatchQueue.main.async { [weak self] in
-//                    switch result {
-//                    case .failure(let error):
-//                        self?.addError(error: error)
-//                    case .success(let mushroom):
-//                        let scrollView: MushroomDetailsScrollView = {
-//                            let view = MushroomDetailsScrollView(session: nil)
-//                            view.configure(mushroom, takesSelection: takesSelection != nil)
-//                            view.customDelegate = self
-//                            view.delegate = self
-//                            view.translatesAutoresizingMaskIntoConstraints = false
-//                            return view
-//                        }()
-//
-//                        self?.scrollView = scrollView
-//                        self?.images = mushroom.images
-//                        self?.elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
-//                        self?.setupView()
-//                    }
-//                }
-//            }
-//        }
-    }
-    
-    private func addError(error: AppError) {
-        view.addSubview(backgroundView)
-        backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        backgroundView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        backgroundView.configure(error: error, handler: nil)
-    }
-    
-    private func setupView() {
-        spinner.stop()
-        guard let scrollView = scrollView else {return}
-        view.backgroundColor = UIColor.appSecondaryColour()
-        view.addSubview(scrollView)
-        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-
-        if takesSelection != nil {
+           if takesSelection != nil {
             view.addSubview(selectButton)
-            selectButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            selectButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-            selectButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-            selectButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60).isActive = true
-            scrollView.bottomAnchor.constraint(equalTo: selectButton.topAnchor, constant: 0).isActive = true
-        } else {
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -1).isActive = true
+            selectButton.do({
+                $0.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+                $0.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+                $0.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+                $0.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60).isActive = true
+            })
+            tableView.bottomAnchor.constraint(equalTo: selectButton.topAnchor).isActive = true
+           } else {
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+           }
+        
+        elNavigationBar.do({
+            $0.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            $0.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            $0.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        })
+    }
+    
+    private func setupAsObservationDetails() {
+        viewModel.observation.observe { [weak self] (state) in
+            switch state {
+            case .loading:
+                self?.tableView.setSections(sections: [.init(title: nil, state: .loading)])
+            case .error(error: let error, handler: let handler):
+                self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error, handler: handler))])
+            case .items(item: let observation):
+                DispatchQueue.main.async {
+                    self?.images = observation.images
+                    self?.elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
+                }
+               
+                var sections: [ELKit.Section<Item>] = [.init(title: nil, state: .items(items: [.observationHeader(observation: observation)]))]
+                if let notes = observation.note, notes != "" {
+                    sections.append(.init(title: NSLocalizedString("observationDetailsScrollView_notes", comment: ""), state: .items(items: [.text(text: notes)])))
+                }
+                
+                if let ecologyNote = observation.ecologyNote, ecologyNote != "" {
+                    sections.append(.init(title: NSLocalizedString("observationDetailsScrollView_ecologyNotes", comment: ""), state: .items(items: [.text(text: ecologyNote)])))
+                }
+                
+                var informationArray = [(String, String)]()
+                if let substrate = observation.substrate {
+                    informationArray.append((NSLocalizedString("observationDetailsScrollView_substrate", comment: ""), substrate.name))
+                }
+                
+                if let vegetationType = observation.vegetationType {
+                    informationArray.append((NSLocalizedString("observationDetailsScrollView_vegetationType", comment: ""), vegetationType.name))
+                }
+                
+                sections.append(.init(title: NSLocalizedString("appScrollView_informationHeaderTitle", comment: ""), state: .items(items: [.informationView(information: informationArray)])))
+                sections.append(.init(title: NSLocalizedString("observationDetailsScrollView_location", comment: ""), state: .items(items: [.observationLocation(observation: observation)])))
+                
+                let speciesSection = sections.appendAndGive(.init(title: NSLocalizedString("observationDetailsScrollView_species", comment: ""), state: .empty))
+                let commentsSection = sections.appendAndGive(.init(title: NSLocalizedString("observationDetailsScrollView_comments", comment: ""), state: .empty))
+                
+                if let session = self?.session {
+                    sections.append(.init(title: nil, state: .items(items: [.addComment(session: session)])))
+                }
+        
+                self?.tableView.setSections(sections: sections)
+                
+                self?.viewModel.mushroom.observe(listener: { (state) in
+                    self?.tableView.performUpdates(updates: { (updater) in
+                    switch state {
+                    case .loading: speciesSection.setState(state: .loading)
+                    case .items(item: let mushroom): speciesSection.setState(state: .items(items: [.mushroom(mushroom: mushroom)]))
+                    case .error(error: let error, handler: let handler): speciesSection.setState(state: .error(error: error, handler: handler))
+                    default: return
+                    }
+                        updater.updateSection(section: speciesSection)
+                    })
+                })
+                
+                self?.viewModel.observationComments.observe { (state) in
+                    self?.tableView.performUpdates(updates: { (updater) in
+                    switch state {
+                    case .error(error: let error, handler: let handler):
+                        commentsSection.setState(state: .error(error: error, handler: handler))
+                    case .items(item: let items):
+                        commentsSection.setState(state: .items(items: items.map({Item.comment(comment: $0)})))
+                    case .loading:
+                        commentsSection.setState(state: .loading)
+                    default: return
+                    }
+                        updater.updateSection(section: commentsSection)
+                    })
+                }
+            case .empty: return
+            }
         }
-        
-        view.addSubview(elNavigationBar)
-        elNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        elNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        elNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
-        if let images = images {
-            elNavigationBar.setContentView(view: imagesCollectionView, ignoreSafeAreaLayoutGuide: true, maxHeight: 300)
-            scrollView.contentInset.top = elNavigationBar.maxHeight
-            scrollView.scrollIndicatorInsets.top = elNavigationBar.maxHeight
-            imagesCollectionView.configure(images: images)
+    }
+    
+    private func setupAsMushroomDetails() {
+        viewModel.mushroom.observe { [weak self] (state) in
+            switch state {
+            case .empty: return
+            case .error(error: let error, handler: let handler):
+            self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error, handler: handler))])
+            case .loading:
+                self?.tableView.setSections(sections: [.init(title: nil, state: .loading)])
+            case .items(item: let mushroom):
+                DispatchQueue.main.async {
+                    self?.elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
+                    self?.images = mushroom.images
+                }
+               
+                var sections: [ELKit.Section<Item>] = [.init(title: nil, state: .items(items: [.mushroomHeader(mushroom: mushroom)]))]
+                
+                if let description = mushroom.attributes?.description, description != "" {
+                    sections.append(.init(title: NSLocalizedString("mushroomDetailsScrollView_description", comment: ""), state: .items(items: [.text(text: description)])))
+                }
+            
+                if let eatability = mushroom.attributes?.eatability, eatability != "" {
+                    sections.append(.init(title: NSLocalizedString("mushroomDetailsScrollView_eatability", comment: ""), state: .items(items: [.text(text: eatability)])))
+                }
+                
+                if let similarities = mushroom.attributes?.similarities, similarities != "" {
+                    sections.append(.init(title: NSLocalizedString("mushroomDetailsScrollView_similarities", comment: ""), state: .items(items: [.text(text: similarities)])))
+                }
+                
+                if let validationNote = mushroom.attributes?.tipsForValidation, validationNote != "" {
+                    sections.append(.init(title: NSLocalizedString("mushroomDetailsScrollView_validationTips", comment: ""), state: .items(items: [.text(text: validationNote)])))
+                }
+                
+                var informationArray = [(String, String)]()
+                if let totalObservations = mushroom.statistics?.acceptedCount {
+                    informationArray.append((NSLocalizedString("mushroomDetailsScrollView_acceptedRecords", comment: ""), "\(totalObservations)"))
+                }
+
+                if let latestAcceptedRecord = mushroom.statistics?.lastAcceptedRecord {
+                    informationArray.append((NSLocalizedString("mushroomDetailsScrollView_latestAcceptedRecord", comment: ""), Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.long) ?? ""))
+                }
+               
+                if let updatedAt = mushroom.updatedAt {
+                    informationArray.append((NSLocalizedString("mushroomDetailsScrollView_latestUpdated", comment: ""), Date(ISO8601String: updatedAt)?.convert(into: DateFormatter.Style.medium) ?? ""))
+                }
+                
+                sections.append(.init(title: NSLocalizedString("appScrollView_informationHeaderTitle", comment: ""), state: .items(items: [.informationView(information: informationArray)])))
+                
+                let nearbyObservationsSection = ELKit.Section<Item>.init(title: NSLocalizedString("mushroomDetailsScrollView_heatMap", comment: ""), state: .empty)
+                sections.append(nearbyObservationsSection)
+                
+                
+                let observationSection = ELKit.Section<Item>.init(title: NSLocalizedString("mushroomDetailsScrollView_latestObservations", comment: ""), state: .loading)
+                
+                sections.append(observationSection)
+                
+                
+                
+                self?.tableView.setSections(sections: sections)
+                
+    
+                self?.viewModel.relatedObservations.observe(listener: { (state) in
+                    self?.tableView.performUpdates(updates: { (updater) in
+                    switch state {
+                    case .loading: observationSection.setState(state: .loading)
+                    case .items(items: let observations): observationSection.setState(state: .items(items: observations.map({Item.observation(observation: $0)})))
+                    case .error(error: let error, handler: let handler):
+                        observationSection.setState(state: .error(error: error, handler: handler))
+                    case .empty: observationSection.setState(state: .empty)
+                    }
+                    
+                        updater.updateSection(section: observationSection)
+                    })
+                })
+                
+                self?.viewModel.userRegion.observe(listener: { (state) in
+                    self?.tableView.performUpdates(updates: { (updater) in
+                    switch state {
+                    case .empty: return
+                    case .loading: nearbyObservationsSection.setState(state: .loading)
+                    case .error(error: let error, handler: let handler): nearbyObservationsSection.setState(state: .error(error: error, handler: handler))
+                    case .items(item: let region):
+                        
+                        self?.viewModel.nearbyObservations.observe(listener: { (state) in
+                            self?.tableView.performUpdates(updates: { (updater) in
+                            switch state {
+                            case .empty: return
+                            case .loading: return
+                            case .error(error: let error, handler: let handler): nearbyObservationsSection.setState(state: .error(error: error, handler: handler))
+                            case .items(item: let observations):
+                                nearbyObservationsSection.setState(state: .items(items: [.heatMap(userRegion: region, observations: observations)]))
+                            }
+                            
+                                updater.updateSection(section: nearbyObservationsSection)
+                            })
+                        })
+                    }
+                    
+                        updater.updateSection(section: nearbyObservationsSection)
+                    })
+                })
+            }
         }
     }
     
@@ -367,15 +430,13 @@ class DetailsViewController: UIViewController {
     }
 }
 
-extension DetailsViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let appBarAdjustedOffset = scrollView.contentOffset.y + elNavigationBar.maxHeight
+extension DetailsViewController: ELTableViewNavigationBarConnector {
+    func tableViewDidScroll(_ tableView: UIScrollView) {
+        let appBarAdjustedOffset = tableView.contentOffset.y + elNavigationBar.maxHeight
         let percent = 1 - (appBarAdjustedOffset / elNavigationBar.maxHeight)
         elNavigationBar.setPercentExpanded(percent)
     }
 }
-
-
 
 extension DetailsViewController: ELRevealViewControllerDelegate, UIGestureRecognizerDelegate {
     func isAllowedToPushMenu() -> Bool? {
@@ -399,12 +460,74 @@ extension DetailsViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
-extension DetailsViewController: NavigationDelegate {
-    func presentVC(_ vc: UIViewController) {
-        self.present(vc, animated: true, completion: nil)
+extension DetailsViewController: CellProviderDelegate {
+    func moreButtonPressed() {
+        switch viewModel.observation.value {
+        case .items(item: let observation):
+            let isCurrentUserObservation = (observation.observedBy == session?.user.name)
+            let actionVC = UIAlertController(title: "Fund med ID: \(observation.id)", message: "Du har nedenstående valgmuligheder.", preferredStyle: .actionSheet).then({
+                if isCurrentUserObservation {
+                    $0.addAction(.init(title: "Rediger fund", style: .default, handler: { (action) in
+                        
+                    }))
+                    $0.addAction(.init(title: "Slet fund", style: .destructive, handler: { (action) in
+                        
+                    }))
+                } else {
+                    $0.addAction(.init(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), style: .destructive, handler: { (action) in
+                        UIAlertController(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), message: NSLocalizedString("observationDetailsScrollView_rapportContent_message", comment: ""), preferredStyle: .alert)
+                            .then({ vc in
+                                vc.addTextField { (textField) in
+                                textField.placeholder = NSLocalizedString("observationDetailsScrollView_rapportContent_placeholder", comment: "")
+                                textField.font = .appPrimary()
+                            }
+                            
+                                vc.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak self] (action) in
+                                    guard let comment = vc.textFields?.first?.text else {return}
+                                    self?.session?.reportOffensiveContent(observationID: observation.id, comment: comment, completion: {
+                                            DispatchQueue.main.async {
+                                                let notification = ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_title", comment: ""), secondaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_message", comment: ""), location: .bottom)
+                                                notification.show(animationType: .zoom)
+                                            }
+                                        })
+                                    }))
+                                vc.addAction(UIAlertAction(title: NSLocalizedString("observationDetailsScrollView_rapportContent_abort", comment: ""), style: .cancel, handler: nil))
+
+                        })
+                            .do({
+                                self.present($0, animated: true, completion: nil)
+                            })
+                    }))
+                }
+                
+                $0.addAction(.init(title: "Afbryd", style: .cancel, handler: nil))
+            })
+            present(actionVC, animated: true, completion: nil)
+        default: return
+        }
     }
     
-    func pushVC(_ vc: UIViewController) {
-        self.navigationController?.pushViewController(vc, animated: true)
+    func enterButtonPressed(withText: String) {
+        switch viewModel.type {
+        case .observation(id: let id):
+            let newCommentSection = ELKit.Section<Item>.init(title: nil, state: .loading)
+            
+            tableView.performUpdates { (updater) in
+                updater.addSection(section: newCommentSection, sectionIndex: self.tableView.sections.count - 1)
+            }
+            session?.uploadComment(observationID: id, comment: withText, completion: { [weak tableView] (result) in
+                    switch result {
+                    case .failure(let error):
+                        newCommentSection.setState(state: .error(error: error, handler: nil))
+                    case .success(let comment):
+                        newCommentSection.setState(state: .items(items: [.comment(comment: comment)]))
+                    }
+
+                    tableView?.performUpdates(updates: { (updates) in
+                        updates.updateSection(section: newCommentSection)
+                    })
+            })
+        default: return
+        }
     }
 }

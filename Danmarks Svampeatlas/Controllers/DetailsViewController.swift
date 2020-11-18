@@ -32,13 +32,13 @@ class DetailsViewController: UIViewController {
         case addComment(session: Session)
         case mushroom(mushroom: Mushroom)
     }
-
+    
     
     private lazy var tableView = ELTableView<Item, CellProvider>.build(provider: CellProvider().then({$0.delegate = self})).then({
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.separatorStyle = .none
         $0.scrollDelegate = self
-        $0.didSelectItem.observe { [weak self] (item, indexPath) in
+        $0.didSelectItem.handleEvent { [weak self] (item, indexPath) in
             switch item {
             case .mushroom(mushroom: let mushroom):
                 self?.navigationController?.pushViewController(DetailsViewController.init(detailsContent: .mushroom(mushroom: mushroom), session: self?.session), animated: true)
@@ -48,8 +48,8 @@ class DetailsViewController: UIViewController {
                 guard let latitude = observation.coordinates.last, let longitude = observation.coordinates.first else {return}
                 let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 let mapVC = MapVC()
-                    mapVC.mapView.addLocationAnnotation(location: coordinate)
-                    mapVC.mapView.setRegion(center: coordinate, zoomMetres: 50000)
+                mapVC.mapView.addLocationAnnotation(location: coordinate)
+                mapVC.mapView.setRegion(center: coordinate, zoomMetres: 50000)
                 self?.navigationController?.pushViewController(mapVC, animated: true)
             default: return
             }
@@ -73,7 +73,7 @@ class DetailsViewController: UIViewController {
     }()
     
     private lazy var elNavigationBar: ELNavigationBar = {
-       let view = ELNavigationBar()
+        let view = ELNavigationBar()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -94,7 +94,7 @@ class DetailsViewController: UIViewController {
         
         return vm
     }()
-        
+    
     private lazy var selectButton: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -139,14 +139,14 @@ class DetailsViewController: UIViewController {
     
     var images: [Image]? {
         didSet {
-             if let images = images {
-                    elNavigationBar.setContentView(view: imagesCollectionView, ignoreSafeAreaLayoutGuide: true, maxHeight: 300)
-                    tableView.contentInset.top = elNavigationBar.maxHeight
-                    imagesCollectionView.configure(images: images)
-             }
+            if let images = images {
+                elNavigationBar.setContentView(view: imagesCollectionView, ignoreSafeAreaLayoutGuide: true, maxHeight: 300)
+                tableView.contentInset.top = elNavigationBar.maxHeight
+                imagesCollectionView.configure(images: images)
+            }
         }
     }
-   
+    
     
     init(detailsContent: DetailsContent, session: Session?, takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))? = nil) {
         self.session = session
@@ -158,7 +158,7 @@ class DetailsViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-        
+    
     override func viewWillLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if let navigationBarFrame = self.navigationController?.navigationBar.frame {
@@ -166,7 +166,7 @@ class DetailsViewController: UIViewController {
                 additionalSafeAreaInsets = UIEdgeInsets(top: -navigationBarFrame.height, left: 0.0, bottom: 0.0, right: 0.0)
                 elNavigationBar.minHeight = navigationBarFrame.maxY
             }
-
+            
             if tableView.contentInset.top != elNavigationBar.maxHeight {
                 tableView.contentInset.top = elNavigationBar.maxHeight
                 tableView.contentInset.bottom = view.safeAreaInsets.bottom
@@ -175,7 +175,7 @@ class DetailsViewController: UIViewController {
                 }
             }
         }
-        }
+    }
     
     
     override func viewDidLoad() {
@@ -189,7 +189,7 @@ class DetailsViewController: UIViewController {
         self.navigationController?.appConfiguration(translucent: true)
         super.viewWillAppear(animated)
     }
-
+    
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -197,11 +197,11 @@ class DetailsViewController: UIViewController {
             imagesCollectionView.invalidate()
         }
     }
-
+    
     deinit {
         debugPrint("DetailsViewController was deinited correctly")
     }
-        
+    
     private func prepareView() {
         switch detailsContent {
         case .observation, .observationWithID:
@@ -212,7 +212,7 @@ class DetailsViewController: UIViewController {
         setupView()
     }
     
-
+    
     private func setupView() {
         view.backgroundColor = UIColor.appSecondaryColour()
         view.do({
@@ -225,7 +225,7 @@ class DetailsViewController: UIViewController {
             $0.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         })
         
-           if takesSelection != nil {
+        if takesSelection != nil {
             view.addSubview(selectButton)
             selectButton.do({
                 $0.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -234,9 +234,9 @@ class DetailsViewController: UIViewController {
                 $0.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60).isActive = true
             })
             tableView.bottomAnchor.constraint(equalTo: selectButton.topAnchor).isActive = true
-           } else {
+        } else {
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-           }
+        }
         
         elNavigationBar.do({
             $0.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -255,9 +255,9 @@ class DetailsViewController: UIViewController {
             case .items(item: let observation):
                 DispatchQueue.main.async {
                     self?.images = observation.images
-                    self?.elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.speciesProperties.name))
+                    self?.elNavigationBar.setTitle(title: String.localizedStringWithFormat(NSLocalizedString("detailsVC_observationTitle", comment: ""), observation.determination.name))
                 }
-               
+                
                 var sections: [ELKit.Section<Item>] = [.init(title: nil, state: .items(items: [.observationHeader(observation: observation)]))]
                 if let notes = observation.note, notes != "" {
                     sections.append(.init(title: NSLocalizedString("observationDetailsScrollView_notes", comment: ""), state: .items(items: [.text(text: notes)])))
@@ -285,32 +285,32 @@ class DetailsViewController: UIViewController {
                 if let session = self?.session {
                     sections.append(.init(title: nil, state: .items(items: [.addComment(session: session)])))
                 }
-        
+                
                 self?.tableView.setSections(sections: sections)
                 
                 self?.viewModel.mushroom.observe(listener: { (state) in
                     self?.tableView.performUpdates(updates: { (updater) in
-                    switch state {
-                    case .loading: speciesSection.setState(state: .loading)
-                    case .items(item: let mushroom): speciesSection.setState(state: .items(items: [.mushroom(mushroom: mushroom)]))
-                    case .error(error: let error, handler: let handler): speciesSection.setState(state: .error(error: error, handler: handler))
-                    default: return
-                    }
+                        switch state {
+                        case .loading: speciesSection.setState(state: .loading)
+                        case .items(item: let mushroom): speciesSection.setState(state: .items(items: [.mushroom(mushroom: mushroom)]))
+                        case .error(error: let error, handler: let handler): speciesSection.setState(state: .error(error: error, handler: handler))
+                        default: return
+                        }
                         updater.updateSection(section: speciesSection)
                     })
                 })
                 
                 self?.viewModel.observationComments.observe { (state) in
                     self?.tableView.performUpdates(updates: { (updater) in
-                    switch state {
-                    case .error(error: let error, handler: let handler):
-                        commentsSection.setState(state: .error(error: error, handler: handler))
-                    case .items(item: let items):
-                        commentsSection.setState(state: .items(items: items.map({Item.comment(comment: $0)})))
-                    case .loading:
-                        commentsSection.setState(state: .loading)
-                    default: return
-                    }
+                        switch state {
+                        case .error(error: let error, handler: let handler):
+                            commentsSection.setState(state: .error(error: error, handler: handler))
+                        case .items(item: let items):
+                            commentsSection.setState(state: .items(items: items.map({Item.comment(comment: $0)})))
+                        case .loading:
+                            commentsSection.setState(state: .loading)
+                        default: return
+                        }
                         updater.updateSection(section: commentsSection)
                     })
                 }
@@ -324,7 +324,7 @@ class DetailsViewController: UIViewController {
             switch state {
             case .empty: return
             case .error(error: let error, handler: let handler):
-            self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error, handler: handler))])
+                self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error, handler: handler))])
             case .loading:
                 self?.tableView.setSections(sections: [.init(title: nil, state: .loading)])
             case .items(item: let mushroom):
@@ -332,13 +332,13 @@ class DetailsViewController: UIViewController {
                     self?.elNavigationBar.setTitle(title: mushroom.localizedName ?? mushroom.fullName)
                     self?.images = mushroom.images
                 }
-               
+                
                 var sections: [ELKit.Section<Item>] = [.init(title: nil, state: .items(items: [.mushroomHeader(mushroom: mushroom)]))]
                 
                 if let description = mushroom.attributes?.description, description != "" {
                     sections.append(.init(title: NSLocalizedString("mushroomDetailsScrollView_description", comment: ""), state: .items(items: [.text(text: description)])))
                 }
-            
+                
                 if let eatability = mushroom.attributes?.eatability, eatability != "" {
                     sections.append(.init(title: NSLocalizedString("mushroomDetailsScrollView_eatability", comment: ""), state: .items(items: [.text(text: eatability)])))
                 }
@@ -355,11 +355,11 @@ class DetailsViewController: UIViewController {
                 if let totalObservations = mushroom.statistics?.acceptedCount {
                     informationArray.append((NSLocalizedString("mushroomDetailsScrollView_acceptedRecords", comment: ""), "\(totalObservations)"))
                 }
-
+                
                 if let latestAcceptedRecord = mushroom.statistics?.lastAcceptedRecord {
                     informationArray.append((NSLocalizedString("mushroomDetailsScrollView_latestAcceptedRecord", comment: ""), Date(ISO8601String: latestAcceptedRecord)?.convert(into: DateFormatter.Style.long) ?? ""))
                 }
-               
+                
                 if let updatedAt = mushroom.updatedAt {
                     informationArray.append((NSLocalizedString("mushroomDetailsScrollView_latestUpdated", comment: ""), Date(ISO8601String: updatedAt)?.convert(into: DateFormatter.Style.medium) ?? ""))
                 }
@@ -378,44 +378,44 @@ class DetailsViewController: UIViewController {
                 
                 self?.tableView.setSections(sections: sections)
                 
-    
+                
                 self?.viewModel.relatedObservations.observe(listener: { (state) in
                     self?.tableView.performUpdates(updates: { (updater) in
-                    switch state {
-                    case .loading: observationSection.setState(state: .loading)
-                    case .items(items: let observations): observationSection.setState(state: .items(items: observations.map({Item.observation(observation: $0)})))
-                    case .error(error: let error, handler: let handler):
-                        observationSection.setState(state: .error(error: error, handler: handler))
-                    case .empty: observationSection.setState(state: .empty)
-                    }
-                    
+                        switch state {
+                        case .loading: observationSection.setState(state: .loading)
+                        case .items(items: let observations): observationSection.setState(state: .items(items: observations.map({Item.observation(observation: $0)})))
+                        case .error(error: let error, handler: let handler):
+                            observationSection.setState(state: .error(error: error, handler: handler))
+                        case .empty: observationSection.setState(state: .empty)
+                        }
+                        
                         updater.updateSection(section: observationSection)
                     })
                 })
                 
                 self?.viewModel.userRegion.observe(listener: { (state) in
                     self?.tableView.performUpdates(updates: { (updater) in
-                    switch state {
-                    case .empty: return
-                    case .loading: nearbyObservationsSection.setState(state: .loading)
-                    case .error(error: let error, handler: let handler): nearbyObservationsSection.setState(state: .error(error: error, handler: handler))
-                    case .items(item: let region):
-                        
-                        self?.viewModel.nearbyObservations.observe(listener: { (state) in
-                            self?.tableView.performUpdates(updates: { (updater) in
-                            switch state {
-                            case .empty: return
-                            case .loading: return
-                            case .error(error: let error, handler: let handler): nearbyObservationsSection.setState(state: .error(error: error, handler: handler))
-                            case .items(item: let observations):
-                                nearbyObservationsSection.setState(state: .items(items: [.heatMap(userRegion: region, observations: observations)]))
-                            }
+                        switch state {
+                        case .empty: return
+                        case .loading: nearbyObservationsSection.setState(state: .loading)
+                        case .error(error: let error, handler: let handler): nearbyObservationsSection.setState(state: .error(error: error, handler: handler))
+                        case .items(item: let region):
                             
-                                updater.updateSection(section: nearbyObservationsSection)
+                            self?.viewModel.nearbyObservations.observe(listener: { (state) in
+                                self?.tableView.performUpdates(updates: { (updater) in
+                                    switch state {
+                                    case .empty: return
+                                    case .loading: return
+                                    case .error(error: let error, handler: let handler): nearbyObservationsSection.setState(state: .error(error: error, handler: handler))
+                                    case .items(item: let observations):
+                                        nearbyObservationsSection.setState(state: .items(items: [.heatMap(userRegion: region, observations: observations)]))
+                                    }
+                                    
+                                    updater.updateSection(section: nearbyObservationsSection)
+                                })
                             })
-                        })
-                    }
-                    
+                        }
+                        
                         updater.updateSection(section: nearbyObservationsSection)
                     })
                 })
@@ -464,43 +464,64 @@ extension DetailsViewController: CellProviderDelegate {
     func moreButtonPressed() {
         switch viewModel.observation.value {
         case .items(item: let observation):
-            let isCurrentUserObservation = (observation.observedBy == session?.user.name)
-            let actionVC = UIAlertController(title: "Fund med ID: \(observation.id)", message: "Du har nedenstående valgmuligheder.", preferredStyle: .actionSheet).then({
-                if isCurrentUserObservation {
-                    $0.addAction(.init(title: "Rediger fund", style: .default, handler: { (action) in
+            let actionVC = UIAlertController(title: String.localizedStringWithFormat(NSLocalizedString("Observation with ID: %d", comment: ""), observation.id), message: NSLocalizedString("You have the options below:", comment: ""), preferredStyle: .actionSheet).then({
+                if let session = session {
+                    if observation.isEditable(user: session.user) {
+                        $0.addAction(.init(title: NSLocalizedString("Edit observation", comment: ""), style: .default, handler: { [weak self] (action) in
+                            AddObservationVC(type: .edit(observationID: observation.id), session: session).do({
+                                self?.navigationController?.pushViewController($0, animated: true)
+                            })
+                        }))
+                    }
+                    
+                    if observation.isDeleteable(user: session.user) {
+                        $0.addAction(.init(title: NSLocalizedString("Delete observation", comment: ""), style: .destructive, handler: { [weak self] (action) in
+                            Spinner.start(onView: self?.view)
+                            session.deleteObservation(id: observation.id) { (result) in
+                                Spinner.stop()
+                                switch result {
+                                case .failure(let error):
+                                    DispatchQueue.main.async {
+                                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: NSLocalizedString("Could not delete", comment: ""), secondaryText: error.message, location: .bottom).show(animationType: .fromBottom)
+                                    }
+                                case .success(_):
+                                    DispatchQueue.main.async {
+                                        self?.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: session)), overrideTypeCheckIgnore: true)
+                                    }
+                                }
+                              
+                            }
+                        }))
                         
-                    }))
-                    $0.addAction(.init(title: "Slet fund", style: .destructive, handler: { (action) in
-                        
-                    }))
+                    }
                 } else {
                     $0.addAction(.init(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), style: .destructive, handler: { (action) in
                         UIAlertController(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), message: NSLocalizedString("observationDetailsScrollView_rapportContent_message", comment: ""), preferredStyle: .alert)
                             .then({ vc in
                                 vc.addTextField { (textField) in
-                                textField.placeholder = NSLocalizedString("observationDetailsScrollView_rapportContent_placeholder", comment: "")
-                                textField.font = .appPrimary()
-                            }
-                            
+                                    textField.placeholder = NSLocalizedString("observationDetailsScrollView_rapportContent_placeholder", comment: "")
+                                    textField.font = .appPrimary()
+                                }
+                                
                                 vc.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak self] (action) in
                                     guard let comment = vc.textFields?.first?.text else {return}
                                     self?.session?.reportOffensiveContent(observationID: observation.id, comment: comment, completion: {
-                                            DispatchQueue.main.async {
-                                                let notification = ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_title", comment: ""), secondaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_message", comment: ""), location: .bottom)
-                                                notification.show(animationType: .zoom)
-                                            }
-                                        })
-                                    }))
+                                        DispatchQueue.main.async {
+                                            let notification = ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_title", comment: ""), secondaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_message", comment: ""), location: .bottom)
+                                            notification.show(animationType: .zoom)
+                                        }
+                                    })
+                                }))
                                 vc.addAction(UIAlertAction(title: NSLocalizedString("observationDetailsScrollView_rapportContent_abort", comment: ""), style: .cancel, handler: nil))
-
-                        })
+                                
+                            })
                             .do({
                                 self.present($0, animated: true, completion: nil)
                             })
                     }))
                 }
                 
-                $0.addAction(.init(title: "Afbryd", style: .cancel, handler: nil))
+                $0.addAction(.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
             })
             present(actionVC, animated: true, completion: nil)
         default: return
@@ -516,16 +537,16 @@ extension DetailsViewController: CellProviderDelegate {
                 updater.addSection(section: newCommentSection, sectionIndex: self.tableView.sections.count - 1)
             }
             session?.uploadComment(observationID: id, comment: withText, completion: { [weak tableView] (result) in
-                    switch result {
-                    case .failure(let error):
-                        newCommentSection.setState(state: .error(error: error, handler: nil))
-                    case .success(let comment):
-                        newCommentSection.setState(state: .items(items: [.comment(comment: comment)]))
-                    }
-
-                    tableView?.performUpdates(updates: { (updates) in
-                        updates.updateSection(section: newCommentSection)
-                    })
+                switch result {
+                case .failure(let error):
+                    newCommentSection.setState(state: .error(error: error, handler: nil))
+                case .success(let comment):
+                    newCommentSection.setState(state: .items(items: [.comment(comment: comment)]))
+                }
+                
+                tableView?.performUpdates(updates: { (updates) in
+                    updates.updateSection(section: newCommentSection)
+                })
             })
         default: return
         }

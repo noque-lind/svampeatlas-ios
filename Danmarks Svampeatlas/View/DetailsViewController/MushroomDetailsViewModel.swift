@@ -84,7 +84,7 @@ class DetailsViewControllerViewModel: NSObject {
         self.observation.set(.items(item: observation))
         fetchObservation(id: observation.id, onlyComments: true)
         if showSpecies {
-            fetchMushroom(id: observation.speciesProperties.id)
+            fetchMushroom(id: observation.determination.id)
         }
     }
     
@@ -148,7 +148,7 @@ class DetailsViewControllerViewModel: NSObject {
                     self?.observation.set(.items(item: observation))
                 }
                 if fetchMushroomToo {
-                    self?.fetchMushroom(id: observation.speciesProperties.id)
+                    self?.fetchMushroom(id: observation.determination.id)
                 }
             }
         }

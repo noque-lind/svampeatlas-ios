@@ -26,6 +26,16 @@ struct Locality: Decodable, Equatable {
         }
     }
     
+    var fullName: String {
+        get {
+            if let geoName = geoName {
+                return "\(geoName.countryName), \(geoName.name)"
+            } else {
+                return name
+            }
+        }
+    }
+    
     private enum CodingKeys: String, CodingKey {
         case id = "_id"
         case name

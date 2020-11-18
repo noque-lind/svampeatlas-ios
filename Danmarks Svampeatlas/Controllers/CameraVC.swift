@@ -42,8 +42,8 @@ class CameraVC: UIViewController {
         return view
     }()
     
-    private lazy var imageView: UIImageView = {
-        let view = UIImageView()
+    private lazy var imageView: DownloadableImageView = {
+        let view = DownloadableImageView()
         view.backgroundColor = UIColor.clear
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
@@ -240,19 +240,16 @@ class CameraVC: UIViewController {
         
         // When CameraVC is in the context of creating a newObservation Record and show the AddObservationVC.
         
-        let newObservation = NewObservation()
-        
-        newObservation.mushroom = mushroom
+        let vm = AddObservationViewModel(action: .new, session: session)
         
         if let imageURL = imageURL {
-            newObservation.appendImage(imageURL: imageURL)
+            vm.addImage(newObservationImage: NewObservationImage(type: .new, url: imageURL))
         }
-        
         if let predictionResults = predictionResults {
-            newObservation.predictionResultsState = .items(items: predictionResults)
+            vm.predictionResults.value = .items(items: predictionResults)
         }
-        
-        self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: AddObservationVC(newObservation: newObservation, session: session)))
+
+        self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: AddObservationVC.init(viewModel: vm)))
     }
     
     private func handleImage(_ url: URL) {

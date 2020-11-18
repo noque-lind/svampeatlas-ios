@@ -92,7 +92,7 @@ class ELPhotos: NSObject  {
                     self?.delegate?.error(.notAuthorized)
             case .authorized, .limited:
                     let picker = UIImagePickerController()
-                    picker.sourceType = .photoLibrary
+                picker.sourceType = .photoLibrary
                     picker.modalPresentationStyle = .fullScreen
                     picker.delegate = self
                     delegate?.presentVC(picker)

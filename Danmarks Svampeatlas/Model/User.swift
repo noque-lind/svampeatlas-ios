@@ -14,6 +14,7 @@ struct User: Decodable, Equatable {
     public private(set) var initials: String
     public private(set) var email: String
     public private(set)  var facebookID: String?
+    public private(set) var roles: [Role]?
    
     public var imageURL: String? {
         get {
@@ -25,12 +26,26 @@ struct User: Decodable, Equatable {
         }
     }
     
+    var isValidator: Bool {
+        var isValidator = false
+        if let roles = roles {
+            for role in roles {
+                if role.name == "validator" {
+                    isValidator = role.name == "validator"
+                    break
+                }
+            }
+        }
+        return isValidator
+    }
+    
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case initials = "Initialer"
         case email
         case name
         case facebookID = "facebook"
+        case roles = "Roles"
     }
     
     init(from cdUser: CDUser) {
@@ -39,5 +54,12 @@ struct User: Decodable, Equatable {
         initials = cdUser.initials ?? ""
         email = cdUser.email ?? ""
         facebookID = cdUser.facebookID
+        if let cdRoles = cdUser.roles?.allObjects as? [CDRole] {
+            roles = cdRoles.map({Role.init(name: $0.name ?? "")})
+        }
     }
+}
+
+struct Role: Decodable, Equatable {
+    public private(set) var name: String
 }

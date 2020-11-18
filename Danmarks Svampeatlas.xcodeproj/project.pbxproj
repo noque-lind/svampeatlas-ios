@@ -157,6 +157,7 @@
 		DBCAA6AB238ADA1B00744EA1 /* UIApplication+OpenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */; };
 		DBCCB0B023C36FF100DFB04F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCB0AF23C36FF100DFB04F /* Repository.swift */; };
 		DBCCB0B423C3702E00DFB04F /* VegetationTypeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCCB0B323C3702E00DFB04F /* VegetationTypeRepository.swift */; };
+		DBCDAA6A255EA4F5007CACFF /* URL+ExtractExif.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDAA69255EA4F5007CACFF /* URL+ExtractExif.swift */; };
 		DBCED36F23B9F65400D54A4E /* Danmarks_SvampeatlasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCED36E23B9F65400D54A4E /* Danmarks_SvampeatlasTests.swift */; };
 		DBCED37723B9F6A800D54A4E /* DatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCED37623B9F6A800D54A4E /* DatabaseTests.swift */; };
 		DBCED37923B9F9FB00D54A4E /* MushroomsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCED37823B9F9FB00D54A4E /* MushroomsRepositoryTests.swift */; };
@@ -365,12 +366,14 @@
 		DBB52C4A23DB0566004A4CBA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DBC30C8921EE1A1900826FC6 /* TableViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewState.swift; sourceTree = "<group>"; };
 		DBC30C8B21EE1F5B00826FC6 /* SettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCell.swift; sourceTree = "<group>"; };
+		DBC43782255C7810002F15F7 /* SvampeAtlas_1.3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SvampeAtlas_1.3.xcdatamodel; sourceTree = "<group>"; };
 		DBC9E74A254B0544003A0EE1 /* MushroomDetailHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MushroomDetailHeaderCell.swift; sourceTree = "<group>"; };
 		DBC9E751254B0C76003A0EE1 /* InformationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationCell.swift; sourceTree = "<group>"; };
 		DBCAA6A6238AD7E200744EA1 /* ELPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ELPhotos.swift; sourceTree = "<group>"; };
 		DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+OpenSettings.swift"; sourceTree = "<group>"; };
 		DBCCB0AF23C36FF100DFB04F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		DBCCB0B323C3702E00DFB04F /* VegetationTypeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VegetationTypeRepository.swift; sourceTree = "<group>"; };
+		DBCDAA69255EA4F5007CACFF /* URL+ExtractExif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+ExtractExif.swift"; sourceTree = "<group>"; };
 		DBCED36C23B9F65400D54A4E /* Danmarks SvampeatlasTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Danmarks SvampeatlasTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCED36E23B9F65400D54A4E /* Danmarks_SvampeatlasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Danmarks_SvampeatlasTests.swift; sourceTree = "<group>"; };
 		DBCED37023B9F65400D54A4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -807,6 +810,7 @@
 				DB8FE83423805BC0002D837C /* UINavigationController+AppConfiguration.swift */,
 				DBCAA6AA238ADA1B00744EA1 /* UIApplication+OpenSettings.swift */,
 				DB3EF6942550A40E000D9F51 /* ELTableView+build.swift */,
+				DBCDAA69255EA4F5007CACFF /* URL+ExtractExif.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1010,6 +1014,7 @@
 				DB679396214D00DA003B34B2 /* ObservationsTableView.swift in Sources */,
 				4A3061E12053F4840061E98F /* CustomTableView.swift in Sources */,
 				4A69457820456CD60041824E /* SideMenuStaticCell.swift in Sources */,
+				DBCDAA6A255EA4F5007CACFF /* URL+ExtractExif.swift in Sources */,
 				DB12BC262135507F00FFA037 /* User.swift in Sources */,
 				DB3EF69E2550AF5F000D9F51 /* MapViewCell.swift in Sources */,
 				DB68741D234CDBFD0038C5A0 /* PredictionResult.swift in Sources */,
@@ -1453,10 +1458,11 @@
 		4A69BC802038D96500D3B88B /* SvampeAtlas.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				DBC43782255C7810002F15F7 /* SvampeAtlas_1.3.xcdatamodel */,
 				DB17731123BD38C000B64868 /* SvampeAtlas_1.2.xcdatamodel */,
 				4A69BC812038D96500D3B88B /* SvampeAtlas.xcdatamodel */,
 			);
-			currentVersion = DB17731123BD38C000B64868 /* SvampeAtlas_1.2.xcdatamodel */;
+			currentVersion = DBC43782255C7810002F15F7 /* SvampeAtlas_1.3.xcdatamodel */;
 			path = SvampeAtlas.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -28,6 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             if let session = session {
                 elRevealViewController.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: session)))
+                if !UserDefaultsHelper.hasSeenWhatsNew {
+                    elRevealViewController.currentViewController.present(TermsVC(terms: .whatsNew), animated: true, completion: nil)
+                    UserDefaultsHelper.hasSeenWhatsNew = true
+                }
+               
             } else {
                 elRevealViewController.pushNewViewController(viewController: UINavigationController(rootViewController: MushroomVC(session: session)))
             }

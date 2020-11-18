@@ -50,6 +50,7 @@ class DataService{
         var message: String {
             switch self {
             case .decodingError(let error):
+                debugPrint(error)
                 return NSLocalizedString("dataServiceError_decodingError_message", comment: "")
             case .searchReponseEmpty:
                 return NSLocalizedString("dataServiceError_searchResponseEmpty_message", comment: "")
@@ -88,7 +89,7 @@ class DataService{
         case invalidResponse
         case serverError
         case unAuthorized
-        case unknown
+        case unknown(debugMessage: String)
         case payloadTooLarge
         
         
@@ -102,8 +103,8 @@ class DataService{
                 return NSLocalizedString("urlSessionError_serverError_message", comment: "")
             case .timeout:
                 return NSLocalizedString("urlSessionError_timeout_message", comment: "")
-            case .unknown:
-                return NSLocalizedString("urlSessionError_unknown_message", comment: "")
+            case .unknown(debugMessage: let message):
+                return NSLocalizedString("urlSessionError_unknown_message", comment: "").appending(" : \(message)")
             case .unAuthorized:
                 return NSLocalizedString("urlSessionError_unAuthorized_message", comment: "")
             case .payloadTooLarge:
@@ -175,7 +176,7 @@ class DataService{
             } catch let error as URLSessionError {
                 completion(Result.failure(error))
             } catch {
-                completion(Result.failure(URLSessionError.unknown))
+                completion(Result.failure(URLSessionError.unknown(debugMessage: String(data: data ?? Data(), encoding: .utf16) ?? "")))
             }
         }
         task.resume()
@@ -203,7 +204,7 @@ class DataService{
         case NSURLErrorTimedOut:
             return URLSessionError.timeout
         default:
-            return URLSessionError.unknown
+            return URLSessionError.unknown(debugMessage: "")
         }
     }
     
@@ -216,7 +217,7 @@ class DataService{
         case 413:
             return URLSessionError.payloadTooLarge
         default:
-            return URLSessionError.unknown
+            return URLSessionError.unknown(debugMessage: "")
         }
     }
 }
@@ -316,7 +317,7 @@ extension DataService {
     
     
     func getObservationsWithin(geometry: API.Geometry, taxonID: Int? = nil, ageInYear: Int? = nil, completion: @escaping (Result<[Observation], AppError>) -> ()) {
-        createDataTaskRequest(url: API.Request.Observation(geometry: geometry, ageInYear: ageInYear, include: [.comments, .determinationView(taxonID: taxonID), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: nil, offset: nil).encodedURL) { (result) in
+        createDataTaskRequest(url: API.Request.Observations(geometry: geometry, ageInYear: ageInYear, include: [.comments, .determinationView(taxonID: taxonID), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: nil, offset: nil).encodedURL) { (result) in
             switch result {
             case .failure(let error):
                 completion(Result.failure(error))

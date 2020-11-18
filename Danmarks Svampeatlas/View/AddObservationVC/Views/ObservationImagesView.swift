@@ -40,12 +40,12 @@ class ObservationImagesView: UIView {
     static let expandedHeight: CGFloat = 200
     
     var onAddImageButtonPressed: (() -> ())?
-    var imageDeleted: ((URL) -> ())?
+    var imageDeleted: ((NewObservationImage) -> ())?
     var shouldAnimateHeight: ((CGFloat) -> ())?
     
     var isExpanded: Bool = false
     
-    private var images = [URL]() {
+    private var images = [NewObservationImage]() {
         didSet {
             if images.count > 0 && isExpanded == false {
                 shouldAnimateHeight?(ObservationImagesView.expandedHeight)
@@ -77,8 +77,8 @@ class ObservationImagesView: UIView {
         collectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
     }
     
-    func configure(imageURLS: [URL]) {
-        self.images = imageURLS
+    func configure(newObservationImages: [NewObservationImage]) {
+        self.images = newObservationImages
         collectionView.reloadData()
     }
     
@@ -98,19 +98,20 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
             return cell
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationImageCell", for: indexPath) as! ObservationImageCell
-        cell.configureCell(imageURL: images[indexPath.row])
+        cell.configureCell(newObservationImage: images[indexPath.row])
         cell.onSwipeUp = { [unowned self] imageURL in
-            guard let index = self.images.firstIndex(of: imageURL) else {return}
-            self.images.remove(at: index)
-            self.imageDeleted?(imageURL)
-            
-            if self.images.count == 0 {
-                self.collectionView.reloadData()
-            } else {
-                self.collectionView.performBatchUpdates({
-                    self.collectionView.deleteItems(at: [.init(row: index, section: 0)])
-                }, completion: nil)
-            }
+            guard let index = self.images.firstIndex(where: {$0.url == imageURL}) else {return}
+            self.imageDeleted?(self.images[index])
+//            self.images.remove(at: index)
+//
+//
+//            if self.images.count == 0 {
+//                self.collectionView.reloadData()
+//            } else {
+//                self.collectionView.performBatchUpdates({
+//                    self.collectionView.deleteItems(at: [.init(row: index, section: 0)])
+//                }, completion: nil)
+//            }
         }
         return cell
     }
@@ -131,14 +132,26 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     
-    func addImage(imageURL: URL) {
-        images.append(imageURL)
+    func addImage(newObservationImage: NewObservationImage) {
+        images.append(newObservationImage)
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [.init(row: images.endIndex - 1, section: 0)])
         }) { (_) in
             DispatchQueue.main.async {
                 self.collectionView.scrollToItem(at: .init(row: self.images.endIndex, section: 0), at: .right, animated: true)
             }
+        }
+    }
+    
+    func removeImage(index: Int) {
+        images.remove(at: index)
+        
+        if images.count == 0 {
+            collectionView.reloadData()
+        } else {
+            collectionView.performBatchUpdates({
+                self.collectionView.deleteItems(at: [.init(row: index, section: 0)])
+            }, completion: nil)
         }
     }
 }
@@ -196,9 +209,18 @@ protocol ObservationImageCellDelegate: class {
 
 class ObservationImageCell: UICollectionViewCell {
     
-    private var imageView: UIImageView = {
-        let imageView = UIImageView()
+
+    private var lockedView = UIImageView().then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.image = #imageLiteral(resourceName: "Glyphs_Lock")
+        $0.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        $0.heightAnchor.constraint(equalToConstant: 14).isActive = true
+    })
+    
+    private var imageView: DownloadableImageView = {
+        let imageView = DownloadableImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .appSecondaryColour()
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 30
         imageView.clipsToBounds = true
@@ -210,6 +232,15 @@ class ObservationImageCell: UICollectionViewCell {
     
     private var animator = UIViewPropertyAnimator()
     private var panGestureRecognizer = UIPanGestureRecognizer()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+        animator.stopAnimation(false)
+        animator.finishAnimation(at: UIViewAnimatingPosition.start)
+        transform = CGAffineTransform.identity
+        self.alpha = 1
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -230,6 +261,7 @@ class ObservationImageCell: UICollectionViewCell {
             view.layer.cornerRadius = imageView.layer.cornerRadius
             view.layer.shadowOpacity = 0.4
             view.layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
+            view.clipsToBounds = true
             
             panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(gesture:)))
             panGestureRecognizer.delegate = self
@@ -240,6 +272,12 @@ class ObservationImageCell: UICollectionViewCell {
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
             imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
             imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            
+            view.addSubview(lockedView)
+            lockedView.do({
+                $0.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+                $0.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            })
             return view
         }()
         
@@ -284,9 +322,19 @@ class ObservationImageCell: UICollectionViewCell {
     }
     
     
-    func configureCell(imageURL: URL) {
-        self.imageURL = imageURL
-        imageView.loadImage(url: imageURL)
+    func configureCell(newObservationImage: NewObservationImage) {
+        if newObservationImage.isDeletable {
+            lockedView.isHidden = true
+            panGestureRecognizer.isEnabled = true
+            imageView.alpha = 1.0
+          
+        } else {
+            lockedView.isHidden = false
+            panGestureRecognizer.isEnabled = false
+            imageView.alpha = 0.3
+        }
+        self.imageURL = newObservationImage.url
+        imageView.loadImage(url: newObservationImage.url)
     }
 }
 

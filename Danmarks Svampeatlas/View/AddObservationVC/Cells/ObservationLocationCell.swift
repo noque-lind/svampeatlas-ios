@@ -74,10 +74,9 @@ class ObservationLocationCell: UICollectionViewCell {
     }()
     
     private var localities = [Locality]()
-    private weak var newObservation: NewObservation?
-    private weak var locationManager: LocationManager?
+    weak var viewModel: AddObservationViewModel?
     weak var delegate: NavigationDelegate?
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -96,26 +95,6 @@ class ObservationLocationCell: UICollectionViewCell {
         clipsToBounds = true
         backgroundColor = UIColor.clear
         
-        contentView.addSubview(collectionView)
-        collectionView.do({
-            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-            $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
-            $0.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
-            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        })
-        
-        contentView.addSubview(retryButton)
-        retryButton.do({
-            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-            $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        })
-        
-        contentView.addSubview(annotationButton)
-        annotationButton.do({
-            $0.topAnchor.constraint(equalTo: retryButton.bottomAnchor, constant: 8).isActive = true
-            $0.centerXAnchor.constraint(equalTo: retryButton.centerXAnchor).isActive = true
-        })
-        
         let precisionView = UIView().then({
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
@@ -127,7 +106,38 @@ class ObservationLocationCell: UICollectionViewCell {
             precisionLabel.trailingAnchor.constraint(equalTo: $0.trailingAnchor, constant: -4).isActive = true
         })
         
-        contentView.addSubview(precisionView)
+        contentView.do({
+            $0.addSubview(mapView)
+            $0.addSubview(collectionView)
+            $0.addSubview(retryButton)
+            $0.addSubview(annotationButton)
+            $0.addSubview(precisionView)
+        })
+        
+        mapView.do({
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+            $0.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+            $0.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        })
+
+        collectionView.do({
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+            $0.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            $0.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        })
+    
+        retryButton.do({
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
+            $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+        })
+        
+        annotationButton.do({
+            $0.topAnchor.constraint(equalTo: retryButton.bottomAnchor, constant: 8).isActive = true
+            $0.centerXAnchor.constraint(equalTo: retryButton.centerXAnchor).isActive = true
+        })
+        
         precisionView.do({
             $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
             $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
@@ -135,7 +145,7 @@ class ObservationLocationCell: UICollectionViewCell {
     }
     
     @objc private func getNearbyLocalities() {
-        locationManager?.start()
+        viewModel?.refindLocation()
     }
     
     @objc func handleGesture(gesture: UIPanGestureRecognizer) {
@@ -156,7 +166,7 @@ class ObservationLocationCell: UICollectionViewCell {
         case .ended:
             annotationButton.backgroundColor = UIColor.appGreen().withAlphaComponent(0.5)
             let annotation = mapView.addLocationAnnotation(button: annotationButton)
-            locationManager?.state.set(.foundLocation(location: CLLocation(coordinate: annotation.coordinate, altitude: -1, horizontalAccuracy: CLLocationAccuracy(mapView.zoom), verticalAccuracy: -1, timestamp: Date())))
+            viewModel?.setCustomLocation(location: .init(coordinate: annotation.coordinate, altitude: -1, horizontalAccuracy: CLLocationAccuracy(mapView.zoom), verticalAccuracy: -1, timestamp: Date()))
             annotationButton.transform = CGAffineTransform.identity
         default:
             return
@@ -168,50 +178,31 @@ class ObservationLocationCell: UICollectionViewCell {
     }
     
     private func didSelectLocality(locality: Locality) {
-        self.newObservation?.locality = locality
+        viewModel?.locality.set(locality)
+    }
+    
+    func configureViewModel(viewModel: AddObservationViewModel) {
+        self.viewModel = viewModel
+    }
+    
+    func configureLocalities(localities: [Locality]) {
+        self.localities = localities
+        collectionView.reloadData()
+        mapView.addLocalityAnnotations(localities: localities)
+    }
+    
+    func configureObservationLocation(location: CLLocation) {
+        mapView.clearAnnotations()
+        mapView.addLocationAnnotation(location: location.coordinate)
+        precisionLabel.text = String.localizedStringWithFormat(NSLocalizedString("Precision %0.2f m.", comment: ""), location.horizontalAccuracy.rounded(toPlaces: 2))
+        mapView.addCirclePolygon(center: location.coordinate, radius: location.horizontalAccuracy, setRegion: false, clearPrevious: true)
+        mapView.setRegion(center: location.coordinate)
+    }
+    
+    func configureLocality(locality: Locality) {
         guard let row = self.localities.firstIndex(of: locality) else {return}
         self.collectionView.selectItem(at: IndexPath(row: row, section: 0), animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
         self.mapView.selectAnnotationAtCoordinate(locality.location.coordinate)
-    }
-    
-    
-    func configureCell(locationManager: LocationManager, newObservation: NewObservation, localities: [Locality]) {
-        if mapView.superview == nil {
-            mapView.alpha = 0
-            collectionView.alpha = 0
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-                self.contentView.insertSubview(self.mapView, at: 0)
-                self.mapView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor).isActive = true
-                self.mapView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor).isActive = true
-                self.mapView.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
-                self.mapView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
-                
-                UIView.animate(withDuration: 0.1, animations: {
-                    self.mapView.alpha = 1
-                    self.collectionView.alpha = 1
-                })
-            }
-        }
-        
-        self.locationManager = locationManager
-        self.newObservation = newObservation
-        self.localities = localities
-        
-        collectionView.reloadData()
-        mapView.clearAnnotations()
-        mapView.addLocalityAnnotations(localities: localities)
-        
-        if let locality = newObservation.locality {
-            didSelectLocality(locality: locality)
-        }
-        
-        if let observationLocation = newObservation.observationCoordinate {
-            mapView.addLocationAnnotation(location: observationLocation.coordinate)
-            precisionLabel.text = String.localizedStringWithFormat(NSLocalizedString("Precision %0.2f m.", comment: ""), observationLocation.horizontalAccuracy.rounded(toPlaces: 2))
-            mapView.addCirclePolygon(center: observationLocation.coordinate, radius: observationLocation.horizontalAccuracy, setRegion: false, clearPrevious: true)
-            mapView.setRegion(center: observationLocation.coordinate)
-            mapView.selectAnnotationAtCoordinate(observationLocation.coordinate)
-        }
     }
 }
 
@@ -240,10 +231,10 @@ extension ObservationLocationCell: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        didSelectLocality(locality: localities[indexPath.row])
+        viewModel?.locality.set(localities[indexPath.row])
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        (cell as? LocalityCell)?.isSelected = localities[indexPath.row] == newObservation?.locality
+        (cell as? LocalityCell)?.isSelected = localities[indexPath.row] == viewModel?.locality.value
     }
 }

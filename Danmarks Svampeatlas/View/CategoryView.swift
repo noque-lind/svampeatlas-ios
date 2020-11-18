@@ -110,8 +110,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         categorySelected?(category)
     }
     
-    func setCategoryLoadingState(category: Category<T>, loading: Bool) {
-        guard let index = items.firstIndex(of: category) else {return}
+    func setCategoryLoadingState(atIndex index: Int, loading: Bool) {
         items[index].loading = loading
         collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
     }

@@ -83,9 +83,12 @@ class MapViewCell: UITableViewCell {
         mapView.addLocationAnnotation(location: coordinate)
         mapView.setRegion(center: coordinate, zoomMetres: 5000)
         
-        guard observation.location != nil else {return}
-        precisionView.isHidden = false
-        precisionLabel.text = observation.location
+        
+        if let locality = observation.locality {
+            precisionView.isHidden = false
+            precisionLabel.text = locality.fullName
+        }
+       
 //        precisionLabel.text = String.localizedStringWithFormat(NSLocalizedString("Precision %0.2f m.", comment: ""), observation.horizontalAccuracy.rounded(toPlaces: 2))
 //        mapView.addCirclePolygon(center: observationLocation.coordinate, radius: observationLocation.horizontalAccuracy, setRegion: false, clearPrevious: true)
 //        mapView.setRegion(center: observationLocation.coordinate)

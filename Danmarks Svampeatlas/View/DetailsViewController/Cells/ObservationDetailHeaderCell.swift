@@ -108,7 +108,7 @@ class ObservationDetailHeaderCell: UITableViewCell {
     
     func configure(observation: Observation) {
         idLabel.text = "ID: \(observation.id) | \(observation.observedBy ?? "")"
-        primaryLabel.text = observation.speciesProperties.name
+        primaryLabel.text = observation.determination.name
         determinationView.configure(validationStatus: observation.validationStatus)
     }
 }

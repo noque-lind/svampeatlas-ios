@@ -162,7 +162,12 @@ extension CoreDataHelper {
             cdUser.email = user.email
             cdUser.facebookID = user.facebookID
             
-            
+            if let roles = user.roles {
+                roles.forEach({ role in
+                    cdUser.addToRoles(CDRole.init(context: managedContext).then({$0.name = role.name}))
+                })
+                    }
+           
             if let imageURL = user.imageURL {
                 DataService.instance.getImage(forUrl: imageURL, size: .full, completion: { (image, imageURL) in
                     ELFileManager.saveMushroomImage(image: image, url: imageURL)

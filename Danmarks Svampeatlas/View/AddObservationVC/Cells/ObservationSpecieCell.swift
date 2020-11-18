@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import ELKit
 
 class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTableView.Item> {
     
     enum Item {
-        case selectedMushroom(Mushroom, NewObservation.DeterminationConfidence)
+        case selectedMushroom(Mushroom, AddObservationViewModel.DeterminationConfidence)
         case selectableMushroom(Mushroom, Double?)
         case unknownSpecies
         case unknownSpeciesButton
@@ -20,7 +21,7 @@ class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTabl
     }
     
     var isAtTop: ((Bool) -> ())?
-    var confidenceSelected: ((NewObservation.DeterminationConfidence) -> ())?
+    var confidenceSelected: ((AddObservationViewModel.DeterminationConfidence) -> ())?
     
     
     override init() {
@@ -89,6 +90,22 @@ class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTabl
 
 class ObservationSpecieCell: UICollectionViewCell {
     
+    enum Error: AppError {
+        case editing
+        
+        var title: String {
+            return NSLocalizedString("You are editing an observation", comment: "")
+        }
+        
+        var message: String {
+            return NSLocalizedString("The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties", comment: "")
+        }
+        
+        var recoveryAction: RecoveryAction? {
+            return nil
+        }
+    }
+    
     private lazy var searchBar: SearchBar = {
         let view = SearchBar()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -110,8 +127,8 @@ class ObservationSpecieCell: UICollectionViewCell {
             }
         }
         
-        tableView.confidenceSelected = { [unowned newObservation] determinationConfidence in
-            newObservation?.determinationConfidence = determinationConfidence
+        tableView.confidenceSelected = { [weak viewModel] determinationConfidence in
+            viewModel?.determinationConfidence = determinationConfidence
         }
         
         tableView.didSelectItem = { [unowned self, unowned tableView] item, _ in
@@ -119,7 +136,7 @@ class ObservationSpecieCell: UICollectionViewCell {
             switch item {
             case .unknownSpeciesButton:
                 vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id), session: nil, takesSelection: (selected: false, title: NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""), handler: { (selected) in
-                    self.newObservation?.mushroom = Mushroom.genus()
+                    self.viewModel?.mushroom = Mushroom.genus()
                     self.configureUpperSection()
                     self.configurePredictions()
                     
@@ -130,13 +147,13 @@ class ObservationSpecieCell: UICollectionViewCell {
                     })
                 }))
             case .selectableMushroom(let mushroom, _):
-                let selected = mushroom == self.newObservation?.mushroom
+                let selected = mushroom == self.viewModel?.mushroom
                 vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom), session: nil, takesSelection: (selected: selected, title: selected ? NSLocalizedString("observationSpeciesCell_deselect", comment: ""): (mushroom.isGenus ? NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""): NSLocalizedString("observationSpeciesCell_chooseSpecies", comment: "")), handler: { (_) in
                     
                     if selected {
-                        self.newObservation?.mushroom = nil
+                        self.viewModel?.mushroom = nil
                     } else {
-                        self.newObservation?.mushroom = mushroom
+                        self.viewModel?.mushroom = mushroom
                     }
                     
                     self.configureUpperSection()
@@ -152,7 +169,7 @@ class ObservationSpecieCell: UICollectionViewCell {
                 }))
             case .selectedMushroom(let mushroom, _):
                 vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom), session: nil, takesSelection: (selected: true, title: NSLocalizedString("observationSpeciesCell_deselect", comment: ""), handler: { (selected) in
-                    self.newObservation?.mushroom = nil
+                    self.viewModel?.mushroom = nil
                     self.configureUpperSection()
                     
                     tableView.performUpdates(updates: { (updater) in
@@ -170,21 +187,23 @@ class ObservationSpecieCell: UICollectionViewCell {
     }()
     
     weak var delegate: NavigationDelegate?
+    weak var viewModel: AddObservationViewModel? {
+        didSet {
+            viewModel?.predictionResults.observe(listener: { [weak self] (state) in
+                DispatchQueue.main.async {
+                    self?.configurePredictions()
+                    self?.tableView.performUpdates(updates: { (updater) in
+                        updater.updateSection(section: self?.middleSection)
+                    })
+                }
+            })
+        }
+    }
+    
     
     private let upperSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .empty)
     private let middleSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .empty)
     private let lowerSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .empty)
-    
-    private var newObservation: NewObservation? {
-        didSet {
-            newObservation?.predictionsResultsStateChanged = { [weak self] in
-                self?.configurePredictions()
-                self?.tableView.performUpdates(updates: { updater in
-                    updater.updateSection(section: self?.middleSection)
-                })
-            }
-        }
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -224,17 +243,24 @@ class ObservationSpecieCell: UICollectionViewCell {
         endEditing(true)
     }
     
-    func configureCell(newObservation: NewObservation) {
-        self.newObservation = newObservation
-        configureUpperSection()
-        configurePredictions()
-        configureFavoritesSection()
-        tableView.setSections(sections: [upperSection, middleSection, lowerSection])
+    func configureCell(viewModel: AddObservationViewModel, action: AddObservationVC.Action) {
+        self.viewModel = viewModel
+        switch action {
+        case .new:
+            configureUpperSection()
+            configurePredictions()
+            configureFavoritesSection()
+            tableView.setSections(sections: [upperSection, middleSection, lowerSection])
+        case .edit:
+            tableView.contentInset = .zero
+            searchBar.isHidden = true
+            tableView.setSections(sections: [.init(title: nil, state: .error(error: Error.editing, handler: nil))])
+        }
     }
     
     
     private func configureUpperSection() {
-        if let selectedMushroom = newObservation?.mushroom, let selectedDeterminationConfidence = newObservation?.determinationConfidence {
+        if let selectedMushroom = viewModel?.mushroom, let selectedDeterminationConfidence = viewModel?.determinationConfidence {
             hideSearchBar()
             upperSection.setTitle(title: selectedMushroom.isGenus ? NSLocalizedString("observationSpeciesCell_choosenGenus", comment: ""): NSLocalizedString("observationSpeciesCell_choosenSpecies", comment: ""))
             upperSection.setState(state: .items(items: [.selectedMushroom(selectedMushroom, selectedDeterminationConfidence)]))
@@ -258,7 +284,7 @@ class ObservationSpecieCell: UICollectionViewCell {
         searchBar.text = nil
         middleSection.setTitle(title: NSLocalizedString("observationSpeciesCell_predictionsHeader", comment: ""))
         
-        if let predictionsState = newObservation?.predictionResultsState {
+        if let predictionsState = viewModel?.predictionResults.value {
             switch predictionsState {
             case .error(error: let error, handler: _):
                 middleSection.setState(state: .error(error: error, handler: nil))

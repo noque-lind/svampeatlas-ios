@@ -44,7 +44,7 @@ class SettingsVC: UIViewController {
     private lazy var tableView = ELTableView<Item, CellProvider>.build(provider: CellProvider()).then({
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setSections(sections: [.init(title: nil, state: .items(items: [.header])), .init(title: NSLocalizedString("settings_general_header", comment: ""), state: .items(items: [.language]))])
-        $0.didSelectItem.observe { (value) in
+        $0.didSelectItem.handleEvent { (value) in
             switch value.Item {
             case .language: UIApplication.openAppSettings()
             default: return

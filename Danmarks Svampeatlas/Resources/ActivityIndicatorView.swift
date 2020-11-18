@@ -28,7 +28,6 @@ class Spinner: UIView {
         private func setupView() {
             translatesAutoresizingMaskIntoConstraints = false
             alpha = 0
-            backgroundColor = UIColor.clear
             let containerView = Spinner.createSpinnerView()
             addSubview(containerView)
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true

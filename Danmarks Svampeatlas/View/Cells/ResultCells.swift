@@ -142,8 +142,8 @@ class UnknownSpeciesCellButton: BaseCell {
         textStackView.distribution = .fill
         containerView.addSubview(textStackView)
         textStackView.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 10).isActive = true
-        textStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 4).isActive = true
-        textStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -4).isActive = true
+        textStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16).isActive = true
+        textStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16).isActive = true
         textStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8).isActive = true
         
         super.setupView()
@@ -152,9 +152,8 @@ class UnknownSpeciesCellButton: BaseCell {
     }
     
     private func configure() {
-        titleLabel.text = NSLocalizedString("unknownSpeciesButton_title", comment: "")
-        secondaryLabel.text = NSLocalizedString("unknownSpeciesButton_message", comment: "")
-        roundedImageView.isMasked = false
+        titleLabel.text = NSLocalizedString("Record unidentifed mushroom", comment: "")
+        secondaryLabel.isHidden = true
         roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Utils_Missing").withRenderingMode(.alwaysTemplate))
     }
 }
@@ -340,9 +339,9 @@ class SelectedSpecieCell: ContainedResultCell {
         return view
     }()
     
-    private var confidences = NewObservation.DeterminationConfidence.allCases
+    private var confidences = AddObservationViewModel.DeterminationConfidence.allCases
     private var isGenus: Bool = false
-    var confidenceSelected: ((NewObservation.DeterminationConfidence) -> ())?
+    var confidenceSelected: ((AddObservationViewModel.DeterminationConfidence) -> ())?
     
     override func setupView(leadingConstant: CGFloat, trailingConstant: CGFloat) {
         super.setupView(leadingConstant: leadingConstant, trailingConstant: trailingConstant)
@@ -367,7 +366,7 @@ class SelectedSpecieCell: ContainedResultCell {
         stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
     }
     
-    func configureCell(mushroom: Mushroom, confidence: NewObservation.DeterminationConfidence) {
+    func configureCell(mushroom: Mushroom, confidence: AddObservationViewModel.DeterminationConfidence) {
         isGenus = mushroom.isGenus
         picker.reloadAllComponents()
         picker.selectRow(confidences.firstIndex(of: confidence) ?? 0, inComponent: 0, animated: false)
@@ -375,9 +374,9 @@ class SelectedSpecieCell: ContainedResultCell {
     }
     
 
-    private func getLabelForConfidence(confidence: NewObservation.DeterminationConfidence, isGenus: Bool) -> String {
+    private func getLabelForConfidence(confidence: AddObservationViewModel.DeterminationConfidence, isGenus: Bool) -> String {
         switch confidence {
-        case .confident:
+        case .certain:
             return isGenus ? NSLocalizedString("selectedSpeciesCell_confident_genus", comment: ""): NSLocalizedString("selectedSpeciesCell_confident_species", comment: "")
         case .possible:
             return isGenus ? NSLocalizedString("selectedSpeciesCell_possible_genus", comment: ""): NSLocalizedString("selectedSpeciesCell_possible_species", comment: "")

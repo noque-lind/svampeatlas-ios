@@ -228,7 +228,7 @@ class ELNavigationBar: UIView {
                 let transform = CGAffineTransform(scaleX: percent, y: percent)
                 contentView?.transform = transform
             } else if constraintValue < maxHeight {
-                contentView?.transform = CGAffineTransform(translationX: 0.0, y: -(40 - 40 * percent))
+                contentView?.transform = CGAffineTransform(translationX: 0.0, y: -(percent))
             } else {
                 contentView?.transform = CGAffineTransform.identity
             }

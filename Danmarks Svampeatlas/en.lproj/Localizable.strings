@@ -79,13 +79,21 @@
 "addObservationVC_useImageMetadata_positive" = "Yes, use the image metadata";
 "addObservationVC_useImageMetadata_negative" = "No";
 "addObservationVC_useImageMetadata_title" = "Location suggestion";
-"addObservationVC_useImageMetadata_message" = "An added image seems to have been taken over 500 meters away from the current location of the observation. Would you like to use the GPS-information and date from the image instead?";
+"addObservationVC_useImageMetadata_message" = "An added image seems to have been taken at a different time and place than now. Would you like to use the information from the image instead?\n\nImage GPS-Precision: %@ m";
 "addObservationVC_localityFound_title" = "The location of your observation has been determined";
-"addObservationVC_localityFound_message" = "Name: %@\nCoordinates: %.02f - %.02f";
+"addObservationVC_localityFound_message" = "Name: %@\nCoordinates: %.02f - %.02f\nAccuracy: %.02f m";
 "addObservationVC_localityFoundError_title" = "Couldn't find nearby location";
+
+"Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded" = "Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded";
+
+"You are editing an observation" = "You are editing an observation";
+"The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties" = "The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties";
 
 // NearbyVC
 "nearbyVC_title" = "Nearby";
+
+"Deletions are final" = "Deletions are final";
+"When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again" = "When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again.";
 
 
 // MushroomVC
@@ -250,6 +258,16 @@
 "observationDetailsCell_notes_message" = "Smells mealy ...";
 "observationDetailsCell_ecologyNotes_title" = "Comments on ecology";
 "observationDetailsCell_ecologyNotes_message" = "On sandy soil ...";
+
+//ObservationLocationCell
+"observationLocationCell_precision" = "Precision: %.02f m";
+"Precision %0.2f m." = "Precision %0.2f m.";
+"Low accuracy" = "Low accuracy";
+"The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?";
+"Yes, find my current location" = "Yes, find my current location";
+"No, continue with the upload" = "No, continue with the upload";
+"Cancel upload" = "Cancel upload";
+
 
 //SearchCell
 "searchCell_title" = "Search for a host here ... 👇";

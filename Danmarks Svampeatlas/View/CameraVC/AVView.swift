@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import Photos
 import CoreLocation
+import ELKit
 
 protocol AVViewDelegate: class {
     func error(error: AVView.AVViewError)
@@ -19,7 +20,7 @@ protocol AVViewDelegate: class {
 class AVView: UIView {
     
     enum AVViewError: AppError {
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .permissionsError:
                 return .openSettings
@@ -27,7 +28,7 @@ class AVView: UIView {
             }
         }
         
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .cameraError(let error): return "\(error.localizedDescription)"
             case .permissionsError: return NSLocalizedString("avViewError_permissionsError_message", comment: "")
@@ -35,7 +36,7 @@ class AVView: UIView {
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .permissionsError:
                 return NSLocalizedString("avViewError_permissionsError_title", comment: "")
@@ -206,7 +207,8 @@ class AVView: UIView {
             String(kCGImagePropertyGPSLongitude): longitude,
             String(kCGImagePropertyGPSLongitudeRef): longitudeRef,
             String(kCGImagePropertyGPSTimeStamp): location.timestamp.timeIntervalSince1970,
-            String(kCGImagePropertyGPSDOP): location.horizontalAccuracy
+            String(kCGImagePropertyGPSDOP): location.horizontalAccuracy,
+            String(kCGImagePropertyGPSHPositioningError): location.horizontalAccuracy
         ]]
         }
         

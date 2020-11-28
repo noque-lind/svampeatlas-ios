@@ -13,11 +13,20 @@ struct Utilities {
     static let PHOTOALBUMNAME = NSLocalizedString("utilities_photoAlbumName", comment: "")
     
     static func isDanish() -> Bool {
-        if Locale.preferredLanguages[0].contains("da") {
+        if Locale.current.identifier.contains("da") {
             return true
         } else {
             return false
-            }
+        }
+//        print(Locale.current.languageCode)
+//        print(Locale.preferredLanguages)
+//        print(Locale.current)
+//
+//        if Locale.preferredLanguages[0].contains("da") || Locale.preferredLanguages[0].contains("dk") {
+//            return true
+//        } else {
+//            return false
+//            }
 }
 }
     
@@ -55,7 +64,8 @@ struct API {
     }
     
     enum Request {
-        case Observation(geometry: Geometry, ageInYear: Int?, include: [ObservationIncludeQueries], limit: Int?, offset: Int?)
+        case Observations(geometry: Geometry, ageInYear: Int?, include: [ObservationIncludeQueries], limit: Int?, offset: Int?)
+        case Observation(id: Int, include: [ObservationIncludeQueries])
         case Mushrooms(searchString: String?, speciesQueries: [SpeciesQueries], limit: Int, offset: Int)
         case Mushroom(id: Int)
         case Hosts(searchString: String?)
@@ -63,7 +73,9 @@ struct API {
         var encodedURL: String {
             
             switch self {
-            case .Observation(geometry: let geometry, let ageInYear, include: let include, let limit, let offset):
+            case .Observation(id: let id):
+                return BASE_URL_API + "observations/\(id)"
+            case .Observations(geometry: let geometry, let ageInYear, include: let include, let limit, let offset):
                 var components = URLComponents()
                 let geometry = URLQueryItem(name: "geometry", value: geometry.geoJSON())
                 components.queryItems = [geometry]
@@ -165,14 +177,31 @@ struct API {
     }
     
     enum Put {
+        case observation(id: Int)
         case notificationLastRead(notificationID: Int)
         
         var encodedURL: String {
             switch self {
+            case .observation(id: let id):
+                return BASE_URL_API + "observations/\(id)"
             case .notificationLastRead(let notificationID):
                 let url = BASE_URL_API + "users/me/feed/\(notificationID)/lastread"
                 //                debugPrint(url)
                 return BASE_URL_API + "users/me/feed/\(notificationID)/lastread"
+            }
+        }
+    }
+    
+    enum Delete {
+        case image(id: Int)
+        case observation(id: Int)
+        
+        var encodedURL: String {
+            switch self {
+            case .image(id: let id):
+                return BASE_URL_API + "observationimages/\(id)"
+            case .observation(id: let id):
+                return BASE_URL_API + "observations/\(id)"
             }
         }
     }
@@ -244,7 +273,7 @@ struct API {
                 }
                 
             case .locality:
-                return "%7B%5C%22model%5C%22%3A%5C%22Locality%5C%22%2C%5C%22as%5C%22%3A%5C%22Locality%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22_id%5C%22%2C%5C%22name%5C%22%5D%7D"
+                return "%7B%5C%22model%5C%22%3A%5C%22Locality%5C%22%2C%5C%22as%5C%22%3A%5C%22Locality%5C%22%2C%5C%22attributes%5C%22%3A%5B%5C%22_id%5C%22%2C%5C%22name%5C%22%2C%5C%22decimalLatitude%5C%22%2C%5C%22decimalLongitude%5C%22%5D%7D"
                 
             case .geomNames:
                 return "%7B%5C%22model%5C%22%3A%5C%22GeoNames%5C%22%2C%5C%22as%5C%22%3A%5C%22GeoNames%5C%22%2C%5C%22where%5C%22%3A%7B%7D%2C%5C%22required%5C%22%3Afalse%7D"

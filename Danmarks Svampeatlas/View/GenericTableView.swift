@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ELKit
 
 class CustomTableView: AppTableView {
     
@@ -234,7 +235,7 @@ class ELTableViewOld<T>: UIView, UITableViewDataSource, UITableViewDelegate {
             return 0
         case .error:
             if sections.count == 1 {
-                return tableView.frame.height
+                return tableView.frame.height - tableView.adjustedContentInset.top - tableView.adjustedContentInset.bottom
             } else {
                 return 350
             }

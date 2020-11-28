@@ -9,7 +9,7 @@
 import Foundation
 
 struct AcceptedTaxon: Decodable {
-    public private(set) var id: Int?
+    public private(set) var id: Int
     public private(set) var fullName: String
     public private(set) var vernacularNameDK: VernacularNameDK?
     

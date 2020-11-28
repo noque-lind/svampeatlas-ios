@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import ELKit
 
-class ErrorCell: UITableViewCell {
+class ErrorCell: UITableViewCell, ELErrorCell {
+
     
     static let identifier = "ErrorCell"
     
@@ -38,7 +40,12 @@ class ErrorCell: UITableViewCell {
         errorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
     
-    func configure(error: AppError, handler: ((mRecoveryAction?) -> ())?) {
+    func configure(error: AppError, handler: ELHandler?) {
         errorView.configure(error: error, handler: handler)
     }
+    
+    func configure(error: ELError, handler: ELHandler?) {
+        errorView.configure(error: error, handler: handler)
+    }
+    
 }

@@ -37,8 +37,8 @@ class ErrorView: UIView {
         return button
     }()
     
-    private var handler: ((mRecoveryAction?) -> ())?
-    private var recoveryAction: mRecoveryAction?
+    private var handler: ELHandler?
+    private var recoveryAction: RecoveryAction?
     
     init() {
         super.init(frame: CGRect.zero)
@@ -71,9 +71,21 @@ class ErrorView: UIView {
         handler?(recoveryAction)
     }
     
-    func configure(error: AppError, handler: ((mRecoveryAction?) -> ())?) {
-        mainLabel.text = error.errorTitle
-        secondaryLabel.text = error.errorDescription
+    func configure(error: AppError, handler: ((RecoveryAction?) -> ())?) {
+        mainLabel.text = error.title
+        secondaryLabel.text = error.message
+        
+        if let recoveryAction = error.recoveryAction, handler != nil {
+            actionButton.setTitle(recoveryAction.localizableText, for: [])
+            actionButton.isHidden = false
+            self.handler = handler
+            self.recoveryAction = recoveryAction
+        }
+    }
+    
+    func configure(error: ELError, handler: ELHandler?) {
+        mainLabel.text = error.title
+        secondaryLabel.text = error.message
         
         if let recoveryAction = error.recoveryAction, handler != nil {
             actionButton.setTitle(recoveryAction.localizableText, for: [])

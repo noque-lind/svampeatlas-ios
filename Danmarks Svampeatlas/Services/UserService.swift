@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit.UIImage
+import ELKit
 
 
 
@@ -18,7 +19,7 @@ protocol SessionDelegate: class {
 class Session {
     
     enum SessionError: AppError {
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .notLoggedIn, .tokenInvalid:
                 return .login
@@ -27,7 +28,7 @@ class Session {
         }
         
     
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .notLoggedIn:
                 return NSLocalizedString("sessionError_notLoggedIn_message", comment: "")
@@ -40,7 +41,7 @@ class Session {
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .notLoggedIn:
                 return NSLocalizedString("sessionError_notLoggedIn_title", comment: "")
@@ -123,8 +124,16 @@ class Session {
         DataService.instance.postComment(taxonID: observationID, comment: comment, token: token, completion: completion)
     }
     
-    func uploadObservation(dict: [String: Any], imageURLs: [URL], completion: @escaping (Result<Int, AppError>) -> ()) {
+    func uploadObservation(dict: [String: Any], imageURLs: [URL], completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
         DataService.instance.postObservation(dict: dict, imageURLs: imageURLs, token: token, completion: completion)
+    }
+    
+    func editObservation(id: Int, dict: [String: Any], newImageURLs: [URL], completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
+        DataService.instance.editObservation(withId: id, dict: dict, newImageURLs: newImageURLs, token: token, completion: completion)
+    }
+    
+    func deleteObservation(id: Int, completion: @escaping (Result<Void, AppError>) -> ()) {
+        DataService.instance.deleteObservation(id: id, token: token, completion: completion)
     }
     
     func reportOffensiveContent(observationID: Int, comment: String?, completion: @escaping () -> ()) {
@@ -133,6 +142,10 @@ class Session {
     
     func markNotificationAsRead(notificationID: Int) {
         DataService.instance.markNotificationAsRead(notificationID: notificationID, token: token)
+    }
+    
+    func deleteImage(id: Int, completion:  @escaping (Result<Void, AppError>) -> ()) {
+        DataService.instance.deleteImage(id: id, token: token, completion: completion)
     }
 }
 
@@ -326,8 +339,38 @@ extension Session: SessionDelegate {
             }
                     }
         
-        func postObservation(dict: [String: Any], imageURLs: [URL], token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
         
+        func editObservation(withId id: Int, dict: [String: Any], newImageURLs: [URL], token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dict, options: [])
+                createDataTaskRequest(url: API.Put.observation(id: id).encodedURL, method: "PUT", data: data, contentType: "application/json", token: token) { (result) in
+                    
+                    switch result {
+                    case .failure(let error):
+                        completion(Result.failure(error))
+                    case .success(let data):
+                        let json = try? JSONSerialization.jsonObject(with: data, options: [])
+                        guard let dict = json as? Dictionary<String, Any> else {return}
+                        
+                        let observationID = (dict["_id"] as? Int)!
+                        
+                        self.uploadImages(observationID: observationID, imageURLs: newImageURLs, token: token, completion: { (result) in
+                            switch result {
+                            case .failure(let error):
+                                completion(Result.failure(error))
+                            case .success(let uploadedCount):
+                                completion(Result.success((observationID: observationID, uploadedImagesCount: uploadedCount)))
+                            }
+                        })
+                    }
+                }
+                
+            } catch {
+                debugPrint(error)
+            }
+        }
+        
+        func postObservation(dict: [String: Any], imageURLs: [URL], token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
             do {
                 let data = try JSONSerialization.data(withJSONObject: dict, options: [])
                 createDataTaskRequest(url: API.postObservationURL(), method: "POST", data: data, contentType: "application/json", token: token) { (result) in
@@ -345,8 +388,8 @@ extension Session: SessionDelegate {
                             switch result {
                             case .failure(let error):
                                 completion(Result.failure(error))
-                            case .success(_):
-                                completion(Result.success(observationID))
+                            case .success(let uploadedCount):
+                                completion(Result.success((observationID: observationID, uploadedImagesCount: uploadedCount)))
                             }
                         })
                     }
@@ -354,6 +397,17 @@ extension Session: SessionDelegate {
                 
             } catch {
                 debugPrint(error)
+            }
+        }
+        
+        func deleteObservation(id: Int, token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
+            createDataTaskRequest(url: API.Delete.observation(id: id).encodedURL, method: "DELETE", data: nil, contentType: nil, contentLenght: nil, token: token) { (result) in
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .success(_):
+                    completion(.success(()))
+                }
             }
         }
         
@@ -379,6 +433,15 @@ extension Session: SessionDelegate {
             
             dispatchGroup.notify(queue: DispatchQueue.global(qos: .background)) {
                 completion(Result.success(uploadedCount))
+            }
+        }
+        
+        func deleteImage(id: Int, token: String, completion:@escaping (Result<Void, AppError>) -> ()) {
+            createDataTaskRequest(url: API.Delete.image(id: id).encodedURL, method: "DELETE", data: nil, contentType: nil, contentLenght: nil, token: token) { (result) in
+                switch result {
+                case .failure(let error): completion(.failure(error))
+                case .success: completion(.success(()))
+                }
             }
         }
         

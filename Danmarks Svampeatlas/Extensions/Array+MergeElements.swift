@@ -13,6 +13,15 @@ extension Array where Element : Equatable {
         return newElements.filter({!self.contains($0)})
     }
     
+    
+    
+}
+
+extension Array {
+    public mutating func appendAndGive(_ element: Element) -> Element {
+        self.append(element)
+        return element
+    }
 }
 
 extension UIAlertController {

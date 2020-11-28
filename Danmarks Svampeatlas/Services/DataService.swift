@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation.CLLocation
+import ELKit
 
 enum Result<ReturnValue, ErrorType> {
     case failure(ErrorType)
@@ -42,11 +43,11 @@ class DataService{
         case unhandled
         case empty
         
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             return nil
         }
         
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .decodingError(let error):
                 debugPrint(error)
@@ -62,7 +63,7 @@ class DataService{
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .searchReponseEmpty:
                 return NSLocalizedString("dataServiceError_searchResponseEmpty_title", comment: "")
@@ -88,11 +89,11 @@ class DataService{
         case invalidResponse
         case serverError
         case unAuthorized
-        case unknown
+        case unknown(debugMessage: String)
         case payloadTooLarge
         
         
-        var errorDescription: String {
+        var message: String {
             switch self {
             case .noInternet:
                 return NSLocalizedString("urlSessionError_noInternet_message", comment: "")
@@ -102,8 +103,8 @@ class DataService{
                 return NSLocalizedString("urlSessionError_serverError_message", comment: "")
             case .timeout:
                 return NSLocalizedString("urlSessionError_timeout_message", comment: "")
-            case .unknown:
-                return NSLocalizedString("urlSessionError_unknown_message", comment: "")
+            case .unknown(debugMessage: let message):
+                return NSLocalizedString("urlSessionError_unknown_message", comment: "").appending(" : \(message)")
             case .unAuthorized:
                 return NSLocalizedString("urlSessionError_unAuthorized_message", comment: "")
             case .payloadTooLarge:
@@ -111,7 +112,7 @@ class DataService{
             }
         }
         
-        var errorTitle: String {
+        var title: String {
             switch self {
             case .noInternet:
                 return NSLocalizedString("urlSessionError_noInternet_title", comment: "")
@@ -130,7 +131,7 @@ class DataService{
             }
         }
         
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .unAuthorized: return .login
             default: return .tryAgain
@@ -149,8 +150,6 @@ class DataService{
     //CLASS FUNCTIONS
     
     internal func createDataTaskRequest(url: String, method: String = "GET", data: Data? = nil, contentType: String? = nil, contentLenght: Int? = nil, token: String? = nil, completion: @escaping (Result<Data, URLSessionError>) -> ()) {
-        
-        print(url)
         var request = URLRequest(url: URL.init(string: url)!)
         request.timeoutInterval = 20
         request.httpMethod = method
@@ -177,7 +176,7 @@ class DataService{
             } catch let error as URLSessionError {
                 completion(Result.failure(error))
             } catch {
-                completion(Result.failure(URLSessionError.unknown))
+                completion(Result.failure(URLSessionError.unknown(debugMessage: String(data: data ?? Data(), encoding: .utf16) ?? "")))
             }
         }
         task.resume()
@@ -205,7 +204,7 @@ class DataService{
         case NSURLErrorTimedOut:
             return URLSessionError.timeout
         default:
-            return URLSessionError.unknown
+            return URLSessionError.unknown(debugMessage: "")
         }
     }
     
@@ -218,7 +217,7 @@ class DataService{
         case 413:
             return URLSessionError.payloadTooLarge
         default:
-            return URLSessionError.unknown
+            return URLSessionError.unknown(debugMessage: "")
         }
     }
 }
@@ -233,8 +232,7 @@ extension DataService {
         
         func handleData(data: Data) {
             do {
-                                       self.mushroomCache.setObject(NSData(data: data), forKey: NSString(string: api))
-                                          
+                                       
                                           let mushrooms = try JSONDecoder().decode([Mushroom].self, from: data)
                                           
                                           if searchString != nil && mushrooms.count == 0 {
@@ -319,7 +317,7 @@ extension DataService {
     
     
     func getObservationsWithin(geometry: API.Geometry, taxonID: Int? = nil, ageInYear: Int? = nil, completion: @escaping (Result<[Observation], AppError>) -> ()) {
-        createDataTaskRequest(url: API.Request.Observation(geometry: geometry, ageInYear: ageInYear, include: [.comments, .determinationView(taxonID: taxonID), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: nil, offset: nil).encodedURL) { (result) in
+        createDataTaskRequest(url: API.Request.Observations(geometry: geometry, ageInYear: ageInYear, include: [.comments, .determinationView(taxonID: taxonID), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: nil, offset: nil).encodedURL) { (result) in
             switch result {
             case .failure(let error):
                 completion(Result.failure(error))
@@ -427,7 +425,7 @@ extension DataService {
             switch result {
             case .success(let data):
                 
-                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
+                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
                 
                 var substrateGroups = [SubstrateGroup]()
                 
@@ -491,7 +489,7 @@ extension DataService {
         createDataTaskRequest(url: API.vegetationTypeURL(), completion: { (result) in
             switch result {
             case .success(let data):
-                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as! [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
+                guard let JSON = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? [[String: Any]] else {completion(Result.failure(DataServiceError.extractionError)); return}
                 
                 var vegetationTypes = [VegetationType]()
                 
@@ -595,7 +593,7 @@ extension DataService {
     }
     
     func getImagePredictions(image: UIImage, completion: @escaping (Result<[PredictionResult], AppError>) -> ()) {
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .default).async {
              let parameters = ["instances": [["image_in": ["b64": image.rotate().toBase64()]]]] as [String : Any]
                    let data = try! JSONSerialization.data(withJSONObject: parameters, options: [])
             self.createDataTaskRequest(url: API.Post.imagePredict(speciesQueries: [.attributes(presentInDenmark: nil), .danishNames, .images(required: false), .redlistData, .statistics, .acceptedTaxon]).encodedURL, method: "POST", data: data, contentType: "application/json", contentLenght: nil, token: nil) { (result) in

@@ -28,6 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             if let session = session {
                 elRevealViewController.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: session)))
+                if !UserDefaultsHelper.hasSeenWhatsNew {
+                    elRevealViewController.currentViewController.present(TermsVC(terms: .whatsNew), animated: true, completion: nil)
+                    UserDefaultsHelper.hasSeenWhatsNew = true
+                }
+               
             } else {
                 elRevealViewController.pushNewViewController(viewController: UINavigationController(rootViewController: MushroomVC(session: session)))
             }
@@ -53,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             if url.pathComponents.contains("taxon") {
                 guard let taxonID = Int(url.lastPathComponent) else {return false}
-                let detailsViewController = DetailsViewController(detailsContent: .mushroomWithID(taxonID: Int(taxonID), takesSelection: nil))
+                let detailsViewController = DetailsViewController(detailsContent: .mushroomWithID(taxonID: Int(taxonID)), session: session)
                 
                 if onboarding {
                     awaitingController = detailsViewController

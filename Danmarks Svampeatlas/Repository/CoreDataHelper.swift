@@ -12,7 +12,7 @@ import CoreData
 import ELKit
 
 enum CoreDataError: AppError {
-    var recoveryAction: mRecoveryAction? {
+    var recoveryAction: RecoveryAction? {
         switch self {
         case .initError:
             return .tryAgain
@@ -28,7 +28,7 @@ enum CoreDataError: AppError {
         case User
     }
     
-    var errorTitle: String {
+    var title: String {
         switch self {
         case .initError: return NSLocalizedString("databaseError_initError_title", comment: "")
         case .contentOutdated:
@@ -42,7 +42,7 @@ enum CoreDataError: AppError {
         }
     }
     
-    var errorDescription: String {
+    var message: String {
         switch self {
              case .initError: return NSLocalizedString("databaseError_initError_message", comment: "")
         case .noEntries(category: let category):
@@ -131,7 +131,7 @@ let persistentContainer: NSPersistentContainer
                      self.persistentContainer.persistentStoreCoordinator.addPersistentStore(with: storeDescription, completionHandler: { (_, _) in
                         completion?()
                     })
-                })]), primaryText: CoreDataError.initError.errorTitle, secondaryText: CoreDataError.initError.errorDescription, location: .bottom)
+                })]), primaryText: CoreDataError.initError.title, secondaryText: CoreDataError.initError.message, location: .bottom)
                     .show(animationType: .fromBottom)
             } else {
                 DispatchQueue.main.async {
@@ -162,7 +162,12 @@ extension CoreDataHelper {
             cdUser.email = user.email
             cdUser.facebookID = user.facebookID
             
-            
+            if let roles = user.roles {
+                roles.forEach({ role in
+                    cdUser.addToRoles(CDRole.init(context: managedContext).then({$0.name = role.name}))
+                })
+                    }
+           
             if let imageURL = user.imageURL {
                 DataService.instance.getImage(forUrl: imageURL, size: .full, completion: { (image, imageURL) in
                     ELFileManager.saveMushroomImage(image: image, url: imageURL)

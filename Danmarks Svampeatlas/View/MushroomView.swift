@@ -210,13 +210,13 @@ class MushroomView: UIView {
         
         configureLowerStackView(informations: informationArray)
         
-        if let redlistStatus = mushroom.redlistStatus {
-            redlistView.configure(redlistStatus, black: true)
-            redlistStackView.isHidden = false
-        } else {
-            redlistStackView.isHidden = true
-            
-        }
+//        if let redlistStatus = mushroom.redlistStatus {
+//            redlistView.configure(redlistStatus, black: true)
+//            redlistStackView.isHidden = false
+//        } else {
+//            redlistStackView.isHidden = true
+//
+//        }
     
     }
 }

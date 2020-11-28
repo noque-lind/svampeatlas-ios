@@ -57,6 +57,10 @@ extension UIFont {
         return UIFontMetrics(forTextStyle: .body).scaledFont(for: UIFont(name: "AvenirNext-Medium", size: size)!)
     }
     
+    class func appMuted(customSize size: CGFloat = 12) -> UIFont {
+        return UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "AvenirNext-UltraLight", size: size)!)
+    }
+    
     class func appDivider() -> UIFont {
         return UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "CaviarDreams-Bold", size: 15)!)
     }
@@ -89,6 +93,8 @@ extension UIFont {
     class func appBold() -> UIFont {
         return UIFont(name: "AvenirNext-Bold", size: 12)!
     }
+    
+    
     
 
     

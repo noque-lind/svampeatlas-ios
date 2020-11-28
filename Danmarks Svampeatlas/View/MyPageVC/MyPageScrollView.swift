@@ -221,7 +221,7 @@ class MyPageScrollView: UIScrollView {
            
             self.notificationsCountLabel.configure(title: "\(self.notificationsCount) \(NSLocalizedString("myPageScrollView_notificationsHeader", comment: ""))")
             self.session.markNotificationAsRead(notificationID: usernotification.observationID)
-            self.navigationDelegate?.pushVC(DetailsViewController(detailsContent: .observationWithID(observationID: usernotification.observationID, showSpeciesView: true, session: self.session)))
+            self.navigationDelegate?.pushVC(DetailsViewController(detailsContent: .observationWithID(observationID: usernotification.observationID, showSpeciesView: true), session: self.session))
         }
     }
     
@@ -229,7 +229,7 @@ class MyPageScrollView: UIScrollView {
         observationsTableView.tableViewState = .Loading
         
         observationsTableView.didSelectItem = {[unowned self] item in
-            self.navigationDelegate?.pushVC(DetailsViewController(detailsContent: .observation(observation: item, showSpeciesView: true, session: self.session)))
+            self.navigationDelegate?.pushVC(DetailsViewController(detailsContent: .observation(observation: item, showSpeciesView: true), session: self.session))
         }
         
         observationsTableView.didRequestAdditionalDataAtOffset = {[weak session] tableView, offset, max in

@@ -8,6 +8,7 @@
 
 import UIKit
 import Photos
+import ELKit
 
 protocol ELPhotosManagerDelegate: NavigationDelegate {
     func error(_ error: ELPhotos.ELPhotosError)
@@ -18,23 +19,7 @@ protocol ELPhotosManagerDelegate: NavigationDelegate {
 class ELPhotos: NSObject  {
     
     enum ELPhotosError: AppError {
-        var errorDescription: String {
-            switch self {
-            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_message", comment: "")
-            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_message", comment: "")
-            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_message", comment: "")
-            }
-        }
-        
-        var errorTitle: String {
-            switch self {
-            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_title", comment: "")
-            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_title", comment: "")
-            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_title", comment: "")
-            }
-        }
-        
-        var recoveryAction: mRecoveryAction? {
+        var recoveryAction: RecoveryAction? {
             switch self {
             case .notAuthorized: return .openSettings
             case .unknownSaveError: return .tryAgain
@@ -42,6 +27,23 @@ class ELPhotos: NSObject  {
             }
         }
         
+        var message: String {
+            switch self {
+            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_message", comment: "")
+            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_message", comment: "")
+            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_message", comment: "")
+            }
+        }
+        
+        var title: String {
+            switch self {
+            case .notAuthorized: return NSLocalizedString("elPhotosError_notAuthorized_title", comment: "")
+            case .unknownSaveError: return NSLocalizedString("elPhotosError_unknownSaveError_title", comment: "")
+            case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_title", comment: "")
+            }
+        }
+        
+    
         case notAuthorized
         case unknownSaveError
         case unknownFetchError
@@ -77,7 +79,9 @@ class ELPhotos: NSObject  {
                case .denied, .restricted, .notDetermined:
                     completion(nil)
         case .limited: return
-               }
+        @unknown default:
+            return
+        }
     }
     
     func showPhotoLibrary() {
@@ -86,13 +90,14 @@ class ELPhotos: NSObject  {
             switch authorization {
             case .notDetermined, .restricted, .denied:
                     self?.delegate?.error(.notAuthorized)
-            case .authorized:
+            case .authorized, .limited:
                     let picker = UIImagePickerController()
-                    picker.sourceType = .photoLibrary
+                picker.sourceType = .photoLibrary
                     picker.modalPresentationStyle = .fullScreen
                     picker.delegate = self
                     delegate?.presentVC(picker)
-            case .limited: return
+            @unknown default:
+                return
             }
             }
         }
@@ -105,7 +110,7 @@ class ELPhotos: NSObject  {
                 DispatchQueue.main.async {
                     delegate?.error(.notAuthorized)
                 }
-            case .authorized:
+            case .authorized, .limited:
                 self?.dispatchQueue.sync {
                     if let album = self?.fetchAlbumWithName(albumName) {
                         self?.saveImageInAlbum(photoData: photoData, album)
@@ -122,7 +127,8 @@ class ELPhotos: NSObject  {
                         }
                     }
                 }
-            case .limited: return
+            @unknown default:
+                return
             }
         }
     }

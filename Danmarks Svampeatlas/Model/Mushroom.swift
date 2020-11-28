@@ -15,6 +15,8 @@ struct Mushroom: Decodable, Equatable {
         return lhs.id == rhs.id
     }
     
+    public private(set) var isPlaceholder: Bool = false
+    
     public private(set) var id: Int
     public private(set) var fullName: String
     public private(set) var fullNameAuthor: String?
@@ -88,6 +90,11 @@ struct Mushroom: Decodable, Equatable {
         self._images = images
     }
     
+    init(id: Int, fullName: String) {
+        self.init(id: id, fullName: fullName, fullNameAuthor: nil, updatedAt: nil, probability: nil, rankName: nil, statistics: nil, attributes: nil, vernacularNameDK: nil, redlistData: nil, images: nil)
+        isPlaceholder = true
+    }
+    
     
     init(from cdMushroom: CDMushroom) {
         id = Int(cdMushroom.id)
@@ -101,7 +108,7 @@ struct Mushroom: Decodable, Equatable {
             _images = [Image]()
             for cdImage in cdImages {
                 guard let url = cdImage.url else {continue}
-                _images?.append(Image(thumbURL: nil, url: url, photographer: cdImage.photographer))
+                _images?.append(Image(id: id, thumbURL: nil, url: url, photographer: cdImage.photographer))
             }
         }
     }

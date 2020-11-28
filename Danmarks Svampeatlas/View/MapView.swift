@@ -8,7 +8,17 @@
 
 import UIKit
 import MapKit
+import ELKit
 
+
+extension MKCoordinateRegion {
+    func distanceMax() -> CLLocationDistance {
+        let furthest = CLLocation(latitude: center.latitude + (span.latitudeDelta/2),
+                             longitude: center.longitude + (span.longitudeDelta/2))
+        let centerLoc = CLLocation(latitude: center.latitude, longitude: center.longitude)
+        return centerLoc.distance(from: furthest)
+    }
+}
 
 fileprivate class CustomMapView: MKMapView {
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -66,7 +76,7 @@ class NewMapView: UIView {
        let template = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         let overlay = MKTileOverlay(urlTemplate: template)
         overlay.canReplaceMapContent = true
-        overlay.maximumZ = 19
+        overlay.maximumZ = 20
         return overlay
     }()
     
@@ -158,6 +168,10 @@ class NewMapView: UIView {
         }
     }
     
+    var zoom: CLLocationDistance {
+        return mapView.region.distanceMax() / 6
+    }
+    
     init(type mapViewType: MapViewType) {
         self.mapViewType = mapViewType
         
@@ -191,7 +205,7 @@ class NewMapView: UIView {
         }
     }
     
-    func showError(error: AppError, handler: ((mRecoveryAction?) -> ())? = nil) {
+    func showError(error: AppError, handler: ((RecoveryAction?) -> ())? = nil) {
         shouldLoad = false
         
         DispatchQueue.main.async {
@@ -208,7 +222,6 @@ class NewMapView: UIView {
     
     func setRegion(region: MKCoordinateRegion, selectAnnotationAtCenter: Bool, animated: Bool) {
         mapView.setRegion(region, animated: animated)
-        
         
 //        guard selectAnnotationAtCenter, let annotation = mapView.annotations.first(where: {$0.coordinate.distance(to: center) == 0}) else {return}
 //        mapView.selectAnnotation(annotation, animated: false)
@@ -251,7 +264,7 @@ class NewMapView: UIView {
     
     func selectAnnotationAtCoordinate(_ coordinate: CLLocationCoordinate2D) {
         guard let annotation = mapView.annotations.first(where: {$0.coordinate.distance(to: coordinate) == 0}) else {return}
-        mapView.selectAnnotation(annotation, animated: false)
+        mapView.selectAnnotation(annotation, animated: true)
     }
     
     func clearAnnotations() {
@@ -285,8 +298,6 @@ class NewMapView: UIView {
     
     func addLocationAnnotation(button: UIButton) -> LocationPIn {
         errorView = nil
-        print(button.frame)
-        print(button.bounds)
         let imageView = button.convert(button.imageView?.frame ?? button.frame, to: button.superview)
         let coordinate = mapView.convert(CGPoint(x: button.frame.midX, y: imageView.maxY), toCoordinateFrom: button.superview)
         let annotation = LocationPIn(coordinate: coordinate)
@@ -296,40 +307,48 @@ class NewMapView: UIView {
     }
     
     func addObservationAnnotations(observations: [Observation]) {
-        DispatchQueue.main.async {
             switch self.mapViewType {
         case .observations(detailed: let detailed):
-            self.errorView = nil
+            DispatchQueue.main.async {
+                self.errorView = nil
+            }
+            
+            DispatchQueue.global(qos: .default).async { [weak self] in
+                guard let self = self else {return}
                 guard let originalElements = self.observations?.returnOriginalElements(newElements: observations), originalElements.count > 0 else {debugPrint("No new items."); return}
                 self.observations?.append(contentsOf: originalElements)
-                
+
                 var annotations = [ObservationPin]()
                 for observation in originalElements {
                     let observationPin = ObservationPin(coordinate: CLLocationCoordinate2D.init(latitude: observation.coordinates.last!, longitude: observation.coordinates.first!), identifier: "observationPin", observation: observation, detailed: detailed)
                     annotations.append(observationPin)
                 }
-                
-                
+
+
                     self.mapView.addAnnotations(annotations)
-              
+            }
         case .localities:
             return
         }
-            
-        }
     }
     
-    func addCirclePolygon(center: CLLocationCoordinate2D, radius: CLLocationDistance) {
+    func addCirclePolygon(center: CLLocationCoordinate2D, radius: CLLocationDistance, setRegion: Bool = true, clearPrevious: Bool = false) {
         DispatchQueue.main.async {
+            if clearPrevious { self.mapView.overlays.forEach({if $0 is MKCircle { self.mapView.removeOverlay($0) }}) }
             let circle = MKCircle(center: center, radius: radius)
             self.mapView.addOverlay(circle)
-            self.setRegion(center: center, zoomMetres: radius * 2.3)
+            if setRegion { self.setRegion(center: center, zoomMetres: radius * 2.3) }
         }
     }
     
     
     func filterByCategory(category: Categories) {
         mapView.removeOverlay(topographicalOverlay)
+        if #available(iOS 13.0, *) {
+            mapView.cameraZoomRange = MKMapView.CameraZoomRange(
+                minCenterCoordinateDistance: MKMapCameraZoomDefault,
+                maxCenterCoordinateDistance: MKMapCameraZoomDefault)
+        }
         
         switch category {
         case .regular:
@@ -338,6 +357,11 @@ class NewMapView: UIView {
         case .satelite:
             mapView.mapType = .satellite
         case .topography:
+            if #available(iOS 13.0, *) {
+                mapView.cameraZoomRange = MKMapView.CameraZoomRange(
+                    minCenterCoordinateDistance: 300,
+                    maxCenterCoordinateDistance: MKMapCameraZoomDefault)
+            }
             mapView.addOverlay(topographicalOverlay, level: .aboveLabels)
         }
     }
@@ -365,7 +389,9 @@ extension NewMapView: MKMapViewDelegate {
         } else if let clusterPin = annotation as? MKClusterAnnotation {
             if let clusterPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "clusterPinView") as? ClusterPinView {
                 clusterPinView.annotation = clusterPin
-                clusterPinView.showObservation = observationPicked
+                clusterPinView.showObservation = { [weak self] (observation) in
+                    self?.observationPicked?(observation)
+                }
                 return clusterPinView
             }
         } else if let localityAnnotation = annotation as? LocalityAnnotation {
@@ -409,23 +435,25 @@ extension NewMapView: MKMapViewDelegate {
             if observationPin.observation.images?.first != nil {
                 var observationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "observationPinViewWithImage") as? ObservationPinView
                 observationPinView?.annotation = observationPin
-                observationPinView?.wasPressed = observationPicked
-                
+               
                 if observationPinView == nil {
                     observationPinView = ObservationPinView(annotation: observationPin, reuseIdentifier: "observationPinViewWithImage", withImage: true)
-                    observationPinView?.wasPressed = observationPicked
                 }
-                
+                observationPinView?.wasPressed = { [weak self] (observation) in
+                    self?.observationPicked?(observation)
+                }
                 observationPinView?.clusteringIdentifier = "clusterAnnotationView"
                 return observationPinView
             } else {
                 var observationPinView = mapView.dequeueReusableAnnotationView(withIdentifier: "observationPinView") as? ObservationPinView
                 observationPinView?.annotation = observationPin
-                observationPinView?.wasPressed = observationPicked
                 
                 if observationPinView == nil {
                     observationPinView = ObservationPinView(annotation: observationPin, reuseIdentifier: "observationPinView", withImage: false)
-                     observationPinView?.wasPressed = observationPicked
+                }
+                
+                observationPinView?.wasPressed = { [weak self] (observation) in
+                    self?.observationPicked?(observation)
                 }
                 
                 observationPinView?.clusteringIdentifier = "clusterAnnotationView"

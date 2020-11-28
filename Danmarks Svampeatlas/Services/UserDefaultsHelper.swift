@@ -71,6 +71,14 @@ struct UserDefaultsHelper {
         }
     }
     
+    static var hasSeenWhatsNew: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "hasSeenWhatsNew1.5")
+        } set {
+            UserDefaults.standard.set(newValue, forKey: "hasSeenWhatsNew1.5")
+        }
+    }
+    
     static var saveImages: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "saveImages")
@@ -135,5 +143,13 @@ struct UserDefaultsHelper {
         guard let dict = UserDefaults.standard.dictionary(forKey: "fileManagerDict") else {return nil}
         guard let url = dict[url] as? String else {return nil}
         return url
+    }
+    
+    static func setHasSeenImageDeletionTip() {
+        UserDefaults.standard.set(true, forKey: "hasSeenImageDeletionTip")
+    }
+    
+    static func hasSeenImageDeletionTip() -> Bool {
+        return UserDefaults.standard.bool(forKey: "hasSeenImageDeletionTip")
     }
 }

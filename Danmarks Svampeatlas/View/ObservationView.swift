@@ -129,21 +129,23 @@ class ObservationView: UIView {
     }
     
     func configure(observation: Observation) {
-        titleLabel.text = observation.speciesProperties.name
+        titleLabel.text = observation.determination.name
         titleLabel.sizeToFit()
         subtitleLabel.text = nil
-        if let dateString = Date(ISO8601String: observation.date!)?.convert(into: .short, ignoreRecentFormatting: false, ignoreTime: true) {
+        if let dateString = Date(ISO8601String: observation.observationDate!)?.convert(into: .short, ignoreRecentFormatting: false, ignoreTime: true) {
             subtitleLabel.text = dateString
         }
         
-        if let locationString = observation.location {
+        if let locality = observation.locality {
             if subtitleLabel.text == nil {
-                subtitleLabel.text = locationString
+                subtitleLabel.text = locality.fullName
             } else {
-                subtitleLabel.text?.append(", \(locationString)")
+                subtitleLabel.text?.append(", \(locality.fullName)")
             }
         }
+       
         
+
         subtitleLabel.sizeToFit()
         userNameLabel.text = observation.observedBy
         validationView.configure(validationStatus: observation.validationStatus)

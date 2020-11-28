@@ -51,14 +51,18 @@ class TextViewCell: UITableViewCell {
     }
 }
 
+protocol AddCommentCellDelegate: class {
+    func enterButtonPressed(withText: String)
+}
+
 class AddCommentCell: UITableViewCell {
     private lazy var textView: ELTextView = {
-        let view = ELTextView(defaultHeight: 200)
+        let view = ELTextView(defaultHeight: 120)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.appSecondaryColour()
         view.textColor = UIColor.appWhite()
         view.textView.isScrollEnabled = true
-        view.shouldHandleKeyboard = false
+        view.shouldHandleKeyboard = true
         view.font = UIFont.appPrimaryHightlighed()
         view.titleTextColor = UIColor.appWhite()
         return view
@@ -77,6 +81,7 @@ class AddCommentCell: UITableViewCell {
         return button
     }()
     
+    weak var delegate: AddCommentCellDelegate?
     var sendButtonTappedHandler: ((String) -> ())?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -87,7 +92,9 @@ class AddCommentCell: UITableViewCell {
     @objc private func buttonpressed() {
         guard let enteredText = textView.text, enteredText != "" else {return}
         sendButtonTappedHandler?(enteredText)
+        delegate?.enterButtonPressed(withText: enteredText)
         textView.text = nil
+        textView.endEditing(true)
     }
     
     
@@ -102,13 +109,13 @@ class AddCommentCell: UITableViewCell {
         backgroundColor = UIColor.clear
         contentView.addSubview(textView)
         contentView.addSubview(sendButton)
-        textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
         textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
         textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
         textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -8).isActive = true
         sendButton.topAnchor.constraint(equalTo: textView.textView.topAnchor).isActive = true
         sendButton.bottomAnchor.constraint(equalTo: textView.textView.bottomAnchor).isActive = true
-        sendButton.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        sendButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
     }
     
     func configureCell(descriptionText: String, placeholder: String?, content: String?, delegate: ELTextViewDelegate?) {

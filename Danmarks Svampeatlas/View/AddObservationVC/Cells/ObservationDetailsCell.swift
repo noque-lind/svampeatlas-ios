@@ -44,9 +44,9 @@ class ObservationDetailsCell: UICollectionViewCell {
         return view
     }()
     
+    weak var viewModel: AddObservationViewModel?
     private let rows = Categories.allCases
     private weak var navigationDelegate: NavigationDelegate?
-    private var newObservation: NewObservation?
     private var shouldClearObservationHost = false
     private var didAdjustSafeAreaInsets: Bool = false
     private var addedRow: (parent: IndexPath, indexPath: IndexPath, selectors: Selectors)? {
@@ -79,9 +79,9 @@ class ObservationDetailsCell: UICollectionViewCell {
         fatalError()
     }
 
-    func configure(newObservation: NewObservation, delegate: NavigationDelegate) {
+    func configure(viewModel: AddObservationViewModel, delegate: NavigationDelegate) {
         self.navigationDelegate = delegate
-        self.newObservation = newObservation
+        self.viewModel = viewModel
         tableView.reloadData()
     }
     
@@ -99,17 +99,17 @@ class ObservationDetailsCell: UICollectionViewCell {
             
         case .hostCell(let host, let selected):
             if selected {
-                newObservation?.hosts.append(host)
-            } else if let indexPath = newObservation?.hosts.firstIndex(where: {$0.id == host.id}) {
-                newObservation?.hosts.remove(at: indexPath)
+                viewModel?.hosts.append(host)
+            } else if let indexPath = viewModel?.hosts.firstIndex(where: {$0.id == host.id}) {
+                viewModel?.hosts.remove(at: indexPath)
             }
             
-            if isLocked == true, let hosts = newObservation?.hosts {
+            if isLocked == true, let hosts = viewModel?.hosts {
                 UserDefaultsHelper.setDefaultHosts(hosts: hosts)
-                newObservation?.lockedHosts = true
+                viewModel?.lockedHosts = true
             } else {
                 UserDefaultsHelper.setDefaultHosts(hosts: [])
-                newObservation?.lockedHosts = false
+                viewModel?.lockedHosts = false
             }
             
             guard let index = rows.firstIndex(of: .Host) else {return}
@@ -125,7 +125,7 @@ class ObservationDetailsCell: UICollectionViewCell {
                 UserDefaultsHelper.setDefaultSubstrateID(0)
             }
             
-            newObservation?.substrate = substrate
+            viewModel?.substrate = substrate
             guard let index = rows.firstIndex(of: .Substrate) else {return}
             let indexPath = IndexPath(row: index, section: 0)
             tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
@@ -139,7 +139,7 @@ class ObservationDetailsCell: UICollectionViewCell {
                 UserDefaultsHelper.setDefaultVegetationTypeID(0)
             }
             
-            newObservation?.vegetationType = vegetationType
+            viewModel?.vegetationType = vegetationType
             guard let index = rows.firstIndex(of: .VegetationType) else {return}
             let indexPath = IndexPath(row: index, section: 0)
             tableView.delegate?.tableView!(tableView, didSelectRowAt: indexPath)
@@ -251,7 +251,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
             case .failure(_):
                 cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell])])
             case .success(var hosts):
-                let selectedHosts = self.newObservation?.hosts ?? []
+                let selectedHosts = self.viewModel?.hosts ?? []
                 
                 let userHosts = hosts.filter({$0.userFound})
                 hosts = hosts.filter({!$0.userFound})
@@ -274,17 +274,17 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
             case .DateSelector:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PickerViewCell", for: indexPath) as! PickerViewCell
                 cell.didPickDate = { [unowned self] date in
-                    self.newObservation?.observationDate = date
+                    self.viewModel?.observationDate = date
                     guard let index = self.rows.firstIndex(of: .Date) else {return}
                     let indexPath = IndexPath(row: index, section: 0)
                     self.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
                     self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
                 }
-                cell.configure(date: newObservation!.observationDate)
+                cell.configure(date: viewModel?.observationDate ?? Date())
                 return cell
             case .SubstraPicker:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewPickerCell", for: indexPath) as! TableViewPickerCell
-                cell.isLocked = newObservation?.substrate?.isLocked ?? false
+                cell.isLocked = viewModel?.substrate?.isLocked ?? false
                 cell.didSelectCell = { [unowned self] cellType, isLocked in
                     self.didSelectCell(cellType: cellType, isLocked: isLocked)
                 }
@@ -292,7 +292,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 return cell
             case .VegetationPicker:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewPickerCell", for: indexPath) as! TableViewPickerCell
-                cell.isLocked = newObservation?.vegetationType?.isLocked ?? false
+                cell.isLocked = viewModel?.vegetationType?.isLocked ?? false
                 cell.didSelectCell = { [unowned self] cellType, isLocked in
                     self.didSelectCell(cellType: cellType, isLocked: isLocked)
                 }
@@ -300,7 +300,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 return cell
             case .HostSelector:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewPickerCell", for: indexPath) as! TableViewPickerCell
-                cell.isLocked = newObservation?.lockedHosts ?? false
+                cell.isLocked = viewModel?.lockedHosts ?? false
                 cell.didSelectCell = { [unowned self] cellType, isLocked in
                     self.didSelectCell(cellType: cellType, isLocked: isLocked)
                 }
@@ -325,23 +325,23 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "selectorCell", for: indexPath) as! SettingCell
                 switch rows[realIndexPathRow] {
                 case .Date:
-                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Date"), description: NSLocalizedString("observationDetailsCell_date", comment: ""), content: newObservation!.observationDate.convert(into: DateFormatter.Style.medium, ignoreRecentFormatting: true))
+                    cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Date"), description: NSLocalizedString("observationDetailsCell_date", comment: ""), content: viewModel?.observationDate.convert(into: DateFormatter.Style.medium, ignoreRecentFormatting: true) ?? "")
                     
                 case .Substrate:
-                    var string = newObservation?.substrate?.isLocked == true  ? "🔒 ": ""
-                        string.append(newObservation?.substrate?.name ?? "*")
+                    var string = viewModel?.substrate?.isLocked == true  ? "🔒 ": ""
+                        string.append(viewModel?.substrate?.name ?? "*")
                     
                     cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_Substrate"), description: NSLocalizedString("observationDetailsCell_substrate", comment: ""), content: string)
                     
                 case .VegetationType:
-                    var string = newObservation?.vegetationType?.isLocked == true ? "🔒 ": ""
-                        string.append(newObservation?.vegetationType?.name ?? "*")
+                    var string = viewModel?.vegetationType?.isLocked == true ? "🔒 ": ""
+                        string.append(viewModel?.vegetationType?.name ?? "*")
                 
                     cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_VegetationType"), description: NSLocalizedString("observationDetailsCell_vegetationType", comment: ""), content: string)
                 case .Host:
-                    var string = newObservation?.lockedHosts == true ? "🔒 ": ""
+                    var string = viewModel?.lockedHosts == true ? "🔒 ": ""
                 
-                    if let hosts = newObservation?.hosts, hosts.count != 0 {
+                    if let hosts = viewModel?.hosts, hosts.count != 0 {
                         for host in hosts {
                             if Utilities.isDanish() {
                                 string.append(contentsOf: "\(host.dkName ?? ""), ")
@@ -370,18 +370,18 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 
                 switch rows[realIndexPathRow] {
                 case .Notes:
-                    cell.configureCell(titleText: NSLocalizedString("observationDetailsCell_notes_title", comment: ""), placeholder: NSLocalizedString("observationDetailsCell_notes_message", comment: ""), content: newObservation?.note, delegate: self)
+                    cell.configureCell(titleText: NSLocalizedString("observationDetailsCell_notes_title", comment: ""), placeholder: NSLocalizedString("observationDetailsCell_notes_message", comment: ""), content: viewModel?.note, delegate: self)
                     
-                    cell.textView.didUpdateEntry = { [weak newObservation] entry in
-                        newObservation?.note = entry
+                    cell.textView.didUpdateEntry = { [weak viewModel] entry in
+                        viewModel?.note = entry
                     }
                     
                     
                 case .EcologyNotes:
-                    cell.configureCell(titleText: NSLocalizedString("observationDetailsCell_ecologyNotes_title", comment: ""), placeholder: NSLocalizedString("observationDetailsCell_ecologyNotes_message", comment: ""), content: newObservation?.ecologyNote, delegate: self)
+                    cell.configureCell(titleText: NSLocalizedString("observationDetailsCell_ecologyNotes_title", comment: ""), placeholder: NSLocalizedString("observationDetailsCell_ecologyNotes_message", comment: ""), content: viewModel?.ecologyNote, delegate: self)
                     
-                    cell.textView.didUpdateEntry = { [weak newObservation] entry in
-                        newObservation?.ecologyNote = entry
+                    cell.textView.didUpdateEntry = { [weak viewModel] entry in
+                        viewModel?.ecologyNote = entry
                     }
                 default: break
                 }

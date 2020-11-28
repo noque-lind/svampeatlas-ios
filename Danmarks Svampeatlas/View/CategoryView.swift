@@ -23,6 +23,7 @@ struct Category<T>: Equatable {
     
    let type: T
    let title: String
+    var loading: Bool = false
 }
 
 class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -70,10 +71,6 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         setupView()
     }
     
-    deinit {
-        debugPrint("CategoryView Deinited")
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
@@ -113,6 +110,11 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         categorySelected?(category)
     }
     
+    func setCategoryLoadingState(atIndex index: Int, loading: Bool) {
+        items[index].loading = loading
+        collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+    }
+    
     func moveSelector(toCellAtIndexPath indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) {
             moveSelector(toCell: cell)
@@ -129,7 +131,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "categoryCell", for: indexPath) as? CategoryCell else {fatalError()}
-        cell.configureCell(title: items[indexPath.row].title)
+        cell.configureCell(title: items[indexPath.row].title, loading: items[indexPath.row].loading)
         return cell
     }
     

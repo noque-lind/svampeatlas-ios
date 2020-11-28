@@ -14,6 +14,8 @@ class TermsVC: UIViewController {
         case mlPredict
         case localityHelper
         case cameraHelper
+        case deleteImageTip
+        case whatsNew
     }
     
     private let header: SectionHeaderView = {
@@ -161,6 +163,9 @@ class TermsVC: UIViewController {
     
     private func configure() {
         switch terms {
+        case .deleteImageTip:
+            header.configure(title: NSLocalizedString("Deletions are final", comment: ""))
+            textView.text = NSLocalizedString("When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again", comment: "")
         case .mlPredict:
             header.configure(title: NSLocalizedString("termsVC_mlPredict_title", comment: ""))
             
@@ -172,6 +177,9 @@ class TermsVC: UIViewController {
         case .cameraHelper:
             header.configure(title: NSLocalizedString("termsVC_cameraHelper_title", comment: ""))
             textView.text = NSLocalizedString("termsVC_cameraHelper_message", comment: "")
+        case .whatsNew:
+            header.configure(title: NSLocalizedString("Whats new?", comment: ""))
+            textView.text = NSLocalizedString("We're so happy that you are still here!\n\nYour app has been updated with some new exciting features:\n\n- New design in mushroom and observation details\n- You can now edit an observation after it has been uploaded\n- You can delete observations (only within the firt 48h of the upload)\n- Major stability improvements\n- Prepareness for more exiciting features such as: Local storage of observations when internet is limited, interactive validation of observations, add extra finders to an observation", comment: "")
         }
     }
     

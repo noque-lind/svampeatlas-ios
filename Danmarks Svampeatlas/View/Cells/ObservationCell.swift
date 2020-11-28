@@ -8,6 +8,119 @@
 
 import UIKit
 
+class NewObservationCell: UITableViewCell {
+    
+    private lazy var roundedImageView = RoundedImageView().then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.widthAnchor.constraint(equalToConstant: 100).isActive = true
+    })
+    
+    private lazy var titleLabel = UILabel().then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = .appPrimaryHightlighed()
+        $0.numberOfLines = 0
+        $0.textColor = .appWhite()
+        $0.setContentHuggingPriority(.required, for: .vertical)
+    })
+    
+    private lazy var subtitleLabel = UILabel().then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = .appPrimary()
+        $0.textColor = .appWhite()
+        $0.numberOfLines = 0
+        $0.setContentHuggingPriority(.required, for: .vertical)
+    })
+    
+    private lazy var userNameLabel = UILabel().then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.appPrimary()
+        $0.numberOfLines = 0
+        $0.setContentHuggingPriority(.required, for: .horizontal)
+        $0.setContentHuggingPriority(.required, for: .vertical)
+        $0.textColor = UIColor.appWhite()
+    })
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    private func setupView() {
+        accessoryType = .disclosureIndicator
+        selectionStyle = .none
+        backgroundColor = .clear
+        
+        let stackView = UIStackView().then({
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.spacing = 8
+            $0.axis = .horizontal
+            $0.addArrangedSubview(roundedImageView)
+            $0.addArrangedSubview(UIView().then({
+                $0.backgroundColor = .clear
+                $0.translatesAutoresizingMaskIntoConstraints = false
+                $0.addSubview(titleLabel)
+                $0.addSubview(subtitleLabel)
+                $0.addSubview(userNameLabel)
+                
+                titleLabel.topAnchor.constraint(equalTo: $0.topAnchor, constant: 16).isActive = true
+                titleLabel.leadingAnchor.constraint(equalTo: $0.leadingAnchor).isActive = true
+                titleLabel.trailingAnchor.constraint(equalTo: $0.trailingAnchor).isActive = true
+                subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4).isActive = true
+                subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
+                subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor).isActive = true
+                userNameLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 8).isActive = true
+                userNameLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
+                userNameLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor).isActive = true
+                userNameLabel.bottomAnchor.constraint(equalTo: $0.bottomAnchor, constant: -16).isActive = true
+            }))
+        })
+        
+        
+        contentView.do({
+            $0.addSubview(stackView)
+        })
+        
+        stackView.do({
+            $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+            $0.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4).isActive = true
+            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
+            $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
+        })
+    }
+    
+    func configure(observation: Observation) {
+        titleLabel.text = observation.determination.name
+        titleLabel.sizeToFit()
+        subtitleLabel.text = nil
+        if let dateString = Date(ISO8601String: observation.observationDate!)?.convert(into: .short, ignoreRecentFormatting: false, ignoreTime: true) {
+            subtitleLabel.text = dateString
+        }
+        if let locality = observation.locality {
+            if subtitleLabel.text == nil {
+                subtitleLabel.text = locality.fullName
+            } else {
+                subtitleLabel.text?.append(", \(locality.fullName)")
+            }
+        }
+      
+       
+        subtitleLabel.sizeToFit()
+        userNameLabel.text = observation.observedBy
+        
+        if let imageURL = observation.images?.first?.url {
+                roundedImageView.configureImage(url: imageURL)
+                roundedImageView.isHidden = false
+        } else {
+                roundedImageView.isHidden = true
+        }
+    }
+    
+}
+
 class ObservationCell: UITableViewCell {
     
     private lazy var roundedImageView: RoundedImageView = {

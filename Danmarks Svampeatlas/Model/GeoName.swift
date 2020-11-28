@@ -12,7 +12,7 @@ class GeoNames: Decodable {
     public private(set) var geonames: [GeoName]
 }
 
-class GeoName: Decodable {
+struct GeoName: Decodable {
     var geonameId: Int
     var name: String
     var countryName: String

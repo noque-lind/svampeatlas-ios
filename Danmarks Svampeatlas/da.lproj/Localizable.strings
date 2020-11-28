@@ -276,7 +276,7 @@
 
 //ObservationDetailsCell
 "observationDetailsCell_mostUsed" = "Mest brugt";
-"observationDetailsCell_date" = "Dato:";
+"observationDetailsCell_date" = "Dato: %@";
 "observationDetailsCell_substrate" = "Substrat:";
 "observationDetailsCell_vegetationType" = "Vegetationstype:";
 "observationDetailsCell_host" = "Vært:";
@@ -284,6 +284,8 @@
 "observationDetailsCell_notes_message" = "Lugt melagtig ...";
 "observationDetailsCell_ecologyNotes_title" = "Kommentarer om voksested";
 "observationDetailsCell_ecologyNotes_message" = "På sandjord blandt mos ...";
+
+"Date: %@" = "Dato: %@";
 
 //SearchCell
 "searchCell_title" = "Søg på en vært her 👇";

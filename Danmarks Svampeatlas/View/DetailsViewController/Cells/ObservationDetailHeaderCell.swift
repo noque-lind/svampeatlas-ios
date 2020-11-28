@@ -107,8 +107,9 @@ class ObservationDetailHeaderCell: UITableViewCell {
     }
     
     func configure(observation: Observation) {
-        idLabel.text = "ID: \(observation.id) | \(observation.observedBy ?? "")"
+        idLabel.text = "ID: \(observation.id) | \(observation.observedBy ?? "") | \(Date.init(ISO8601String: observation.observationDate ?? "")?.convert(into: .medium, ignoreRecentFormatting: false, ignoreTime: true) ?? "")"
         primaryLabel.text = observation.determination.name
+//        secondaryLabel.text = String.localizedStringWithFormat(NSLocalizedString("Date: %@", comment: ""),  Date(ISO8601String: observation.observationDate ?? "")?.convert(into: .full, ignoreRecentFormatting: false, ignoreTime: true) ?? "")
         determinationView.configure(validationStatus: observation.validationStatus)
     }
 }

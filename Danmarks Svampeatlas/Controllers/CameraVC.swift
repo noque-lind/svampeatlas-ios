@@ -242,12 +242,17 @@ class CameraVC: UIViewController {
         
         let vm = AddObservationViewModel(action: .new, session: session)
         
+        if let mushroom = mushroom {
+            vm.mushroom = mushroom
+        }
+        
         if let imageURL = imageURL {
             vm.addImage(newObservationImage: NewObservationImage(type: .new, url: imageURL))
         }
         if let predictionResults = predictionResults {
             vm.predictionResults.value = .items(items: predictionResults)
         }
+        
 
         self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: AddObservationVC.init(viewModel: vm)))
     }

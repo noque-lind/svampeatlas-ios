@@ -462,6 +462,35 @@ extension DetailsViewController: UIViewControllerTransitioningDelegate {
 
 extension DetailsViewController: CellProviderDelegate {
     func moreButtonPressed() {
+        func addReportContentButton(_ alertController: UIAlertController, observationID: Int) {
+            alertController.addAction(.init(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), style: .destructive, handler: { (action) in
+                UIAlertController(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), message: NSLocalizedString("observationDetailsScrollView_rapportContent_message", comment: ""), preferredStyle: .alert)
+                    .then({ vc in
+                        vc.addTextField { (textField) in
+                            textField.placeholder = NSLocalizedString("observationDetailsScrollView_rapportContent_placeholder", comment: "")
+                            textField.font = .appPrimary()
+                        }
+                        
+                        vc.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak self] (action) in
+                            guard let comment = vc.textFields?.first?.text else {return}
+                            self?.session?.reportOffensiveContent(observationID: observationID, comment: comment, completion: {
+                                DispatchQueue.main.async {
+                                    let notification = ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_title", comment: ""), secondaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_message", comment: ""), location: .bottom)
+                                    notification.show(animationType: .zoom)
+                                }
+                            })
+                        }))
+                        vc.addAction(UIAlertAction(title: NSLocalizedString("observationDetailsScrollView_rapportContent_abort", comment: ""), style: .cancel, handler: nil))
+                        
+                    })
+                    .do({
+                        self.present($0, animated: true, completion: nil)
+                    })
+            }))
+
+        }
+        
+        
         switch viewModel.observation.value {
         case .items(item: let observation):
             let actionVC = UIAlertController(title: String.localizedStringWithFormat(NSLocalizedString("Observation with ID: %d", comment: ""), observation.id), message: NSLocalizedString("You have the options below:", comment: ""), preferredStyle: .actionSheet).then({
@@ -472,6 +501,8 @@ extension DetailsViewController: CellProviderDelegate {
                                 self?.navigationController?.pushViewController($0, animated: true)
                             })
                         }))
+                    } else {
+                        addReportContentButton($0, observationID: observation.id)
                     }
                     
                     if observation.isDeleteable(user: session.user) {
@@ -495,31 +526,8 @@ extension DetailsViewController: CellProviderDelegate {
                         
                     }
                 } else {
-                    $0.addAction(.init(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), style: .destructive, handler: { (action) in
-                        UIAlertController(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), message: NSLocalizedString("observationDetailsScrollView_rapportContent_message", comment: ""), preferredStyle: .alert)
-                            .then({ vc in
-                                vc.addTextField { (textField) in
-                                    textField.placeholder = NSLocalizedString("observationDetailsScrollView_rapportContent_placeholder", comment: "")
-                                    textField.font = .appPrimary()
-                                }
-                                
-                                vc.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak self] (action) in
-                                    guard let comment = vc.textFields?.first?.text else {return}
-                                    self?.session?.reportOffensiveContent(observationID: observation.id, comment: comment, completion: {
-                                        DispatchQueue.main.async {
-                                            let notification = ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_title", comment: ""), secondaryText: NSLocalizedString("observationDetailsScrollView_rapportContent_thankYou_message", comment: ""), location: .bottom)
-                                            notification.show(animationType: .zoom)
-                                        }
-                                    })
-                                }))
-                                vc.addAction(UIAlertAction(title: NSLocalizedString("observationDetailsScrollView_rapportContent_abort", comment: ""), style: .cancel, handler: nil))
-                                
-                            })
-                            .do({
-                                self.present($0, animated: true, completion: nil)
-                            })
-                    }))
-                }
+                    addReportContentButton($0, observationID: observation.id)
+                    }
                 
                 $0.addAction(.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
             })

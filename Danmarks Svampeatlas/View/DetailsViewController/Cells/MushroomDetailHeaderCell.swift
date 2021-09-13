@@ -85,7 +85,7 @@ class MushroomDetailsHeaderCell: UITableViewCell {
     @objc private func favoriteButtonPressed() {
         if favoriteButton.tintColor == UIColor.appWhite() {
             guard let mushroom = mushroom else {return}
-            Database.instance.mushroomsRepository.save(items: [mushroom]) { [weak self] (result) in
+            Database.instance.mushroomsRepository.saveFavorite(mushroom) { [weak self] result in
                 switch result {
                 case .success:
                     UIView.animate(withDuration: 0.2) {
@@ -98,14 +98,13 @@ class MushroomDetailsHeaderCell: UITableViewCell {
                     }
                 case .failure: return
                 }
+
             }
-            
         } else {
             guard let mushroom = mushroom else {return}
-            Database.instance.mushroomsRepository.delete(mushroom: mushroom) { [weak self] (result) in
+            Database.instance.mushroomsRepository.removeAsFavorite(mushroom) { [weak self] result in
                 switch result {
-                case .failure: return
-                case .success:
+                case .success():
                     UIView.animate(withDuration: 0.2) {
                         self?.favoriteButton.tintColor = .appWhite()
                         self?.favoriteButton.transform = CGAffineTransform.init(scaleX: 1.2, y: 1.2)
@@ -114,9 +113,10 @@ class MushroomDetailsHeaderCell: UITableViewCell {
                             self?.favoriteButton.transform = .identity
                         }
                     }
+                case .failure(let error): break
                 }
             }
-            
+           
         }
     }
     

@@ -10,11 +10,13 @@ import UIKit
 import CoreLocation
 import ELKit
 
-class AddObservationVC: UIViewController {
-    
+class AddObservationVC: UIViewController  {
+
     enum Action {
         case new
         case edit(observationID: Int)
+        case newNote
+        case editNote(node: CDNote)
     }
     
     private enum ObservationCategories: CaseIterable, Equatable {
@@ -42,8 +44,8 @@ class AddObservationVC: UIViewController {
         let heightAnchor = view.heightAnchor.constraint(equalToConstant: view.isExpanded ? ObservationImagesView.expandedHeight: ObservationImagesView.collapsedHeight)
                 heightAnchor.isActive = true
         
-        view.shouldAnimateHeight = { [weak self] constant in
-                    heightAnchor.constant = constant
+        view.shouldAnimateHeight = { [weak self, weak heightAnchor] constant in
+                    heightAnchor?.constant = constant
         
                     UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.curveEaseInOut, animations: {
                         self?.view.layoutIfNeeded()
@@ -52,10 +54,10 @@ class AddObservationVC: UIViewController {
                     }
                 }
         
-        view.imageDeleted = { [weak self] imageUrl in
+        view.imageDeleted = { [weak self, weak view] imageUrl in
             if !UserDefaultsHelper.hasSeenImageDeletionTip() {
                 self?.present(TermsVC(terms: .deleteImageTip), animated: true, completion: nil)
-                self?.viewModel.images.set(self?.viewModel.images.value ?? [])
+                view?.configure(newObservationImages: self?.viewModel.images.value ?? [])
                 UserDefaultsHelper.setHasSeenImageDeletionTip()
             } else {
                 self?.viewModel.removeImage(newObservationImage: imageUrl)
@@ -64,8 +66,8 @@ class AddObservationVC: UIViewController {
         
         view.onAddImageButtonPressed = { [weak self, weak viewModel] in
            CameraVC(cameraVCUsage: .imageCapture).then({
-                $0.onImageCaptured = { imageURL in
-                    viewModel?.addImage(newObservationImage: NewObservationImage(type: .new, url: imageURL))
+                $0.onImageCaptured = { [weak viewModel] imageURL in
+                    viewModel?.addImage(newObservationImage: UserObservation.Image(type: .new, url: imageURL, filename: ""))
                 }
             })
            .do({
@@ -145,6 +147,8 @@ class AddObservationVC: UIViewController {
         view.backgroundColor = UIColor.appPrimaryColour()
         
         switch viewModel.action {
+        case .newNote:
+            title = "New note"
         case .new:
             title = NSLocalizedString("addObservationVC_title", comment: "")
             navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu)), animated: false)
@@ -160,9 +164,37 @@ class AddObservationVC: UIViewController {
                 
                 $0.addArrangedSubview(idLabel)
             })
+        case .editNote:
+            self.navigationItem.titleView = UIStackView().then({
+                $0.axis = .vertical
+                $0.alignment = .center
+                $0.addArrangedSubview(UILabel().then({
+                    $0.font = .appTitle()
+                    $0.textColor = .appWhite()
+                    $0.text = NSLocalizedString("Edit note", comment: "")
+                }))
+                
+                $0.addArrangedSubview(idLabel)
+            })
         }
         
-        navigationItem.setRightBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload)), animated: false)
+//        navigationItem.setRightBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload)), animated: false)
+        let rightButtonText: String
+        switch viewModel.action {
+        case .newNote, .editNote, .edit:
+            rightButtonText = NSLocalizedString("Save", comment: "")
+        case .new:
+            rightButtonText =  NSLocalizedString("Upload", comment: "")
+        }
+        
+        navigationItem.setRightBarButton(.init(customView: ActionButton().then({
+            $0.addTarget(self, action: #selector(onAction), for: .touchUpInside)
+            if #available(iOS 13.0, *) {
+                $0.configure(text:rightButtonText, contextDelegate: self)
+            } else {
+                $0.configure(text: rightButtonText)
+            }
+        })), animated: false)
         
         let gradientView = GradientView().then({
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -201,8 +233,9 @@ class AddObservationVC: UIViewController {
         switch viewModel.action {
         case .edit(observationID: let id):
             idLabel.text = "ID: \(id)"
-        case .new: return
-            
+        case .new, .newNote: return
+        case .editNote(node: let note):
+            idLabel.text = note.observationDate?.convert(into: .medium, ignoreRecentFormatting: true, ignoreTime: true)
         }
     }
     
@@ -218,7 +251,7 @@ class AddObservationVC: UIViewController {
                     self?.collectionView.reloadData()
                     guard let type = self?.viewModel.action else {return}
                     switch type {
-                    case .new:
+                    case .new, .newNote, .editNote:
                         self?.categoryView.moveSelector(toCellAtIndexPath: .init(row: 0, section: 0))
                         self?.collectionView.scrollToItem(at: .init(row: 0, section: 0), at: .left, animated: true)
                     case .edit:
@@ -245,11 +278,12 @@ class AddObservationVC: UIViewController {
             }
         }
         
-        viewModel.addedImage.handleEvent { [weak observationImagesView] (image) in
+        viewModel.addedImage.handleEvent(ignoreQueue: true) {  [weak observationImagesView]  image in
             DispatchQueue.main.async {
                 observationImagesView?.addImage(newObservationImage: image)
             }
         }
+    
         
         viewModel.removedImage.handleEvent { [weak observationImagesView] (index) in
             DispatchQueue.main.async {
@@ -301,6 +335,8 @@ class AddObservationVC: UIViewController {
                 let notif = ELNotificationView.appNotification(style: value.1, primaryText: value.0.title, secondaryText: value.0.message, location: .bottom)
                 
                 switch value.0 {
+                case .deleteSuccesful:
+                    self?.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: viewModel.session)), overrideTypeCheckIgnore: true)
                 case .successfullUpload:
                     notif.show(animationType: .fromBottom, queuePosition: .front, onViewController: self)
                     viewModel.reset()
@@ -309,7 +345,15 @@ class AddObservationVC: UIViewController {
                     self?.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: viewModel.session)))
                 case .error, .localityError:
                     notif.show(animationType: .fromBottom, queuePosition: .front, onViewController: self)
-                case .newObservationError(error: let error):
+                case .noteSave:
+                    switch self?.action {
+                    case .newNote, .editNote:
+                        self?.navigationController?.popViewController(animated: true)
+                    default:
+                        notif.show(animationType: .fromBottom, onViewController: self)
+                        viewModel.reset()
+                    }
+                case .userObservationValidationError(error: let error):
                     notif.show(animationType: .fromBottom, queuePosition: .front, onViewController: self)
                     switch error {
                     case .lowAccuracy, .noCoordinates, .noLocality:
@@ -336,8 +380,8 @@ class AddObservationVC: UIViewController {
         collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
     }
     
-    @objc private func beginObservationUpload(overrideLowAccuracy: Bool = false) {
-        viewModel.uploadObservation(action: action)
+    @objc private func onAction(overrideLowAccuracy: Bool = false) {
+        viewModel.performAction()
     }
 }
 
@@ -367,7 +411,8 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? ObservationLocationCell {
-            viewModel.observationLocation.value.item?.do({
+
+            viewModel.observationLocation.value?.item?.do({
                 cell.configureObservationLocation(location: $0)
             })
             
@@ -404,4 +449,42 @@ extension AddObservationVC: NavigationDelegate {
     func presentVC(_ vc: UIViewController) {
         present(vc, animated: true, completion: nil)
     }
+}
+
+@available(iOS 13.0, *)
+extension AddObservationVC: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        let uploadAction = UIAction(title: NSLocalizedString("Upload now", comment: ""), image: UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate)) { [weak self] _ in
+            self?.viewModel.uploadNew()
+        }
+        
+        let saveNote = UIAction(title: NSLocalizedString("Save as note", comment: ""), image: UIImage(systemName: "checkmark")?.withRenderingMode(.alwaysTemplate)) { [weak self] _ in
+            self?.viewModel.saveNew()
+        }
+        
+        let deleteNote = UIAction(title: NSLocalizedString("Delete note", comment: ""), image: UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate), attributes: .destructive) { [weak self] _ in
+            self?.viewModel.deleteNote()
+        }
+        
+        let deleteObservation = UIAction(title: NSLocalizedString("Delete observation", comment: ""), image: UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate), attributes: .destructive) { [weak self] _ in
+            self?.viewModel.deleteObservation()
+        }
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            switch self?.viewModel.action {
+            case .newNote:
+                return  UIMenu(title: "", children: [ uploadAction])
+            case .editNote:
+                return  UIMenu(title: "", children: [ uploadAction, deleteNote])
+            case .new:
+                return  UIMenu(title: "", children: [ saveNote])
+            case .edit:
+                return  UIMenu(title: "", children: [ deleteObservation])
+            case .none:
+                return nil
+            }
+        }
+    }
+    
+    
 }

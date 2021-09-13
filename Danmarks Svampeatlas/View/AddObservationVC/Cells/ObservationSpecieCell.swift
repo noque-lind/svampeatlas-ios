@@ -12,7 +12,7 @@ import ELKit
 class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTableView.Item> {
     
     enum Item {
-        case selectedMushroom(Mushroom, AddObservationViewModel.DeterminationConfidence)
+        case selectedMushroom(Mushroom, UserObservation.DeterminationConfidence)
         case selectableMushroom(Mushroom, Double?)
         case unknownSpecies
         case unknownSpeciesButton
@@ -21,7 +21,7 @@ class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTabl
     }
     
     var isAtTop: ((Bool) -> ())?
-    var confidenceSelected: ((AddObservationViewModel.DeterminationConfidence) -> ())?
+    var confidenceSelected: ((UserObservation.DeterminationConfidence) -> ())?
     
     
     override init() {
@@ -57,7 +57,9 @@ class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTabl
         case .selectedMushroom(let mushroom, let confidence):
             let cell = tableView.dequeueReusableCell(withIdentifier: SelectedSpecieCell.identifier, for: indexPath) as! SelectedSpecieCell
             cell.configureCell(mushroom: mushroom, confidence: confidence)
-            cell.confidenceSelected = confidenceSelected
+            cell.confidenceSelected = { [weak self] confidence in
+                self?.confidenceSelected?(confidence)
+            }
             cell.accessoryType = .none
             return cell
             
@@ -127,8 +129,8 @@ class ObservationSpecieCell: UICollectionViewCell {
             }
         }
         
-        tableView.confidenceSelected = { [weak viewModel] determinationConfidence in
-            viewModel?.determinationConfidence = determinationConfidence
+        tableView.confidenceSelected = { [weak self] determinationConfidence in
+            self?.viewModel?.determinationConfidence = determinationConfidence
         }
         
         tableView.didSelectItem = { [unowned self, unowned tableView] item, _ in
@@ -191,8 +193,8 @@ class ObservationSpecieCell: UICollectionViewCell {
         didSet {
             viewModel?.predictionResults.observe(listener: { [weak self] (state) in
                 DispatchQueue.main.async {
-                    self?.configurePredictions()
-                    self?.tableView.performUpdates(updates: { (updater) in
+                    self?.tableView.performUpdates(updates: { [weak self] (updater) in
+                        self?.configurePredictions()
                         updater.updateSection(section: self?.middleSection)
                     })
                 }
@@ -246,7 +248,7 @@ class ObservationSpecieCell: UICollectionViewCell {
     func configureCell(viewModel: AddObservationViewModel, action: AddObservationVC.Action) {
         self.viewModel = viewModel
         switch action {
-        case .new:
+        case .new, .newNote, .editNote:
             configureUpperSection()
             configurePredictions()
             configureFavoritesSection()
@@ -272,7 +274,7 @@ class ObservationSpecieCell: UICollectionViewCell {
     }
     
     private func configureFavoritesSection() {
-        switch Database.instance.mushroomsRepository.fetchAll() {
+        switch Database.instance.mushroomsRepository.fetchFavorites() {
         case .failure: return
         case .success(let mushrooms):
             lowerSection.setTitle(title: NSLocalizedString("observationSpeciesCell_myFavorites", comment: ""))
@@ -322,18 +324,36 @@ extension ObservationSpecieCell: CustomSearchBarDelegate {
         tableView.performUpdates(updates: { (updater) in
             updater.updateSection(section: self.middleSection)
         }) { [weak middleSection, weak tableView] in
-            DataService.instance.getMushrooms(searchString: entry, speciesQueries: [.attributes(presentInDenmark: nil), .images(required: false), .danishNames, .redlistData, .statistics]) { (result) in
-                switch result {
-                case .failure(let appError):
-                    middleSection?.setState(state: .error(error: appError, handler: nil))
-                case .success(let mushrooms):
-                    middleSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
+            if UserDefaultsHelper.lastDataUpdateDate != nil {
+                Database.instance.mushroomsRepository.searchTaxon(searchString: entry) { result in
+                    switch result {
+                    case .failure(let error):
+                        middleSection?.setState(state: .error(error: error, handler: nil))
+                    case .success(let mushrooms):
+                        middleSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
+                    }
+                    
+                    tableView?.performUpdates(updates: { updater in
+                        updater.updateSection(section: middleSection)
+                    })
                 }
-                
-                tableView?.performUpdates(updates: { updater in
-                    updater.updateSection(section: middleSection)
-                })
+            } else {
+                DataService.instance.getMushrooms(searchString: entry, speciesQueries: [.attributes(presentInDenmark: nil), .images(required: false), .danishNames, .redlistData, .statistics], limit: 30) { (result) in
+                    switch result {
+                    case .failure(let appError):
+                        middleSection?.setState(state: .error(error: appError, handler: nil))
+                    case .success(let mushrooms):
+                        middleSection?.setState(state: .items(items: mushrooms.compactMap({AddObservationMushroomTableView.Item.selectableMushroom($0, nil)})))
+                    }
+                    
+                    tableView?.performUpdates(updates: { updater in
+                        updater.updateSection(section: middleSection)
+                    })
             }
+            }
+            tableView?.performUpdates(updates: { updater in
+                updater.updateSection(section: middleSection)
+            })
         }
     }
     

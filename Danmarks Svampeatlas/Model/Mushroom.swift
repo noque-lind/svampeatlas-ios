@@ -30,14 +30,10 @@ struct Mushroom: Decodable, Equatable {
     private var _images: [Image]?
     
     var localizedName: String? {
-        get {
-            if Utilities.isDanish() {
-                guard let vernacularname_dk = vernacularNameDK?.vernacularname_dk, vernacularname_dk != "" else {return nil}
-                return vernacularname_dk.capitalizeFirst()
-            } else {
-                guard let vernacularNameEN = attributes?.vernacularNameEN, vernacularNameEN != "" else {return nil}
-                return vernacularNameEN.capitalizeFirst()
-            }
+        switch Utilities.appLanguage() {
+        case .danish: return vernacularNameDK?.vernacularname_dk?.capitalizeFirst()
+        case .english: return attributes?.enName?.capitalizeFirst()
+        case .czech: return attributes?.czName?.capitalizeFirst()
         }
     }
     
@@ -102,8 +98,12 @@ struct Mushroom: Decodable, Equatable {
         vernacularNameDK = VernacularNameDK(vernacularname_dk: cdMushroom.danishName, source: nil)
         updatedAt = cdMushroom.updatedAt
         redlistData = [RedlistData(status: cdMushroom.redlistStatus)]
-        attributes = Attributes(presentInDenmark: nil, similarities: cdMushroom.attributes?.similarities, ecology: cdMushroom.attributes?.ecology, eatability: cdMushroom.attributes?.eatability, tipsForValidation: cdMushroom.attributes?.tipsForValidation, vernacularNameEN: cdMushroom.attributes?.vernacularNameEN, diagnosis: cdMushroom.attributes?.diagnosis, diagnosisEn: cdMushroom.attributes?.mDescriptionEN)
+
+        if let cdAttributes = cdMushroom.attributes {
+            attributes = Attributes(cdAttributes)
+        }
         
+
         if let cdImages = cdMushroom.images?.allObjects as? [CDImage], cdImages.count != 0 {
             _images = [Image]()
             for cdImage in cdImages {
@@ -112,6 +112,7 @@ struct Mushroom: Decodable, Equatable {
             }
         }
     }
+
     
     static func genus() -> Mushroom {
         return Mushroom(id: 60212, fullName: "Fungi Sp.", isGenus: true)
@@ -124,48 +125,64 @@ struct Attributes: Decodable {
     private let _ecology: String?
     private let _eatability: String?
     private let _tipsForValidation: String?
-    fileprivate let vernacularNameEN: String?
-    fileprivate let _diagnosis: String?
-    fileprivate let _diagnosisEn: String?
+    fileprivate let czName: String?
+    fileprivate let enName: String?
+    fileprivate let dkDescription: String?
+    fileprivate let enDescription: String?
+    fileprivate let czDescription: String?
+    
+    private enum CodingKeys: String, CodingKey {
+        case presentInDenmark = "PresentInDK"
+        case _similarities = "forvekslingsmuligheder"
+        case _ecology = "oekologi"
+        case _eatability = "spiselighedsrapport"
+        case dkDescription = "bogtekst_gyldendal"
+        case enDescription = "bogtekst_gyldendal_en"
+        case czDescription = "bogtekst_gyldendal_cz"
+        case _tipsForValidation = "valideringsrapport"
+        case enName = "vernacular_name_GB"
+        case czName = "vernacular_name_CZ"
+    }
+    
+    
     
     var description: String? {
-        if Utilities.isDanish() {
-            return _diagnosis
-        } else {
-            return _diagnosisEn
+        switch Utilities.appLanguage() {
+        case .czech: return czDescription?.capitalizeFirst()
+        case .danish: return dkDescription?.capitalizeFirst()
+        case .english: return enDescription?.capitalizeFirst()
         }
     }
     
     var eatability: String? {
-        if Utilities.isDanish() {
-            return _eatability
-        } else {
-            return nil
+        switch Utilities.appLanguage() {
+        case .czech: return nil
+        case .danish: return _eatability?.capitalizeFirst()
+        case .english: return nil
         }
     }
     
     var similarities: String? {
-        if Utilities.isDanish() {
-            return _similarities
-        } else {
-            return nil
+        switch Utilities.appLanguage() {
+        case .czech: return nil
+        case .danish: return _similarities?.capitalizeFirst()
+        case .english: return nil
         }
     }
     
     var ecology: String? {
-        print(Locale.preferredLanguages[0])
-        if Utilities.isDanish() {
-            return _ecology
-        } else {
-            return nil
+        switch Utilities.appLanguage() {
+        case .czech: return nil
+        case .danish: return _ecology?.capitalizeFirst()
+        case .english: return nil
         }
     }
     
     var tipsForValidation: String? {
-        if Utilities.isDanish() {
-            return _tipsForValidation
-        } else {
-            return nil
+        switch Utilities.appLanguage() {
+        case .czech: return nil
+        case .danish: return _tipsForValidation?.capitalizeFirst()
+        case .english: return nil
         }
     }
     
@@ -177,40 +194,45 @@ struct Attributes: Decodable {
         }
     }
     
-    init(presentInDenmark: Bool?, similarities: String?, ecology: String?, eatability: String?, tipsForValidation: String?, vernacularNameEN: String?, diagnosis: String?, diagnosisEn: String?) {
-        self.presentInDenmark = presentInDenmark
-        self._similarities = similarities
-        self._ecology = ecology
-        self._eatability = eatability
-        self._tipsForValidation = tipsForValidation
-        self.vernacularNameEN = vernacularNameEN
-        self._diagnosis = diagnosis
-        self._diagnosisEn = diagnosisEn
+//    init(presentInDenmark: Bool?, similarities: String?, ecology: String?, eatability: String?, tipsForValidation: String?, enName: String?, diagnosis: String?, diagnosisEn: String?) {
+//        self.presentInDenmark = presentInDenmark
+//        self._similarities = similarities
+//        self._ecology = ecology
+//        self._eatability = eatability
+//        self._tipsForValidation = tipsForValidation
+//        self.enName =
+//        self.vernacularNameEN = vernacularNameEN
+//        self._diagnosis = diagnosis
+//        self._diagnosisEn = diagnosisEn
+//    }
+    
+    init(_ model: CDMushroomAttribute) {
+        self.presentInDenmark = nil
+        self.czName = model.czName
+        self.enName = model.enName
+        self.dkDescription = model.mDescription
+        self.enDescription = model.mDescriptionEN
+        self.czDescription = nil
+        self._ecology = model.ecology
+        self._eatability = model.eatability
+        self._similarities = model.similarities
+        self._tipsForValidation = model.tipsForValidation
     }
     
     func toDatabase(cdMushroom: CDMushroom, context: NSManagedObjectContext) {
         let cdAttributes = NSEntityDescription.insertNewObject(forEntityName: "CDMushroomAttribute", into: context)  as! CDMushroomAttribute
-        cdAttributes.diagnosis = _diagnosis
-        cdAttributes.mDescriptionEN = _diagnosisEn
-        cdAttributes.vernacularNameEN = vernacularNameEN
         cdAttributes.ecology = _ecology
         cdAttributes.similarities = _similarities
         cdAttributes.tipsForValidation = _tipsForValidation
         cdAttributes.eatability = _eatability
         cdAttributes.mushroom = cdMushroom
-
+        cdAttributes.czName = czName
+        cdAttributes.enName = enName
+        cdAttributes.mDescription = dkDescription
+        cdAttributes.mDescriptionEN = enDescription
     }
     
-    private enum CodingKeys: String, CodingKey {
-        case presentInDenmark = "PresentInDK"
-        case _similarities = "forvekslingsmuligheder"
-        case _ecology = "oekologi"
-        case _eatability = "spiselighedsrapport"
-        case _diagnosis = "diagnose"
-        case _diagnosisEn = "bogtekst_gyldendal_en"
-        case _tipsForValidation = "valideringsrapport"
-        case vernacularNameEN = "vernacular_name_GB"
-    }
+   
 }
 
 enum ToxicityLevel: String {

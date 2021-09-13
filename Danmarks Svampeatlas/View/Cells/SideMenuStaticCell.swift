@@ -24,7 +24,7 @@ class SideMenuStaticCell: UITableViewCell {
     }
     
     func setupView() {
-        label.font = UIFont.appTextHighlight(customSize: 16)
+        label.font = UIFont.appPrimaryHightlighed()
         label.textColor = UIColor.appWhite()
     }
 

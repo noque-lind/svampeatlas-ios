@@ -13,27 +13,30 @@ struct SubstrateGroup {
     public private(set) var id: Int = 100
     let dkName: String
     let enName: String
+    let czName: String?
     public private(set) var substrates = [Substrate]()
     
     var name: String {
-        if Utilities.isDanish() {
-            return dkName
-        } else {
-            return enName
+        switch Utilities.appLanguage() {
+        case .czech: return czName ?? enName
+        case .danish: return dkName
+        case .english: return enName
         }
     }
     
     init(from cdSubstrateGroup: CDSubstrateGroup) {
         self.dkName = cdSubstrateGroup.dkName ?? ""
         self.enName = cdSubstrateGroup.enName ?? ""
+        self.czName = cdSubstrateGroup.czName
         guard let cdSubstrates = cdSubstrateGroup.cdSubstrate?.allObjects as? [CDSubstrate] else {return}
         self.substrates = cdSubstrates.compactMap({Substrate(from: $0)})
         self.assignID()
         }
     
-    init(dkName: String, enName: String, substrates: [Substrate]) {
+    init(dkName: String, enName: String, czName: String?, substrates: [Substrate]) {
         self.dkName = dkName
         self.enName = enName
+        self.czName = czName
         self.substrates = substrates
         self.assignID()
     }
@@ -70,13 +73,14 @@ struct Substrate {
     public private(set) var id: Int
     let dkName: String
     let enName: String
+    let czName: String?
     public var isLocked: Bool = false
     
     var name: String {
-        if Utilities.isDanish() {
-            return dkName
-        } else {
-            return enName
+        switch Utilities.appLanguage() {
+        case .czech: return czName ?? enName
+        case .danish: return dkName
+        case .english: return enName
         }
     }
     
@@ -84,11 +88,13 @@ struct Substrate {
         self.id = Int(cdSubstrate.id)
         self.dkName = cdSubstrate.dkName ?? ""
         self.enName = cdSubstrate.enName ?? ""
+        self.czName = cdSubstrate.czName
     }
     
-    init(id: Int, dkName: String, enName: String) {
+    init(id: Int, dkName: String, enName: String, czName: String?) {
         self.id = id
         self.dkName = dkName
         self.enName = enName
+        self.czName = czName
     }
 }

@@ -75,14 +75,17 @@ fileprivate struct PrivateSubstrate: Decodable {
     let _id: Int
     let name: String
     let name_uk: String
+    let name_cz: String?
     let group_dk: String
     let group_uk: String
+    let group_cz: String?
 }
 
 fileprivate struct PrivateVegetationType: Decodable {
     let _id: Int
     let name: String
     let name_uk: String
+    let name_cz:String?
 }
 
 fileprivate struct PrivateGeom: Decodable {
@@ -248,13 +251,13 @@ struct Observation: Decodable, Equatable {
         }
         
         if let vegetationType = privateObservation.VegetationType {
-            self.vegetationType = VegetationType(id: vegetationType._id, dkName: vegetationType.name, enName: vegetationType.name_uk)
+            self.vegetationType = VegetationType(id: vegetationType._id, dkName: vegetationType.name, enName: vegetationType.name_uk, czName: vegetationType.name_cz)
         } else if let vegetationTypeID = privateObservation.vegetationtype_id {
             vegetationType = CoreDataHelper.fetchVegetationType(withID: vegetationTypeID)
         }
         
         if let substrate = privateObservation.Substrate {
-            self.substrate = Substrate(id: substrate._id, dkName: substrate.name, enName: substrate.name_uk)
+            self.substrate = Substrate(id: substrate._id, dkName: substrate.name, enName: substrate.name_uk, czName: substrate.name_uk)
         } else if let substrateID = privateObservation.substrate_id {
             substrate = CoreDataHelper.fetchSubstrateGroup(withID: substrateID)
         }
@@ -305,9 +308,10 @@ struct Determination: Decodable {
     public private(set) var confidence: String?
     
     var name: String {
-        if let danishName = danishName, Utilities.isDanish() {
-            return danishName.capitalizeFirst()
-        } else {
+        switch Utilities.appLanguage() {
+        case .danish:
+            return danishName?.capitalizeFirst() ?? fullName.capitalizeFirst()
+        default:
             return fullName.capitalizeFirst()
         }
     }

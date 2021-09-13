@@ -43,11 +43,7 @@ class VegetationTypeRepository: Repository, RepositoryDelegate {
         backgroundThread.performAndWait {
             do {
                 for item in items {
-                    let object = NSEntityDescription.insertNewObject(forEntityName: "CDVegetationType", into: backgroundThread) as! CDVegetationType
-                    object.dkName = item.dkName
-                    object.enName = item.enName
-                    object.id = Int16(item.id)
-                    
+                    _ = create(item)
                 }
                 try backgroundThread.save()
                 DispatchQueue.main.async {
@@ -59,5 +55,13 @@ class VegetationTypeRepository: Repository, RepositoryDelegate {
                 }
             }
         }
+    }
+    
+    func create(_ item: VegetationType) -> CDVegetationType {
+        return (NSEntityDescription.insertNewObject(forEntityName: "CDVegetationType", into: backgroundThread) as! CDVegetationType).then({
+            $0.dkName = item.dkName
+            $0.enName = item.enName
+            $0.id = Int16(item.id)
+        })
     }
 }

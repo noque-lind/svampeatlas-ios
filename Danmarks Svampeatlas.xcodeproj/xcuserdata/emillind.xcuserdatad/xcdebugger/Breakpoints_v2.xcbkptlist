@@ -166,8 +166,8 @@
             filePath = "../../../ELKit/ELKit/NotificationView/ELNotificationView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565">
+            startingLineNumber = "575"
+            endingLineNumber = "575">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -180,8 +180,8 @@
             filePath = "../../../ELKit/ELKit/NotificationView/ELNotificationView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565">
+            startingLineNumber = "575"
+            endingLineNumber = "575">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -194,8 +194,8 @@
             filePath = "../../../ELKit/ELKit/NotificationView/ELNotificationView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565">
+            startingLineNumber = "575"
+            endingLineNumber = "575">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -217,24 +217,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0AEF047D-3BB6-48B1-AE48-348EC65319D4"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Danmarks Svampeatlas/Repository/CoreDataHelper.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
-            landmarkName = "setup(completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "2DC58B20-B8B3-42B1-A69A-C298A0C113C3"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Danmarks Svampeatlas/View/DetailsViewController/Cells/MushroomDetailHeaderCell.swift"
@@ -243,54 +227,6 @@
             startingLineNumber = "86"
             endingLineNumber = "86"
             landmarkName = "favoriteButtonPressed()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "71D57C7C-FEF4-4C68-B1A0-8F96F8384338"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Danmarks Svampeatlas/Services/UserService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "350"
-            endingLineNumber = "350"
-            landmarkName = "editObservation(withId:dict:newImageURLs:token:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D49815B2-B2B3-4733-BB3D-64014FFF2C3E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Danmarks Svampeatlas/Services/UserService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "352"
-            endingLineNumber = "352"
-            landmarkName = "editObservation(withId:dict:newImageURLs:token:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D731BD6A-D0F7-4BCF-9B01-B72C8D9FE373"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Danmarks Svampeatlas/Services/DataService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
-            landmarkName = "handleURLSessionError(error:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -329,33 +265,337 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B0C4AADD-F319-4995-82A3-C918A539D0F9"
-            shouldBeEnabled = "Yes"
+            uuid = "F806C393-5FA8-4188-B41C-76DE3E7EAF88"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Danmarks Svampeatlas/Services/DataService.swift"
+            filePath = "Danmarks Svampeatlas/Resources/Constants.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "306"
-            endingLineNumber = "306"
-            landmarkName = "getObservationsForMushroom(withID:limit:offset:completion:)"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "appLanguage()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "52E25FB2-5959-445C-8A69-20CE46082D8A"
+            uuid = "EC9CCB4B-E1B7-4E1D-A7F3-F309CA736B8B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Services/DataService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "402"
+            endingLineNumber = "402"
+            landmarkName = "getSubstrateGroups(overrideOutdateError:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "EC9CCB4B-E1B7-4E1D-A7F3-F309CA736B8B - 4fe6084fec4982de"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Danmarks_Svampeatlas.DataService.getSubstrateGroups(overrideOutdateError: Swift.Optional&lt;Swift.Bool&gt;, completion: (Danmarks_Svampeatlas.Result&lt;Swift.Array&lt;Danmarks_Svampeatlas.SubstrateGroup&gt;, Danmarks_Svampeatlas.AppError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Danmarks Svampeatlas"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Services/DataService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "397"
+                  endingLineNumber = "397"
+                  offsetFromSymbolStart = "208">
+               </Location>
+               <Location
+                  uuid = "EC9CCB4B-E1B7-4E1D-A7F3-F309CA736B8B - 4fe6084fec4982de"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Danmarks_Svampeatlas.DataService.getSubstrateGroups(overrideOutdateError: Swift.Optional&lt;Swift.Bool&gt;, completion: (Danmarks_Svampeatlas.Result&lt;Swift.Array&lt;Danmarks_Svampeatlas.SubstrateGroup&gt;, Danmarks_Svampeatlas.AppError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Danmarks Svampeatlas"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Services/DataService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "397"
+                  endingLineNumber = "397"
+                  offsetFromSymbolStart = "264">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D5833EEA-4915-45D0-ACD7-25910704EC5D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Services/DataService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "403"
+            endingLineNumber = "403"
+            landmarkName = "getSubstrateGroups(overrideOutdateError:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1C0A537D-3BAE-4BA6-8D4E-44F9F7A9B05D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Services/DataService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "408"
+            endingLineNumber = "408"
+            landmarkName = "getSubstrateGroups(overrideOutdateError:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "1C0A537D-3BAE-4BA6-8D4E-44F9F7A9B05D - e1027ce8dce07260"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Danmarks_Svampeatlas.Result&lt;Swift.Array&lt;Danmarks_Svampeatlas.SubstrateGroup&gt;, Danmarks_Svampeatlas.AppError&gt;) -&gt; () in Danmarks_Svampeatlas.DataService.getSubstrateGroups(overrideOutdateError: Swift.Optional&lt;Swift.Bool&gt;, completion: (Danmarks_Svampeatlas.Result&lt;Swift.Array&lt;Danmarks_Svampeatlas.SubstrateGroup&gt;, Danmarks_Svampeatlas.AppError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Danmarks Svampeatlas"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Services/DataService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "403"
+                  endingLineNumber = "403"
+                  offsetFromSymbolStart = "76">
+               </Location>
+               <Location
+                  uuid = "1C0A537D-3BAE-4BA6-8D4E-44F9F7A9B05D - e1027ce8dce07260"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Danmarks_Svampeatlas.Result&lt;Swift.Array&lt;Danmarks_Svampeatlas.SubstrateGroup&gt;, Danmarks_Svampeatlas.AppError&gt;) -&gt; () in Danmarks_Svampeatlas.DataService.getSubstrateGroups(overrideOutdateError: Swift.Optional&lt;Swift.Bool&gt;, completion: (Danmarks_Svampeatlas.Result&lt;Swift.Array&lt;Danmarks_Svampeatlas.SubstrateGroup&gt;, Danmarks_Svampeatlas.AppError&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "Danmarks Svampeatlas"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Services/DataService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "403"
+                  endingLineNumber = "403"
+                  offsetFromSymbolStart = "92">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3FF30142-A626-4F5F-BB32-1E883514338F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Services/DataService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "416"
+            endingLineNumber = "416"
+            landmarkName = "getSubstrateGroups(overrideOutdateError:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B68D5E05-4F1B-4BED-8CDF-F979D1AF8F69"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Services/DataService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "438"
+            endingLineNumber = "438"
+            landmarkName = "downloadSubstrateGroups(completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4684512D-C371-4E5A-896B-D44696A7AB16"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Danmarks Svampeatlas/Model/Observation.swift"
+            filePath = "Danmarks Svampeatlas/Repository/NotesRepository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
-            landmarkName = "init(from:)"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "save(userObservation:completion:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EF44BFEC-429E-4419-8F15-81ABC5E7E067"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Repository/NotesRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
+            landmarkName = "save(userObservation:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "86021CD2-CB73-42CA-BAD2-4ADE46E7B0C3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/ViewModels/NotebookViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "controller(_:didChange:at:for:newIndexPath:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "86021CD2-CB73-42CA-BAD2-4ADE46E7B0C3 - 9835c28e5b39cb4a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Danmarks_Svampeatlas.NotebookViewModel.controller(_: __C.NSFetchedResultsController&lt;__C.NSFetchRequestResult&gt;, didChange: Any, at: Swift.Optional&lt;Foundation.IndexPath&gt;, for: __C.NSFetchedResultsChangeType, newIndexPath: Swift.Optional&lt;Foundation.IndexPath&gt;) -&gt; ()"
+                  moduleName = "Danmarks Svampeatlas"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/ViewModels/NotebookViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "39"
+                  endingLineNumber = "39"
+                  offsetFromSymbolStart = "135">
+               </Location>
+               <Location
+                  uuid = "86021CD2-CB73-42CA-BAD2-4ADE46E7B0C3 - c2c6c49da5dc274a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Array&lt;Danmarks_Svampeatlas.CDNote&gt;) -&gt; () in Danmarks_Svampeatlas.NotebookViewModel.controller(_: __C.NSFetchedResultsController&lt;__C.NSFetchRequestResult&gt;, didChange: Any, at: Swift.Optional&lt;Foundation.IndexPath&gt;, for: __C.NSFetchedResultsChangeType, newIndexPath: Swift.Optional&lt;Foundation.IndexPath&gt;) -&gt; ()"
+                  moduleName = "Danmarks Svampeatlas"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/ViewModels/NotebookViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "39"
+                  endingLineNumber = "39"
+                  offsetFromSymbolStart = "37">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A201899D-A42A-4C33-B505-E0C92F88BD21"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/View/AddObservationVC/Cells/ObservationLocationCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "collectionView(_:didSelectItemAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "30287263-48CA-4F77-AC16-CA6FC0382504"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Repository/NotesRepository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
+            landmarkName = "mapValues(note:userObservation:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "04727418-8D01-4191-AC1D-B59CA1E0D835"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/ViewModels/AddObservationVCViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A4D0D948-F197-44E6-9C1B-CB1DDD77086C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Repository/CoreDataHelper.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "setup(completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A4D0D948-F197-44E6-9C1B-CB1DDD77086C - ab1a5720c95a3e05"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.NSPersistentStoreDescription, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Danmarks_Svampeatlas.Database.setup(completion: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; ()"
+                  moduleName = "Danmarks Svampeatlas"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Repository/CoreDataHelper.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "704">
+               </Location>
+               <Location
+                  uuid = "A4D0D948-F197-44E6-9C1B-CB1DDD77086C - d5d44a52a2230710"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 (__C.NSPersistentStoreDescription, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Danmarks_Svampeatlas.Database.setup(completion: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; ()"
+                  moduleName = "Danmarks Svampeatlas"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Repository/CoreDataHelper.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "141"
+                  endingLineNumber = "141"
+                  offsetFromSymbolStart = "324">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

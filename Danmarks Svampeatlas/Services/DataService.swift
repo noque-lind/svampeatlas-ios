@@ -31,7 +31,7 @@ enum Result<ReturnValue, ErrorType> {
     }
 }
 
-class DataService{
+class DataService {
     
     enum DataServiceError: AppError {
         
@@ -147,11 +147,16 @@ class DataService{
     private let mushroomCache = NSCache<NSString, NSData>()
     private var currentlyDownloading = Dictionary<String, URLSessionTask>()
     
+    lazy var observationsRepository = ObservationsData(ds: self)
+    
     //CLASS FUNCTIONS
     
-    internal func createDataTaskRequest(url: String, method: String = "GET", data: Data? = nil, contentType: String? = nil, contentLenght: Int? = nil, token: String? = nil, completion: @escaping (Result<Data, URLSessionError>) -> ()) {
+    internal func createDataTaskRequest(url: String, method: String = "GET", data: Data? = nil, contentType: String? = nil, contentLenght: Int? = nil, token: String? = nil, largeDownload: Bool = false, completion: @escaping (Result<Data, URLSessionError>) -> ()) {
         var request = URLRequest(url: URL.init(string: url)!)
-        request.timeoutInterval = 20
+        if !largeDownload {
+            request.timeoutInterval = 20
+        }
+      
         request.httpMethod = method
         request.httpBody = data
         
@@ -226,7 +231,7 @@ extension DataService {
     
     //FUNCTIONS THAT RETURN MUSHROOM/S
     
-    func getMushrooms(searchString: String?, speciesQueries: [API.SpeciesQueries] = [API.SpeciesQueries.danishNames, API.SpeciesQueries.attributes(presentInDenmark: nil), API.SpeciesQueries.images(required: false), API.SpeciesQueries.statistics, API.SpeciesQueries.redlistData], limit: Int = 100, offset: Int = 0, completion: @escaping (Result<[Mushroom], AppError>) -> ()) {
+    func getMushrooms(searchString: String?, speciesQueries: [API.SpeciesQueries] = [API.SpeciesQueries.danishNames, API.SpeciesQueries.attributes(presentInDenmark: nil), API.SpeciesQueries.images(required: false), API.SpeciesQueries.statistics, API.SpeciesQueries.redlistData, .tag(id: 16)], limit: Int?, offset: Int = 0, largeDownload: Bool = false, useCache: Bool = true, completion: @escaping (Result<[Mushroom], AppError>) -> ()) {
         
         let api = API.Request.Mushrooms(searchString: searchString, speciesQueries: speciesQueries, limit: limit, offset: offset).encodedURL
         
@@ -248,7 +253,7 @@ extension DataService {
         
         
         
-        if let data = mushroomCache.object(forKey: NSString(string: api)) {
+        if useCache, let data = mushroomCache.object(forKey: NSString(string: api)) {
             handleData(data: Data(data))
         } else {
             createDataTaskRequest(url: api) { (result) in
@@ -386,7 +391,7 @@ extension DataService {
         }
     }
     
-  func getSubstrateGroups(overrideOutdateError: Bool? = false, completion: @escaping (Result<[SubstrateGroup], AppError>) -> ()) {
+    func getSubstrateGroups(overrideOutdateError: Bool? = false, completion: @escaping (Result<[SubstrateGroup], AppError>) -> ()) {
     
     func sortAndComplete(substrateGroups: [SubstrateGroup]) {
         let sortedSubstrateGroups = substrateGroups.sorted(by: {$0.id < $1.id})
@@ -420,7 +425,7 @@ extension DataService {
     }
     }
     
-    private func downloadSubstrateGroups(completion: @escaping (Result<[SubstrateGroup], AppError>) -> ()) {
+    func downloadSubstrateGroups(completion: @escaping (Result<[SubstrateGroup], AppError>) -> ()) {
         createDataTaskRequest(url: API.substrateURL()) { (result) in
             switch result {
             case .success(let data):
@@ -433,9 +438,9 @@ extension DataService {
                     guard let hide = object["hide"] as? Bool, let id = object["_id"] as? Int, let name = object["name"] as? String, let name_uk = object["name_uk"] as? String, let group_dk = object["group_dk"] as? String, let group_uk = object["group_uk"] as? String, hide == false else {continue}
                     
                     if let index = substrateGroups.firstIndex(where: {$0.dkName == group_dk}) {
-                        substrateGroups[index].appendSubstrate(substrate: Substrate(id: id, dkName: name, enName: name_uk))
+                        substrateGroups[index].appendSubstrate(substrate: Substrate(id: id, dkName: name, enName: name_uk, czName: object["name_cz"] as? String))
                     } else {
-                        substrateGroups.append(SubstrateGroup(dkName: group_dk, enName: group_uk, substrates: [Substrate(id: id, dkName: name, enName: name_uk)]))
+                        substrateGroups.append(SubstrateGroup(dkName: group_dk, enName: group_uk, czName: object["group_cz"] as? String, substrates: [Substrate(id: id, dkName: name, enName: name_uk ,czName: object["name_cz"] as? String)]))
                     }
                 }
                 
@@ -485,7 +490,7 @@ extension DataService {
     }
     
    
-    private func downloadVegetationTypes(completion: @escaping (Result<[VegetationType], AppError>) -> ()) {
+    func downloadVegetationTypes(completion: @escaping (Result<[VegetationType], AppError>) -> ()) {
         createDataTaskRequest(url: API.vegetationTypeURL(), completion: { (result) in
             switch result {
             case .success(let data):
@@ -495,7 +500,7 @@ extension DataService {
                 
                 for object in JSON {
                     guard let id = object["_id"] as? Int, let name_uk = object["name_uk"] as? String, let name = object["name"] as? String else {continue}
-                    vegetationTypes.append(VegetationType(id: id, dkName: name, enName: name_uk))
+                    vegetationTypes.append(VegetationType(id: id, dkName: name, enName: name_uk, czName: object["name_cz"] as? String))
                 }
                 completion(Result.success(vegetationTypes))
                 CoreDataHelper.saveVegetationTypes(vegetationTypes: vegetationTypes)

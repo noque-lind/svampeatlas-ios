@@ -8,17 +8,33 @@
 
 import Foundation
 import CoreData
+import PredicateKit
 
-class MushroomsRepository: Repository, RepositoryDelegate {
+class MushroomsRepository: Repository {
+
     
     typealias Item = Mushroom
     
     
+    private func getDevice() throws -> CDLocal  {
+        
+        let fetchRequest: NSFetchRequest<CDLocal> = CDLocal.fetchRequest()
+        if let cdDevice = (try backgroundThread.fetch(fetchRequest)).first {
+            return cdDevice
+        } else {
+            return CDLocal.init(context: backgroundThread)
+            
+        }
+    }
+    
     /// Must be called on the main thread
-    func fetchAll() -> Result<[Mushroom], CoreDataError> {
+    func fetchFavorites() -> Result<[Mushroom], CoreDataError> {
+            
         do {
-            let cdMushrooms: [CDMushroom] = try mainThread.fetch(NSFetchRequest.init(entityName: "CDMushroom"))
-            let mushrooms = cdMushrooms.compactMap({Mushroom(from: $0)})
+            let cdDevice = try getDevice()
+            let mushrooms = (cdDevice.mushrooms?.allObjects as? [CDMushroom])?.map({
+                Mushroom(from: $0)
+            }) ?? []
             
             if mushrooms.isEmpty {
                return .failure(.noEntries(category: .favoritedMushrooms))
@@ -26,42 +42,46 @@ class MushroomsRepository: Repository, RepositoryDelegate {
                 return .success(mushrooms)
             }
         } catch {
-            debugPrint(error)
             return .failure(.readError)
         }
     }
     
-    /// The completion closure is returned on the main thread
-    func save(items: [Mushroom], completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
-        backgroundThread.perform { [unowned backgroundThread] in
-            for item in items {
-                let cdMushroom = NSEntityDescription.insertNewObject(forEntityName: "CDMushroom", into: backgroundThread) as! CDMushroom
-                cdMushroom.id = Int32(item.id)
-                cdMushroom.fullName = item.fullName
-                cdMushroom.danishName = item.localizedName
-                cdMushroom.redlistStatus = item.redlistStatus
-                cdMushroom.updatedAt = item.updatedAt
-                
-                item.attributes?.toDatabase(cdMushroom: cdMushroom, context: backgroundThread)
-                if let images = item.images {
-                    for image in images {
-                        let cdImage = NSEntityDescription.insertNewObject(forEntityName: "CDImage", into: backgroundThread) as! CDImage
-                        cdImage.url = image.url
-                        cdImage.photographer = image.photographer
-                        cdMushroom.addToImages(cdImage)
-                        
-                        DispatchQueue.global(qos: .background).async {
-                            if !ELFileManager.mushroomImageExists(withURL: image.url) {
-                                DataService.instance.getImage(forUrl: image.url, size: .full) { (image, imageURL) in
-                                    ELFileManager.saveMushroomImage(image: image, url: imageURL)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
+    func searchTaxon(searchString: String, completion: @escaping ((Result<[Mushroom], CoreDataError>) -> ())) {
+        backgroundThread.perform {
             do {
+                let predicate: Predicate<CDMushroom>
+                
+                switch Utilities.appLanguage() {
+                case .danish:
+                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.danishName).contains(searchString)
+                case .czech:
+                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.attributes?.czName).contains(searchString)
+                case .english:
+                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.attributes?.enName).contains(searchString)
+                }
+                
+                let mushrooms: [CDMushroom] =  try self.backgroundThread.fetch(where: predicate).result()
+                if mushrooms.isEmpty {
+                    completion(.failure(.noEntries(category: .favoritedMushrooms)))
+                } else {
+                    completion(.success(mushrooms.map({ Mushroom(from: $0)})))
+                }
+             
+            } catch {
+                completion(.failure(.readError))
+            }
+        }
+        
+       
+        }
+    
+    
+    func saveFavorite(_ mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+        backgroundThread.perform { [unowned self] in
+            do {
+                let device = try self.getDevice()
+                let mushroom = self.create(mushroom: mushroom, saveImages: true)
+                device.addToMushrooms(mushroom)
                 try self.backgroundThread.save()
                 DispatchQueue.main.async {
                     completion(.success(()))
@@ -72,11 +92,84 @@ class MushroomsRepository: Repository, RepositoryDelegate {
                 }
             }
         }
+       
+    }
+    
+    func removeAsFavorite(_ mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+        do {
+            guard let cdMushroom = fetch(id: mushroom.id) else {return}
+            let device = try getDevice()
+            device.removeFromMushrooms(cdMushroom)
+            try backgroundThread.save()
+            DispatchQueue.main.async {
+                completion(.success(()))
+            }
+        } catch {
+            DispatchQueue.main.async {
+                completion(.failure(.saveError))
+            }
+        }
+    }
+    
+
+    
+    /// The completion closure is returned on the main thread
+    func save(items: [Mushroom], completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+        backgroundThread.perform { [unowned backgroundThread] in
+          // First delete mushrooms, that have no important relationships
+            do {
+                let deletableMushrooms: [CDMushroom] = try backgroundThread.fetch(where: (\CDMushroom.note).count < 1 && (\CDMushroom.device) == nil).result()
+                let favoritedMushrooms: [CDMushroom] = try backgroundThread.fetch(where: !(\CDMushroom.device == nil)).result()
+                
+                for mushroom in deletableMushrooms {
+                    backgroundThread.delete(mushroom)
+                }
+                
+                let filtered = items.filter({ m in
+                    return !favoritedMushrooms.contains(where: {m.id == $0.id})
+                })
+                
+                for item in filtered {
+                    _ = self.create(mushroom: item, saveImages: false)
+                }
+                try backgroundThread.save()
+                DispatchQueue.main.async {
+                    completion(.success(()))
+                }
+            } catch {
+                print(error)
+                DispatchQueue.main.async {
+                    completion(.failure(.saveError))
+                }
+            }
+        }
+    }
+    
+    func fetch(id: Int) -> CDMushroom? {
+        let fetchRequest: NSFetchRequest<CDMushroom> = CDMushroom.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %i", id)
+        fetchRequest.fetchLimit = 1
+        
+        do {
+            return try backgroundThread.fetch(fetchRequest).first
+        } catch {
+            return nil
+        }
+    }
+    
+    func create(mushroom: Mushroom, saveImages: Bool = false) -> CDMushroom {
+        return (NSEntityDescription.insertNewObject(forEntityName: "CDMushroom", into: backgroundThread) as! CDMushroom).then({
+            mapValue(item: mushroom, cdMushroom: $0, saveImages: saveImages)
+        })
+      
     }
     
     func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
          backgroundThread.perform { [unowned backgroundThread] in
                     do {
+                        
+                        
+                        
                         let fetchRequest = NSFetchRequest<CDImage>(entityName: "CDImage")
                         let cdImages = try backgroundThread.fetch(fetchRequest)
                         
@@ -101,39 +194,77 @@ class MushroomsRepository: Repository, RepositoryDelegate {
                 }
     }
     
-    func delete(mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
-        backgroundThread.perform { [unowned backgroundThread] in
-            let fetchRequest: NSFetchRequest<CDMushroom> = CDMushroom.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "id == %i", mushroom.id)
-            
-            do {
-                let cdMushrooms = try backgroundThread.fetch(fetchRequest)
-                cdMushrooms.forEach({
-                    ($0.images?.allObjects as? [CDImage])?.forEach({ELFileManager.deleteMushroomImage(withUrl: $0.url ?? "")})
-                    backgroundThread.delete($0)})
-                try backgroundThread.save()
-                DispatchQueue.main.async {
-                    completion(.success(()))
-                }
-            } catch {
-                DispatchQueue.main.async {
-                     completion(.failure(.saveError))
-                }
-            }
-        }
-    }
+//    func delete(mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+//        backgroundThread.perform { [unowned backgroundThread] in
+//            let fetchRequest: NSFetchRequest<CDMushroom> = CDMushroom.fetchRequest()
+//            fetchRequest.predicate = NSPredicate(format: "id == %i", mushroom.id)
+//
+//            do {
+//                let cdMushrooms = try backgroundThread.fetch(fetchRequest)
+//                cdMushrooms.forEach({
+//
+//                    ($0.images?.allObjects as? [CDImage])?.forEach({
+//                                                                    ELFileManager.deleteMushroomImage(withUrl: $0.url ?? "")
+//                                                                    backgroundThread.delete($0)})
+//                    })
+//
+//                try backgroundThread.save()
+//                DispatchQueue.main.async {
+//                    completion(.success(()))
+//                }
+//            } catch {
+//                DispatchQueue.main.async {
+//                     completion(.failure(.saveError))
+//                }
+//            }
+//        }
+//    }
     
     /// Must call this method on the main thread
     func exists(mushroom: Mushroom) -> Bool {
-        let fetchRequest: NSFetchRequest<CDMushroom> = CDMushroom.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %i", mushroom.id)
+        let local = try? getDevice()
+        let some = (local?.mushrooms?.allObjects as? [CDMushroom])?.contains(where: {$0.id == mushroom.id})
+        return some ?? false
+        
+        //
         
         do {
-            let count = try mainThread.count(for: fetchRequest)
-            return count > 0 ? true: false
-        } catch {
-            debugPrint(error)
-            return false
+//            let count = try mainThread.count(for: fetchRequest)
+//            return count > 0 ? true: false
+//        } catch {
+//            debugPrint(error)
+//            return false
+//        }
+    }
+    }
+    
+    func mapValue(item: Mushroom, cdMushroom: CDMushroom, saveImages: Bool) {
+        cdMushroom.id = Int32(item.id)
+        cdMushroom.fullName = item.fullName
+        cdMushroom.danishName = item.localizedName
+        cdMushroom.redlistStatus = item.redlistStatus
+        cdMushroom.updatedAt = item.updatedAt
+        
+        item.attributes?.toDatabase(cdMushroom: cdMushroom, context: backgroundThread)
+        if let images = item.images {
+            for image in images {
+                let cdImage = NSEntityDescription.insertNewObject(forEntityName: "CDImage", into: backgroundThread) as! CDImage
+                cdImage.url = image.url
+                cdImage.photographer = image.photographer
+                cdMushroom.addToImages(cdImage)
+                
+                
+                if saveImages {
+                    DispatchQueue.global(qos: .background).async {
+                        if !ELFileManager.mushroomImageExists(withURL: image.url) {
+                            DataService.instance.getImage(forUrl: image.url, size: .full) { (image, imageURL) in
+                                ELFileManager.saveMushroomImage(image: image, url: imageURL)
+                            }
+                        }
+                    }
+                }
+                
+            }
         }
     }
 }

@@ -58,12 +58,12 @@ class MushroomVC: UIViewController {
                     }
                 }
             case .favorites:
-            switch Database.instance.mushroomsRepository.fetchAll() {
-            case .success(let mushrooms):
-               self?.tableView.setSections(sections: [.init(title: nil, state: .items(items: mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})))])
-            case .failure(let error):
-                self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error))])
-            }
+                switch Database.instance.mushroomsRepository.fetchFavorites() {
+                case .success(let mushrooms):
+                   self?.tableView.setSections(sections: [.init(title: nil, state: .items(items: mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})))])
+                case .failure(let error):
+                    self?.tableView.setSections(sections: [.init(title: nil, state: .error(error: error))])
+                }
         }
         }
         
@@ -122,7 +122,8 @@ class MushroomVC: UIViewController {
         
         tableView.mushroomSwiped = { [weak self, weak tableView] mushroom, indexPath in
             if Database.instance.mushroomsRepository.exists(mushroom: mushroom) {
-                Database.instance.mushroomsRepository.delete(mushroom: mushroom) { (result) in
+                Database.instance.mushroomsRepository.removeAsFavorite(mushroom) {
+                    (result) in
                     switch result {
                     case .failure(let error):
                         ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom)
@@ -138,7 +139,7 @@ class MushroomVC: UIViewController {
                     }
                 }
             } else {
-                Database.instance.mushroomsRepository.save(items: [mushroom]) { (result) in
+                Database.instance.mushroomsRepository.saveFavorite(mushroom) { result in
                     switch result {
                     case .failure(let error):
                         ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom)
@@ -240,7 +241,7 @@ class MushroomVC: UIViewController {
 
 extension MushroomVC: CustomSearchBarDelegate {
     func newSearchEntry(entry: String) {
-                DataService.instance.getMushrooms(searchString: entry) { [weak tableView] (result) in
+                DataService.instance.getMushrooms(searchString: entry, speciesQueries: [API.SpeciesQueries.danishNames, API.SpeciesQueries.attributes(presentInDenmark: nil), API.SpeciesQueries.images(required: false), API.SpeciesQueries.statistics, API.SpeciesQueries.redlistData], limit: 30) { [weak tableView] (result) in
                     switch result {
                     case .success(let mushrooms):
                         tableView?.setSections(sections: [.init(title: nil, state: .items(items: mushrooms.compactMap({MushroomTableView.Item.mushroom($0)})))])

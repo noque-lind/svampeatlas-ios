@@ -247,10 +247,10 @@ class CameraVC: UIViewController {
         }
         
         if let imageURL = imageURL {
-            vm.addImage(newObservationImage: NewObservationImage(type: .new, url: imageURL))
+            vm.addImage(newObservationImage: UserObservation.Image(type: .new, url: imageURL, filename: ""))
         }
         if let predictionResults = predictionResults {
-            vm.predictionResults.value = .items(items: predictionResults)
+            vm.setPredictionResults(.items(items: predictionResults))
         }
         
 
@@ -361,6 +361,7 @@ extension CameraVC: ELPhotosManagerDelegate {
     
     func presentVC(_ vc: UIViewController) {
         // To present the photolibrary VC
+        
         present(vc, animated: true, completion: nil)
     }
     

@@ -101,10 +101,6 @@ extension UIFont {
     class func appText(customSize size: CGFloat = 13) -> UIFont {
         return UIFont(name: "AvenirNext-UltraLight", size: size)!
     }
-    
-    class func appTextHighlight(customSize size: CGFloat = 13) -> UIFont {
-        return UIFont(name: "AvenirNext-Regular", size: size)!
-    }
 }
 
 extension Float {

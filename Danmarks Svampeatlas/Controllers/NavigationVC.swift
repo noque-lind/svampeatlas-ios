@@ -71,7 +71,7 @@ class NavigationVC: UIViewController {
     
     private var navigationItems: [[NavigationItem]] {
         if session != nil {
-            return [[.myPageVC, .newObservationVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .settings, .facebook]]
+            return [[.myPageVC, .notebook, .newObservationVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .settings, .facebook]]
         } else {
             return [[.loginVC], [.nearbyVC, .mushroomsVC, .cameraVC], [.about, .settings, .facebook]]
         }
@@ -213,6 +213,9 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
             vc = AboutVC()
         case .settings:
             vc = SettingsVC()
+        case .notebook:
+            guard let session = session else {return}
+            vc = NotesVC(session: session)
         }
         
         self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: vc), overrideTypeCheckIgnore: overrideTypeCheckIgnore)

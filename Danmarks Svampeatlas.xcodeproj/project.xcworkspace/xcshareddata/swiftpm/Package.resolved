@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "PredicateKit",
+        "repositoryURL": "https://github.com/ftchirou/PredicateKit.git",
+        "state": {
+          "branch": null,
+          "revision": "b7f9071ebf9cb7fa7115cbc4c186bf158ea0c24a",
+          "version": "1.4.0"
+        }
+      },
+      {
         "package": "Then",
         "repositoryURL": "https://github.com/devxoul/Then",
         "state": {

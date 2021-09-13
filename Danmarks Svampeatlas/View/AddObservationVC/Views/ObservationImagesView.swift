@@ -40,12 +40,12 @@ class ObservationImagesView: UIView {
     static let expandedHeight: CGFloat = 200
     
     var onAddImageButtonPressed: (() -> ())?
-    var imageDeleted: ((NewObservationImage) -> ())?
+    var imageDeleted: ((UserObservation.Image) -> ())?
     var shouldAnimateHeight: ((CGFloat) -> ())?
     
     var isExpanded: Bool = false
     
-    private var images = [NewObservationImage]() {
+    private var images = [UserObservation.Image]() {
         didSet {
             if images.count > 0 && isExpanded == false {
                 shouldAnimateHeight?(ObservationImagesView.expandedHeight)
@@ -77,7 +77,7 @@ class ObservationImagesView: UIView {
         collectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
     }
     
-    func configure(newObservationImages: [NewObservationImage]) {
+    func configure(newObservationImages: [UserObservation.Image]) {
         self.images = newObservationImages
         collectionView.reloadData()
     }
@@ -132,7 +132,7 @@ extension ObservationImagesView: UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     
-    func addImage(newObservationImage: NewObservationImage) {
+    func addImage(newObservationImage: UserObservation.Image) {
         images.append(newObservationImage)
         collectionView.performBatchUpdates({
             collectionView.insertItems(at: [.init(row: images.endIndex - 1, section: 0)])
@@ -322,7 +322,7 @@ class ObservationImageCell: UICollectionViewCell {
     }
     
     
-    func configureCell(newObservationImage: NewObservationImage) {
+    func configureCell(newObservationImage: UserObservation.Image) {
         if newObservationImage.isDeletable {
             lockedView.isHidden = true
             panGestureRecognizer.isEnabled = true

@@ -15,13 +15,15 @@ class DownloadableImageView: UIImageView {
         $0.hidesWhenStopped = true
     })
     
-    private var url: String?
+    
+   var url: String?
     
     func loadImage(url: URL) {
         self.url = url.absoluteString
         
         if url.isFileURL {
             DispatchQueue.main.async {
+                guard self.url == url.absoluteString else {return}
                 self.image = UIImage(url: url)
             }
         } else {

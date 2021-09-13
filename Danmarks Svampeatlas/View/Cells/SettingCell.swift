@@ -23,7 +23,7 @@ class SettingCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -35,7 +35,6 @@ class SettingCell: UITableViewCell {
         label.numberOfLines = 0
         label.textColor = UIColor.appWhite()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }()
     
@@ -61,6 +60,7 @@ class SettingCell: UITableViewCell {
             view.translatesAutoresizingMaskIntoConstraints = false
             view.axis = .horizontal
             view.spacing = 8
+            view.distribution = .fillProportionally
             view.alignment = .center
             view.clipsToBounds = false
             view.addArrangedSubview(iconImageView)

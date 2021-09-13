@@ -12,13 +12,14 @@ struct VegetationType: Decodable {
     public private(set) var id: Int
     let dkName: String
     let enName: String
+    let czName: String?
     public var isLocked: Bool = false
     
     var name: String {
-        if Utilities.isDanish() {
-            return dkName
-        } else {
-            return enName
+        switch Utilities.appLanguage() {
+        case .czech: return czName ?? enName
+        case .danish: return dkName
+        case .english: return enName
         }
     }
     
@@ -26,17 +27,20 @@ struct VegetationType: Decodable {
         case id = "_id"
         case dkName = "name"
         case enName = "name_uk"
+        case czName = "name_cz"
     }
     
     init(from cdVegetationType: CDVegetationType) {
         self.id = Int(cdVegetationType.id)
         self.dkName = cdVegetationType.dkName ?? ""
         self.enName = cdVegetationType.enName ?? ""
+        self.czName = cdVegetationType.czName
     }
     
-    init(id: Int, dkName: String, enName: String) {
+    init(id: Int, dkName: String, enName: String, czName: String?) {
         self.id = id
         self.dkName = dkName
         self.enName = enName
+        self.czName = czName
     }
 }

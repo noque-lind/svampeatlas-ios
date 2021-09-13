@@ -84,6 +84,9 @@ class AboutVC: UIViewController {
             stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_Aage V. Jensen")))
             stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_Svampekundskabens fremme")))
             stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_fifteenJune")))
+            stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_wb")))
+            stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_piva")))
+            stackView.addArrangedSubview(createImageViewWithImage(image: #imageLiteral(resourceName: "Images_Sponsors_ctu")))
             stackView.addArrangedSubview(createText(title: NSLocalizedString("aboutVC_recognition_title", comment: ""), message: NSLocalizedString("aboutVC_recognition_message", comment: "")
 ))
             

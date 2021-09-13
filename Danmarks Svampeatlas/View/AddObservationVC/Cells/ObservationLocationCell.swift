@@ -178,7 +178,7 @@ class ObservationLocationCell: UICollectionViewCell {
     }
     
     private func didSelectLocality(locality: Locality) {
-        viewModel?.locality.set(locality)
+        viewModel?.setLocality(locality: locality)
     }
     
     func configureViewModel(viewModel: AddObservationViewModel) {
@@ -231,7 +231,7 @@ extension ObservationLocationCell: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel?.locality.set(localities[indexPath.row])
+        viewModel?.setLocality(locality: localities[indexPath.row])
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {

@@ -124,12 +124,12 @@ class Session {
         DataService.instance.postComment(taxonID: observationID, comment: comment, token: token, completion: completion)
     }
     
-    func uploadObservation(dict: [String: Any], imageURLs: [URL], completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
-        DataService.instance.postObservation(dict: dict, imageURLs: imageURLs, token: token, completion: completion)
+    func uploadObservation(userObservation: UserObservation, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
+        DataService.instance.observationsRepository.postObservation(userObservation: userObservation, session: self, token: token, completion: completion)
     }
     
-    func editObservation(id: Int, dict: [String: Any], newImageURLs: [URL], completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
-        DataService.instance.editObservation(withId: id, dict: dict, newImageURLs: newImageURLs, token: token, completion: completion)
+    func editObservation(id: Int, userObservation: UserObservation, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
+        DataService.instance.observationsRepository.editObservation(withId: id, userObservation: userObservation, session: self, token: token, completion: completion)
     }
     
     func deleteObservation(id: Int, completion: @escaping (Result<Void, AppError>) -> ()) {
@@ -338,67 +338,6 @@ extension Session: SessionDelegate {
                 completion(Result.failure(DataServiceError.encodingError))
             }
                     }
-        
-        
-        func editObservation(withId id: Int, dict: [String: Any], newImageURLs: [URL], token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
-            do {
-                let data = try JSONSerialization.data(withJSONObject: dict, options: [])
-                createDataTaskRequest(url: API.Put.observation(id: id).encodedURL, method: "PUT", data: data, contentType: "application/json", token: token) { (result) in
-                    
-                    switch result {
-                    case .failure(let error):
-                        completion(Result.failure(error))
-                    case .success(let data):
-                        let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                        guard let dict = json as? Dictionary<String, Any> else {return}
-                        
-                        let observationID = (dict["_id"] as? Int)!
-                        
-                        self.uploadImages(observationID: observationID, imageURLs: newImageURLs, token: token, completion: { (result) in
-                            switch result {
-                            case .failure(let error):
-                                completion(Result.failure(error))
-                            case .success(let uploadedCount):
-                                completion(Result.success((observationID: observationID, uploadedImagesCount: uploadedCount)))
-                            }
-                        })
-                    }
-                }
-                
-            } catch {
-                debugPrint(error)
-            }
-        }
-        
-        func postObservation(dict: [String: Any], imageURLs: [URL], token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
-            do {
-                let data = try JSONSerialization.data(withJSONObject: dict, options: [])
-                createDataTaskRequest(url: API.postObservationURL(), method: "POST", data: data, contentType: "application/json", token: token) { (result) in
-                    
-                    switch result {
-                    case .failure(let error):
-                        completion(Result.failure(error))
-                    case .success(let data):
-                        let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                        guard let dict = json as? Dictionary<String, Any> else {return}
-                        
-                        let observationID = (dict["_id"] as? Int)!
-                        
-                        self.uploadImages(observationID: observationID, imageURLs: imageURLs, token: token, completion: { (result) in
-                            switch result {
-                            case .failure(let error):
-                                completion(Result.failure(error))
-                            case .success(let uploadedCount):
-                                completion(Result.success((observationID: observationID, uploadedImagesCount: uploadedCount)))
-                            }
-                        })
-                    }
-                }
-                
-            } catch {
-                debugPrint(error)
-            }
-        }
         
         func deleteObservation(id: Int, token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
             createDataTaskRequest(url: API.Delete.observation(id: id).encodedURL, method: "DELETE", data: nil, contentType: nil, contentLenght: nil, token: token) { (result) in

@@ -29,7 +29,6 @@ struct UserDefaultsHelper {
             if Calendar.current.dateComponents([.day], from: databaseLastUpdatedDate).day ?? 0 < 30 {
                 return false
             } else {
-                debugPrint(Calendar.current.dateComponents([.day], from: databaseLastUpdatedDate).day)
                 return true
             }
         }
@@ -84,6 +83,23 @@ struct UserDefaultsHelper {
             return UserDefaults.standard.bool(forKey: "saveImages")
         } set {
             UserDefaults.standard.set(newValue, forKey: "saveImages")
+        }
+    }
+    
+    static var lastDataUpdateDate: Date? {
+        get {
+            let dateString = UserDefaults.standard.double(forKey: "lastDataUpdate")
+            if dateString != 0 {
+                return Date(timeIntervalSince1970: dateString)
+            } else {
+                return nil
+            }
+        } set {
+            if let date = newValue {
+                UserDefaults.standard.setValue(date.timeIntervalSince1970, forKey: "lastDataUpdate")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "lastDataUpdate")
+            }
         }
     }
     
@@ -152,4 +168,5 @@ struct UserDefaultsHelper {
     static func hasSeenImageDeletionTip() -> Bool {
         return UserDefaults.standard.bool(forKey: "hasSeenImageDeletionTip")
     }
+
 }

@@ -26,6 +26,7 @@ enum CoreDataError: AppError {
         case favoritedMushrooms
         case Hosts
         case User
+        case Notes
     }
     
     var title: String {
@@ -49,6 +50,8 @@ enum CoreDataError: AppError {
             switch category {
             case .favoritedMushrooms:
                 return NSLocalizedString("databaseError_noEntries_favoritedMushrooms_message", comment: "")
+            case .Notes:
+                return NSLocalizedString("You do not yet have any saved notes. This functionality enables you to save your observations locally, without uploading it before you are ready. Perhaps once you have a better internet connection", comment: "")
             default: return NSLocalizedString("databaseError_noEntries_message", comment: "")
             }
         case .readError:
@@ -106,6 +109,10 @@ let persistentContainer: NSPersistentContainer
         return VegetationTypeRepository(mainThread: mainContext, backgroundThread: backgroundContext)
     }()
     
+    lazy var notesRepository: NotesRepository = {
+        return NotesRepository(mainThread: mainContext, backgroundThread: backgroundContext)
+    }()
+    
     init(type: Type) {
         self.type = type
         
@@ -122,10 +129,17 @@ let persistentContainer: NSPersistentContainer
         self.persistentContainer = persistentContainer
     }
     
+    func reset() {
+        backgroundContext.reset()
+        mainContext.reset()
+    }
+    
     func setup(completion: (() -> ())?) {
         persistentContainer.loadPersistentStores { (storeDescription, error) in
             if let _ = error as NSError? {
                 ELNotificationView.appNotification(style: .error(actions: [.neutral(CoreDataError.initError.recoveryAction?.localizableText, {
+                    UserDefaultsHelper.lastDataUpdateDate = nil
+                    
                     guard let url = self.persistentContainer.persistentStoreDescriptions.first?.url else {return}
                     try? self.persistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: url, ofType: NSSQLiteStoreType, options: nil)
                      self.persistentContainer.persistentStoreCoordinator.addPersistentStore(with: storeDescription, completionHandler: { (_, _) in

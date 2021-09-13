@@ -339,9 +339,9 @@ class SelectedSpecieCell: ContainedResultCell {
         return view
     }()
     
-    private var confidences = AddObservationViewModel.DeterminationConfidence.allCases
+    private var confidences = UserObservation.DeterminationConfidence.allCases
     private var isGenus: Bool = false
-    var confidenceSelected: ((AddObservationViewModel.DeterminationConfidence) -> ())?
+    var confidenceSelected: ((UserObservation.DeterminationConfidence) -> ())?
     
     override func setupView(leadingConstant: CGFloat, trailingConstant: CGFloat) {
         super.setupView(leadingConstant: leadingConstant, trailingConstant: trailingConstant)
@@ -366,7 +366,7 @@ class SelectedSpecieCell: ContainedResultCell {
         stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
     }
     
-    func configureCell(mushroom: Mushroom, confidence: AddObservationViewModel.DeterminationConfidence) {
+    func configureCell(mushroom: Mushroom, confidence: UserObservation.DeterminationConfidence) {
         isGenus = mushroom.isGenus
         picker.reloadAllComponents()
         picker.selectRow(confidences.firstIndex(of: confidence) ?? 0, inComponent: 0, animated: false)
@@ -374,7 +374,7 @@ class SelectedSpecieCell: ContainedResultCell {
     }
     
 
-    private func getLabelForConfidence(confidence: AddObservationViewModel.DeterminationConfidence, isGenus: Bool) -> String {
+    private func getLabelForConfidence(confidence: UserObservation.DeterminationConfidence, isGenus: Bool) -> String {
         switch confidence {
         case .certain:
             return isGenus ? NSLocalizedString("selectedSpeciesCell_confident_genus", comment: ""): NSLocalizedString("selectedSpeciesCell_confident_species", comment: "")

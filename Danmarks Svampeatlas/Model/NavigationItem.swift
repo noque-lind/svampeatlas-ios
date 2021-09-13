@@ -13,6 +13,7 @@ enum NavigationItem {
     case loginVC
     case myPageVC
     case newObservationVC
+    case notebook
     case nearbyVC
     case mushroomsVC
     case cameraVC
@@ -39,6 +40,8 @@ enum NavigationItem {
             return NSLocalizedString("navigationItem_settings", comment: "")
             case .facebook:
                 return NSLocalizedString("navigationItem_facebook", comment: "")
+        case .notebook:
+            return NSLocalizedString("navigationItem_notebook", comment: "")
         case .about:
             return NSLocalizedString("navigationItem_about", comment: "")
         }
@@ -52,6 +55,8 @@ enum NavigationItem {
             return #imageLiteral(resourceName: "Icons_MenuIcons_Profile")
         case .newObservationVC:
             return #imageLiteral(resourceName: "Icons_Icons_Add")
+        case .notebook:
+            return #imageLiteral(resourceName: "Icons_MenuIcons_Walk")
         case .nearbyVC:
             return #imageLiteral(resourceName: "Icons_MenuIcons_Location")
         case .mushroomsVC:

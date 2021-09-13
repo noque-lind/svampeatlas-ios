@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreData
-
+import PredicateKit
 
 
 class SubstrateGroupsRepository: Repository, RepositoryDelegate {
@@ -36,14 +36,7 @@ class SubstrateGroupsRepository: Repository, RepositoryDelegate {
                     object.enName = item.enName
                     
                     for substrate in item.substrates {
-                        let cdSubstrate: CDSubstrate = {
-                            let object = NSEntityDescription.insertNewObject(forEntityName: "CDSubstrate", into: backgroundThread) as! CDSubstrate
-                            object.dkName = substrate.dkName
-                            object.id = Int16(substrate.id)
-                            object.enName = substrate.enName
-                            return object
-                        }()
-                        object.addToCdSubstrate(cdSubstrate)
+                        object.addToCdSubstrate(create(substrate: substrate))
                     }
                     return object
                 }()
@@ -96,5 +89,19 @@ class SubstrateGroupsRepository: Repository, RepositoryDelegate {
         } else {
             return fetchAll()
         }
+    }
+    
+    func find(substrate: Substrate) throws -> CDSubstrate? {
+        let substrates: [CDSubstrate] = try backgroundThread.fetch(where: \CDSubstrate.id == Int16(substrate.id)).result()
+        return substrates.first
+    }
+    
+    
+    func create(substrate: Substrate) -> CDSubstrate {
+        return (NSEntityDescription.insertNewObject(forEntityName: "CDSubstrate", into: backgroundThread) as! CDSubstrate).then({
+            $0.dkName = substrate.dkName
+            $0.id = Int16(substrate.id)
+            $0.enName = substrate.enName
+        })
     }
 }

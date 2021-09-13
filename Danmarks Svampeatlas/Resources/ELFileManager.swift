@@ -55,8 +55,6 @@ struct ELFileManager {
     }
     
     
-    
-    
     static func mushroomImageExists(withURL url: String) -> Bool {
         guard let imageName = UserDefaultsHelper.getImageName(forUrl: url) else {return false}
         return FileManager.default.fileExists(atPath: DocumentsDir().appendingPathComponent(imageName).absoluteString)
@@ -69,6 +67,16 @@ struct ELFileManager {
         if let data = image.pngData() {
             try? data.write(to: DocumentsDir().appendingPathComponent(imageName))
         }
+    }
+    
+    static func saveNoteImage(image: URL) -> String {
+        let filename = UUID().uuidString + ".png"
+        try? Data(contentsOf: image).write(to: DocumentsDir().appendingPathComponent(filename))
+        return filename
+    }
+    
+    static func createUrl(from filename: String) -> URL {
+        return DocumentsDir().appendingPathComponent(filename)
     }
     
     static func deleteMushroomImage(withUrl url: String) {

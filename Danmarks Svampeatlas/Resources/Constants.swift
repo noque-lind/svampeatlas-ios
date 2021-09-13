@@ -10,24 +10,29 @@ import UIKit
 import MapKit
 
 struct Utilities {
-    static let PHOTOALBUMNAME = NSLocalizedString("utilities_photoAlbumName", comment: "")
+    enum ApplicationLanguage {
+        case danish
+        case english
+        case czech
+    }
     
-    static func isDanish() -> Bool {
+    
+    
+    
+    static let PHOTOALBUMNAME = NSLocalizedString("utilities_photoAlbumName", comment: "")
+
+    static func appLanguage() -> ApplicationLanguage {
         if Locale.current.identifier.contains("da") {
-            return true
+            return .danish
+        } else if Locale.current.identifier.contains("en") {
+            return .english
+        } else if Locale.current.identifier.contains("cs") {
+            return .czech
         } else {
-            return false
+            return .english
         }
-//        print(Locale.current.languageCode)
-//        print(Locale.preferredLanguages)
-//        print(Locale.current)
-//
-//        if Locale.preferredLanguages[0].contains("da") || Locale.preferredLanguages[0].contains("dk") {
-//            return true
-//        } else {
-//            return false
-//            }
-}
+    }
+
 }
     
 
@@ -66,13 +71,16 @@ struct API {
     enum Request {
         case Observations(geometry: Geometry, ageInYear: Int?, include: [ObservationIncludeQueries], limit: Int?, offset: Int?)
         case Observation(id: Int, include: [ObservationIncludeQueries])
-        case Mushrooms(searchString: String?, speciesQueries: [SpeciesQueries], limit: Int, offset: Int)
+        case Comments(observationID: Int)
+        case Mushrooms(searchString: String?, speciesQueries: [SpeciesQueries], limit: Int?, offset: Int)
         case Mushroom(id: Int)
         case Hosts(searchString: String?)
         
         var encodedURL: String {
             
             switch self {
+            case .Comments(observationID: let id):
+                return BASE_URL_API + ""
             case .Observation(id: let id):
                 return BASE_URL_API + "observations/\(id)"
             case .Observations(geometry: let geometry, let ageInYear, include: let include, let limit, let offset):
@@ -112,11 +120,15 @@ struct API {
                     queryItems.append(URLQueryItem(name: "order", value: "RankID ASC, probability DESC, FullName ASC"))
                     queryItems.append(URLQueryItem(name: "nocount", value: "true"))
                 } else {
-                    queryItems.append(URLQueryItem(name: "limit", value: String(limit)))
+                    if let limit = limit {
+                        queryItems.append(URLQueryItem(name: "limit", value: String(limit)))
+                    }
+                   
                     queryItems.append(URLQueryItem(name: "offset", value: String(offset)))
                     queryItems.append(URLQueryItem(name: "order", value: "FullName ASC"))
-                    speciesQueries.append(.tag(id: 16))
                 }
+                
+           
                 
                 queryItems.append(URLQueryItem(name: "include", value: parseSpeciesQueries(queries: speciesQueries)))
                 url.queryItems = queryItems
@@ -218,19 +230,20 @@ struct API {
         var query: String {
             switch self {
             case .attributes(presentInDenmark: let presentInDenmark):
+                var baseQuery = "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"valideringsrapport\",\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"bogtekst_gyldendal_en\", \"bogtekst_gyldendal\", \"spiselighedsrapport\", \"vernacular_name_CZ\", \"vernacular_name_GB\"]"
+                
                 if let presentInDenmark = presentInDenmark {
-                    return "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"valideringsrapport\",\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"bogtekst_gyldendal_en\", \"vernacular_name_GB\", \"spiselighedsrapport\"],\"where\":\"{\\\"PresentInDK\\\":\(presentInDenmark)}\"}"
-                } else {
-                    return "{\"model\":\"TaxonAttributes\",\"as\":\"attributes\",\"attributes\":[\"PresentInDK\", \"diagnose\", \"beskrivelse\", \"forvekslingsmuligheder\", \"oekologi\", \"spiselighedsrapport\", \"bogtekst_gyldendal_en\", \"vernacular_name_GB\"]}"
+                    baseQuery += ",\"where\":\"{\\\"PresentInDK\\\":\(presentInDenmark)}\""
                 }
                 
+                return baseQuery + "}"
             case .danishNames:
                 return "{\"model\":\"TaxonDKnames\",\"as\":\"Vernacularname_DK\", \"attributes\":[\"vernacularname_dk\", \"source\"]}"
                 
             case .images(required: let required):
                 return "{\"model\":\"TaxonImages\",\"as\":\"Images\",\"required\":\(required)}"
             case .redlistData:
-                return "{\"model\":\"TaxonRedListData\",\"as\":\"redlistdata\",\"required\":false,\"attributes\":[\"status\"],\"where\":\"{\\\"year\\\":2009}\"}"
+                return "{\"model\":\"TaxonRedListData\",\"as\":\"redlistdata\",\"required\":false,\"attributes\":[\"status\"],\"where\":\"{\\\"year\\\":2019}\"}"
             case .statistics:
                 return "{\"model\":\"TaxonStatistics\",\"as\":\"Statistics\", \"attributes\":[\"accepted_count\", \"last_accepted_record\", \"first_accepted_record\"]}"
             case .tag(id: let id):
@@ -316,10 +329,14 @@ struct API {
             }
         }
         
-        if Utilities.isDanish() {
-         return "{\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$Vernacularname_DK.vernacularname_dk$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
-        } else {
-             return "{\"$or\":[{\"$attributes.vernacular_name_GB$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+    
+        switch Utilities.appLanguage() {
+        case .czech:
+            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$attributes.vernacular_name_CZ$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+        case .danish:
+            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$Vernacularname_DK.vernacularname_dk$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+        case .english:
+            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$attributes.vernacular_name_GB$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
         }
     }
     
@@ -474,12 +491,6 @@ func SEARCHFORMUSHROOM_URL(searchTerm: String) -> String {
     //    print(returned)
     return returned
 }
-
-
-fileprivate let BASE_URL_OLD = "https://svampe.databasen.org/api/taxa?_order=%5B%5B%22FullName%22%5D%5D&acceptedTaxaOnly=true&include=%5B%7B%22model%22%3A%22TaxonRedListData%22%2C%22as%22%3A%22redlistdata%22%2C%22required%22%3Afalse%2C%22attributes%22%3A%5B%22status%22%5D%2C%22where%22%3A%22%7B%5C%22year%5C%22%3A2009%7D%22%7D%2C%7B%22model%22%3A%22Taxon%22%2C%22as%22%3A%22acceptedTaxon%22%7D%2C%7B%22model%22%3A%22TaxonAttributes%22%2C%22as%22%3A%22attributes%22%2C%22attributes%22%3A%5B%22PresentInDK%22%2C%20%22forvekslingsmuligheder%22%2C%20%22oekologi%22%2C%20%22diagnose%22%5D%2C%22where%22%3A%22%7B%5C%22PresentInDK%5C%22%3Atrue%7D%22%7D%2C%7B%22model%22%3A%22TaxonDKnames%22%2C%22as%22%3A%22Vernacularname_DK%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonStatistics%22%2C%22as%22%3A%22Statistics%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonImages%22%2C%22as%22%3A%22Images%22%2C%22required%22%3Atrue%7D%5D&limit=100&offset=0"
-
-//https://svampe.databasen.org/apitaxa?_order=%5B%5B%22FullName%22%5D%5D&acceptedTaxaOnly=true&include=%5B%7B%22model%22%3A%22TaxonRedListData%22%2C%22as%22%3A%22redlistdata%22%2C%22required%22%3Afalse%2C%22attributes%22%3A%5B%22status%22%5D%2C%22where%22%3A%22%7B%5C%22year%5C%22%3A2009%7D%22%7D%2C%7B%22model%22%3A%22Taxon%22%2C%22as%22%3A%22acceptedTaxon%22%7D%2C%7B%22model%22%3A%22TaxonAttributes%22%2C%22as%22%3A%22attributes%22%2C%22attributes%22%3A%5B%22PresentInDK%22%2C%20%22forvekslingsmuligheder%22%2C%20%22oekologi%22%2C%20%22diagnose%22%5D%2C%22where%22%3A%22%7B%5C%22PresentInDK%5C%22%3Atrue%7D%22%7D%2C%7B%22model%22%3A%22TaxonDKnames%22%2C%22as%22%3A%22Vernacularname_DK%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonStatistics%22%2C%22as%22%3A%22Statistics%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonImages%22%2C%22as%22%3A%22Images%22%2C%22required%22%3Atrue%7D%5D&limit=100&offset=0
-
 
 fileprivate let SPECIES_LIST_BASE_URL = "svampe.databasen.org/api/observations/specieslist"
 

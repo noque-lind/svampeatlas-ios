@@ -250,7 +250,7 @@
 
 //ObservationDetailsCell
 "observationDetailsCell_mostUsed" = "Most used";
-"observationDetailsCell_date" = "Date: %@";
+"observationDetailsCell_date" = "Date:";
 "observationDetailsCell_substrate" = "Substrate:";
 "observationDetailsCell_vegetationType" = "Vegetationtype:";
 "observationDetailsCell_host" = "Host:";

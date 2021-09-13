@@ -294,10 +294,9 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             case .hostCell(let host, let selected):
                 tableView.allowsMultipleSelection = true
                 
-                if Utilities.isDanish() {
-                     cell.textLabel?.text = "- \(host.dkName?.capitalizeFirst() ?? "") (\(host.latinName ?? ""))"
-                } else {
-                    cell.textLabel?.text = "- \(host.latinName?.capitalizeFirst() ?? "")"
+                switch Utilities.appLanguage() {
+                case .czech, .english: cell.textLabel?.text = "- \(host.latinName?.capitalizeFirst() ?? "")"
+                case .danish:  cell.textLabel?.text = "- \(host.dkName?.capitalizeFirst() ?? "") (\(host.latinName ?? ""))"
                 }
                 
                 if selected {

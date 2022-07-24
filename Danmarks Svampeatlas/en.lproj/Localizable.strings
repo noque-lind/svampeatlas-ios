@@ -22,6 +22,7 @@
 "navigationItem_facebook" = "Facebook";
 "navigationItem_about" = "About";
 "navigationItem_settings" = "Settings";
+"navigationItem_notebook" = "Notebook";
 
 //ToxicityLevels
 "toxicityLevel_poisonous" = "Poisonous";

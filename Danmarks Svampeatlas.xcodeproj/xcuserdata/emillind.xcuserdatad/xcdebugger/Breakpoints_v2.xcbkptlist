@@ -564,38 +564,6 @@
             endingLineNumber = "140"
             landmarkName = "setup(completion:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "A4D0D948-F197-44E6-9C1B-CB1DDD77086C - ab1a5720c95a3e05"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.NSPersistentStoreDescription, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Danmarks_Svampeatlas.Database.setup(completion: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; ()"
-                  moduleName = "Danmarks Svampeatlas"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Repository/CoreDataHelper.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "140"
-                  endingLineNumber = "140"
-                  offsetFromSymbolStart = "704">
-               </Location>
-               <Location
-                  uuid = "A4D0D948-F197-44E6-9C1B-CB1DDD77086C - d5d44a52a2230710"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in closure #1 (__C.NSPersistentStoreDescription, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Danmarks_Svampeatlas.Database.setup(completion: Swift.Optional&lt;() -&gt; ()&gt;) -&gt; ()"
-                  moduleName = "Danmarks Svampeatlas"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/emillind/Documents/Noque%20ApS/Danmarks%20Svampeatlas/iOS/App/Danmarks%20Svampeatlas/Repository/CoreDataHelper.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "141"
-                  endingLineNumber = "141"
-                  offsetFromSymbolStart = "324">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

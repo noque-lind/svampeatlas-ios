@@ -7,6 +7,7 @@
 //
 
 import CoreData
+import CoreLocation
 
 extension CLLocation {
     func toCD(context: NSManagedObjectContext) -> CDLocation {

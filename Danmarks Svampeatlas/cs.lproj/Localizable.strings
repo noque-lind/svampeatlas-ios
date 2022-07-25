@@ -428,6 +428,8 @@
 
 "navigationItem_settings" = "Nastavení";
 
+"navigationItem_notebook" = "Notebook";
+
 /* NearbyVC */
 "nearbyVC_title" = "Nedaleko";
 

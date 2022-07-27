@@ -88,7 +88,7 @@ class CameraVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
         
         if case .mlPredict = usage, !UserDefaultsHelper.hasAcceptedmagePredictionTerms {
-            let vc = TermsVC(terms: .mlPredict)
+            let vc = ModalVC(terms: .mlPredict)
             presentVC(vc)
             
             vc.wasDismissed = { [unowned avView] in
@@ -202,7 +202,7 @@ class CameraVC: UIViewController {
     }
     
     @objc private func informationButtonPressed() {
-        presentVC(TermsVC(terms: .cameraHelper))
+        presentVC(ModalVC(terms: .cameraHelper))
     }
     
     private func handleImageSaving(photoData: Data) {

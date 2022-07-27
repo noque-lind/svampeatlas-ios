@@ -128,7 +128,7 @@ class NotesVC: UIViewController {
         navigationItem.rightBarButtonItem?.width = 100
         navigationItem.setRightBarButton(.init(customView: ActionButton().then({
             $0.addTarget(self, action: #selector(newNote), for: .touchUpInside)
-            $0.configure(text: NSLocalizedString("New", comment: ""))
+            $0.configure(text: NSLocalizedString("New note", comment: ""), icon: UIImage.init(systemName: "plus"))
         })), animated: false)
         
             

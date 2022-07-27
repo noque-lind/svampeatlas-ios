@@ -33,6 +33,13 @@ class AddObservationVC: UIViewController  {
         }
     }
     
+    private lazy var actionButton = ActionButton().then({
+        $0.addTarget(self, action: #selector(onAction), for: .touchUpInside)
+        if #available(iOS 13.0, *) {
+            $0.addInteraction(UIContextMenuInteraction(delegate: self))
+        }
+})
+    
     private lazy var idLabel = UILabel().then({
         $0.font = .appMuted()
         $0.textColor = .appWhite()
@@ -56,7 +63,7 @@ class AddObservationVC: UIViewController  {
         
         view.imageDeleted = { [weak self, weak view] imageUrl in
             if !UserDefaultsHelper.hasSeenImageDeletionTip() {
-                self?.present(TermsVC(terms: .deleteImageTip), animated: true, completion: nil)
+                self?.present(ModalVC(terms: .deleteImageTip), animated: true, completion: nil)
                 view?.configure(newObservationImages: self?.viewModel.images.value ?? [])
                 UserDefaultsHelper.setHasSeenImageDeletionTip()
             } else {
@@ -81,8 +88,9 @@ class AddObservationVC: UIViewController  {
         let view = CategoryView<ObservationCategories>.init(categories: items, firstIndex: 0)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        view.categorySelected = { [unowned collectionView, unowned self] category in
+        view.categorySelected = { [unowned collectionView, unowned self, unowned actionButton] category in
             guard let index = ObservationCategories.allCases.firstIndex(of: category) else {return}
+            actionButton.configure(state: getStateForActionView())
             collectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
             self.view.endEditing(true)
         }
@@ -177,24 +185,8 @@ class AddObservationVC: UIViewController  {
                 $0.addArrangedSubview(idLabel)
             })
         }
-        
-//        navigationItem.setRightBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_Upload"), style: .plain, target: self, action: #selector(beginObservationUpload)), animated: false)
-        let rightButtonText: String
-        switch viewModel.action {
-        case .newNote, .editNote, .edit:
-            rightButtonText = NSLocalizedString("Save", comment: "")
-        case .new:
-            rightButtonText =  NSLocalizedString("Upload", comment: "")
-        }
-        
-        navigationItem.setRightBarButton(.init(customView: ActionButton().then({
-            $0.addTarget(self, action: #selector(onAction), for: .touchUpInside)
-            if #available(iOS 13.0, *) {
-                $0.configure(text:rightButtonText, contextDelegate: self)
-            } else {
-                $0.configure(text: rightButtonText)
-            }
-        })), animated: false)
+
+        navigationItem.setRightBarButton(.init(customView: actionButton), animated: false)
         
         let gradientView = GradientView().then({
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -252,11 +244,9 @@ class AddObservationVC: UIViewController  {
                     guard let type = self?.viewModel.action else {return}
                     switch type {
                     case .new, .newNote, .editNote:
-                        self?.categoryView.moveSelector(toCellAtIndexPath: .init(row: 0, section: 0))
-                        self?.collectionView.scrollToItem(at: .init(row: 0, section: 0), at: .left, animated: true)
+                        self?.categoryView.selectCategory(category: .Species)
                     case .edit:
-                        self?.categoryView.moveSelector(toCellAtIndexPath: .init(row: 1, section: 0))
-                        self?.collectionView.scrollToItem(at: .init(row: 1, section: 0), at: .left, animated: true)
+                        self?.categoryView.selectCategory(category: .Details)
                     }
                 }
             }
@@ -295,14 +285,14 @@ class AddObservationVC: UIViewController  {
             DispatchQueue.main.async {
                 switch state {
                 case .loading:
-                    self?.categoryView.setCategoryLoadingState(atIndex: ObservationCategories.allCases.firstIndex(of: .Location)!, loading: true)
+                    self?.categoryView.setCategoryLoadingState(category: .Location, loading: true)
                 case .items(item: let location):
                     if let cell = self?.collectionView.visibleCells.first as? ObservationLocationCell {
                         cell.configureObservationLocation(location: location)
                     }
-                    self?.categoryView.setCategoryLoadingState(atIndex: ObservationCategories.allCases.firstIndex(of: .Location)!, loading: false)
+                    self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
                     
-                default: self?.categoryView.setCategoryLoadingState(atIndex: ObservationCategories.allCases.firstIndex(of: .Location)!, loading: false)
+                default:               self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
                   }
             }
         }
@@ -310,13 +300,13 @@ class AddObservationVC: UIViewController  {
         viewModel.localities.observe { [weak self] (state) in
             DispatchQueue.main.async {
                 switch state {
-                case .loading: self?.categoryView.setCategoryLoadingState(atIndex: ObservationCategories.allCases.firstIndex(of: .Location)!, loading: true)
+                case .loading: self?.categoryView.setCategoryLoadingState(category: .Location, loading: true)
                 case .items(item: let localities):
                     if let cell = self?.collectionView.visibleCells.first as? ObservationLocationCell {
                         cell.configureLocalities(localities: localities)
                     }
-                    self?.categoryView.setCategoryLoadingState(atIndex: ObservationCategories.allCases.firstIndex(of: .Location)!, loading: false)
-                default: self?.categoryView.setCategoryLoadingState(atIndex: ObservationCategories.allCases.firstIndex(of: .Location)!, loading: false)
+                    self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
+                default: self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
                 }
             }
         }
@@ -350,18 +340,18 @@ class AddObservationVC: UIViewController  {
                     case .newNote, .editNote:
                         self?.navigationController?.popViewController(animated: true)
                     default:
-                        notif.show(animationType: .fromBottom, onViewController: self)
+                        notif.show(animationType: .fromBottom, onViewController: nil)
                         viewModel.reset()
                     }
                 case .userObservationValidationError(error: let error):
                     notif.show(animationType: .fromBottom, queuePosition: .front, onViewController: self)
                     switch error {
                     case .lowAccuracy, .noCoordinates, .noLocality:
-                        self?.collectionView.scrollToItem(at: .init(row: ObservationCategories.allCases.firstIndex(of: .Location)!, section: 0), at: .left, animated: true)
+                        self?.categoryView.selectCategory(category: .Location)
                     case .noMushroom:
-                        self?.collectionView.scrollToItem(at: .init(row: ObservationCategories.allCases.firstIndex(of: .Species)!, section: 0), at: .left, animated: true)
+                        self?.categoryView.selectCategory(category: .Species)
                     case .noSubstrateGroup, .noVegetationType:
-                        self?.collectionView.scrollToItem(at: .init(row: ObservationCategories.allCases.firstIndex(of: .Details)!, section: 0), at: .left, animated: true)
+                        self?.categoryView.selectCategory(category: .Details)
                     }
                    
                 case .foundLocationAndLocality:
@@ -374,14 +364,46 @@ class AddObservationVC: UIViewController  {
             }
         }
     }
-        
-    private func reset() {
-        configure()
-        collectionView.scrollToItem(at: IndexPath.init(row: 0, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: false)
+    
+    private func getStateForActionView() -> ActionButton.State {
+         switch viewModel.action {
+        case .newNote, .editNote, .edit:
+             return  .init(title: NSLocalizedString("Save", comment: ""), icon: #imageLiteral(resourceName: "Glyphs_Checkmark"), backgroundColor: .appGreen())
+        case .new:
+             switch categoryView.selectedItem.type {
+             case .Details, .Species:
+                 return .init(title: "Fortsæt", icon:  #imageLiteral(resourceName: "Glyphs_DisclosureButton") , backgroundColor: .appSecondaryColour())
+             case .Location:
+                 return .init(title: "Indsend", icon:  #imageLiteral(resourceName: "Glyphs_Checkmark"), backgroundColor: .appGreen())
+             }
+        }
+    }
+    
+    // Every 15th upload, we want to show the user a message that reminds them to double check their position.
+    private func validateReminderState() {
+        UserDefaultsHelper.decreasePositionReminderCounter()
+        if UserDefaultsHelper.shouldShowPositionReminder {
+            presentVC(ModalVC(terms: .localityHelper))
+        }
     }
     
     @objc private func onAction(overrideLowAccuracy: Bool = false) {
-        viewModel.performAction()
+        // Below logic is only relevant if context is new note record or new new note. Not in edit modes.
+        switch self.action {
+        case .editNote(node: _), .edit(observationID: _):
+            viewModel.performAction(); return
+        case .newNote, .new:
+            switch categoryView.selectedItem.type {
+            case .Species:
+                guard viewModel.mushroom != nil else {viewModel.performAction(); return }
+                    categoryView.selectCategory(category: .Details)
+            case .Details:
+                guard viewModel.substrate != nil && viewModel.vegetationType != nil else {viewModel.performAction(); return }
+                categoryView.selectCategory(category: .Location)
+            case .Location:
+                viewModel.performAction()
+            }
+        }
     }
 }
 
@@ -409,9 +431,11 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
         }
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? ObservationLocationCell {
-
+            // We want to check reminder state, every time position screen is shown
+            validateReminderState()
             viewModel.observationLocation.value?.item?.do({
                 cell.configureObservationLocation(location: $0)
             })
@@ -433,6 +457,7 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         categoryView.moveSelector(toCellAtIndexPath: IndexPath(row: Int(ceil(collectionView.contentOffset.x/collectionView.bounds.size.width)), section: 0))
+        actionButton.configure(state: getStateForActionView())
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

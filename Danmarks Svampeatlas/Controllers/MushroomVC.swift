@@ -252,7 +252,7 @@ extension MushroomVC: CustomSearchBarDelegate {
     }
     
     func clearedSearchEntry() {
-        categoryView.selectCategory(category: Categories.species, force: true)
+        categoryView.selectCategory(category: Categories.species)
     }
 }
 

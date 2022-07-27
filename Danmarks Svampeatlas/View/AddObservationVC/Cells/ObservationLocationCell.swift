@@ -174,7 +174,7 @@ class ObservationLocationCell: UICollectionViewCell {
     }
     
     @objc private func annotationButtonPressed() {
-        delegate?.presentVC(TermsVC(terms: .localityHelper))
+        delegate?.presentVC(ModalVC(terms: .localityHelper))
     }
     
     private func didSelectLocality(locality: Locality) {

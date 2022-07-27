@@ -8,11 +8,7 @@
 
 import UIKit
 
-protocol CategoryViewDelegate: NSObjectProtocol {
-    func categorySelected(category: Any)
-}
-
-struct Category<T>: Equatable {
+struct Category<T: Equatable>: Equatable {
     static func == (lhs: Category<T>, rhs: Category<T>) -> Bool {
         if lhs.title == rhs.title {
             return true
@@ -26,7 +22,7 @@ struct Category<T>: Equatable {
     var loading: Bool = false
 }
 
-class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class CategoryView<T: Equatable>: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -54,8 +50,8 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
     }()
     
     var categorySelected: ((T) -> ())? = nil
-    private var items: [Category<T>]
     var selectedItem: Category<T>
+    private var items: [Category<T>]
     private var firstIndex: Int?
     private var cellsWidth: CGFloat
     
@@ -84,11 +80,13 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         backgroundColor = UIColor.appPrimaryColour()
         
         addSubview(collectionView)
-        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        collectionView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        
+        collectionView.do({
+            $0.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+            $0.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            $0.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            $0.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        })
+       
         addSubview(selectorView)
         selectorViewWidthConstraint = selectorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: (1.0/CGFloat(items.count))/2)
         selectorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -106,15 +104,23 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         }, completion: nil)
     }
     
-    func selectCategory(category: T, force: Bool) {
+    /// This function imitates a push on a category item
+    func selectCategory(category: T) {
+        if let index = items.firstIndex(where: {$0.type == category}) {
+            moveSelector(toCellAtIndexPath: IndexPath(item: index, section: 0))
+        }
         categorySelected?(category)
     }
     
-    func setCategoryLoadingState(atIndex index: Int, loading: Bool) {
-        items[index].loading = loading
-        collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+    /// Set the loading state of a category
+    func setCategoryLoadingState(category: T, loading: Bool) {
+        if let index = items.firstIndex(where: {$0.type == category}) {
+            items[index].loading = loading
+            collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+        }
     }
     
+    /// This function moves the visual indicator of the category cell
     func moveSelector(toCellAtIndexPath indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) {
             moveSelector(toCell: cell)
@@ -125,17 +131,17 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    internal func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "categoryCell", for: indexPath) as? CategoryCell else {fatalError()}
         cell.configureCell(title: items[indexPath.row].title, loading: items[indexPath.row].loading)
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    internal func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == firstIndex {
             selectedItem = items[indexPath.row]
             collectionView.selectItem(at: IndexPath.init(row: indexPath.row, section: 0), animated: true, scrollPosition: .top)
@@ -146,7 +152,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    internal func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if cellsWidth > collectionView.frame.width {
             let labelWidth = (items[indexPath.row].title as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.appPrimary()])
             return CGSize(width: labelWidth.width + 16, height: collectionView.frame.size.height)
@@ -155,7 +161,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    internal func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if selectedItem != items[indexPath.row] {
             return true
         } else {
@@ -163,7 +169,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    internal func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedItem = items[indexPath.row]
         categorySelected?(items[indexPath.row].type)
         guard let cell = collectionView.cellForItem(at: indexPath) else {return}
@@ -177,7 +183,7 @@ class CategoryView<T>: UIView, UICollectionViewDelegate, UICollectionViewDataSou
     
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
         selectorView.transform = CGAffineTransform(translationX: -scrollView.contentOffset.x, y: 0.0)
     }
 

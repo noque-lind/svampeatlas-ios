@@ -103,9 +103,39 @@ struct UserDefaultsHelper {
         }
     }
     
-    static var hasSeenLocalityHelper: Bool {
-        return UserDefaults.standard.bool(forKey: "hasSeenLocalityHelper")
+    /// Wether the user would like to recieve position reminders, toggleable in settings.
+    static var shouldShowPositionReminderToggle: Bool {
+        get {
+            return UserDefaults.standard.object(forKey: "shouldShowPositionReminderToggle") != nil ? UserDefaults.standard.bool(forKey: "shouldShowPositionReminderToggle"): true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "shouldShowPositionReminderToggle")
+        }
     }
+    
+    /// Keeps track of how many sent observations it has been since user was last reminded about precision importance
+    private static var positionReminderObservationCount: Int {
+        get {
+            print(UserDefaults.standard.integer(forKey: "positionReminderObservationCount"))
+            return UserDefaults.standard.integer(forKey: "positionReminderObservationCount")
+        } set {
+            UserDefaults.standard.set(newValue, forKey: "positionReminderObservationCount")
+        }
+    }
+    
+    static func decreasePositionReminderCounter() {
+        positionReminderObservationCount = positionReminderObservationCount - 1
+    }
+    
+    static var shouldShowPositionReminder: Bool {
+        return shouldShowPositionReminderToggle ? positionReminderObservationCount <= 0: false
+    }
+    
+    
+    static func setHasShownPositionReminder() {
+        UserDefaults.standard.set(5, forKey: "positionReminderObservationCount")
+    }
+    
     
     static var hasAcceptedmagePredictionTerms: Bool {
         return UserDefaults.standard.bool(forKey: "hasAcceptedImagePredictionTerms")
@@ -130,10 +160,6 @@ struct UserDefaultsHelper {
     
     static func setHasAcceptedImagePredictionTerms(_ accepted: Bool) {
         UserDefaults.standard.set(accepted, forKey: "hasAcceptedImagePredictionTerms")
-    }
-    
-    static func setHasSeenLocalityHelper() {
-        UserDefaults.standard.set(true, forKey: "hasSeenLocalityHelper")
     }
     
     static func setSaveImages(_ value: Bool) {

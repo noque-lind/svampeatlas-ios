@@ -216,6 +216,7 @@ class AddObservationViewModel:NSObject {
     let removedImage = ELEvent<Int>.init()
     
     let showNotification = ELEvent<(Notification, ELNotificationView.Style)>.init()
+    let presentVC = ELEvent<UIViewController>.init()
     
     init(action: AddObservationVC.Action, session: Session) {
         self.action = action
@@ -394,7 +395,7 @@ private func getPredictions(imageURL: URL) {
 }
 
     func performAction() {
-    switch action {
+        switch action {
     case .new:
             uploadNew()
     case .edit(observationID: let id):

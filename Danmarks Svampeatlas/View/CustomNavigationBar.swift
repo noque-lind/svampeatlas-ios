@@ -47,10 +47,7 @@ class AppNavigationBar: UIView {
         return button
     }()
     
-    
     private let navigationBarType: NavigationBarType
-    
-    
 
     init(navigationBarType: NavigationBarType) {
         self.navigationBarType = navigationBarType
@@ -65,7 +62,6 @@ class AppNavigationBar: UIView {
     private func setupView() {
         self.alpha = 1
         
-        
         switch navigationBarType {
         case .solid:
             backgroundColor = UIColor.appPrimaryColour()
@@ -76,7 +72,6 @@ class AppNavigationBar: UIView {
             transparentView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
             transparentView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         }
-        
     
         addSubview(contentView)
         contentView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4).isActive = true
@@ -84,8 +79,6 @@ class AppNavigationBar: UIView {
         contentView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4).isActive = true
         contentView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor).isActive = true
     }
-    
-
     
     func setLeftItem(itemType: ItemType) {
         switch itemType {
@@ -95,7 +88,6 @@ class AppNavigationBar: UIView {
             leftMenuItem.setImage(#imageLiteral(resourceName: "Exit"), for: [])
         }
     }
-    
     
 }
 
@@ -146,7 +138,7 @@ class ELNavigationBar: UIView {
     
     var minHeight: CGFloat = 0 {
         didSet {
-            if (_maxHeight == 0) {
+            if _maxHeight == 0 {
                 heightConstraint.isActive = false
                 heightConstraint.constant = minHeight
                 heightConstraint.isActive = true
@@ -202,7 +194,7 @@ class ELNavigationBar: UIView {
     }
     
     func setPercentExpanded(_ percent: CGFloat) {
-        if (maxHeight == minHeight) {
+        if maxHeight == minHeight {
             backgroundColor = UIColor.appPrimaryColour()
             if percent <= 0 {
                 isCollapsed = false
@@ -214,7 +206,6 @@ class ELNavigationBar: UIView {
             let adjustedPercent = ((maxHeight * (1 - percent)) - ((maxHeight - minHeight) * (1 - percent))) / (maxHeight - minHeight)
             contentView?.alpha = percent - adjustedPercent
             backgroundColor = UIColor.appPrimaryColour().withAlphaComponent(1 - percent + adjustedPercent)
-            
             
             if percent < 0.0 {
                 onCollapsed()
@@ -267,4 +258,3 @@ class ELNavigationBar: UIView {
 
     }
 }
-

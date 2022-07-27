@@ -6,9 +6,9 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
+import CoreData
 import Foundation
 import UIKit
-import CoreData
 
 struct Mushroom: Decodable, Equatable {
     static func == (lhs: Mushroom, rhs: Mushroom) -> Bool {
@@ -91,7 +91,6 @@ struct Mushroom: Decodable, Equatable {
         isPlaceholder = true
     }
     
-    
     init(from cdMushroom: CDMushroom) {
         id = Int(cdMushroom.id)
         fullName = cdMushroom.fullName ?? "[...]"
@@ -102,7 +101,6 @@ struct Mushroom: Decodable, Equatable {
         if let cdAttributes = cdMushroom.attributes {
             attributes = Attributes(cdAttributes)
         }
-        
 
         if let cdImages = cdMushroom.images?.allObjects as? [CDImage], cdImages.count != 0 {
             _images = [Image]()
@@ -112,7 +110,6 @@ struct Mushroom: Decodable, Equatable {
             }
         }
     }
-
     
     static func genus() -> Mushroom {
         return Mushroom(id: 60212, fullName: "Fungi Sp.", isGenus: true)
@@ -143,8 +140,6 @@ struct Attributes: Decodable {
         case enName = "vernacular_name_GB"
         case czName = "vernacular_name_CZ"
     }
-    
-    
     
     var description: String? {
         switch Utilities.appLanguage() {
@@ -231,13 +226,11 @@ struct Attributes: Decodable {
         cdAttributes.mDescription = dkDescription
         cdAttributes.mDescriptionEN = enDescription
     }
-    
    
 }
 
 enum ToxicityLevel: String {
     case toxic = "GIFTIG"
-    
     
     var description: String {
         switch self {
@@ -258,13 +251,6 @@ struct Statistics: Decodable {
     }
 }
 
-
-
-
 struct RedlistData: Decodable {
     var status: String?
 }
-
-
-
-

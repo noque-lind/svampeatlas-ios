@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class OnboardingVC: UIViewController {
 
@@ -43,7 +43,6 @@ class OnboardingVC: UIViewController {
             stackView.axis = .vertical
             stackView.spacing = 20
             
-            
             let spinnerStackview: UIStackView = {
                let stackView = UIStackView()
                 stackView.axis = .horizontal
@@ -59,8 +58,6 @@ class OnboardingVC: UIViewController {
                 stackView.addArrangedSubview(spinner)
                 return stackView
             }()
-            
-            
             
             stackView.addArrangedSubview(actionLabel)
             stackView.addArrangedSubview(spinnerStackview)

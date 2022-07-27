@@ -22,7 +22,7 @@ extension UINavigationController {
             appearance.backgroundImage = UIImage()
             appearance.shadowImage = nil
             appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
-            navigationBar.standardAppearance = appearance;
+            navigationBar.standardAppearance = appearance
             navigationBar.scrollEdgeAppearance = navigationBar.standardAppearance
         } else {
             navigationBar.isTranslucent = translucent

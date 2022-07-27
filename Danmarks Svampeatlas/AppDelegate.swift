@@ -6,9 +6,9 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import CoreData
 import ELKit
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     
     var window: UIWindow?
-    var session: Session? = nil {
+    var session: Session? {
         didSet {
             navigationVC.session = session
             
@@ -43,13 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private var onboarding = true
-    private var awaitingController: UIViewController? = nil
-    
+    private var awaitingController: UIViewController?
     
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         
         guard let url = userActivity.webpageURL else {return false}
-        
         
         if url.host != "svampe.databasen.org" {
             // THE url is not correct and therefore we want safari to handle it
@@ -99,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     switch result {
                     case .success(let session):
                         self.session = session
-                    case .failure(_):
+                    case .failure:
                         self.session = nil
                     }
                 }
@@ -132,4 +130,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //        self.saveContext()
     }
 }
-

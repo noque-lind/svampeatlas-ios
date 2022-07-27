@@ -11,7 +11,7 @@ import Foundation
 struct UserDefaultsHelper {
     static var token: String? {
         get {
-            return UserDefaults.standard.string(forKey: "token")
+            UserDefaults.standard.string(forKey: "token")
         } set {
             if newValue == nil {
                 UserDefaults.standard.removeObject(forKey: "token")
@@ -20,7 +20,6 @@ struct UserDefaultsHelper {
             }
         }
     }
-    
     
     static var shouldUpdateDatabase: Bool {
         get {
@@ -67,14 +66,6 @@ struct UserDefaultsHelper {
             return UserDefaults.standard.bool(forKey: "hasBeenAskedToSaveImages")
         } set {
             UserDefaults.standard.set(newValue, forKey: "hasBeenAskedToSaveImages")
-        }
-    }
-    
-    static var hasSeenWhatsNew: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: "hasSeenWhatsNew1.5")
-        } set {
-            UserDefaults.standard.set(newValue, forKey: "hasSeenWhatsNew1.5")
         }
     }
     
@@ -131,11 +122,9 @@ struct UserDefaultsHelper {
         return shouldShowPositionReminderToggle ? positionReminderObservationCount <= 0: false
     }
     
-    
     static func setHasShownPositionReminder() {
-        UserDefaults.standard.set(5, forKey: "positionReminderObservationCount")
+        UserDefaults.standard.set(20, forKey: "positionReminderObservationCount")
     }
-    
     
     static var hasAcceptedmagePredictionTerms: Bool {
         return UserDefaults.standard.bool(forKey: "hasAcceptedImagePredictionTerms")

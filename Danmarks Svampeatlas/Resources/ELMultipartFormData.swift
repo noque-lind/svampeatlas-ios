@@ -50,7 +50,6 @@ struct ELMultipartFormData {
         
         body.append("--\(boundary)--\(lineBreak)".data(using: .utf8)!)
         
-        
         return body
     }
     
@@ -81,6 +80,5 @@ struct ELMultipartFormData {
         
         return body
     }
-    
     
 }

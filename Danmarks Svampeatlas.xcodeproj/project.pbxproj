@@ -919,6 +919,7 @@
 				4A69BC732038D96500D3B88B /* Frameworks */,
 				4A69BC742038D96500D3B88B /* Resources */,
 				DB2DC12823D9ECC000EE9BC4 /* Embed Frameworks */,
+				DB7385592891725800537D60 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -991,7 +992,7 @@
 			mainGroup = 4A69BC6D2038D96500D3B88B;
 			packageReferences = (
 				DB53F05025193372000F3038 /* XCRemoteSwiftPackageReference "Then" */,
-				DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit.git" */,
+				DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit" */,
 			);
 			productRefGroup = 4A69BC772038D96500D3B88B /* Products */;
 			projectDirPath = "";
@@ -1050,6 +1051,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DB7385592891725800537D60 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n    swiftlint --fix\n    swiftlint\nelse\n    echo \"Not installed\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4A69BC722038D96500D3B88B /* Sources */ = {
@@ -1530,7 +1551,7 @@
 				minimumVersion = 2.7.0;
 			};
 		};
-		DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit.git" */ = {
+		DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ftchirou/PredicateKit.git";
 			requirement = {
@@ -1548,7 +1569,7 @@
 		};
 		DBA9283726E94CF700471F0A /* PredicateKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit.git" */;
+			package = DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit" */;
 			productName = PredicateKit;
 		};
 /* End XCSwiftPackageProductDependency section */

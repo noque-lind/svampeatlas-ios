@@ -37,7 +37,6 @@ class ProgressBarView: UIView {
         addSubview(loaderView)
     }
     
-    
     init() {
         super.init(frame: CGRect.zero)
         setupView()

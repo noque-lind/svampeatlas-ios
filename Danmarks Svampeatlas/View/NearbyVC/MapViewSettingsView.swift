@@ -98,7 +98,6 @@ class MapViewSettingsView: UIView {
         radiusStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         radiusStackView.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor, constant: 8).isActive = true
         
-        
         let ageStackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .horizontal
@@ -130,7 +129,6 @@ class MapViewSettingsView: UIView {
         settingsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         settingsButton.leadingAnchor.constraint(equalTo: ageStackView.trailingAnchor, constant: 8).isActive = true
         
-        
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleGesture(gesture:)))
         annotationButton.addGestureRecognizer(panGestureRecognizer)
         return view
@@ -139,9 +137,8 @@ class MapViewSettingsView: UIView {
     private var settingsView: ExpandedSettingsView?
     private var mapViewFilteringSettings: MapViewFilteringSettings
     private var isCollapsed = true
-    var onSearchButtonPressed: (() -> ())?
-    var onAnnotationRelease: ((UIButton) -> ())?
-    
+    var onSearchButtonPressed: (() -> Void)?
+    var onAnnotationRelease: ((UIButton) -> Void)?
     
     init(mapViewFilteringSettings: MapViewFilteringSettings) {
         self.mapViewFilteringSettings = mapViewFilteringSettings
@@ -180,7 +177,6 @@ class MapViewSettingsView: UIView {
     private func collapse() {
         guard !isCollapsed else {return}
         configure()
-        
         
         UIView.animate(withDuration: 0.2, animations: {
             self.settingsView?.alpha = 0.0
@@ -234,8 +230,6 @@ class MapViewSettingsView: UIView {
             self.settingsView?.setupView()
         }
     }
-    
-    
 
     @objc func handleGesture(gesture: UIPanGestureRecognizer) {
         switch gesture.state {
@@ -278,7 +272,7 @@ class MapViewSettingsView: UIView {
     
 }
 
-fileprivate class ExpandedSettingsView: UIView {
+private class ExpandedSettingsView: UIView {
     
     private var distanceLabel: UILabel = {
         let label = UILabel()
@@ -303,7 +297,7 @@ fileprivate class ExpandedSettingsView: UIView {
         label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
         return label
-    } ()
+    }()
     
     private lazy var ageSlider: UISlider = {
         let slider = UISlider()
@@ -327,7 +321,7 @@ fileprivate class ExpandedSettingsView: UIView {
         return button
     }()
     
-    var onSearchButtonPressed: (() -> ())?
+    var onSearchButtonPressed: (() -> Void)?
     var topConstraint = NSLayoutConstraint()
     var leadingConstraint = NSLayoutConstraint()
     var mapViewfilteringSettings: MapViewFilteringSettings
@@ -412,4 +406,3 @@ fileprivate class ExpandedSettingsView: UIView {
         ageLabel.attributedText = mapViewfilteringSettings.ageText
     }
 }
-

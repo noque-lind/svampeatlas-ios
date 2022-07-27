@@ -49,7 +49,7 @@ class CategoryView<T: Equatable>: UIView, UICollectionViewDelegate, UICollection
         return view
     }()
     
-    var categorySelected: ((T) -> ())? = nil
+    var categorySelected: ((T) -> Void)?
     var selectedItem: Category<T>
     private var items: [Category<T>]
     private var firstIndex: Int?

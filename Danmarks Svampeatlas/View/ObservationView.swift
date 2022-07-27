@@ -108,7 +108,6 @@ class ObservationView: UIView {
         setupView()
     }
     
-    
     private func setupView() {
         addSubview(disclosureIndicator)
         disclosureIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -123,8 +122,6 @@ class ObservationView: UIView {
         self.contentStackView.trailingAnchor.constraint(equalTo: disclosureIndicator.leadingAnchor, constant: -8).isActive = true
         self.contentStackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         self.contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-        
         
     }
     
@@ -143,8 +140,6 @@ class ObservationView: UIView {
                 subtitleLabel.text?.append(", \(locality.fullName)")
             }
         }
-       
-        
 
         subtitleLabel.sizeToFit()
         userNameLabel.text = observation.observedBy

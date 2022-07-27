@@ -15,7 +15,6 @@ class DownloadableImageView: UIImageView {
         $0.hidesWhenStopped = true
     })
     
-    
    var url: String?
     
     func loadImage(url: URL) {
@@ -28,7 +27,7 @@ class DownloadableImageView: UIImageView {
             }
         } else {
             addSpinnerIfNecessary(spinnerNeeded: true)
-            URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
+            URLSession.shared.dataTask(with: url) { [weak self] (data, _, _) in
                 guard self?.url == url.absoluteString, let data = data, let image = UIImage.init(data: data) else {return}
                 DispatchQueue.main.async {
                     self?.spinner.stopAnimating()
@@ -78,8 +77,6 @@ extension UIImageView {
         self.image = image
         self.layer.add(crossFade, forKey: "animateContents")
     }
-    
-
 
 //    func downloadImage(size: DataService.ImageSize, urlString: String?) {
 //        guard let urlString = urlString else {return}

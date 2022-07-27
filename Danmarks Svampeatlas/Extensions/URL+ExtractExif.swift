@@ -6,8 +6,8 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import CoreLocation
+import UIKit
 
 extension URL {
     func getExifLocation() -> CLLocation? {

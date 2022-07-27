@@ -51,8 +51,7 @@ class NotificationsTableView: GenericTableView<UserNotification> {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableViewState.value(row: indexPath.row) == nil {
             return 90
-        }
-        else {
+        } else {
             return UITableView.automaticDimension
         }
     }

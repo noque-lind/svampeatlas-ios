@@ -56,7 +56,6 @@ class CommentCell: UITableViewCell {
     private func setupView() {
         backgroundColor = UIColor.clear
         selectionStyle = .none
-
         
         let upperStackView: UIStackView = {
             let stackView = UIStackView()

@@ -17,9 +17,6 @@ class InformationView: UIView {
                stackView.translatesAutoresizingMaskIntoConstraints = false
                return stackView
            }()
-           
-           
-           
     
     enum Style {
         case light

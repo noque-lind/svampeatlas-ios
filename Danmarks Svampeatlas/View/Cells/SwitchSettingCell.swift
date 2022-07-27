@@ -15,6 +15,7 @@ class SwitchSettingCell: UITableViewCell {
         label.font = UIFont.appPrimary()
         label.textColor = UIColor.appWhite()
         label.numberOfLines = 0
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -32,7 +33,7 @@ class SwitchSettingCell: UITableViewCell {
         onValueSet?(switcher.isOn)
     }
     
-    var onValueSet: ((_ newValue: Bool) -> ())?
+    var onValueSet: ((_ newValue: Bool) -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -62,15 +63,14 @@ class SwitchSettingCell: UITableViewCell {
         
         contentView.addSubview(stackView)
         stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
         stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16).isActive = true
         stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
     }
     
-    func configureCell(description: String, value: Bool, onValueSet: @escaping ((_ newValue: Bool) -> ())) {
+    func configureCell(description: String, value: Bool, onValueSet: @escaping (_ newValue: Bool) -> Void) {
         descriptionLabel.text = description
         switcher.isOn = value
         self.onValueSet = onValueSet
     }
 }
-

@@ -6,8 +6,8 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import ELKit
+import Foundation
 
 class DownloaderviewModel: NSObject {
     
@@ -25,12 +25,9 @@ class DownloaderviewModel: NSObject {
         fetch()
     }
     
-    
     private func fetch() {
-  
         
         _state.set(.Loading(message: NSLocalizedString("Downloading taxons", comment: "")))
-        
         
         DataService.instance.getMushrooms(searchString: nil, speciesQueries: [.images(required: false), .danishNames], limit: nil, offset: 0, largeDownload: true, useCache: false) { [weak self] result in
             switch result {
@@ -38,12 +35,12 @@ class DownloaderviewModel: NSObject {
                 let dispatchGroup = DispatchGroup()
                 dispatchGroup.enter()
                 self?._state.set(.Loading(message: NSLocalizedString("Downloading metadata", comment: "")))
-                DataService.instance.downloadSubstrateGroups(completion: { result in
+                DataService.instance.downloadSubstrateGroups(completion: { _ in
                     dispatchGroup.leave()
                 })
                 
                 dispatchGroup.enter()
-                DataService.instance.downloadVegetationTypes() { result in
+                DataService.instance.downloadVegetationTypes { _ in
                     dispatchGroup.leave()
                 }
                 
@@ -61,7 +58,7 @@ class DownloaderviewModel: NSObject {
         _state.set(.Loading(message: NSLocalizedString("Saving to local storage", comment: "")))
         Database.instance.mushroomsRepository.save(items: mushrooms) { [weak self] result in
             switch result {
-            case .success(): self?._state.set(.Completed);  UserDefaultsHelper.lastDataUpdateDate = Date()
+            case .success: self?._state.set(.Completed);  UserDefaultsHelper.lastDataUpdateDate = Date()
             case .failure(let error):
                 self?._state.set(.Error(error: error))
             }

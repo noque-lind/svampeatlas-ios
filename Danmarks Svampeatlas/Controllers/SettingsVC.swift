@@ -6,9 +6,8 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
-
+import UIKit
 
 class SettingsVC: UIViewController {
     

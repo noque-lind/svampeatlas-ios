@@ -6,11 +6,10 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class ErrorCell: UITableViewCell, ELErrorCell {
-
     
     static let identifier = "ErrorCell"
     

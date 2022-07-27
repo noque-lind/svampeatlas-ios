@@ -40,7 +40,7 @@ class ImagesCollectionView: UIView {
         return collectionView
     }()
     
-    var didSelectImage: ((IndexPath) -> ())?
+    var didSelectImage: ((IndexPath) -> Void)?
     
     var currentlyShownCell: UICollectionViewCell? {
         get {
@@ -70,7 +70,6 @@ class ImagesCollectionView: UIView {
         collectionView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        
         
         addSubview(pageControl)
         pageControl.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true

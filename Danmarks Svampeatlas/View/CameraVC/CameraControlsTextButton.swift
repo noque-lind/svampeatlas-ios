@@ -22,7 +22,7 @@ class CameraControlsTextButton: UIButton {
         }
        }
     
-    var pressed: (() -> ())?
+    var pressed: (() -> Void)?
     
     init() {
         super.init(frame: CGRect.zero)
@@ -32,7 +32,6 @@ class CameraControlsTextButton: UIButton {
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
     
     private func setupView() {
         titleLabel?.textAlignment = .center

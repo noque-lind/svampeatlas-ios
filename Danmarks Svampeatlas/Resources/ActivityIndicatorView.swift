@@ -94,7 +94,6 @@ extension Spinner {
             return containerView
     }
     
-    
     public static func start(onView: UIView?) {
         guard let onView = onView else {return}
     
@@ -119,5 +118,3 @@ extension Spinner {
 
 }
     
-    
-

@@ -6,13 +6,13 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
-import Vision
-import ELKit
 import CoreLocation
+import ELKit
 import Foundation
 import Photos
+import UIKit
+import Vision
 
 class CameraVC: UIViewController {
     
@@ -56,7 +56,7 @@ class CameraVC: UIViewController {
         return photos
     }()
     
-    var onImageCaptured: ((URL) -> ())?
+    var onImageCaptured: ((URL) -> Void)?
     
     private var currentImageURL: URL?
     private let usage: Usage
@@ -104,7 +104,6 @@ class CameraVC: UIViewController {
         NotificationCenter.default.removeObserver(self)
         super.viewDidDisappear(animated)
     }
-    
 
     private func setupView() {
         view.backgroundColor = UIColor.black
@@ -252,7 +251,6 @@ class CameraVC: UIViewController {
         if let predictionResults = predictionResults {
             vm.setPredictionResults(.items(items: predictionResults))
         }
-        
 
         self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: AddObservationVC.init(viewModel: vm)))
     }
@@ -272,7 +270,6 @@ class CameraVC: UIViewController {
         }
     }
 }
-
 
 extension CameraVC: CameraViewDelegate {
     func move(expanded: Bool) {
@@ -324,7 +321,7 @@ extension CameraVC: CameraViewDelegate {
         switch usage {
         case .mlPredict(session: let session):
             if let session = session {
-                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom), session: session, takesSelection: (selected: false, title: NSLocalizedString("detailsVC_newSightingPrompt", comment: ""), handler: { [unowned self] (selected) in
+                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom), session: session, takesSelection: (selected: false, title: NSLocalizedString("detailsVC_newSightingPrompt", comment: ""), handler: { [unowned self] (_) in
                     self.createNewObservationRecord(imageURL: self.currentImageURL, mushroom: predictionResult.mushroom, predictionResults: predictionResults, session: session)
                 })), animated: true)
                 

@@ -33,7 +33,6 @@ class RoundedImageView: UIView {
         fatalError()
     }
     
-    
     private func setupView() {
         clipsToBounds = true
         layer.shadowOpacity = Float.shadowOpacity()
@@ -46,8 +45,6 @@ class RoundedImageView: UIView {
         imageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
-    
-        
 
     func configureImage(url: String?) {
             imageView.image = nil

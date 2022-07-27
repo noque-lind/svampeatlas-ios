@@ -12,12 +12,11 @@ class ObservationsData {
     
     private let ds: DataService
     
-    
     init(ds: DataService) {
         self.ds = ds
     }
     
-    func postObservation(userObservation: UserObservation, session: Session, token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
+    func postObservation(userObservation: UserObservation, session: Session, token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> Void) {
         guard let dict = userObservation.returnAsDictionary(session: session, isEdit: false) else {completion(.failure(DataService.DataServiceError.unhandled)); return}
         do {
             let data = try JSONSerialization.data(withJSONObject: dict, options: [])
@@ -27,7 +26,7 @@ class ObservationsData {
                     completion(Result.failure(error))
                 case .success(let data):
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                    guard let dict = json as? Dictionary<String, Any> else {return}
+                    guard let dict = json as? [String: Any] else {return}
                     
                     let observationID = (dict["_id"] as? Int)!
                     
@@ -47,7 +46,7 @@ class ObservationsData {
         }
     }
     
-    func editObservation(withId id: Int, userObservation: UserObservation, session: Session, token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
+    func editObservation(withId id: Int, userObservation: UserObservation, session: Session, token: String, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> Void) {
         guard let dict = userObservation.returnAsDictionary(session: session, isEdit: false) else {completion(.failure(DataService.DataServiceError.unhandled)); return}
         do {
             let data = try JSONSerialization.data(withJSONObject: dict, options: [])
@@ -58,7 +57,7 @@ class ObservationsData {
                     completion(Result.failure(error))
                 case .success(let data):
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                    guard let dict = json as? Dictionary<String, Any> else {return}
+                    guard let dict = json as? [String: Any] else {return}
                     
                     let observationID = (dict["_id"] as? Int)!
                     let userImages: [UserObservation.Image] = userObservation.images.compactMap({
@@ -81,20 +80,18 @@ class ObservationsData {
         }
     }
     
-   
-    
-    func deleteObservation(id: Int, token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
+    func deleteObservation(id: Int, token: String, completion: @escaping (Result<Void, AppError>) -> Void) {
         ds.createDataTaskRequest(url: API.Delete.observation(id: id).encodedURL, method: "DELETE", data: nil, contentType: nil, contentLenght: nil, token: token) { (result) in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
-            case .success(_):
+            case .success:
                 completion(.success(()))
             }
         }
     }
     
-    private func uploadImages(observationID: Int, imageURLs: [URL], token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
+    private func uploadImages(observationID: Int, imageURLs: [URL], token: String, completion: @escaping (Result<Int, AppError>) -> Void) {
                    
         let dispatchGroup = DispatchGroup()
         var uploadedCount = 0
@@ -106,7 +103,7 @@ class ObservationsData {
                 switch result {
                 case .failure(let error):
                     debugPrint(error)
-                case .success(_):
+                case .success:
                     uploadedCount += 1
                 }
             
@@ -119,7 +116,7 @@ class ObservationsData {
         }
     }
     
-    func deleteImage(id: Int, token: String, completion:@escaping (Result<Void, AppError>) -> ()) {
+    func deleteImage(id: Int, token: String, completion:@escaping (Result<Void, AppError>) -> Void) {
         ds.createDataTaskRequest(url: API.Delete.image(id: id).encodedURL, method: "DELETE", data: nil, contentType: nil, contentLenght: nil, token: token) { (result) in
             switch result {
             case .failure(let error): completion(.failure(error))
@@ -128,7 +125,7 @@ class ObservationsData {
         }
     }
     
-    private func uploadImage(observationID: Int, imageURL: URL, token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
+    private func uploadImage(observationID: Int, imageURL: URL, token: String, completion: @escaping (Result<Void, AppError>) -> Void) {
        
         guard let media = ELMultipartFormData.Media(withImage: imageURL, forKey: "file") else {completion(Result.failure(DataService.DataServiceError.encodingError)); return}
         
@@ -140,11 +137,10 @@ class ObservationsData {
             case .failure(let error):
                 print(error)
                 completion(Result.failure(error))
-            case .success(_):
+            case .success:
                 completion(Result.success(()))
             }
         }
     }
-    
     
 }

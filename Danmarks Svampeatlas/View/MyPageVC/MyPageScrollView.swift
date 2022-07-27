@@ -6,11 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
-
-
-
+import UIKit
 
 class MyPageScrollView: UIScrollView {
     
@@ -64,7 +61,7 @@ class MyPageScrollView: UIScrollView {
     
     private lazy var logoutButton: UIButton = {
        let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_LogOut") , for: [])
+        button.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_LogOut"), for: [])
         button.translatesAutoresizingMaskIntoConstraints = false
         button.widthAnchor.constraint(equalToConstant: 24).isActive = true
         button.heightAnchor.constraint(equalToConstant: 24).isActive = true
@@ -111,7 +108,6 @@ class MyPageScrollView: UIScrollView {
         addSubview(logoutLabel)
         logoutLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         logoutLabel.bottomAnchor.constraint(equalTo: logoutButton.topAnchor, constant: -10).isActive = true
-        
        
         addSubview(contentView)
         contentView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -163,7 +159,6 @@ class MyPageScrollView: UIScrollView {
         setupNotifications()
         setupObservations()
     }
-    
 
     private func setupNotifications() {
             notificationsTableView.tableViewState = .Loading
@@ -241,7 +236,7 @@ class MyPageScrollView: UIScrollView {
                     tableView.tableViewState = .Error(error, nil)
                 case .success(let observations):
                     allObservations.append(contentsOf: observations)
-                    if let max = max, allObservations.count >= max{
+                    if let max = max, allObservations.count >= max {
                          tableView.tableViewState = .Items(allObservations)
                     } else {
                         tableView.tableViewState = .Paging(items: allObservations, max: max)

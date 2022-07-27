@@ -6,8 +6,8 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import ELKit
+import Foundation
 
 extension ELTableView {
     static func build(provider: Providor) -> ELTableView<T, Providor> {

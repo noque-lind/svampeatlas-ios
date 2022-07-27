@@ -6,10 +6,9 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
-import MapKit
 import ELKit
-
+import MapKit
+import UIKit
 
 extension MKCoordinateRegion {
     func distanceMax() -> CLLocationDistance {
@@ -20,7 +19,7 @@ extension MKCoordinateRegion {
     }
 }
 
-fileprivate class CustomMapView: MKMapView {
+private class CustomMapView: MKMapView {
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer is UITapGestureRecognizer {
             return true
@@ -121,9 +120,9 @@ class NewMapView: UIView {
     
     weak var delegate: CustomMapViewDelegate?
     
-    var observationPicked: ((_ observation: Observation) -> ())?
-    var localityPicked: ((_ locality: Locality) -> ())?
-    var wasTapped: (() -> ())? {
+    var observationPicked: ((_ observation: Observation) -> Void)?
+    var localityPicked: ((_ locality: Locality) -> Void)?
+    var wasTapped: (() -> Void)? {
         didSet {
             if wasTapped != nil {
                 isUserInteractionEnabled = true
@@ -137,7 +136,6 @@ class NewMapView: UIView {
         @objc private func gestureWasTapped() {
         wasTapped?()
         }
-        
     
     var showsUserLocation: Bool = true {
         didSet {
@@ -151,7 +149,6 @@ class NewMapView: UIView {
             mapView.layoutMargins = self.layoutMargins
         }
     }
-    
     
     var shouldLoad = false {
         didSet {
@@ -205,7 +202,7 @@ class NewMapView: UIView {
         }
     }
     
-    func showError(error: AppError, handler: ((RecoveryAction?) -> ())? = nil) {
+    func showError(error: AppError, handler: ((RecoveryAction?) -> Void)? = nil) {
         shouldLoad = false
         
         DispatchQueue.main.async {
@@ -249,7 +246,6 @@ class NewMapView: UIView {
         let region = MKCoordinateRegion.init(center: center, span: span)
         mapView.setRegion(region, animated: animated)
         
-        
         guard selectAnnotationAtCoordinate, let annotation = mapView.annotations.first(where: {$0.coordinate.distance(to: center) == 0}) else {return}
         mapView.selectAnnotation(annotation, animated: false)
     }
@@ -272,7 +268,6 @@ class NewMapView: UIView {
         localities?.removeAll()
         observations?.removeAll()
     }
-    
     
     func addLocalityAnnotations(localities: [Locality]) {
         errorView = nil
@@ -324,7 +319,6 @@ class NewMapView: UIView {
                     annotations.append(observationPin)
                 }
 
-
                     self.mapView.addAnnotations(annotations)
             }
         case .localities:
@@ -340,7 +334,6 @@ class NewMapView: UIView {
             if setRegion { self.setRegion(center: center, zoomMetres: radius * 2.3) }
         }
     }
-    
     
     func filterByCategory(category: Categories) {
         mapView.removeOverlay(topographicalOverlay)
@@ -427,7 +420,6 @@ extension NewMapView: MKMapViewDelegate {
         }
         return nil
     }
-    
    
     private func returnAnnotationViewForObservationPin(_ observationPin: ObservationPin) -> MKAnnotationView? {
         switch observationPin.detailed {
@@ -460,12 +452,11 @@ extension NewMapView: MKMapViewDelegate {
                 return observationPinView
             }
         case false:
-            guard let heatAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "heatAnnotationView") as? HeatAnnotationView else  {fatalError()}
+            guard let heatAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "heatAnnotationView") as? HeatAnnotationView else {fatalError()}
             heatAnnotationView.clusteringIdentifier = "clusteredHeatAnnotation"
             return heatAnnotationView
         }
     }
-
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKCircle {

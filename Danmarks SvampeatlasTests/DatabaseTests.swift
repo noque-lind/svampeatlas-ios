@@ -10,13 +10,12 @@ import XCTest
 import CoreData
 @testable import Danmarks_Svampeatlas
 
-
 class DatabaseTests: XCTestCase {
 
     let sut = Database.init(type: .test)
-    
+
     override func setUp() {
-        
+
     }
 
     override func tearDown() {
@@ -25,16 +24,16 @@ class DatabaseTests: XCTestCase {
 
  func testSetup() {
         let setupExpectation = expectation(description: "Setup completion called")
-        
+
     sut.setup {
         setupExpectation.fulfill()
     }
-    
+
         waitForExpectations(timeout: 1.0) { (_) in
             XCTAssertTrue(self.sut.persistentContainer.persistentStoreCoordinator.persistentStores.count > 0)
         }
     }
-    
+
     func testContainerType() {
                waitForExpectations(timeout: 1.0) { (_) in
                 XCTAssertEqual(self.sut.persistentContainer.persistentStoreDescriptions.first?.type, NSInMemoryStoreType)

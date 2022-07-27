@@ -6,9 +6,9 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreLocation.CLLocation
 import ELKit
+import Foundation
 
 class UserObservation {
     
@@ -75,7 +75,6 @@ class UserObservation {
         case possible = "mulig"
     }
     
-    
     var observationDate = Date()
     var observationDateAccuracy = "day"
     var substrate: Substrate?
@@ -131,7 +130,7 @@ class UserObservation {
             observationLocation = CLLocation.init(coordinate: .init(latitude: location.latitude, longitude: location.longitude), altitude: 0, horizontalAccuracy: location.accuracy, verticalAccuracy: location.accuracy, timestamp: location.date ?? Date())
         }
         
-        if let cdLocality = note.locality, let locality = Locality(cdLocality)  {
+        if let cdLocality = note.locality, let locality = Locality(cdLocality) {
             self.locality = locality
         }
         

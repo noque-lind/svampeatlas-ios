@@ -16,7 +16,6 @@ class AppNavigationController: UINavigationController {
         view.setLeftItem(itemType: .menuButton)
         return view
     }()
-    
 
     private lazy var menuButton: UIBarButtonItem = {
         let button = UIBarButtonItem(image: #imageLiteral(resourceName: "MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
@@ -27,7 +26,6 @@ class AppNavigationController: UINavigationController {
         super.viewDidLoad()
         setupView()
     }
-    
 
     private func setupView() {
 //

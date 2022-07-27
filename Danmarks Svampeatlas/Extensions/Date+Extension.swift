@@ -48,7 +48,7 @@ extension Date {
         return dateFormatter.string(from: self)
     }
 
-    func checkIfDateIsRecent(ignoreTime: Bool, date: Date) -> String?  {
+    func checkIfDateIsRecent(ignoreTime: Bool, date: Date) -> String? {
         let components = NSCalendar.current.dateComponents([Calendar.Component.day, Calendar.Component.hour], from: date, to: self)
         if let days = components.day, days < 30 {
             if days == 0 {
@@ -56,7 +56,7 @@ extension Date {
                     if hours == 0 {
                         return NSLocalizedString("dateFormatting_rightNow", comment: "")
                     } else {
-                        return String.localizedStringWithFormat(NSLocalizedString("dateFormatting_hoursSince",comment: ""), hours)
+                        return String.localizedStringWithFormat(NSLocalizedString("dateFormatting_hoursSince", comment: ""), hours)
                     }
                 } else {
                     return NSLocalizedString("dateFormatting_today", comment: "")

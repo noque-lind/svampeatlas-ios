@@ -6,10 +6,10 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import CoreData
 import ELKit
+import Foundation
+import UIKit
 
 enum CoreDataError: AppError {
     var recoveryAction: RecoveryAction? {
@@ -45,7 +45,7 @@ enum CoreDataError: AppError {
     
     var message: String {
         switch self {
-             case .initError: return NSLocalizedString("databaseError_initError_message", comment: "")
+        case .initError: return NSLocalizedString("databaseError_initError_message", comment: "")
         case .noEntries(category: let category):
             switch category {
             case .favoritedMushrooms:
@@ -63,7 +63,6 @@ enum CoreDataError: AppError {
         }
     }
     
-    
     case noEntries(category: NoEntriesCategory)
     case contentOutdated
     case readError
@@ -80,7 +79,7 @@ class Database {
         case test
     }
     
-let persistentContainer: NSPersistentContainer
+    let persistentContainer: NSPersistentContainer
     
     private lazy var backgroundContext: NSManagedObjectContext = {
         let context = persistentContainer.newBackgroundContext()
@@ -89,12 +88,12 @@ let persistentContainer: NSPersistentContainer
     }()
     
     fileprivate lazy var mainContext: NSManagedObjectContext = {
-            let context = persistentContainer.viewContext
+        let context = persistentContainer.viewContext
         context.automaticallyMergesChangesFromParent = true
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-            return context
-        }()
-
+        return context
+    }()
+    
     let type: Type
     
     lazy var mushroomsRepository: MushroomsRepository = {
@@ -102,7 +101,7 @@ let persistentContainer: NSPersistentContainer
     }()
     
     lazy var substrateGroupsRepository: SubstrateGroupsRepository = {
-       return SubstrateGroupsRepository(mainThread: mainContext, backgroundThread: backgroundContext)
+        return SubstrateGroupsRepository(mainThread: mainContext, backgroundThread: backgroundContext)
     }()
     
     lazy var vegetationTypeRepository: VegetationTypeRepository = {
@@ -117,13 +116,13 @@ let persistentContainer: NSPersistentContainer
         self.type = type
         
         let persistentContainer: NSPersistentContainer = {
-           let pc = NSPersistentContainer(name: "SvampeAtlas")
-               switch type {
-               case .production: pc.persistentStoreDescriptions.first?.type = NSSQLiteStoreType
-               case .test: pc.persistentStoreDescriptions.first?.type = NSInMemoryStoreType
-               }
+            let pc = NSPersistentContainer(name: "SvampeAtlas")
+            switch type {
+            case .production: pc.persistentStoreDescriptions.first?.type = NSSQLiteStoreType
+            case .test: pc.persistentStoreDescriptions.first?.type = NSInMemoryStoreType
+            }
             
-           return pc
+            return pc
         }()
         
         self.persistentContainer = persistentContainer
@@ -134,7 +133,7 @@ let persistentContainer: NSPersistentContainer
         mainContext.reset()
     }
     
-    func setup(completion: (() -> ())?) {
+    func setup(completion: (() -> Void)?) {
         persistentContainer.loadPersistentStores { (storeDescription, error) in
             if let _ = error as NSError? {
                 ELNotificationView.appNotification(style: .error(actions: [.neutral(CoreDataError.initError.recoveryAction?.localizableText, {
@@ -142,14 +141,14 @@ let persistentContainer: NSPersistentContainer
                     
                     guard let url = self.persistentContainer.persistentStoreDescriptions.first?.url else {return}
                     try? self.persistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: url, ofType: NSSQLiteStoreType, options: nil)
-                     self.persistentContainer.persistentStoreCoordinator.addPersistentStore(with: storeDescription, completionHandler: { (_, _) in
+                    self.persistentContainer.persistentStoreCoordinator.addPersistentStore(with: storeDescription, completionHandler: { (_, _) in
                         completion?()
                     })
                 })]), primaryText: CoreDataError.initError.title, secondaryText: CoreDataError.initError.message, location: .bottom)
-                    .show(animationType: .fromBottom)
+                .show(animationType: .fromBottom)
             } else {
                 DispatchQueue.main.async {
-                     completion?()
+                    completion?()
                 }
             }
         }
@@ -158,10 +157,8 @@ let persistentContainer: NSPersistentContainer
 
 struct CoreDataHelper {
     
-    
     static var managedContext = Database.instance.mainContext
     
-
 }
 
 extension CoreDataHelper {
@@ -180,8 +177,8 @@ extension CoreDataHelper {
                 roles.forEach({ role in
                     cdUser.addToRoles(CDRole.init(context: managedContext).then({$0.name = role.name}))
                 })
-                    }
-           
+            }
+            
             if let imageURL = user.imageURL {
                 DataService.instance.getImage(forUrl: imageURL, size: .full, completion: { (image, imageURL) in
                     ELFileManager.saveMushroomImage(image: image, url: imageURL)
@@ -193,7 +190,6 @@ extension CoreDataHelper {
             debugPrint("Could not save user: \(error.localizedDescription)")
         }
     }
-    
     
     static func fetchUser() -> Result<User, CoreDataError> {
         let fetchRequest = NSFetchRequest<CDUser>(entityName: "CDUser")
@@ -220,12 +216,10 @@ extension CoreDataHelper {
         }
     }
     
-    
-    
 }
 
 extension CoreDataHelper {
-    static func fetchVegetationTypes(overrideOutdateWarning: Bool? = false, completion: (Result<[VegetationType], CoreDataError>) -> ()) {
+    static func fetchVegetationTypes(overrideOutdateWarning: Bool? = false, completion: (Result<[VegetationType], CoreDataError>) -> Void) {
         if UserDefaultsHelper.shouldUpdateDatabase && overrideOutdateWarning == false {
             completion(Result.failure(CoreDataError.contentOutdated))
         } else {
@@ -248,7 +242,7 @@ extension CoreDataHelper {
     static func fetchSubstrateGroup(withID id: Int) -> Substrate? {
         
         let fetchRequest = NSFetchRequest<CDSubstrate>(entityName: "CDSubstrate")
-        fetchRequest.predicate = NSPredicate(format: "id = %i", id);
+        fetchRequest.predicate = NSPredicate(format: "id = %i", id)
         
         do {
             guard let cdSubstrate = try managedContext.fetch(fetchRequest).first else {return nil}
@@ -262,7 +256,7 @@ extension CoreDataHelper {
     static func fetchVegetationType(withID id: Int) -> VegetationType? {
         
         let fetchRequest = NSFetchRequest<CDVegetationType>(entityName: "CDVegetationType")
-        fetchRequest.predicate = NSPredicate(format: "id = %i", id);
+        fetchRequest.predicate = NSPredicate(format: "id = %i", id)
         
         do {
             guard let cdVegetationType = try managedContext.fetch(fetchRequest).first else {return nil}
@@ -273,7 +267,7 @@ extension CoreDataHelper {
         return nil
     }
     
-    static func fetchSubstrateGroups(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[SubstrateGroup], CoreDataError>) -> ()) {
+    static func fetchSubstrateGroups(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[SubstrateGroup], CoreDataError>) -> Void) {
         if UserDefaultsHelper.shouldUpdateDatabase && overrideOutdateWarning == false {
             completion(Result.failure(CoreDataError.contentOutdated))
         } else {
@@ -298,12 +292,11 @@ extension CoreDataHelper {
         }
     }
     
-    static func fetchHosts(overrideOutdateWarning: Bool? = false, completion: (Result<[Host], CoreDataError>) -> ()) {
+    static func fetchHosts(overrideOutdateWarning: Bool? = false, completion: (Result<[Host], CoreDataError>) -> Void) {
         if UserDefaultsHelper.shouldUpdateDatabase && overrideOutdateWarning == false {
             completion(Result.failure(CoreDataError.contentOutdated))
         } else {
             let fetchRequest = NSFetchRequest<CDHost>(entityName: "CDHost")
-            
             
             do {
                 let cdHosts = try managedContext.fetch(fetchRequest)
@@ -319,7 +312,7 @@ extension CoreDataHelper {
     static func fetchHost(withID id: Int) -> Host? {
         
         let fetchRequest = NSFetchRequest<CDHost>(entityName: "CDHost")
-        fetchRequest.predicate = NSPredicate(format: "id = %i", id);
+        fetchRequest.predicate = NSPredicate(format: "id = %i", id)
         
         do {
             guard let cdHost = try managedContext.fetch(fetchRequest).first else {return nil}
@@ -364,7 +357,7 @@ extension CoreDataHelper {
     static func saveSubstrateGroups(substrateGroups: [SubstrateGroup]) {
         do {
             
-            Database.instance.persistentContainer.performBackgroundTask { (context) in
+            Database.instance.persistentContainer.performBackgroundTask { (_) in
                 _ = deleteSubstrateGroups()
                 
             }
@@ -400,11 +393,9 @@ extension CoreDataHelper {
             if !userFound {
                 let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "CDHost")
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-                deleteFetch.predicate = NSPredicate(format: "userFound = %@", NSNumber(booleanLiteral: false));
+                deleteFetch.predicate = NSPredicate(format: "userFound = %@", NSNumber(booleanLiteral: false))
                 try managedContext.execute(deleteRequest)
             }
-            
-            
             
             for host in hosts {
                 let cdHost = CDHost(context: managedContext)
@@ -422,14 +413,7 @@ extension CoreDataHelper {
         }
     }
     
-    
-    
     static func getFavoriteHosts() -> Result<[Host], CoreDataError> {
         return Result.failure(CoreDataError.noEntries(category: .Hosts))
     }
 }
-
-
-
-
-

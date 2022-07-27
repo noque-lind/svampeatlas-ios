@@ -13,8 +13,8 @@ protocol RepositoryDelegate {
     
     /// Make sure this function is always called on the main thread.
     func fetchAll() -> Result<[Item], CoreDataError>
-    func save(items: [Item], completion: @escaping ((Result<Void, CoreDataError>) -> ()))
-    func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> ()))
+    func save(items: [Item], completion: @escaping ((Result<Void, CoreDataError>) -> Void))
+    func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> Void))
 }
 
 open class Repository {

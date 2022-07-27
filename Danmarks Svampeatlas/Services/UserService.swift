@@ -6,11 +6,9 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
+import ELKit
 import Foundation
 import UIKit.UIImage
-import ELKit
-
-
 
 protocol SessionDelegate: class {
     func userUpdated(user: User)
@@ -26,7 +24,6 @@ class Session {
             default: return nil
             }
         }
-        
     
         var message: String {
             switch self {
@@ -74,7 +71,7 @@ class Session {
         UserDefaultsHelper.token = nil
     }
     
-    func getNotificationCount(completion: @escaping (Result<Int, AppError>) -> ()) {
+    func getNotificationCount(completion: @escaping (Result<Int, AppError>) -> Void) {
         DataService.instance.getUserNotificationCount(token: token) { (result) in
             switch result {
             case .failure(let error):
@@ -85,7 +82,7 @@ class Session {
         }
     }
     
-    func getObservationsCount(completion: @escaping (Result<Int, AppError>) -> ()) {
+    func getObservationsCount(completion: @escaping (Result<Int, AppError>) -> Void) {
         DataService.instance.getUserObservationsCount(userID: user.id) { (result) in
             switch result {
             case .failure(let error):
@@ -96,7 +93,7 @@ class Session {
         }
     }
     
-    func getUserNotifications(limit: Int, offset: Int, completion: @escaping (Result<[UserNotification], AppError>) -> ()) {
+    func getUserNotifications(limit: Int, offset: Int, completion: @escaping (Result<[UserNotification], AppError>) -> Void) {
         DataService.instance.getNotifications(userID: user.id, token: token, limit: limit, offset: offset) { (result) in
             switch result {
             case .failure(let error):
@@ -108,7 +105,7 @@ class Session {
         }
     }
     
-    func getObservations(limit: Int, offset: Int, completion: @escaping (Result<[Observation], AppError>) -> ()) {
+    func getObservations(limit: Int, offset: Int, completion: @escaping (Result<[Observation], AppError>) -> Void) {
         DataService.instance.downloadUserObservations(limit: limit, offset: offset, userID: user.id) { (result) in
             switch result {
             case .failure(let error):
@@ -120,23 +117,23 @@ class Session {
         }
     }
     
-    func uploadComment(observationID: Int, comment: String, completion: @escaping (Result<Comment, AppError>) -> ()) {
+    func uploadComment(observationID: Int, comment: String, completion: @escaping (Result<Comment, AppError>) -> Void) {
         DataService.instance.postComment(taxonID: observationID, comment: comment, token: token, completion: completion)
     }
     
-    func uploadObservation(userObservation: UserObservation, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
+    func uploadObservation(userObservation: UserObservation, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> Void) {
         DataService.instance.observationsRepository.postObservation(userObservation: userObservation, session: self, token: token, completion: completion)
     }
     
-    func editObservation(id: Int, userObservation: UserObservation, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> ()) {
+    func editObservation(id: Int, userObservation: UserObservation, completion: @escaping (Result<(observationID: Int, uploadedImagesCount: Int), AppError>) -> Void) {
         DataService.instance.observationsRepository.editObservation(withId: id, userObservation: userObservation, session: self, token: token, completion: completion)
     }
     
-    func deleteObservation(id: Int, completion: @escaping (Result<Void, AppError>) -> ()) {
+    func deleteObservation(id: Int, completion: @escaping (Result<Void, AppError>) -> Void) {
         DataService.instance.deleteObservation(id: id, token: token, completion: completion)
     }
     
-    func reportOffensiveContent(observationID: Int, comment: String?, completion: @escaping () -> ()) {
+    func reportOffensiveContent(observationID: Int, comment: String?, completion: @escaping () -> Void) {
         DataService.instance.postOffensiveContentComment(observationID: observationID, comment: comment, token: token, completion: completion)
     }
     
@@ -144,14 +141,14 @@ class Session {
         DataService.instance.markNotificationAsRead(notificationID: notificationID, token: token)
     }
     
-    func deleteImage(id: Int, completion:  @escaping (Result<Void, AppError>) -> ()) {
+    func deleteImage(id: Int, completion:  @escaping (Result<Void, AppError>) -> Void) {
         DataService.instance.deleteImage(id: id, token: token, completion: completion)
     }
 }
 
-//MARK: Static functions
+// MARK: Static functions
 extension Session {
-    static func resumeSession(completion: @escaping (Result<Session, AppError>) -> ()) {
+    static func resumeSession(completion: @escaping (Result<Session, AppError>) -> Void) {
         guard let token = UserDefaultsHelper.token else {completion(Result.failure(SessionError.notLoggedIn)); return}
         getUser(token: token) { (result) in
             switch result {
@@ -163,7 +160,7 @@ extension Session {
         }
     }
     
-    private static func getUser(token: String, completion: @escaping (Result<User, AppError>) -> ()) {
+    private static func getUser(token: String, completion: @escaping (Result<User, AppError>) -> Void) {
         switch CoreDataHelper.fetchUser() {
         case .failure:
             DataService.instance.downloadUserDetails(token: token) { (result) in
@@ -182,8 +179,7 @@ extension Session {
         }
     }
     
-    
-    static func login(initials: String, password: String, completion: @escaping (Result<Session, AppError>) -> ()) {
+    static func login(initials: String, password: String, completion: @escaping (Result<Session, AppError>) -> Void) {
         DataService.instance.login(initials: initials, password: password) { (result) in
             switch result {
             case .success(let token):
@@ -204,7 +200,6 @@ extension Session {
         }
     }
     
-    
 }
 
 extension Session: SessionDelegate {
@@ -214,7 +209,7 @@ extension Session: SessionDelegate {
 }
 
     fileprivate extension DataService {
-        func login(initials: String, password: String, completion: @escaping (Result<String, AppError>) -> ()) {
+        func login(initials: String, password: String, completion: @escaping (Result<String, AppError>) -> Void) {
             
             guard let data = try? JSONSerialization.data(withJSONObject: ["Initialer": initials, "password": password]) else {completion(Result.failure(DataServiceError.encodingError)); return}
             
@@ -228,14 +223,14 @@ extension Session: SessionDelegate {
                     
                 case .success(let data):
                     guard let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) else {completion(Result.failure(DataServiceError.extractionError)); return}
-                    guard let dictionary = json as? [String: Any],  let token = dictionary["token"] as? String else {completion(Result.failure(DataServiceError.extractionError)); return}
+                    guard let dictionary = json as? [String: Any], let token = dictionary["token"] as? String else {completion(Result.failure(DataServiceError.extractionError)); return}
                     completion(Result.success(token))
                 }
             }
         }
         
-        func getNotifications(userID: Int, token: String, limit: Int, offset: Int, completion: @escaping (Result<[UserNotification], AppError>) -> ()) {
-            createDataTaskRequest(url: API.userNotificationsURL(userID:  userID, limit: limit, offset: offset), token: token) { (result) in
+        func getNotifications(userID: Int, token: String, limit: Int, offset: Int, completion: @escaping (Result<[UserNotification], AppError>) -> Void) {
+            createDataTaskRequest(url: API.userNotificationsURL(userID: userID, limit: limit, offset: offset), token: token) { (result) in
                 switch result {
                 case .failure(let error):
                     completion(Result.failure(error))
@@ -249,9 +244,8 @@ extension Session: SessionDelegate {
                 }
             }
         }
-    
 
-        func getUserNotificationCount(token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
+        func getUserNotificationCount(token: String, completion: @escaping (Result<Int, AppError>) -> Void) {
             createDataTaskRequest(url: API.userNotificationsCountURL(), token: token) { (result) in
                 switch result {
                 case .success(let data):
@@ -264,7 +258,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        func downloadUserDetails(token: String, completion: @escaping (Result<User, AppError>) -> ()) {
+        func downloadUserDetails(token: String, completion: @escaping (Result<User, AppError>) -> Void) {
             createDataTaskRequest(url: API.userURL(), token: token) { (result) in
                 switch result {
                 case .failure(let error):
@@ -280,7 +274,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        func getUserObservationsCount(userID: Int, completion: @escaping (Result<Int, AppError>) -> ()) {
+        func getUserObservationsCount(userID: Int, completion: @escaping (Result<Int, AppError>) -> Void) {
             createDataTaskRequest(url: API.userObservationsCountURL(userID: userID)) { (result) in
                 switch result {
                 case .failure(let error):
@@ -293,7 +287,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        func downloadUserObservations(limit: Int, offset: Int, userID: Int, completion: @escaping (Result<[Observation], AppError>) -> ()) {
+        func downloadUserObservations(limit: Int, offset: Int, userID: Int, completion: @escaping (Result<[Observation], AppError>) -> Void) {
             createDataTaskRequest(url: API.observationsURL(includeQueries: [.locality, .determinationView(taxonID: nil), .comments, .images, .geomNames, .user(responseFilteredByUserID: userID)], limit: limit, offset: offset)) { (result) in
                 switch result {
                 case .failure(let error):
@@ -309,7 +303,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        func postComment(taxonID: Int, comment: String, token: String, completion: @escaping (Result<Comment, AppError>) -> ()) {
+        func postComment(taxonID: Int, comment: String, token: String, completion: @escaping (Result<Comment, AppError>) -> Void) {
             
             let dictionary = ["content": comment]
             
@@ -321,9 +315,9 @@ extension Session: SessionDelegate {
                         completion(Result.failure(error))
                     case .success(let data):
                         do {
-                            let json = try JSONSerialization.jsonObject(with: data, options: []) as! Dictionary<String, Any>
+                            let json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                             
-                            guard let id = json["_id"] as? Int, let date = json["createdAt"] as? String, let content = json["content"] as? String, let user = json["User"] as? Dictionary<String, Any>, let commentername = user["name"] as? String else {completion(Result.failure(DataServiceError.extractionError)); return}
+                            guard let id = json["_id"] as? Int, let date = json["createdAt"] as? String, let content = json["content"] as? String, let user = json["User"] as? [String: Any], let commentername = user["name"] as? String else {completion(Result.failure(DataServiceError.extractionError)); return}
                             let facebook = json["facebook"] as? String
                             let initials = user["Initialer"] as? String
                             
@@ -339,18 +333,18 @@ extension Session: SessionDelegate {
             }
                     }
         
-        func deleteObservation(id: Int, token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
+        func deleteObservation(id: Int, token: String, completion: @escaping (Result<Void, AppError>) -> Void) {
             createDataTaskRequest(url: API.Delete.observation(id: id).encodedURL, method: "DELETE", data: nil, contentType: nil, contentLenght: nil, token: token) { (result) in
                 switch result {
                 case .failure(let error):
                     completion(.failure(error))
-                case .success(_):
+                case .success:
                     completion(.success(()))
                 }
             }
         }
         
-        private func uploadImages(observationID: Int, imageURLs: [URL], token: String, completion: @escaping (Result<Int, AppError>) -> ()) {
+        private func uploadImages(observationID: Int, imageURLs: [URL], token: String, completion: @escaping (Result<Int, AppError>) -> Void) {
                        
             let dispatchGroup = DispatchGroup()
             var uploadedCount = 0
@@ -362,7 +356,7 @@ extension Session: SessionDelegate {
                     switch result {
                     case .failure(let error):
                         debugPrint(error)
-                    case .success(_):
+                    case .success:
                         uploadedCount += 1
                     }
                 
@@ -375,7 +369,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        func deleteImage(id: Int, token: String, completion:@escaping (Result<Void, AppError>) -> ()) {
+        func deleteImage(id: Int, token: String, completion:@escaping (Result<Void, AppError>) -> Void) {
             createDataTaskRequest(url: API.Delete.image(id: id).encodedURL, method: "DELETE", data: nil, contentType: nil, contentLenght: nil, token: token) { (result) in
                 switch result {
                 case .failure(let error): completion(.failure(error))
@@ -384,7 +378,7 @@ extension Session: SessionDelegate {
             }
         }
         
-        private func uploadImage(observationID: Int, imageURL: URL, token: String, completion: @escaping (Result<Void, AppError>) -> ()) {
+        private func uploadImage(observationID: Int, imageURL: URL, token: String, completion: @escaping (Result<Void, AppError>) -> Void) {
            
             guard let media = ELMultipartFormData.Media(withImage: imageURL, forKey: "file") else {completion(Result.failure(DataServiceError.encodingError)); return}
             
@@ -396,13 +390,13 @@ extension Session: SessionDelegate {
                 case .failure(let error):
                     print(error)
                     completion(Result.failure(error))
-                case .success(_):
+                case .success:
                     completion(Result.success(()))
                 }
             }
         }
         
-        func postOffensiveContentComment(observationID: Int, comment: String?, token: String, completion: @escaping () -> ()) {
+        func postOffensiveContentComment(observationID: Int, comment: String?, token: String, completion: @escaping () -> Void) {
             
             do {
                 let data = try JSONSerialization.data(withJSONObject: ["message": comment ?? ""], options: [])
@@ -410,9 +404,9 @@ extension Session: SessionDelegate {
                 createDataTaskRequest(url: API.Post.offensiveContentComment(taxonID: observationID).encodedURL, method: "POST", data: data, contentType: "application/json", token: token) { (result) in
                     
                     switch result {
-                    case .failure(_):
+                    case .failure:
                         completion()
-                    case .success(_):
+                    case .success:
                         completion()
                     }
                 }
@@ -427,11 +421,9 @@ extension Session: SessionDelegate {
                 switch  result {
                 case .failure(let error):
                     debugPrint(error)
-                case .success(_):
+                case .success:
                     return
                 }
             }
         }
 }
-
-

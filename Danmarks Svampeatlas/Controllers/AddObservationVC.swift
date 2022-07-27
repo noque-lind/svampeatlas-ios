@@ -6,11 +6,11 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import CoreLocation
 import ELKit
+import UIKit
 
-class AddObservationVC: UIViewController  {
+class AddObservationVC: UIViewController {
 
     enum Action {
         case new
@@ -131,7 +131,6 @@ class AddObservationVC: UIViewController  {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
@@ -273,7 +272,6 @@ class AddObservationVC: UIViewController  {
                 observationImagesView?.addImage(newObservationImage: image)
             }
         }
-    
         
         viewModel.removedImage.handleEvent { [weak observationImagesView] (index) in
             DispatchQueue.main.async {
@@ -372,9 +370,9 @@ class AddObservationVC: UIViewController  {
         case .new:
              switch categoryView.selectedItem.type {
              case .Details, .Species:
-                 return .init(title: "Fortsæt", icon:  #imageLiteral(resourceName: "Glyphs_DisclosureButton") , backgroundColor: .appSecondaryColour())
+                 return .init(title: NSLocalizedString("Continue", comment: ""), icon: #imageLiteral(resourceName: "Glyphs_DisclosureButton"), backgroundColor: .appSecondaryColour())
              case .Location:
-                 return .init(title: "Indsend", icon:  #imageLiteral(resourceName: "Glyphs_Checkmark"), backgroundColor: .appGreen())
+                 return .init(title: NSLocalizedString("Upload", comment: ""), icon: #imageLiteral(resourceName: "Glyphs_Checkmark"), backgroundColor: .appGreen())
              }
         }
     }
@@ -413,7 +411,7 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch ObservationCategories.allCases[indexPath.row]{
+        switch ObservationCategories.allCases[indexPath.row] {
         case .Species:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "observationSpecieCell", for: indexPath) as? ObservationSpecieCell else {fatalError()}
             cell.delegate = self
@@ -430,7 +428,6 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
             return cell
         }
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? ObservationLocationCell {
@@ -449,7 +446,6 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
             }
         }
     }
-
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
@@ -510,6 +506,5 @@ extension AddObservationVC: UIContextMenuInteractionDelegate {
             }
         }
     }
-    
     
 }

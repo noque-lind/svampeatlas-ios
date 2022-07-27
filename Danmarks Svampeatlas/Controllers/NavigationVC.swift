@@ -40,7 +40,7 @@ class NavigationVC: UIViewController {
             label.numberOfLines = 0
             label.translatesAutoresizingMaskIntoConstraints = false
             
-            if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String    {
+            if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
                 label.text = "Version: \(version) Build \(build)"
             }
             
@@ -93,7 +93,7 @@ class NavigationVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
 
-        if firstLoad  {
+        if firstLoad {
             if session?.user != nil {
                 tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .top)
             } else {
@@ -138,7 +138,6 @@ class NavigationVC: UIViewController {
         view.addConstraint(trailingConstraint)
         trailingConstraint.isActive = true
         
-        
         userView.centerXAnchor.constraint(equalTo: tableView.centerXAnchor).isActive = true
         userView.topAnchor.constraint(equalTo: tableView.topAnchor).isActive = true
         userView.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
@@ -173,13 +172,11 @@ extension NavigationVC: UITableViewDelegate, UITableViewDataSource {
         return 30
     }
     
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
         view.backgroundColor = UIColor.clear
         return view
     }
-    
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50

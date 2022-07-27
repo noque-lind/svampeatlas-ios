@@ -196,7 +196,6 @@ class AppScrollView: UIScrollView {
             return stackView
         }
         
-        
         if let title = title {
             let stackView: UIStackView = {
                let stackView = UIStackView()
@@ -220,7 +219,6 @@ class AppScrollView: UIScrollView {
         }
     }
     
-    
     func addText(title: String, text: String?) {
         guard let text = text, text != "" else {return}
         
@@ -234,7 +232,7 @@ class AppScrollView: UIScrollView {
             paragraphStyle.hyphenationFactor = 1.0
             
             // Swift 4.2++
-            let attributedString = NSMutableAttributedString(string: text.capitalizeFirst(), attributes: [NSAttributedString.Key.paragraphStyle:paragraphStyle])
+            let attributedString = NSMutableAttributedString(string: text.capitalizeFirst(), attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
             label.attributedText = attributedString
             return label
         }()

@@ -13,19 +13,15 @@ class showImageAnimationInteractor: UIPercentDrivenInteractiveTransition {
     var shouldFinish = false
 }
 
-
 class ShowImageAnimationController: NSObject, UIViewControllerAnimatedTransitioning {
     
     private let imageFrame: CGRect
     private let isBeingPresented: Bool
     
-    
-    
     init(isBeingPresented: Bool, imageFrame: CGRect) {
         self.isBeingPresented = isBeingPresented
         self.imageFrame = imageFrame
     }
-    
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
@@ -36,18 +32,15 @@ class ShowImageAnimationController: NSObject, UIViewControllerAnimatedTransition
             let fromVC = transitionContext.viewController(forKey: .from) as? ImageVC,
             let toVC = transitionContext.viewController(forKey: .to),
             let snapshot = toVC.view.snapshotView(afterScreenUpdates: true) else {return}
-
     
     let containerView = transitionContext.containerView
     let finalFrame = transitionContext.finalFrame(for: toVC)
         
 //        snapshot.frame = imageFrame
-
         
         if isBeingPresented {
             
         } else {
-        
         
         containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
        

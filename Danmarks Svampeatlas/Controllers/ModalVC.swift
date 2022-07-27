@@ -93,12 +93,10 @@ class ModalVC: UIViewController {
         return stackView
     }()
     
-    
-    
     var stack: UIStackView?
     private var heightAnchor = NSLayoutConstraint()
     private let terms: Terms
-    var wasDismissed: (() -> ())?
+    var wasDismissed: (() -> Void)?
     
     init(terms: Terms) {
         self.terms = terms
@@ -110,7 +108,6 @@ class ModalVC: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -135,14 +132,12 @@ class ModalVC: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         
-        
         let scrollView: UIScrollView = {
             let scrollView = UIScrollView()
             scrollView.backgroundColor = UIColor.appSecondaryColour()
             scrollView.translatesAutoresizingMaskIntoConstraints = false
             scrollView.layer.cornerRadius = 16
             scrollView.addSubview(contentStackView)
-            
             
             contentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
             contentStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
@@ -151,7 +146,6 @@ class ModalVC: UIViewController {
             contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
             return scrollView
         }()
-        
         
         view.addSubview(scrollView)
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true

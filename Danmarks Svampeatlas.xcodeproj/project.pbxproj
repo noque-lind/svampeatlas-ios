@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2083452D22574C4300E86730 /* AVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2083452C22574C4300E86730 /* AVView.swift */; };
 		20D4C810223A7962006AA9E9 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D4C80F223A7962006AA9E9 /* NavigationItem.swift */; };
+		3B2F6B494A54DA4FFBF8BC99 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F64EC5561053693EE88EE /* .swiftlint.yml */; };
 		4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0683D0207A581D00EB06D7 /* ResultsView.swift */; };
 		4A1B178120C3F6E200E1F1B2 /* ToxicityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */; };
 		4A1F76012079606B0082B873 /* CameraVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F76002079606B0082B873 /* CameraVC.swift */; };
@@ -234,6 +235,7 @@
 		2083452C22574C4300E86730 /* AVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVView.swift; sourceTree = "<group>"; };
 		20D4C807223A62B0006AA9E9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20D4C80F223A7962006AA9E9 /* NavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
+		3B2F64EC5561053693EE88EE /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		4A0683D0207A581D00EB06D7 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 		4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToxicityView.swift; sourceTree = "<group>"; };
 		4A1F76002079606B0082B873 /* CameraVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraVC.swift; sourceTree = "<group>"; };
@@ -693,6 +695,7 @@
 				DBA96F9A26EF6DE20092EAA0 /* mapping_1.4_1.5.xcmappingmodel */,
 				DB2DC11C23D8BF1C00EE9BC4 /* Localizable.strings */,
 				DBB52C4123DAFF38004A4CBA /* InfoPlist.strings */,
+				3B2F64EC5561053693EE88EE /* .swiftlint.yml */,
 			);
 			path = "Danmarks Svampeatlas";
 			sourceTree = "<group>";
@@ -988,7 +991,7 @@
 			mainGroup = 4A69BC6D2038D96500D3B88B;
 			packageReferences = (
 				DB53F05025193372000F3038 /* XCRemoteSwiftPackageReference "Then" */,
-				DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit" */,
+				DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit.git" */,
 			);
 			productRefGroup = 4A69BC772038D96500D3B88B /* Products */;
 			projectDirPath = "";
@@ -1035,6 +1038,7 @@
 				DB2DC11A23D8BF1C00EE9BC4 /* Localizable.strings in Resources */,
 				DB7F04F922AD099C00785AF8 /* CaviarDreams_Bold.ttf in Resources */,
 				4A69BC842038D96500D3B88B /* Assets.xcassets in Resources */,
+				3B2F6B494A54DA4FFBF8BC99 /* .swiftlint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1526,7 +1530,7 @@
 				minimumVersion = 2.7.0;
 			};
 		};
-		DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit" */ = {
+		DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ftchirou/PredicateKit.git";
 			requirement = {
@@ -1544,7 +1548,7 @@
 		};
 		DBA9283726E94CF700471F0A /* PredicateKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit" */;
+			package = DBA9283626E94CF700471F0A /* XCRemoteSwiftPackageReference "PredicateKit.git" */;
 			productName = PredicateKit;
 		};
 /* End XCSwiftPackageProductDependency section */

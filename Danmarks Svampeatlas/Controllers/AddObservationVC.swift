@@ -10,13 +10,17 @@ import UIKit
 import CoreLocation
 import ELKit
 
-class AddObservationVC: UIViewController  {
+class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegate {
 
     enum Action {
         case new
         case edit(observationID: Int)
         case newNote
         case editNote(node: CDNote)
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
     }
     
     private enum ObservationCategories: CaseIterable, Equatable {
@@ -240,6 +244,7 @@ class AddObservationVC: UIViewController  {
     }
     
     private func setupViewModel() {
+        
         viewModel.setupState.observe { [weak self] (state) in
             DispatchQueue.main.async {
                 switch state {
@@ -298,7 +303,7 @@ class AddObservationVC: UIViewController  {
                     self?.categoryView.setCategoryLoadingState(atIndex: ObservationCategories.allCases.firstIndex(of: .Location)!, loading: true)
                 case .items(item: let location):
                     if let cell = self?.collectionView.visibleCells.first as? ObservationLocationCell {
-                        cell.configureObservationLocation(location: location)
+                        cell.configureObservationLocation(location: location.item, locked: location.locked)
                     }
                     self?.categoryView.setCategoryLoadingState(atIndex: ObservationCategories.allCases.firstIndex(of: .Location)!, loading: false)
                     
@@ -325,7 +330,7 @@ class AddObservationVC: UIViewController  {
             guard let locality = locality else {return}
             DispatchQueue.main.async {
                 if let cell = self?.collectionView.visibleCells.first as? ObservationLocationCell {
-                    cell.configureLocality(locality: locality)
+                    cell.configureLocality(locality: locality.locality, locked: locality.locked)
                 }
             }
         }
@@ -411,17 +416,18 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? ObservationLocationCell {
+            // We want to check reminder state, every time position screen is shown
+            validateReminderState()
+            if let location = viewModel.observationLocation.value?.item {
+                cell.configureObservationLocation(location: location.item, locked: location.locked)
+            }
 
-            viewModel.observationLocation.value?.item?.do({
-                cell.configureObservationLocation(location: $0)
-            })
-            
             viewModel.localities.value.item?.do({
                 cell.configureLocalities(localities: $0)
             })
             
             if let locality = viewModel.locality.value {
-                cell.configureLocality(locality: locality)
+                cell.configureLocality(locality: locality.locality, locked: locality.locked)
             }
         }
     }
@@ -447,6 +453,7 @@ extension AddObservationVC: NavigationDelegate {
     }
     
     func presentVC(_ vc: UIViewController) {
+        vc.popoverPresentationController?.delegate = self
         present(vc, animated: true, completion: nil)
     }
 }

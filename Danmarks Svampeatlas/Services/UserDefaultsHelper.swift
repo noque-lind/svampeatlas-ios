@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 struct UserDefaultsHelper {
     static var token: String? {
@@ -59,6 +60,41 @@ struct UserDefaultsHelper {
             return ids
         } else {
             return nil
+        }
+    }
+    
+    static var lockedLocality: Locality? {
+        get {
+            if let data = UserDefaults.standard.data(forKey: "LockedLocality") {
+                return try? JSONDecoder().decode(Locality.self, from: data)
+            } else {
+                return nil
+        }
+        }
+        set {
+            if let data = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(data, forKey: "LockedLocality")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "LockedLocality")
+            }
+        }
+    }
+    
+    static var lockedLocation: CLLocation? {
+        get {
+            if let loadedLocation = UserDefaults.standard.data(forKey: "LockedLocation") {
+                return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(loadedLocation) as? CLLocation
+            } else {
+                return nil
+            }
+        } set {
+            if let location = newValue {
+                if let encodedLocation = try? NSKeyedArchiver.archivedData(withRootObject: location, requiringSecureCoding: false) {
+                    UserDefaults.standard.set(encodedLocation, forKey: "LockedLocation")
+                }
+            } else {
+                UserDefaults.standard.removeObject(forKey: "LockedLocation")
+            }
         }
     }
     

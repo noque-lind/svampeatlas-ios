@@ -122,9 +122,7 @@ class TermsVC: UIViewController {
         super.viewDidLayoutSubviews()
         
         let maxHeight: CGFloat = (UIScreen.main.bounds.height / 4) * 3
-        
-        print(contentStackView.frame.height)
-        
+
         if contentStackView.frame.height >= (maxHeight) {
             heightAnchor.constant = maxHeight
         } else {

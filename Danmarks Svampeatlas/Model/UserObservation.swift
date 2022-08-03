@@ -88,8 +88,8 @@ class UserObservation {
     var determinationNotes: String?
     var note: String?
     var images = [Image]()
-    var observationLocation: CLLocation?
-    var locality: Locality?
+    var observationLocation: (item: CLLocation, locked: Bool)?
+    var locality: (locality: Locality, locked: Bool)?
     
     init() {
         if let substrateID = UserDefaultsHelper.defaultSubstrateID {
@@ -105,6 +105,14 @@ class UserObservation {
         if let hostsIDS = UserDefaultsHelper.defaultHostsIDS {
             hosts = hostsIDS.compactMap({CoreDataHelper.fetchHost(withID: $0)})
             lockedHosts = true
+        }
+        
+        if let locality = UserDefaultsHelper.lockedLocality {
+            self.locality = (locality: locality, locked: true)
+        }
+        
+        if let location = UserDefaultsHelper.lockedLocation {
+            self.observationLocation = (item: location, locked: true)
         }
     }
     
@@ -128,11 +136,11 @@ class UserObservation {
         }
         
         if let location = note.location {
-            observationLocation = CLLocation.init(coordinate: .init(latitude: location.latitude, longitude: location.longitude), altitude: 0, horizontalAccuracy: location.accuracy, verticalAccuracy: location.accuracy, timestamp: location.date ?? Date())
+            observationLocation = (CLLocation.init(coordinate: .init(latitude: location.latitude, longitude: location.longitude), altitude: 0, horizontalAccuracy: location.accuracy, verticalAccuracy: location.accuracy, timestamp: location.date ?? Date()), false)
         }
         
-        if let cdLocality = note.locality, let locality = Locality(cdLocality)  {
-            self.locality = locality
+        if let cdLocality = note.locality, let locality = Locality(cdLocality) {
+            self.locality = (locality, false)
         }
         
         if let images = note.images?.allObjects as? [CDNoteImage] {
@@ -157,8 +165,8 @@ class UserObservation {
             observationDate = Date()
         }
         
-        observationLocation = observation.location
-        locality = observation.locality
+        observationLocation = (observation.location, false)
+        locality =  (observation.locality != nil) ? (observation.locality!, false): nil
         images = observation.images?.compactMap({
                                                     guard let url = URL(string: $0.url), let createdDate = $0.createdDate else {return nil}
                                                     return Image(type: .uploaded(id: $0.id, creationDate: Date(ISO8601String: createdDate), userIsValidator: session?.user.isValidator ?? false), url: url, filename: "")}) ?? []
@@ -177,7 +185,7 @@ class UserObservation {
         guard substrate != nil else {return .noSubstrateGroup}
         guard vegetationType != nil else {return .noVegetationType}
         guard locality != nil else {return .noLocality}
-        guard let observationLocation =  observationLocation else {return .noCoordinates}
+        guard let observationLocation = observationLocation?.item else {return .noCoordinates}
         if !overrideAccuracy {
             guard observationLocation.horizontalAccuracy <= 500 else {return .lowAccuracy(accurracy: observationLocation.horizontalAccuracy)}
         }
@@ -196,9 +204,9 @@ class UserObservation {
         dict["browser"] = "Native App"
         dict["substrate_id"] = substrate.id
         dict["vegetationtype_id"] = vegetationType.id
-        dict["decimalLatitude"] = observationCoordinate.coordinate.latitude
-        dict["decimalLongitude"] = observationCoordinate.coordinate.longitude
-        dict["accuracy"] = observationCoordinate.horizontalAccuracy
+        dict["decimalLatitude"] = observationCoordinate.item.coordinate.latitude
+        dict["decimalLongitude"] = observationCoordinate.item.coordinate.longitude
+        dict["accuracy"] = observationCoordinate.item.horizontalAccuracy
 
         if let ecologyNote = ecologyNote {
             dict["ecologynote"] = ecologyNote
@@ -220,11 +228,11 @@ class UserObservation {
 
         dict["users"] = [["_id": session.user.id, "Initialer": session.user.initials, "email": session.user.email, "facebook": session.user.facebookID ?? "", "name": session.user.name]]
 
-        if let geoName = locality.geoName {
+        if let geoName = locality.locality.geoName {
             dict["geonameId"] = geoName.geonameId
             dict["geoname"] = ["geonameId": geoName.geonameId, "name": geoName.name, "adminName1": geoName.adminName1, "lat": geoName.lat, "lng": geoName.lng, "countryName": geoName.countryName, "countryCode": geoName.countryCode, "fcodeName": geoName.fcodeName, "fclName": geoName.fclName]
         } else {
-            dict["locality_id"] = locality.id
+            dict["locality_id"] = locality.locality.id
         }
 
         if !isEdit {

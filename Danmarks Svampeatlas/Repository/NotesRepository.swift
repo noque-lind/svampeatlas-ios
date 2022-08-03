@@ -132,11 +132,11 @@ class NotesRepository: Repository, RepositoryDelegate {
         }
         
         if let locality = userObservation.locality {
-            note.locality = locality.toCD(context: backgroundThread)
+            note.locality = locality.locality.toCD(context: backgroundThread)
         }
         
         if let observationLocation = userObservation.observationLocation {
-            note.location = observationLocation.toCD(context: backgroundThread)
+            note.location = observationLocation.item.toCD(context: backgroundThread)
         }
         
         note.images?.allObjects.forEach({

@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import CoreData
 
-struct Locality: Decodable, Equatable {
+struct Locality: Decodable, Encodable, Equatable {
     static func == (lhs: Locality, rhs: Locality) -> Bool {
         if lhs.id == rhs.id {return true} else {return false}
     }
@@ -36,6 +36,7 @@ struct Locality: Decodable, Equatable {
             }
         }
     }
+
     
     private enum CodingKeys: String, CodingKey {
         case id = "_id"

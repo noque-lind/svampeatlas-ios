@@ -83,18 +83,18 @@ class AddObservationViewModel:NSObject {
    
     private var userObservation: UserObservation = UserObservation() {
         didSet {
-            if userObservation.observationLocation != self.observationLocation.value?.item {
-                if let observationLocation = userObservation.observationLocation{
+            if userObservation.observationLocation?.item != self.observationLocation.value?.item?.item {
+                if let observationLocation = userObservation.observationLocation {
                     _observationLocation.set(.items(item: observationLocation))
                 } else {
                     _observationLocation.set(.empty)
                 }
             }
-           
-            if userObservation.locality != self.locality.value {
+            
+            if userObservation.locality?.locality != self.locality.value?.locality {
                 if let locality = userObservation.locality {
                     _locality.set(locality)
-                    _localities.set(.items(item: [locality]))
+                    _localities.set(.items(item: [locality.locality]))
                 } else {
                     _locality.set(nil)
                     _localities.set(.empty)
@@ -192,13 +192,15 @@ class AddObservationViewModel:NSObject {
     }
     lazy var images = ELListenerImmutable(_images)
     
-    private lazy var _locality = ELListener<Locality?>.init(nil) { [weak self] value in
+    private lazy var _locality = ELListener<(locality: Locality, locked: Bool)?>.init(nil) { [weak self] value in
         self?.userObservation.locality = value
+        UserDefaultsHelper.lockedLocality = (value?.locked ?? false) ? value?.locality: nil
     }
     lazy var locality = ELListenerImmutable(_locality)
     
-    private  lazy var _observationLocation = ELListener<SimpleState<CLLocation>?>.init(nil) { [weak self] value in
+    private  lazy var _observationLocation = ELListener<SimpleState<(item: CLLocation, locked: Bool)>?>.init(nil) { [weak self] value in
         self?.userObservation.observationLocation = value?.item
+        UserDefaultsHelper.lockedLocation = (value?.item?.locked ?? false) ? value?.item?.item: nil
     }
     lazy var observationLocation = ELListenerImmutable(_observationLocation)
     
@@ -242,19 +244,19 @@ class AddObservationViewModel:NSObject {
                     self?.showNotification.post(value:
                                                     (Notification.useImageMetadata(precision: imageLocation.horizontalAccuracy),
                                                      .action(backgroundColor: UIColor.appSecondaryColour(), actions: [
-                                                                .positive(NSLocalizedString("addObservationVC_useImageMetadata_positive", comment: ""), { [weak self] in
-                                                                    self?._observationLocation.set(.items(item: imageLocation))
-                                                                    self?.observationDate = imageLocation.timestamp
-                                                                    self?.setupState.set(.items(item: ()))
-                                                                    self?.findLocality(location: imageLocation)
-                                                                }),
-                                                                .negative(   NSLocalizedString("addObservationVC_useImageMetadata_negative", comment: ""), { [weak self] in
-                                                                    self?._observationLocation.set(.items(item: location))
-                                                                    self?.findLocality(location: location)
-                                                                })])))
+                                                        .positive(NSLocalizedString("addObservationVC_useImageMetadata_positive", comment: ""), { [weak self] in
+                                                            self?._observationLocation.set(.items(item: (imageLocation, false)))
+                                                            self?.observationDate = imageLocation.timestamp
+                                                            self?.setupState.set(.items(item: ()))
+                                                            self?.findLocality(location: imageLocation)
+                                                        }),
+                                                        .negative(   NSLocalizedString("addObservationVC_useImageMetadata_negative", comment: ""), { [weak self] in
+                                                            self?._observationLocation.set(.items(item: (location, false)))
+                                                            self?.findLocality(location: location)
+                                                        })])))
                     
                 } else {
-                    self?._observationLocation.set(.items(item: location))
+                    self?._observationLocation.set(.items(item: (location, false)))
                     self?.findLocality(location: location)
                 }
             default: return
@@ -267,8 +269,13 @@ class AddObservationViewModel:NSObject {
     func start(action: AddObservationVC.Action) {
         switch action {
         case .new, .newNote:
+            userObservation = UserObservation()
             setupState.set(.items(item: ()))
-            locationManager.start()
+            if (userObservation.observationLocation?.item == nil) {
+                locationManager.start()
+            } else if let location = observationLocation.value?.item, userObservation.locality?.locality == nil {
+                findLocality(location: location.item)
+            }
         case .editNote(node: let note):
             userObservation = UserObservation(note)
         case .edit(observationID: let id):
@@ -297,18 +304,31 @@ func reset() {
         getPredictions(imageURL: newObservationImage.url)
     }
     
-    _images.value.append(newObservationImage)
-    addedImage.post(value: newObservationImage)
-        if let imageLocation = newObservationImage.url.getExifLocation(), let currentObservationLocation = _observationLocation.value?.item, currentObservationLocation.distance(from: imageLocation) > imageLocation.horizontalAccuracy {
-        showNotification.post(value: (Notification.useImageMetadata(precision: imageLocation.horizontalAccuracy),
-                                      .action(backgroundColor: UIColor.appSecondaryColour(), actions: [
-                                                .positive(NSLocalizedString("addObservationVC_useImageMetadata_positive", comment: ""), { [weak self] in
-                                                    self?._observationLocation.set(.items(item: imageLocation))
-                                                    self?.observationDate = imageLocation.timestamp
-                                                    self?.setupState.set(.items(item: ()))
-                                                    self?.findLocality(location: imageLocation)
-                                                }),
-                                                .negative(NSLocalizedString("addObservationVC_useImageMetadata_negative", comment: ""), {})])))
+    func reset() {
+        userObservation = UserObservation()
+        _predictionResults.set(.empty)
+        uploadState.set(.empty)
+        start(action: .new)
+    }
+    
+    func addImage(newObservationImage: UserObservation.Image) {
+        if _images.value.count == 0 && mushroom == nil {
+            getPredictions(imageURL: newObservationImage.url)
+        }
+        
+        _images.value.append(newObservationImage)
+        addedImage.post(value: newObservationImage)
+        if let imageLocation = newObservationImage.url.getExifLocation(), let currentObservationLocation = _observationLocation.value?.item, currentObservationLocation.item.distance(from: imageLocation) > imageLocation.horizontalAccuracy {
+            showNotification.post(value: (Notification.useImageMetadata(precision: imageLocation.horizontalAccuracy),
+                                          .action(backgroundColor: UIColor.appSecondaryColour(), actions: [
+                                            .positive(NSLocalizedString("addObservationVC_useImageMetadata_positive", comment: ""), { [weak self] in
+                                                self?._observationLocation.set(.items(item: (imageLocation, false)))
+                                                self?.observationDate = imageLocation.timestamp
+                                                self?.setupState.set(.items(item: ()))
+                                                self?.findLocality(location: imageLocation)
+                                            }),
+                                            .negative(NSLocalizedString("addObservationVC_useImageMetadata_negative", comment: ""), {})])))
+        }
     }
 }
 
@@ -343,35 +363,55 @@ func reset() {
 }
     
     func setLocality(locality: Locality?) {
-        _locality.set(locality)
+        if let locality = locality {
+            _locality.set((locality, false))
+        } else {
+            _locality.set(nil)
+        }
+    }
+    
+    func setLocalityLockedState(locked: Bool) {
+        if let locality = _locality.value {
+            _locality.set((locality.locality, locked))
+        }
     }
 
     func setObservationLocation(_ location: CLLocation?) {
         if let location = location {
-            _observationLocation.set(.items(item: location))
+            _observationLocation.set(.items(item: (location, false)))
         } else {
             _observationLocation.set(.empty)
+        }
+    }
+    
+    func setLocationLockedState(locked: Bool) {
+        if let location = observationLocation.value?.item {
+            _observationLocation.set(.items(item: (location.item, locked)))
         }
     }
     
     func setPredictionResults(_ pr: Section<PredictionResult>.State) {
         _predictionResults.set(pr)
     }
-
-private func findLocality(location: CLLocation) {
-    _localities.set(.loading)
-    DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self] result in
-        switch result {
-        case .success(let localities):
-            self?._localities.set(.items(item: localities))
-            let closest = localities.min(by: {$0.location.distance(from: location) < $1.location.distance(from: location)})
-            
-            if let closest = closest {
-                self?._locality.set(closest)
-                self?.showNotification.post(value: (Notification.foundLocationAndLocality(observationLocation: location, locality: closest),
-                                                    .success))
-            } else {
-                self?.showNotification.post(value: (.localityError(error: nil), .error(actions: nil)))
+    
+    private func findLocality(location: CLLocation) {
+        _localities.set(.loading)
+        DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self] result in
+            switch result {
+            case .success(let localities):
+                self?._localities.set(.items(item: localities))
+                let closest = localities.min(by: {$0.location.distance(from: location) < $1.location.distance(from: location)})
+                
+                if let closest = closest {
+                    self?._locality.set((closest, false))
+                    self?.showNotification.post(value: (Notification.foundLocationAndLocality(observationLocation: location, locality: closest),
+                                                        .success))
+                } else {
+                    self?.showNotification.post(value: (.localityError(error: nil), .error(actions: nil)))
+                }
+            case .failure(let error):
+                self?._localities.set(.error(error: error, handler: nil))
+                self?.showNotification.post(value: (.localityError(error: error), .error(actions: nil)))
             }
         case .failure(let error):
             self?._localities.set(.error(error: error, handler: nil))
@@ -514,13 +554,13 @@ private func getPredictions(imageURL: URL) {
         }
         
     }
-
-func setCustomLocation(location: CLLocation) {
-    _observationLocation.set(.items(item: location))
-    findLocality(location: location)
-}
-
-func refindLocation() {
-    locationManager.start()
-}
+    
+    func setCustomLocation(location: CLLocation) {
+        _observationLocation.set(.items(item: (location, false)))
+        findLocality(location: location)
+    }
+    
+    func refindLocation() {
+        locationManager.start()
+    }
 }

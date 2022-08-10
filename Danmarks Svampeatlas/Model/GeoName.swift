@@ -8,11 +8,12 @@
 
 import Foundation
 
-class GeoNames: Decodable {
+class GeoNames: Decodable, Encodable {
     public private(set) var geonames: [GeoName]
+    
 }
 
-struct GeoName: Decodable {
+struct GeoName: Decodable, Encodable {
     var geonameId: Int
     var name: String
     var countryName: String

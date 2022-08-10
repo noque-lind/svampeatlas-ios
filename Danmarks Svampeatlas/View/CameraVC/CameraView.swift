@@ -48,13 +48,12 @@ class CameraView: UIVisualEffectView {
     }
     
     private var cameraVCUsage: CameraVC.Usage
-    weak var delegate: CameraViewDelegate? = nil {
+    weak var delegate: CameraViewDelegate? {
         didSet {
             cameraControlsView.delegate = delegate
             resultsView.delegate = delegate
         }
     }
-    
     
     init(cameraVCUsage: CameraVC.Usage) {
         self.cameraVCUsage = cameraVCUsage
@@ -88,7 +87,7 @@ class CameraView: UIVisualEffectView {
             self.cameraControlsView.alpha = 0
             UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
                 self.superview?.layoutIfNeeded()
-            }) { (finished) in
+            }) { (_) in
                 DispatchQueue.main.async {
                     self.resultsView.showResults()
                 }
@@ -119,10 +118,9 @@ class CameraView: UIVisualEffectView {
         
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             self.superview?.layoutIfNeeded()
-        }) { (finished) in
+        }) { (_) in
         }
     }
-    
     
     func setCameraControlsState(state: CameraControlsView.State) {
         cameraControlsView.setState(state: state)

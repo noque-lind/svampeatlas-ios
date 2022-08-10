@@ -6,17 +6,15 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 import PredicateKit
 
 class MushroomsRepository: Repository {
-
     
     typealias Item = Mushroom
     
-    
-    private func getDevice() throws -> CDLocal  {
+    private func getDevice() throws -> CDLocal {
         
         let fetchRequest: NSFetchRequest<CDLocal> = CDLocal.fetchRequest()
         if let cdDevice = (try backgroundThread.fetch(fetchRequest)).first {
@@ -46,7 +44,7 @@ class MushroomsRepository: Repository {
         }
     }
     
-    func searchTaxon(searchString: String, completion: @escaping ((Result<[Mushroom], CoreDataError>) -> ())) {
+    func searchTaxon(searchString: String, completion: @escaping ((Result<[Mushroom], CoreDataError>) -> Void)) {
         backgroundThread.perform {
             do {
                 let predicate: Predicate<CDMushroom>
@@ -71,12 +69,10 @@ class MushroomsRepository: Repository {
                 completion(.failure(.readError))
             }
         }
-        
        
         }
     
-    
-    func saveFavorite(_ mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func saveFavorite(_ mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         backgroundThread.perform { [unowned self] in
             do {
                 let device = try self.getDevice()
@@ -95,7 +91,7 @@ class MushroomsRepository: Repository {
        
     }
     
-    func removeAsFavorite(_ mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func removeAsFavorite(_ mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         do {
             guard let cdMushroom = fetch(id: mushroom.id) else {return}
             let device = try getDevice()
@@ -111,10 +107,8 @@ class MushroomsRepository: Repository {
         }
     }
     
-
-    
     /// The completion closure is returned on the main thread
-    func save(items: [Mushroom], completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func save(items: [Mushroom], completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         backgroundThread.perform { [unowned backgroundThread] in
           // First delete mushrooms, that have no important relationships
             do {
@@ -164,11 +158,9 @@ class MushroomsRepository: Repository {
       
     }
     
-    func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
          backgroundThread.perform { [unowned backgroundThread] in
                     do {
-                        
-                        
                         
                         let fetchRequest = NSFetchRequest<CDImage>(entityName: "CDImage")
                         let cdImages = try backgroundThread.fetch(fetchRequest)
@@ -252,7 +244,6 @@ class MushroomsRepository: Repository {
                 cdImage.url = image.url
                 cdImage.photographer = image.photographer
                 cdMushroom.addToImages(cdImage)
-                
                 
                 if saveImages {
                     DispatchQueue.global(qos: .background).async {

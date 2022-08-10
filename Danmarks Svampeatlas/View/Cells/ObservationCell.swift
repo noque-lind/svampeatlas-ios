@@ -79,7 +79,6 @@ class NewObservationCell: UITableViewCell {
             }))
         })
         
-        
         contentView.do({
             $0.addSubview(stackView)
         })
@@ -106,7 +105,6 @@ class NewObservationCell: UITableViewCell {
                 subtitleLabel.text?.append(", \(locality.fullName)")
             }
         }
-      
        
         subtitleLabel.sizeToFit()
         userNameLabel.text = observation.observedBy

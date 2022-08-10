@@ -21,7 +21,7 @@ class ClusterPinCalloutView: UIView {
     
     var heightConstraint: NSLayoutConstraint!
     var widthConstraint: NSLayoutConstraint!
-    var showObservation: ((_ observation: Observation) -> ())?
+    var showObservation: ((_ observation: Observation) -> Void)?
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if let observationsTableView = observationsTableView.hitTest(convert(point, to: observationsTableView), with: event) {
@@ -30,7 +30,7 @@ class ClusterPinCalloutView: UIView {
         return nil
     }
    
-    init(showObservation: ((_ observation: Observation) -> ())?) {
+    init(showObservation: ((_ observation: Observation) -> Void)?) {
         self.showObservation = showObservation
         super.init(frame: CGRect.zero)
         setupView()
@@ -66,12 +66,10 @@ class ClusterPinCalloutView: UIView {
         heightConstraint.isActive = true
         superView.layoutIfNeeded()
     }
-
     
     func show() {
         widthConstraint.constant = 310
         heightConstraint.constant = 500
-        
 
         UIView.animate(withDuration: 0.3, delay: 0.0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseOut, animations: {
             self.superview!.layoutIfNeeded()
@@ -84,7 +82,7 @@ class ClusterPinCalloutView: UIView {
         }
     }
     
-    func hide(superView: UIView, animated: Bool, completion: @escaping () -> ()) {
+    func hide(superView: UIView, animated: Bool, completion: @escaping () -> Void) {
         observationsTableView.tableViewState = .Empty
         
         if animated {

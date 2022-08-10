@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import MapKit.MKClusterAnnotation
 import MapKit.MKAnnotationView
+import MapKit.MKClusterAnnotation
 
 class ClusteredHeatAnnotation: MKClusterAnnotation {
     var image: UIImage {
@@ -27,7 +27,6 @@ class ClusteredHeatAnnotation: MKClusterAnnotation {
         }
     }
 }
-
 
 class ClusteredHeatAnnotationView: MKAnnotationView {
     

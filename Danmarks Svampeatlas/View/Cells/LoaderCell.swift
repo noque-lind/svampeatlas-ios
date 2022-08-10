@@ -33,7 +33,6 @@ class LoaderCell: UITableViewCell {
         setupView()
     }
     
-    
     required init?(coder: NSCoder) {
         fatalError()
     }

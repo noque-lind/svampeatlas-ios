@@ -6,15 +6,14 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import ELKit
+import Foundation
 
 class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
         
     private let session: Session
     private let controller: NSFetchedResultsController<CDNote>
-    
     
     let notes = ELListener<SimpleState<[CDNote]>>.init(.empty)
     let deleteNote = ELEvent<IndexPath>.init()
@@ -80,7 +79,7 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
     func deleteNote(note: CDNote, indexPath: IndexPath) {
         Database.instance.notesRepository.delete(note: note) { [weak self] result in
             switch result {
-            case .success():
+            case .success:
                 print("here")
 //                self?.deleteNote.post(value: indexPath)
             case .failure(let error):
@@ -97,7 +96,7 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
             DispatchQueue.main.async {
                 switch result {
                 case .success((let id, let imageCount)):
-                    Database.instance.notesRepository.delete(note: note) { result in }
+                    Database.instance.notesRepository.delete(note: note) { _ in }
                     if imageCount == userObservation.images.count {
                         self?.show.post(value: .appNotification(style: .success, primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: "DMS: \(id)", location: .bottom))
                     } else {
@@ -109,6 +108,5 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
             }
         }
     }
-
 
 }

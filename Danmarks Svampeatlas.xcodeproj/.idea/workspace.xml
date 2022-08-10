@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="66d46409-924d-4b29-a073-4d3689dce26e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/LocalitySettingsModal.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xcshareddata/xcschemes/Danmarks Svampeatlas.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/xcshareddata/xcschemes/Danmarks Svampeatlas.xcscheme" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xcuserdata/emillind.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" beforeDir="false" afterPath="$PROJECT_DIR$/xcuserdata/emillind.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/xcuserdata/emillind.xcuserdatad/xcschemes/SvampeAtlas.xcscheme" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/xcuserdata/emillind.xcuserdatad/xcschemes/xcschememanagement.plist" beforeDir="false" afterPath="$PROJECT_DIR$/xcuserdata/emillind.xcuserdatad/xcschemes/xcschememanagement.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/.swiftlint.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/AddObservationVC.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/AddObservationVC.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/ModalVC.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/ModalVC.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/Services/DataService.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/Services/DataService.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/da.lproj/Localizable.strings" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/da.lproj/Localizable.strings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/en.lproj/Localizable.strings" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/en.lproj/Localizable.strings" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="iphonesimulator_FB53F4D5-D3A5-411A-9A66-62DFD39058D5" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../Danmarks Svampeatlas/AppDelegate.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Danmarks Svampeatlas/Repository/CoreDataHelper.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Danmarks Svampeatlas/Services/UserDefaultsHelper.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Danmarks Svampeatlas/ViewModels/AddObservationVCViewModel.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Danmarks SvampeatlasTests/MushroomsRepositoryTests.swift" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2CWrmhKbVSvAAHCYs5TKW90cvnS" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;OBJC.PRESERVED_TARGET_SELECTION&quot;: &quot;Danmarks Svampeatlas&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.appcodeplugins.swiftlint.v1_7.isDisableWhenNoConfigPresent&quot;: &quot;true&quot;,
+    &quot;com.appcodeplugins.swiftlint.v1_7.localAppName&quot;: &quot;/opt/homebrew/Cellar/swiftlint/0.48.0/bin/swiftlint&quot;,
+    &quot;com.appcodeplugins.swiftlint.v1_7.quickFixEnabled&quot;: &quot;true&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.lonelybytes.swiftlint.Configuration&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="66d46409-924d-4b29-a073-4d3689dce26e" name="Changes" comment="" />
+      <created>1658929346118</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1658929346118</updated>
+      <workItem from="1658929348154" duration="1777000" />
+      <workItem from="1659548071610" duration="1454000" />
+      <workItem from="1659552526000" duration="2052000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -8,12 +8,10 @@
 
 import UIKit
 
-extension Array where Element : Equatable {
-    public func returnOriginalElements<C : Collection>(newElements: C) -> [Element] where C.Iterator.Element == Element {
+extension Array where Element: Equatable {
+    public func returnOriginalElements<C: Collection>(newElements: C) -> [Element] where C.Iterator.Element == Element {
         return newElements.filter({!self.contains($0)})
     }
-    
-    
     
 }
 

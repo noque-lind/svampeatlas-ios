@@ -6,7 +6,6 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-
 import UIKit
 
 class CautionCell: UITableViewCell {
@@ -69,4 +68,3 @@ imageView.contentMode = .scaleAspectFit
         }
 }
 }
-

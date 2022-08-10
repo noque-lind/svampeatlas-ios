@@ -14,7 +14,6 @@ struct Image: Decodable {
     public private(set) var url: String
     public private(set) var photographer: String?
     public private(set) var createdDate: String?
-    
 
     private enum CodingKeys: String, CodingKey {
         case id = "_id"

@@ -6,9 +6,9 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
-import Photos
 import ELKit
+import Photos
+import UIKit
 
 protocol ELPhotosManagerDelegate: NavigationDelegate {
     func error(_ error: ELPhotos.ELPhotosError)
@@ -16,7 +16,7 @@ protocol ELPhotosManagerDelegate: NavigationDelegate {
     func assetFetchCanceled()
 }
 
-class ELPhotos: NSObject  {
+class ELPhotos: NSObject {
     
     enum ELPhotosError: AppError {
         var recoveryAction: RecoveryAction? {
@@ -42,13 +42,11 @@ class ELPhotos: NSObject  {
             case .unknownFetchError: return NSLocalizedString("elPhotosError_unknownFetchError_title", comment: "")
             }
         }
-        
     
         case notAuthorized
         case unknownSaveError
         case unknownFetchError
     }
-    
     
     weak var delegate: ELPhotosManagerDelegate?
     private var dispatchQueue = DispatchQueue(label: "ELPhotosManager", qos: .utility)
@@ -59,11 +57,11 @@ class ELPhotos: NSObject  {
         }
     }
     
-    static func fetchPhotoLibraryThumbnail(size: CGSize, completion: @escaping (UIImage?) -> ()) {
+    static func fetchPhotoLibraryThumbnail(size: CGSize, completion: @escaping (UIImage?) -> Void) {
         switch PHPhotoLibrary.authorizationStatus() {
                case .authorized:
                    let fetchOptions = PHFetchOptions()
-                   fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+                   fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
                    fetchOptions.fetchLimit = 1
                    
                    let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
@@ -151,25 +149,24 @@ class ELPhotos: NSObject  {
         return PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions).firstObject
     }
     
-    private func createAlbumWithName(_ albumName: String, completion: @escaping (Error?) -> ()) {
+    private func createAlbumWithName(_ albumName: String, completion: @escaping (Error?) -> Void) {
         PHPhotoLibrary.shared().performChanges({
             PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
-        }) { (success, error) in
+        }) { (_, error) in
             completion(error)
         }
     }
 }
 
 extension ELPhotos: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let phAsset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset else {return}
         
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
         
-        PHImageManager.default().requestImageData(for: phAsset, options: requestOptions) { [weak self] (data, string, orientation, nil) in
+        PHImageManager.default().requestImageData(for: phAsset, options: requestOptions) { [weak self] (data, _, _, _) in
             if let data = data {
                 switch ELFileManager.saveTempImage(imageData: data) {
                 case .failure(let error):

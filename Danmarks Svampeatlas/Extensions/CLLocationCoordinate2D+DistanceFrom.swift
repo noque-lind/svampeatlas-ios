@@ -34,13 +34,9 @@ extension CLLocationCoordinate2D {
             let bearing = 2 * Double.pi * Double(coordinates.count) / Double(numberOfSegments)
             let offsetLangitude = asin((sin(latitudeInRadians) * cos(radiusDividedByEathRadius)) + cos(latitudeInRadians) * sin(radiusDividedByEathRadius) * cos(bearing))
             let offsetLongitude = longitudeInRadians + atan2(sin(bearing) * sin(radiusDividedByEathRadius) * cos(latitudeInRadians), cos(radiusDividedByEathRadius) - sin(latitudeInRadians) * sin(offsetLangitude))
-            
     
             coordinates.append(CLLocationCoordinate2D(latitude: toDegress(angleInRadians: offsetLangitude), longitude: toDegress(angleInRadians: offsetLongitude)))
         }
-        
-        
-        
         
         coordinates.append(coordinates[0])
         return coordinates
@@ -66,6 +62,3 @@ extension CLLocationCoordinate2D {
     }
 
 }
-
-
-

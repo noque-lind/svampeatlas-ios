@@ -6,8 +6,8 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import ELKit
+import Foundation
 import MapKit
 
 class DetailsViewControllerViewModel: NSObject {
@@ -44,7 +44,7 @@ class DetailsViewControllerViewModel: NSObject {
                     self?.userRegion.set(.items(item: region))
                     self?.fetchNearbyObservations(id: id, geometry: geometry)
                 case .error(error: let error):
-                    self?.userRegion.set(.error(error: error, handler: { (action) in
+                    self?.userRegion.set(.error(error: error, handler: { (_) in
                         self?.locationManager.start()
                     }))
                 case .stopped: return
@@ -94,11 +94,10 @@ class DetailsViewControllerViewModel: NSObject {
     }
     
     convenience init(mushroom: Mushroom) {
-        self.init(type:  .mushroom(id: mushroom.id))
+        self.init(type: .mushroom(id: mushroom.id))
         self.mushroom.set(.items(item: mushroom))
         fetchRelatedObservations(id: mushroom.id)
     }
-    
     
     private func fetchRelatedObservations(id: Int) {
         relatedObservations.set(.loading)

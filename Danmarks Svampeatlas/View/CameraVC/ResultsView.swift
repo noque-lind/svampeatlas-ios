@@ -8,12 +8,10 @@
 
 import UIKit
 
-
 protocol ResultsViewDelegate: class {
     func retry()
     func mushroomSelected(predictionResult: PredictionResult, predictionResults: [PredictionResult])
 }
-
 
 class ResultsTableView: ELTableViewOld<ResultsTableView.Item> {
     
@@ -24,8 +22,7 @@ class ResultsTableView: ELTableViewOld<ResultsTableView.Item> {
         case lowConfidence
     }
     
-    var scrollViewDidScroll: ((UIScrollView) -> ())?
-    
+    var scrollViewDidScroll: ((UIScrollView) -> Void)?
     
     override init() {
         super.init()
@@ -38,8 +35,6 @@ class ResultsTableView: ELTableViewOld<ResultsTableView.Item> {
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
-
     
     override func cellForItem(_ item: ResultsTableView.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
         switch item {
@@ -125,7 +120,7 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
         tableView.separatorStyle = .none
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        tableView.didSelectItem = { [weak delegate, unowned self] item, indexPath in
+        tableView.didSelectItem = { [weak delegate, unowned self] item, _ in
             switch item {
             case .tryAgain: delegate?.retry()
             case .result(predictionResult: let predictionsResult):
@@ -133,7 +128,6 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
             default: break
             }
         }
-        
 
         return tableView
     }()
@@ -165,18 +159,14 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
 //        }
 //    }
     
-  
-    
     private var results = [PredictionResult]()
-    weak var delegate: ResultsViewDelegate? = nil
+    weak var delegate: ResultsViewDelegate?
     private var error: AppError?
     
     init() {
         super.init(frame: CGRect.zero)
         setupView()
     }
-    
-
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -185,7 +175,6 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
     private func setupView() {
         alpha = 0
     }
-
     
     func configure(results: [PredictionResult]) {
         self.results = results
@@ -257,4 +246,3 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
         alpha = 0
     }
 }
-

@@ -6,12 +6,13 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
+import CoreLocation
 import Foundation
 
 struct UserDefaultsHelper {
     static var token: String? {
         get {
-            return UserDefaults.standard.string(forKey: "token")
+            UserDefaults.standard.string(forKey: "token")
         } set {
             if newValue == nil {
                 UserDefaults.standard.removeObject(forKey: "token")
@@ -20,7 +21,6 @@ struct UserDefaultsHelper {
             }
         }
     }
-    
     
     static var shouldUpdateDatabase: Bool {
         get {
@@ -62,19 +62,46 @@ struct UserDefaultsHelper {
         }
     }
     
+    static var lockedLocality: Locality? {
+        get {
+            if let data = UserDefaults.standard.data(forKey: "LockedLocality") {
+                return try? JSONDecoder().decode(Locality.self, from: data)
+            } else {
+                return nil
+        }
+        }
+        set {
+            if let data = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(data, forKey: "LockedLocality")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "LockedLocality")
+            }
+        }
+    }
+    
+    static var lockedLocation: CLLocation? {
+        get {
+            if let loadedLocation = UserDefaults.standard.data(forKey: "LockedLocation") {
+                return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(loadedLocation) as? CLLocation
+            } else {
+                return nil
+            }
+        } set {
+            if let location = newValue {
+                if let encodedLocation = try? NSKeyedArchiver.archivedData(withRootObject: location, requiringSecureCoding: false) {
+                    UserDefaults.standard.set(encodedLocation, forKey: "LockedLocation")
+                }
+            } else {
+                UserDefaults.standard.removeObject(forKey: "LockedLocation")
+            }
+        }
+    }
+    
     static var hasBeenAskedToSaveImages: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "hasBeenAskedToSaveImages")
         } set {
             UserDefaults.standard.set(newValue, forKey: "hasBeenAskedToSaveImages")
-        }
-    }
-    
-    static var hasSeenWhatsNew: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: "hasSeenWhatsNew1.5")
-        } set {
-            UserDefaults.standard.set(newValue, forKey: "hasSeenWhatsNew1.5")
         }
     }
     
@@ -103,8 +130,36 @@ struct UserDefaultsHelper {
         }
     }
     
-    static var hasSeenLocalityHelper: Bool {
-        return UserDefaults.standard.bool(forKey: "hasSeenLocalityHelper")
+    /// Wether the user would like to recieve position reminders, toggleable in settings.
+    static var shouldShowPositionReminderToggle: Bool {
+        get {
+            return UserDefaults.standard.object(forKey: "shouldShowPositionReminderToggle") != nil ? UserDefaults.standard.bool(forKey: "shouldShowPositionReminderToggle"): true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "shouldShowPositionReminderToggle")
+        }
+    }
+    
+    /// Keeps track of how many sent observations it has been since user was last reminded about precision importance
+    private static var positionReminderObservationCount: Int {
+        get {
+            print(UserDefaults.standard.integer(forKey: "positionReminderObservationCount"))
+            return UserDefaults.standard.integer(forKey: "positionReminderObservationCount")
+        } set {
+            UserDefaults.standard.set(newValue, forKey: "positionReminderObservationCount")
+        }
+    }
+    
+    static func decreasePositionReminderCounter() {
+        positionReminderObservationCount = positionReminderObservationCount - 1
+    }
+    
+    static var shouldShowPositionReminder: Bool {
+        return shouldShowPositionReminderToggle ? positionReminderObservationCount <= 0: false
+    }
+    
+    static func setHasShownPositionReminder() {
+        UserDefaults.standard.set(20, forKey: "positionReminderObservationCount")
     }
     
     static var hasAcceptedmagePredictionTerms: Bool {
@@ -130,10 +185,6 @@ struct UserDefaultsHelper {
     
     static func setHasAcceptedImagePredictionTerms(_ accepted: Bool) {
         UserDefaults.standard.set(accepted, forKey: "hasAcceptedImagePredictionTerms")
-    }
-    
-    static func setHasSeenLocalityHelper() {
-        UserDefaults.standard.set(true, forKey: "hasSeenLocalityHelper")
     }
     
     static func setSaveImages(_ value: Bool) {

@@ -28,7 +28,6 @@ extension ImageCell: UIGestureRecognizerDelegate {
     }
 }
 
-
 class ImageCell: UICollectionViewCell {
     
     private lazy var imageView: DownloadableImageView = {
@@ -53,9 +52,8 @@ class ImageCell: UICollectionViewCell {
         return pan
     }()
     
-    
     var isZooming = false
-    var originalImageCenter : CGPoint?
+    var originalImageCenter: CGPoint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,7 +64,6 @@ class ImageCell: UICollectionViewCell {
         super.init(coder: aDecoder)
         setupView()
     }
-    
     
    lazy var gradient: CAGradientLayer = {
        let gradient = CAGradientLayer()
@@ -83,7 +80,6 @@ class ImageCell: UICollectionViewCell {
         view.layer.addSublayer(gradient)
         return view
     }()
-    
     
     func configureCell(contentMode: UIView.ContentMode, url: String, photoAuthor: String?) {
         imageView.contentMode = contentMode
@@ -107,8 +103,7 @@ class ImageCell: UICollectionViewCell {
     }
     }
     
-    
-@objc func pinch(sender:UIPinchGestureRecognizer) {
+@objc func pinch(sender: UIPinchGestureRecognizer) {
         if sender.state == .began {
             let currentScale = imageView.frame.size.width / imageView.bounds.size.width
             let newScale = currentScale*sender.scale
@@ -134,7 +129,7 @@ class ImageCell: UICollectionViewCell {
                 let transform = CGAffineTransform(scaleX: newScale, y: newScale)
                 imageView.transform = transform
                 sender.scale = 1
-            }else {
+            } else {
                 view.transform = transform
                 sender.scale = 1
             }

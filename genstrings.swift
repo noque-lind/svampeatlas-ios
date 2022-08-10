@@ -9,7 +9,7 @@ class GenStrings {
     let acceptedFileExtensions = ["swift"]
     let excludedFolderNames = ["Carthage"]
     let excludedFileNames = ["genstrings.swift"]
-    var regularExpresions = [String:NSRegularExpression]()
+    var regularExpresions = [String: NSRegularExpression]()
 
     let localizedRegex = "(?<=\")([^\"]*)(?=\".(localized|localizedFormat))|(?<=(Localized|NSLocalizedString)\\(\")([^\"]*?)(?=\")"
     let commentedRegex = "(?<=.commented\\(\")([^\"]*)(?=\")"
@@ -21,11 +21,11 @@ class GenStrings {
     // Performs the genstrings functionality
     func perform(path: String? = nil) {
         let directoryPath = path ?? fileManager.currentDirectoryPath
-        let rootPath = URL(fileURLWithPath:directoryPath)
+        let rootPath = URL(fileURLWithPath: directoryPath)
         let allFiles = fetchFilesInFolder(rootPath: rootPath)
         // We use a set to avoid duplicates
         var localizableStrings = Set<String>()
-        var comments = [String:String]()
+        var comments = [String: String]()
         for filePath in allFiles {
             let (stringsInFile, commentsInFile) = localizableStringsInFile(filePath: filePath)
             localizableStrings = localizableStrings.union(stringsInFile)
@@ -44,18 +44,18 @@ class GenStrings {
     }
 
     // Applies regex to a file at filePath.
-    func localizableStringsInFile(filePath: URL) -> (Set<String>, [String:String]) {
+    func localizableStringsInFile(filePath: URL) -> (Set<String>, [String: String]) {
         do {
             let fileContentsData = try Data(contentsOf: filePath)
             guard let fileContentsString = NSString(data: fileContentsData, encoding: String.Encoding.utf8.rawValue) else {
-                return (Set<String>(), [String:String]())
+                return (Set<String>(), [String: String]())
             }
 
             let localizedMatches = try regexMatches(pattern: localizedRegex, string: fileContentsString as String)
             let commentedMatches = try regexMatches(pattern: commentedRegex, string: fileContentsString as String)
 
             let localizedStringsArray = localizedMatches.map({fileContentsString.substring(with: $0.range)})
-            var comments = [String:String]()
+            var comments = [String: String]()
             for m in commentedMatches {
                 let comment = fileContentsString.substring(with: m.range)
                 let localizedRange = localizedMatches.filter { $0.range.location + $0.range.length <= m.range.location }.last?.range
@@ -67,25 +67,23 @@ class GenStrings {
 
             return (Set(localizedStringsArray), comments)
         } catch {}
-        return (Set<String>(), [String:String]())
+        return (Set<String>(), [String: String]())
     }
 
-    //MARK: Regex
+    // MARK: Regex
 
     func regexWithPattern(pattern: String) throws -> NSRegularExpression {
         var safeRegex = regularExpresions
         if let regex = safeRegex[pattern] {
             return regex
-        }
-        else {
+        } else {
             do {
                 let currentPattern: NSRegularExpression
-                currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
+                currentPattern =  try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive)
                 safeRegex.updateValue(currentPattern, forKey: pattern)
                 regularExpresions = safeRegex
                 return currentPattern
-            }
-            catch {
+            } catch {
                 throw GenstringsError.Error
             }
         }
@@ -97,16 +95,15 @@ class GenStrings {
             let currentPattern =  try regexWithPattern(pattern: pattern)
             // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
             let nsString = internalString as NSString
-            let stringRange = NSMakeRange(0, nsString.length)
+            let stringRange = NSRange(location: 0, length: nsString.length)
             let matches = currentPattern.matches(in: internalString, options: [], range: stringRange)
             return matches
-        }
-        catch {
+        } catch {
             throw GenstringsError.Error
         }
     }
 
-    //MARK: File manager
+    // MARK: File manager
 
     func fetchFilesInFolder(rootPath: URL) -> [URL] {
         var files = [URL]()
@@ -116,15 +113,15 @@ class GenStrings {
                 let stringPath = urlPath.path
                 let lastPathComponent = urlPath.lastPathComponent
                 let pathExtension = urlPath.pathExtension
-                var isDir : ObjCBool = false
-                if fileManager.fileExists(atPath: stringPath, isDirectory:&isDir) {
+                var isDir: ObjCBool = false
+                if fileManager.fileExists(atPath: stringPath, isDirectory: &isDir) {
                     if isDir.boolValue {
                         if !excludedFolderNames.contains(lastPathComponent) {
                             let dirFiles = fetchFilesInFolder(rootPath: urlPath)
                             files.append(contentsOf: dirFiles)
                         }
                     } else {
-                        if acceptedFileExtensions.contains(pathExtension) && !excludedFileNames.contains(lastPathComponent)  {
+                        if acceptedFileExtensions.contains(pathExtension) && !excludedFileNames.contains(lastPathComponent) {
                             files.append(urlPath)
                         }
                     }

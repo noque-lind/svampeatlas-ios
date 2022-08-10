@@ -54,12 +54,11 @@ class GradientImageView: UIView {
             gradient.frame = self.bounds
             self.layer.mask = gradient
         }
-        
 
         func setImage(image: UIImage, fade: Bool) {
             if fade {
                 UIView.transition(with: self.imageView,
-                                  duration:3.0,
+                                  duration: 3.0,
                                   options: .transitionCrossDissolve,
                                   animations: { self.imageView.image = image },
                                   completion: nil)

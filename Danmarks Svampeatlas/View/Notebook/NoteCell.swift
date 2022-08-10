@@ -6,8 +6,8 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit.UITableViewCell
 import ELKit
+import UIKit.UITableViewCell
 
 class NoteCell: UITableViewCell {
     
@@ -53,7 +53,7 @@ class NoteCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .appGreen()
         $0.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_Upload"), for: [])
-        $0.imageEdgeInsets = .init(top:6, left: 6, bottom: 6, right: 6)
+        $0.imageEdgeInsets = .init(top: 6, left: 6, bottom: 6, right: 6)
         $0.layer.cornerRadius = .cornerRadius()
         $0.heightAnchor.constraint(equalToConstant: 40).isActive = true
         $0.widthAnchor.constraint(equalTo: $0.heightAnchor).isActive = true
@@ -61,7 +61,7 @@ class NoteCell: UITableViewCell {
         $0.clipsToBounds = true
     })
     
-    var uploadPressed: (() -> ())? = nil
+    var uploadPressed: (() -> Void)?
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         backgroundColor = highlighted ? UIColor.appSecondaryColour().withAlphaComponent(0.3): UIColor.clear
@@ -89,7 +89,6 @@ class NoteCell: UITableViewCell {
     private func setupView() {
         backgroundColor = .clear
         selectionStyle = .none
-        
     
         let imageViewStackView = UIStackView().then({
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -125,14 +124,12 @@ class NoteCell: UITableViewCell {
             $0.addArrangedSubview(mainTitle)
         })
         
-        
         contentView.do({
             $0.addSubview(imageViewStackView)
             $0.addSubview(textStackView)
             $0.addSubview(statusLabel)
             $0.addSubview(actionButton)
         })
-        
         
         imageViewStackView.do({
             $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true

@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class ObservationsTableView: GenericTableView<Observation> {
 
     weak var navigationDelegate: NavigationDelegate?
@@ -23,8 +22,7 @@ class ObservationsTableView: GenericTableView<Observation> {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if tableViewState.value(row: indexPath.row) == nil {
             return 90
-        }
-        else {
+        } else {
             return UITableView.automaticDimension
         }
     }
@@ -42,4 +40,3 @@ class ObservationsTableView: GenericTableView<Observation> {
     }
 
 }
-

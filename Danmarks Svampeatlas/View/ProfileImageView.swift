@@ -38,7 +38,6 @@ class ProfileImageView: UIView {
         }
     }
     
-    
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = frame.height / 2
@@ -54,7 +53,6 @@ class ProfileImageView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    
 
     private func setupView() {
         layer.shadowOpacity = 0.5

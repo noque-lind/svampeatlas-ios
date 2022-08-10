@@ -104,7 +104,7 @@ class MushroomDetailsHeaderCell: UITableViewCell {
             guard let mushroom = mushroom else {return}
             Database.instance.mushroomsRepository.removeAsFavorite(mushroom) { [weak self] result in
                 switch result {
-                case .success():
+                case .success:
                     UIView.animate(withDuration: 0.2) {
                         self?.favoriteButton.tintColor = .appWhite()
                         self?.favoriteButton.transform = CGAffineTransform.init(scaleX: 1.2, y: 1.2)

@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreGraphics
+import Foundation
 
 class MapViewFilteringSettings {
     

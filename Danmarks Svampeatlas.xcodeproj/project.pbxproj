@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2083452D22574C4300E86730 /* AVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2083452C22574C4300E86730 /* AVView.swift */; };
 		20D4C810223A7962006AA9E9 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D4C80F223A7962006AA9E9 /* NavigationItem.swift */; };
+		3B2F6B494A54DA4FFBF8BC99 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F64EC5561053693EE88EE /* .swiftlint.yml */; };
 		4A0683D1207A581D00EB06D7 /* ResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A0683D0207A581D00EB06D7 /* ResultsView.swift */; };
 		4A1B178120C3F6E200E1F1B2 /* ToxicityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */; };
 		4A1F76012079606B0082B873 /* CameraVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1F76002079606B0082B873 /* CameraVC.swift */; };
@@ -86,14 +87,17 @@
 		DB32B0B521E65DF200514CCA /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB32B0B421E65DF200514CCA /* LocationService.swift */; };
 		DB34AA072190678900D423DA /* CommentsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB34AA062190678900D423DA /* CommentsTableView.swift */; };
 		DB3C4929219AEF11001894B5 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C4928219AEF11001894B5 /* ReloadCell.swift */; };
+		DB3C6EB7289017760049A0DB /* LocalityHelper.gif in Resources */ = {isa = PBXBuildFile; fileRef = DB3C6EB6289017760049A0DB /* LocalityHelper.gif */; };
+		DB3C6EBA2891276D0049A0DB /* SwitchSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C6EB92891276D0049A0DB /* SwitchSettingCell.swift */; };
+		DB3EE45F28A44019001FF5E3 /* LocalitySettingsModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EE45C28A44019001FF5E3 /* LocalitySettingsModal.swift */; };
 		DB3EF6952550A40E000D9F51 /* ELTableView+build.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF6942550A40E000D9F51 /* ELTableView+build.swift */; };
 		DB3EF69E2550AF5F000D9F51 /* MapViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF69D2550AF5F000D9F51 /* MapViewCell.swift */; };
 		DB402BB823D9EED90020D68B /* ELKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB402BB523D9EEC70020D68B /* ELKit.framework */; };
 		DB402BB923D9EED90020D68B /* ELKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DB402BB523D9EEC70020D68B /* ELKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB42E37221776EB8003C3585 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37121776EB8003C3585 /* UserService.swift */; };
 		DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB42E37321777811003C3585 /* ProfileImageView.swift */; };
+		DB460DF2289B04370063197A /* AutoLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB460DF1289B04370063197A /* AutoLabel.swift */; };
 		DB4AE10B22BE89DA006F6516 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4AE10A22BE89DA006F6516 /* SearchVC.swift */; };
-		DB4B2ED0235B253D00698B36 /* LocalityHelper.gif in Resources */ = {isa = PBXBuildFile; fileRef = DB4B2ECF235B253D00698B36 /* LocalityHelper.gif */; };
 		DB4E002626DE288000485AB7 /* CDNoteImage+Url.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4E002526DE288000485AB7 /* CDNoteImage+Url.swift */; };
 		DB4E002A26DE2A6700485AB7 /* OfflineDownloaderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4E002926DE2A6700485AB7 /* OfflineDownloaderVC.swift */; };
 		DB4E002C26DE2B3D00485AB7 /* OfflineDownloaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4E002B26DE2B3D00485AB7 /* OfflineDownloaderViewModel.swift */; };
@@ -188,7 +192,7 @@
 		DBDEE48B219601DB0047C788 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBDEE48A219601DB0047C788 /* CommentCell.swift */; };
 		DBEE2858212441DB0017817A /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEE2857212441DB0017817A /* AppError.swift */; };
 		DBF33C6A22FB432300F383D4 /* CALayer+Animate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF33C6822FB432200F383D4 /* CALayer+Animate.swift */; };
-		DBF4F3C6232A41CC0042E7A8 /* TermsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF4F3C5232A41CC0042E7A8 /* TermsVC.swift */; };
+		DBF4F3C6232A41CC0042E7A8 /* ModalVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBF4F3C5232A41CC0042E7A8 /* ModalVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -233,6 +237,7 @@
 		2083452C22574C4300E86730 /* AVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVView.swift; sourceTree = "<group>"; };
 		20D4C807223A62B0006AA9E9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20D4C80F223A7962006AA9E9 /* NavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
+		3B2F64EC5561053693EE88EE /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		4A0683D0207A581D00EB06D7 /* ResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsView.swift; sourceTree = "<group>"; };
 		4A1B178020C3F6E200E1F1B2 /* ToxicityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToxicityView.swift; sourceTree = "<group>"; };
 		4A1F76002079606B0082B873 /* CameraVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraVC.swift; sourceTree = "<group>"; };
@@ -315,13 +320,16 @@
 		DB32B0B421E65DF200514CCA /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		DB34AA062190678900D423DA /* CommentsTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentsTableView.swift; sourceTree = "<group>"; };
 		DB3C4928219AEF11001894B5 /* ReloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadCell.swift; sourceTree = "<group>"; };
+		DB3C6EB6289017760049A0DB /* LocalityHelper.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = LocalityHelper.gif; sourceTree = "<group>"; };
+		DB3C6EB92891276D0049A0DB /* SwitchSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchSettingCell.swift; sourceTree = "<group>"; };
+		DB3EE45C28A44019001FF5E3 /* LocalitySettingsModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalitySettingsModal.swift; sourceTree = "<group>"; };
 		DB3EF6942550A40E000D9F51 /* ELTableView+build.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ELTableView+build.swift"; sourceTree = "<group>"; };
 		DB3EF69D2550AF5F000D9F51 /* MapViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCell.swift; sourceTree = "<group>"; };
 		DB402BAF23D9EEC60020D68B /* ELKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ELKit.xcodeproj; path = ../../../ELKit/ELKit.xcodeproj; sourceTree = "<group>"; };
 		DB42E37121776EB8003C3585 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		DB42E37321777811003C3585 /* ProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageView.swift; sourceTree = "<group>"; };
+		DB460DF1289B04370063197A /* AutoLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLabel.swift; sourceTree = "<group>"; };
 		DB4AE10A22BE89DA006F6516 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
-		DB4B2ECF235B253D00698B36 /* LocalityHelper.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = LocalityHelper.gif; sourceTree = "<group>"; };
 		DB4E002526DE288000485AB7 /* CDNoteImage+Url.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDNoteImage+Url.swift"; sourceTree = "<group>"; };
 		DB4E002926DE2A6700485AB7 /* OfflineDownloaderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDownloaderVC.swift; sourceTree = "<group>"; };
 		DB4E002B26DE2B3D00485AB7 /* OfflineDownloaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDownloaderViewModel.swift; sourceTree = "<group>"; };
@@ -423,7 +431,7 @@
 		DBEE2857212441DB0017817A /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		DBF33C6322F436FD00F383D4 /* Danmarks Svampeatlas.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Danmarks Svampeatlas.entitlements"; sourceTree = "<group>"; };
 		DBF33C6822FB432200F383D4 /* CALayer+Animate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CALayer+Animate.swift"; sourceTree = "<group>"; };
-		DBF4F3C5232A41CC0042E7A8 /* TermsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsVC.swift; sourceTree = "<group>"; };
+		DBF4F3C5232A41CC0042E7A8 /* ModalVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -553,6 +561,7 @@
 				DBB2850425486B2D00719E08 /* DeterminationStatusView.swift */,
 				DB03EE5B26DA712A0019D9F7 /* ActionButton.swift */,
 				DBA96F9826ECAC5A0092EAA0 /* PaddedLabel.swift */,
+				DB460DF1289B04370063197A /* AutoLabel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -573,6 +582,7 @@
 				DB68448C234D2FE700CD0AE2 /* LoaderCell.swift */,
 				DB68448E234D319C00CD0AE2 /* ErrorCell.swift */,
 				DB96D7D7237D8597005C7AF6 /* CreditationCell.swift */,
+				DB3C6EB92891276D0049A0DB /* SwitchSettingCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -593,7 +603,7 @@
 		4A28AB852044412200F21EEE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				DB4B2ECF235B253D00698B36 /* LocalityHelper.gif */,
+				DB3C6EB52890176C0049A0DB /* Gifs */,
 				DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */,
 				DB0C5A0722746B140071B15C /* Silom.ttf */,
 				4A28AB8C20444B0300F21EEE /* AppProperties.swift */,
@@ -628,6 +638,7 @@
 		4A69457420456BCE0041824E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				DB3EE45C28A44019001FF5E3 /* LocalitySettingsModal.swift */,
 				DB0C5A0E2277056A0071B15C /* OnboardingVC.swift */,
 				DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */,
 				4A69457520456C010041824E /* NavigationVC.swift */,
@@ -641,7 +652,7 @@
 				4A4E4CFE20AE00AD00B3F898 /* AppNavigationController.swift */,
 				DB7F04F122AAB19D00785AF8 /* MapVC.swift */,
 				DB4AE10A22BE89DA006F6516 /* SearchVC.swift */,
-				DBF4F3C5232A41CC0042E7A8 /* TermsVC.swift */,
+				DBF4F3C5232A41CC0042E7A8 /* ModalVC.swift */,
 				DB893119232BCE52000BDCD1 /* AboutVC.swift */,
 				DB81C8AD2519275F006E45B9 /* SettingsVC.swift */,
 				DB4E002926DE2A6700485AB7 /* OfflineDownloaderVC.swift */,
@@ -690,6 +701,7 @@
 				DBA96F9A26EF6DE20092EAA0 /* mapping_1.4_1.5.xcmappingmodel */,
 				DB2DC11C23D8BF1C00EE9BC4 /* Localizable.strings */,
 				DBB52C4123DAFF38004A4CBA /* InfoPlist.strings */,
+				3B2F64EC5561053693EE88EE /* .swiftlint.yml */,
 			);
 			path = "Danmarks Svampeatlas";
 			sourceTree = "<group>";
@@ -754,6 +766,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DB3C6EB52890176C0049A0DB /* Gifs */ = {
+			isa = PBXGroup;
+			children = (
+				DB3C6EB6289017760049A0DB /* LocalityHelper.gif */,
+			);
+			path = Gifs;
 			sourceTree = "<group>";
 		};
 		DB402BB023D9EEC60020D68B /* Products */ = {
@@ -905,6 +925,7 @@
 				4A69BC732038D96500D3B88B /* Frameworks */,
 				4A69BC742038D96500D3B88B /* Resources */,
 				DB2DC12823D9ECC000EE9BC4 /* Embed Frameworks */,
+				DB7385592891725800537D60 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1018,12 +1039,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A69BC872038D96500D3B88B /* LaunchScreen.storyboard in Resources */,
+				DB3C6EB7289017760049A0DB /* LocalityHelper.gif in Resources */,
 				DBB52C3F23DAFF38004A4CBA /* InfoPlist.strings in Resources */,
 				DB0C5A0822746B140071B15C /* Silom.ttf in Resources */,
 				DB2DC11A23D8BF1C00EE9BC4 /* Localizable.strings in Resources */,
-				DB4B2ED0235B253D00698B36 /* LocalityHelper.gif in Resources */,
 				DB7F04F922AD099C00785AF8 /* CaviarDreams_Bold.ttf in Resources */,
 				4A69BC842038D96500D3B88B /* Assets.xcassets in Resources */,
+				3B2F6B494A54DA4FFBF8BC99 /* .swiftlint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1035,6 +1057,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DB7385592891725800537D60 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n    #swiftlint --fix\n    #swiftlint\n    echo \"Not installed\"\nelse\n    echo \"Not installed\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4A69BC722038D96500D3B88B /* Sources */ = {
@@ -1058,6 +1100,7 @@
 				4AD107BD20976C6000BA04D0 /* ObservationView.swift in Sources */,
 				DB8CF12521B949ED00ACBF06 /* AddObservationVC.swift in Sources */,
 				DB897AFF21DD50DD00E74C00 /* ObservationDetailsCell.swift in Sources */,
+				DB3C6EBA2891276D0049A0DB /* SwitchSettingCell.swift in Sources */,
 				DBA0D96D21F9ACB3001E9CA8 /* LocalityCell.swift in Sources */,
 				4A95D5452057D7B500EBB2C5 /* ActivityIndicatorView.swift in Sources */,
 				DB32B0B321E61B6F00514CCA /* TableViewHeaderView.swift in Sources */,
@@ -1163,12 +1206,14 @@
 				DBCFD9B123942F9700A9302F /* CameraControlsTextButton.swift in Sources */,
 				DBCED37B23BA1AF700D54A4E /* SubstrateGroupsRepository.swift in Sources */,
 				DB64374B2296A3F700BE7FF4 /* Host.swift in Sources */,
-				DBF4F3C6232A41CC0042E7A8 /* TermsVC.swift in Sources */,
+				DBF4F3C6232A41CC0042E7A8 /* ModalVC.swift in Sources */,
 				DBCFD9AC239263A600A9302F /* PhotoLibraryButton.swift in Sources */,
 				4A54F67220AB2C2F001C8EC8 /* ListView.swift in Sources */,
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
 				DB03EE5C26DA712A0019D9F7 /* ActionButton.swift in Sources */,
 				DB03EE5E26DB8E140019D9F7 /* UserObservation.swift in Sources */,
+				DB3EE45F28A44019001FF5E3 /* LocalitySettingsModal.swift in Sources */,
+				DB460DF2289B04370063197A /* AutoLabel.swift in Sources */,
 				DB78CDA123DDEBC90014B0E6 /* Version 1 to 1.2.xcmappingmodel in Sources */,
 				DBD27B2B231ECB2F00391CCF /* PredictionMatch.swift in Sources */,
 				DBB33A4521CE67E200BCED22 /* ELTextViewCell.swift in Sources */,
@@ -1391,7 +1436,7 @@
 				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1413,7 +1458,7 @@
 				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

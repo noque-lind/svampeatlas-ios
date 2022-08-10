@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class ObservationDetailsCell: UICollectionViewCell {
     
@@ -84,7 +84,6 @@ class ObservationDetailsCell: UICollectionViewCell {
         self.viewModel = viewModel
         tableView.reloadData()
     }
-    
 
     private func setupView() {
         contentView.addSubview(tableView)
@@ -150,7 +149,6 @@ class ObservationDetailsCell: UICollectionViewCell {
     }
 }
 
-
 extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return rows.count + (addedRow != nil ? 1: 0)
@@ -163,7 +161,6 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
             return indexPath
         }
     }
-    
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if let addedRow = addedRow, addedRow.parent == indexPath {
@@ -211,7 +208,6 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
             }
     }
     
-    
     fileprivate func getVegetationTypes(forCell cell: TableViewPickerCell) {
         cell.tableViewState = .Loading
         
@@ -221,7 +217,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 cell.tableViewState = .Items([.init(title: nil, cells: vegetationTypes.compactMap({TableViewPickerCell.Section.CellType.vegetationTypeCell($0)}))])
 
             case .failure(let error):
-                cell.tableViewState = .Error(error, { recoveryAction in
+                cell.tableViewState = .Error(error, { _ in
                     self.getVegetationTypes(forCell: cell)
                 })
             }
@@ -234,7 +230,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
         DataService.instance.getSubstrateGroups { [weak cell, weak self] (result) in
             switch result {
             case .failure(let error):
-                cell?.tableViewState = .Error(error, {  recoveryAction in
+                cell?.tableViewState = .Error(error, {  _ in
                     guard let cell = cell else { return }
                     self?.getSubstrateGroups(forCell: cell)
                 })
@@ -248,7 +244,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
     fileprivate func getHosts(forCell cell: TableViewPickerCell) {
         DataService.instance.getPopularHosts { (result) in
             switch result {
-            case .failure(_):
+            case .failure:
                 cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell])])
             case .success(var hosts):
                 let selectedHosts = self.viewModel?.hosts ?? []
@@ -372,7 +368,6 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                     cell.textView.didUpdateEntry = { [weak viewModel] entry in
                         viewModel?.note = entry
                     }
-                    
                     
                 case .EcologyNotes:
                     cell.configureCell(titleText: NSLocalizedString("observationDetailsCell_ecologyNotes_title", comment: ""), placeholder: NSLocalizedString("observationDetailsCell_ecologyNotes_message", comment: ""), content: viewModel?.ecologyNote, delegate: self)

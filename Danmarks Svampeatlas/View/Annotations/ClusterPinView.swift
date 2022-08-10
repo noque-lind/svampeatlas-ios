@@ -6,8 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import MapKit
+import UIKit
 
 @available(iOS 11.0, *)
 class ClusterPinView: MKAnnotationView {
@@ -35,19 +35,17 @@ class ClusterPinView: MKAnnotationView {
         }
     }
     
-    
     private lazy var observations: [Observation] = {
             let observations = ((annotation as! MKClusterAnnotation).memberAnnotations as! [ObservationPin]).compactMap({$0.observation})
             return observations
     }()
     
-    var showObservation: ((_ observation: Observation) -> ())?
+    var showObservation: ((_ observation: Observation) -> Void)?
     
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         setupView()
     }
-
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()

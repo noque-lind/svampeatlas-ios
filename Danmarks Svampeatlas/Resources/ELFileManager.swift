@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 struct ELFileManager {
     
@@ -23,7 +23,6 @@ struct ELFileManager {
             case .imageSavingError: return NSLocalizedString("elFileManagerError_imageSavingError_title", comment: "")
             }
         }
-        
 
         var recoveryAction: RecoveryAction? {
             switch self {
@@ -34,7 +33,6 @@ struct ELFileManager {
         case imageSavingError
         
     }
-    
 
     static func saveTempImage(imageData: Data) -> Result<URL, ELFileManagerError> {
         let temporaryDirectory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true).appendingPathComponent(ProcessInfo().globallyUniqueString)
@@ -53,7 +51,6 @@ struct ELFileManager {
     fileprivate static func DocumentsDir() -> URL {
           return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
-    
     
     static func mushroomImageExists(withURL url: String) -> Bool {
         guard let imageName = UserDefaultsHelper.getImageName(forUrl: url) else {return false}
@@ -98,8 +95,3 @@ struct ELFileManager {
        return nil
     }
 }
-
-
-
-
-

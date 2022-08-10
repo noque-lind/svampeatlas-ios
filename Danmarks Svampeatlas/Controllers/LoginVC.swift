@@ -6,9 +6,9 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
 import SafariServices
+import UIKit
 
 class LoginVC: UIViewController {
     
@@ -22,13 +22,11 @@ class LoginVC: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 10
-        
 
         let upperStackView: UIStackView = {
             let stackView = UIStackView()
             stackView.axis = .vertical
             stackView.spacing = 0
-            
     
             let upperLabel: UILabel = {
                 let label = UILabel()
@@ -43,7 +41,7 @@ class LoginVC: UIViewController {
                 label.font = UIFont.appTitle()
                 label.textColor = UIColor.appWhite()
                 label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-                label.text = NSLocalizedString("loginVC_lowerLabel",  comment: "")
+                label.text = NSLocalizedString("loginVC_lowerLabel", comment: "")
                 return label
             }()
             
@@ -57,7 +55,7 @@ class LoginVC: UIViewController {
             label.font = UIFont.appPrimary()
             label.textColor = UIColor.appWhite()
             label.numberOfLines = 0
-            label.text = NSLocalizedString("loginVC_detailsLabel",  comment: "")
+            label.text = NSLocalizedString("loginVC_detailsLabel", comment: "")
             return label
         }()
         
@@ -71,7 +69,7 @@ class LoginVC: UIViewController {
         textField.font = UIFont.appPrimaryHightlighed()
         textField.textColor = UIColor.appWhite()
         textField.autocapitalizationType = .none
-        textField.placeholder = NSLocalizedString("loginVC_initialsTextField_placeholder",  comment: "")
+        textField.placeholder = NSLocalizedString("loginVC_initialsTextField_placeholder", comment: "")
         textField.backgroundColor = UIColor.appSecondaryColour()
         textField.textContentType = .username
         textField.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -83,7 +81,7 @@ class LoginVC: UIViewController {
         let textField = ELTextField()
         textField.font = UIFont.appPrimaryHightlighed()
         textField.textColor = UIColor.appWhite()
-        textField.placeholder = NSLocalizedString("loginVC_passwordTextField_placeholder",  comment: "")
+        textField.placeholder = NSLocalizedString("loginVC_passwordTextField_placeholder", comment: "")
         textField.textContentType = .password
         textField.backgroundColor = UIColor.appSecondaryColour()
         textField.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -96,7 +94,7 @@ class LoginVC: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor.appGreen()
-        button.setTitle(NSLocalizedString("loginVC_loginButton",  comment: ""), for: [])
+        button.setTitle(NSLocalizedString("loginVC_loginButton", comment: ""), for: [])
         button.layer.cornerRadius = CGFloat.cornerRadius()
         button.layer.shadowOpacity = Float.shadowOpacity()
         button.layer.shadowOffset = CGSize.shadowOffset()
@@ -110,7 +108,7 @@ class LoginVC: UIViewController {
     
     private lazy var createNewAccountButton: UIButton = {
         let button = UIButton()
-        button.setTitle(NSLocalizedString("loginVC_createNewAccountButton",  comment: ""), for: [])
+        button.setTitle(NSLocalizedString("loginVC_createNewAccountButton", comment: ""), for: [])
         button.setTitleColor(UIColor.appWhite(), for: .normal)
         button.setTitleColor(UIColor.darkGray, for: .highlighted)
         button.titleLabel?.font = UIFont.appPrimary()
@@ -145,7 +143,6 @@ class LoginVC: UIViewController {
         self.navigationItem.leftBarButtonItem = menuButton
         super.viewWillAppear(animated)
     }
-    
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -155,8 +152,6 @@ class LoginVC: UIViewController {
                 self.upperStackView.alpha = 1
             }, completion: nil)
     }
-    
-    
     
     private func setupView() {
         view.backgroundColor = UIColor.appPrimaryColour()
@@ -174,7 +169,6 @@ class LoginVC: UIViewController {
         gradientImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         gradientImageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         view.addConstraint(NSLayoutConstraint(item: gradientImageView, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.height, multiplier: 0.8, constant: 0.0))
-        
         
         let textFieldStackView: UIStackView = {
             let stackView = UIStackView()
@@ -200,13 +194,11 @@ class LoginVC: UIViewController {
         upperStackView.alpha = 0
         upperStackView.transform = CGAffineTransform(translationX: 0.0, y: -50)
         
-        
         ELKeyboardHelper.instance.registerObject(view: passwordTextField)
     }
     
     @objc private func logInButtonPressed() {
         guard let initials = initialsTextField.text, initials != "" else {initialsTextField.showError(message: NSLocalizedString("loginVC_initialsTextField_error", comment: "")); return}
-        
         
         guard let password = passwordTextField.text, password != "" else {passwordTextField.showError(message: NSLocalizedString("loginVC_passwordTextField_error", comment: "")); return}
         view.endEditing(true)
@@ -230,4 +222,3 @@ class LoginVC: UIViewController {
         }
     }
 }
-

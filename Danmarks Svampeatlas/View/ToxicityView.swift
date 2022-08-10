@@ -75,8 +75,6 @@ class ToxicityView: UIView {
         label.sizeToFit()
     }
     
-
-    
     init() {
         super.init(frame: CGRect.zero)
         setupView()

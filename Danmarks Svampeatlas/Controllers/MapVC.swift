@@ -33,7 +33,6 @@ class MapVC: UIViewController {
          self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.appWhite(), NSAttributedString.Key.font: UIFont.appTitle()]
         super.viewWillAppear(animated)
     }
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()

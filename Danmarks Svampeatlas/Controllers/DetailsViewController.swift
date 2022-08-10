@@ -6,14 +6,14 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
-import Then
 import MapKit
+import Then
+import UIKit
 
 enum DetailsContent {
     case mushroomWithID(taxonID: Int)
-    case mushroom(mushroom : Mushroom)
+    case mushroom(mushroom: Mushroom)
     case observation(observation: Observation, showSpeciesView: Bool)
     case observationWithID(observationID: Int, showSpeciesView: Bool)
 }
@@ -33,12 +33,11 @@ class DetailsViewController: UIViewController {
         case mushroom(mushroom: Mushroom)
     }
     
-    
     private lazy var tableView = ELTableView<Item, CellProvider>.build(provider: CellProvider().then({$0.delegate = self})).then({
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.separatorStyle = .none
         $0.scrollDelegate = self
-        $0.didSelectItem.handleEvent { [weak self] (item, indexPath) in
+        $0.didSelectItem.handleEvent { [weak self] (item, _) in
             switch item {
             case .mushroom(mushroom: let mushroom):
                 self?.navigationController?.pushViewController(DetailsViewController.init(detailsContent: .mushroom(mushroom: mushroom), session: self?.session), animated: true)
@@ -133,7 +132,7 @@ class DetailsViewController: UIViewController {
     private let detailsContent: DetailsContent
     private var viewDidLayout: Bool = false
     private var session: Session?
-    private var takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))?
+    private var takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> Void))?
     
     let interactor = showImageAnimationInteractor()
     
@@ -147,8 +146,7 @@ class DetailsViewController: UIViewController {
         }
     }
     
-    
-    init(detailsContent: DetailsContent, session: Session?, takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> ()))? = nil) {
+    init(detailsContent: DetailsContent, session: Session?, takesSelection: (selected: Bool, title: String, handler: ((_ selected: Bool) -> Void))? = nil) {
         self.session = session
         self.takesSelection = takesSelection
         self.detailsContent = detailsContent
@@ -177,7 +175,6 @@ class DetailsViewController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = ""
@@ -189,7 +186,6 @@ class DetailsViewController: UIViewController {
         self.navigationController?.appConfiguration(translucent: true)
         super.viewWillAppear(animated)
     }
-    
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -211,7 +207,6 @@ class DetailsViewController: UIViewController {
         }
         setupView()
     }
-    
     
     private func setupView() {
         view.backgroundColor = UIColor.appSecondaryColour()
@@ -369,15 +364,11 @@ class DetailsViewController: UIViewController {
                 let nearbyObservationsSection = ELKit.Section<Item>.init(title: NSLocalizedString("mushroomDetailsScrollView_heatMap", comment: ""), state: .empty)
                 sections.append(nearbyObservationsSection)
                 
-                
                 let observationSection = ELKit.Section<Item>.init(title: NSLocalizedString("mushroomDetailsScrollView_latestObservations", comment: ""), state: .loading)
                 
                 sections.append(observationSection)
                 
-                
-                
                 self?.tableView.setSections(sections: sections)
-                
                 
                 self?.viewModel.relatedObservations.observe(listener: { (state) in
                     self?.tableView.performUpdates(updates: { (updater) in
@@ -454,7 +445,6 @@ extension DetailsViewController: UIViewControllerTransitioningDelegate {
         }
     }
     
-    
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return ShowImageAnimationController(isBeingPresented: false, imageFrame: CGRect.zero)
     }
@@ -463,7 +453,7 @@ extension DetailsViewController: UIViewControllerTransitioningDelegate {
 extension DetailsViewController: CellProviderDelegate {
     func moreButtonPressed() {
         func addReportContentButton(_ alertController: UIAlertController, observationID: Int) {
-            alertController.addAction(.init(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), style: .destructive, handler: { (action) in
+            alertController.addAction(.init(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), style: .destructive, handler: { (_) in
                 UIAlertController(title: NSLocalizedString("observationDetailsScrollView_rapportContent_title", comment: ""), message: NSLocalizedString("observationDetailsScrollView_rapportContent_message", comment: ""), preferredStyle: .alert)
                     .then({ vc in
                         vc.addTextField { (textField) in
@@ -471,7 +461,7 @@ extension DetailsViewController: CellProviderDelegate {
                             textField.font = .appPrimary()
                         }
                         
-                        vc.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak self] (action) in
+                        vc.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak self] (_) in
                             guard let comment = vc.textFields?.first?.text else {return}
                             self?.session?.reportOffensiveContent(observationID: observationID, comment: comment, completion: {
                                 DispatchQueue.main.async {
@@ -490,13 +480,12 @@ extension DetailsViewController: CellProviderDelegate {
 
         }
         
-        
         switch viewModel.observation.value {
         case .items(item: let observation):
             let actionVC = UIAlertController(title: String.localizedStringWithFormat(NSLocalizedString("Observation with ID: %d", comment: ""), observation.id), message: NSLocalizedString("You have the options below:", comment: ""), preferredStyle: .actionSheet).then({
                 if let session = session {
                     if observation.isEditable(user: session.user) {
-                        $0.addAction(.init(title: NSLocalizedString("Edit observation", comment: ""), style: .default, handler: { [weak self] (action) in
+                        $0.addAction(.init(title: NSLocalizedString("Edit observation", comment: ""), style: .default, handler: { [weak self] (_) in
                             AddObservationVC(type: .edit(observationID: observation.id), session: session).do({
                                 self?.navigationController?.pushViewController($0, animated: true)
                             })
@@ -506,7 +495,7 @@ extension DetailsViewController: CellProviderDelegate {
                     }
                     
                     if observation.isDeleteable(user: session.user) {
-                        $0.addAction(.init(title: NSLocalizedString("Delete observation", comment: ""), style: .destructive, handler: { [weak self] (action) in
+                        $0.addAction(.init(title: NSLocalizedString("Delete observation", comment: ""), style: .destructive, handler: { [weak self] (_) in
                             Spinner.start(onView: self?.view)
                             session.deleteObservation(id: observation.id) { (result) in
                                 Spinner.stop()
@@ -515,7 +504,7 @@ extension DetailsViewController: CellProviderDelegate {
                                     DispatchQueue.main.async {
                                         ELNotificationView.appNotification(style: .error(actions: nil), primaryText: NSLocalizedString("Could not delete", comment: ""), secondaryText: error.message, location: .bottom).show(animationType: .fromBottom)
                                     }
-                                case .success(_):
+                                case .success:
                                     DispatchQueue.main.async {
                                         self?.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: session)), overrideTypeCheckIgnore: true)
                                     }

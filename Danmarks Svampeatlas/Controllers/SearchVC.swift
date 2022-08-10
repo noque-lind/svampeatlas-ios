@@ -8,9 +8,9 @@
 
 import UIKit
 
-fileprivate class HostTableView: GenericTableView<Host> {
+private class HostTableView: GenericTableView<Host> {
     
-     var isAtTop: ((Bool) -> ())?
+     var isAtTop: ((Bool) -> Void)?
     
     override func setupView() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "tableViewCell")
@@ -110,7 +110,7 @@ class SearchVC: UIViewController {
         return view
     }()
     
-    var didSelectItem: ((Host) -> ())?
+    var didSelectItem: ((Host) -> Void)?
     
     override func viewWillLayoutSubviews() {
         tableView.tableView.contentInset = UIEdgeInsets(top: searchBar.frame.height + (8 * 2), left: 0.0, bottom: view.safeAreaInsets.bottom, right: 0.0)

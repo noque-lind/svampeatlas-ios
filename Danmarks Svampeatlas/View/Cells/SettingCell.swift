@@ -88,4 +88,3 @@ class SettingCell: UITableViewCell {
         contentLabel.text = content
     }
 }
-

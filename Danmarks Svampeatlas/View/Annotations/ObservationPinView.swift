@@ -6,9 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import MapKit
-
+import UIKit
 
 class ObservationPin: NSObject, MKAnnotation {
     var detailed: Bool
@@ -24,7 +23,6 @@ class ObservationPin: NSObject, MKAnnotation {
         super.init()
     }
 }
-
 
 class ObservationPinView: MKAnnotationView {
 
@@ -57,7 +55,7 @@ class ObservationPinView: MKAnnotationView {
         }
     }
     
-    var wasPressed: ((_ observation: Observation) -> ())?
+    var wasPressed: ((_ observation: Observation) -> Void)?
     
     private var withImage: Bool
     
@@ -112,7 +110,7 @@ class ObservationPinView: MKAnnotationView {
     private func configure() {
         imageView.image = nil
         guard let imageURL = observationPin.observation.images?.first?.url else {return}
-        DataService.instance.getImage(forUrl: imageURL, size: .mini) { (image, imageURL) in
+        DataService.instance.getImage(forUrl: imageURL, size: .mini) { (image, _) in
             DispatchQueue.main.async {
                 self.imageView.image = image
             }

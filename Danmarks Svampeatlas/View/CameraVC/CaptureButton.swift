@@ -19,7 +19,7 @@ class CaptureButton: UIButton {
         return view
     }()
     
-    var pressed: (() -> ())?
+    var pressed: (() -> Void)?
     
     init() {
         super.init(frame: CGRect.zero)
@@ -29,7 +29,6 @@ class CaptureButton: UIButton {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     private func setupView() {
         setImage(#imageLiteral(resourceName: "Icons_Utils_CaptureButton"), for: [])

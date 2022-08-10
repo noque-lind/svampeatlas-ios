@@ -6,16 +6,10 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class CustomTableView: AppTableView {
-    
-    
-    
-    
-    
-    
     
     //    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
     //        if self.point(inside: point, with: event) {
@@ -129,9 +123,8 @@ class ELTableViewOld<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    
     public private(set) var sections = [Section<T>]()
-    var didSelectItem: ((T, IndexPath) -> ())?
+    var didSelectItem: ((T, IndexPath) -> Void)?
     
     init() {
         super.init(frame: CGRect.zero)
@@ -153,7 +146,7 @@ class ELTableViewOld<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
  /// Remember to never reference anything else than the updater class within the update block.
-    func performUpdates(updates: @escaping (Updater) -> (), completion: (() -> Void)? = nil) {
+    func performUpdates(updates: @escaping (Updater) -> Void, completion: (() -> Void)? = nil) {
         DispatchQueue.main.async {
             self.tableView.performBatchUpdates({
                 updates(Updater(superclass: self))
@@ -277,7 +270,6 @@ class ELTableViewOld<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {}
 }
 
-
 class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     
     lazy var tableView: CustomTableView = {
@@ -317,8 +309,8 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
      - int: The current tableView offset
      - int: The maximum number of items in the model.
      */
-    var didRequestAdditionalDataAtOffset: ((_ tableView: GenericTableView<T>, _ offset: Int, _ max: Int?) -> ())?
-    var didSelectItem: ((_ item: T) -> ())?
+    var didRequestAdditionalDataAtOffset: ((_ tableView: GenericTableView<T>, _ offset: Int, _ max: Int?) -> Void)?
+    var didSelectItem: ((_ item: T) -> Void)?
     
     var tableViewState: TableViewState<T> = TableViewState.None {
         didSet {
@@ -382,7 +374,7 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
         tableView.register(cellClass, forCellReuseIdentifier: identifier)
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         guard automaticallyAdjustHeight == true else {return}
         switch tableViewState {
         case .Items, .Paging:
@@ -438,6 +430,3 @@ class GenericTableView<T>: UIView, UITableViewDataSource, UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {}
 }
-
-
-

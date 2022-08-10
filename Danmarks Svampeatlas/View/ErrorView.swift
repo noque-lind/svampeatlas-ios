@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class ErrorView: UIView {
     
@@ -71,7 +71,7 @@ class ErrorView: UIView {
         handler?(recoveryAction)
     }
     
-    func configure(error: AppError, handler: ((RecoveryAction?) -> ())?) {
+    func configure(error: AppError, handler: ((RecoveryAction?) -> Void)?) {
         mainLabel.text = error.title
         secondaryLabel.text = error.message
         

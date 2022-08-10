@@ -6,8 +6,8 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import Then
+import UIKit
 
 class SettingsInformationCell: UITableViewCell {
     static let identifier = "SettingsInformationCell"

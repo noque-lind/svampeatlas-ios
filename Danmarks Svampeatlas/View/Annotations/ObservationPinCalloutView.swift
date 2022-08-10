@@ -35,12 +35,11 @@ class ObservationPinCalloutView: UIView {
     }()
     
     private var observation: Observation?
-    weak var delegate: MapViewDelegate? = nil
+    weak var delegate: MapViewDelegate?
     private var withImage: Bool
     
     private var imageViewWidthConstraint = NSLayoutConstraint()
     private var imageViewTopConstraint = NSLayoutConstraint()
-    
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         if let button = button.hitTest(convert(point, to: button), with: event) {
@@ -54,7 +53,7 @@ class ObservationPinCalloutView: UIView {
         return true
     }
     
-    var wasPressed: ((_ observation: Observation) -> ())?
+    var wasPressed: ((_ observation: Observation) -> Void)?
     
     init(withImage: Bool) {
         self.withImage = withImage
@@ -71,7 +70,6 @@ class ObservationPinCalloutView: UIView {
         clipsToBounds = true
         layer.cornerRadius = CGFloat.cornerRadius()
         alpha = 0
-
         
         addSubview(button)
         button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -102,7 +100,7 @@ class ObservationPinCalloutView: UIView {
         observationView.configure(observation: observation)
         
         if let imageURL = observation.images?.first?.url, withImage == true {
-            DataService.instance.getImage(forUrl: imageURL, size: .mini) { (image, imageURL) in
+            DataService.instance.getImage(forUrl: imageURL, size: .mini) { (image, _) in
                 DispatchQueue.main.async {
                     self.imageView.image = image
                 }
@@ -147,13 +145,12 @@ class ObservationPinCalloutView: UIView {
         }
     }
     
-    func hide(animated: Bool, completion: @escaping () -> ()) {
+    func hide(animated: Bool, completion: @escaping () -> Void) {
         if withImage {
             imageViewWidthConstraint.isActive = false
             imageViewWidthConstraint = self.imageView.widthAnchor.constraint(equalToConstant: 120)
             imageViewWidthConstraint.isActive = true
         }
-       
         
         if animated {
             UIView.animate(withDuration: 0.2, animations: {

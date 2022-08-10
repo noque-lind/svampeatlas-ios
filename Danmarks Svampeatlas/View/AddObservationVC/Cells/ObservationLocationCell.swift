@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import MapKit
+import UIKit
 
 class ObservationLocationCell: UICollectionViewCell {
 
@@ -210,7 +210,7 @@ class ObservationLocationCell: UICollectionViewCell {
     }
     
     @objc private func annotationButtonPressed() {
-        delegate?.presentVC(TermsVC(terms: .localityHelper))
+        delegate?.presentVC(ModalVC(terms: .localityHelper))
     }
     
     private func didSelectLocality(locality: Locality) {
@@ -241,7 +241,6 @@ class ObservationLocationCell: UICollectionViewCell {
     }
 }
 
-
 ///CollectionView Extension
 extension ObservationLocationCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -254,7 +253,6 @@ extension ObservationLocationCell: UICollectionViewDelegate, UICollectionViewDat
         cell.configureCell(locality: localities[indexPath.row], locked: (viewModel?.locality.value?.locked ?? false) ? locality.id == viewModel?.locality.value?.locality.id: false)
         return cell
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if localities.count >= 3 {

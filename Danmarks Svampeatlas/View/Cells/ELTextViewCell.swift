@@ -6,8 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class TextViewCell: UITableViewCell {
     
@@ -26,11 +26,9 @@ class TextViewCell: UITableViewCell {
         setupView()
     }
     
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-
     
     private func setupView() {
         separatorInset = UIEdgeInsets(top: 0.0, left: 0, bottom: 0.0, right: 0.0)
@@ -82,7 +80,7 @@ class AddCommentCell: UITableViewCell {
     }()
     
     weak var delegate: AddCommentCellDelegate?
-    var sendButtonTappedHandler: ((String) -> ())?
+    var sendButtonTappedHandler: ((String) -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -96,7 +94,6 @@ class AddCommentCell: UITableViewCell {
         textView.text = nil
         textView.endEditing(true)
     }
-    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()

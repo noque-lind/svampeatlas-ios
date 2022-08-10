@@ -6,9 +6,9 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreLocation.CLLocation
 import ELKit
+import Foundation
 
 class UserObservation {
     
@@ -74,7 +74,6 @@ class UserObservation {
         case likely = "sandsynlig"
         case possible = "mulig"
     }
-    
     
     var observationDate = Date()
     var observationDateAccuracy = "day"

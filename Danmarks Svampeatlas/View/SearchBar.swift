@@ -33,10 +33,9 @@ class SearchBar: UITextField {
     
     private var progressBarView: ProgressBarView?
     private var recentSearch: String?
-    weak var searchBarDelegate: CustomSearchBarDelegate? = nil
+    weak var searchBarDelegate: CustomSearchBarDelegate?
     public private(set) var isExpanded: Bool = false
     private var shapeLayer = CAShapeLayer()
-
     
     init(radius: CGFloat = 50, trailingConstant: CGFloat = 8) {
         super.init(frame: CGRect.zero)
@@ -97,8 +96,6 @@ class SearchBar: UITextField {
         self.placeholder = nil
           attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [NSAttributedString.Key.font: UIFont.appPrimary(), NSAttributedString.Key.foregroundColor: UIColor.appWhite().withAlphaComponent(0.8)])
     }
-    
-  
     
     func setHidden(_ hidden: Bool) {
         DispatchQueue.main.async {
@@ -216,5 +213,3 @@ extension SearchBar: ProgressBarViewDelegate {
         }
     }
 }
-
-

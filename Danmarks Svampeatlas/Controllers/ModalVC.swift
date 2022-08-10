@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TermsVC: UIViewController {
+class ModalVC: UIViewController {
     
     enum Terms {
         case mlPredict
@@ -93,12 +93,10 @@ class TermsVC: UIViewController {
         return stackView
     }()
     
-    
-    
     var stack: UIStackView?
     private var heightAnchor = NSLayoutConstraint()
     private let terms: Terms
-    var wasDismissed: (() -> ())?
+    var wasDismissed: (() -> Void)?
     
     init(terms: Terms) {
         self.terms = terms
@@ -110,7 +108,6 @@ class TermsVC: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -133,14 +130,12 @@ class TermsVC: UIViewController {
     private func setupView() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         
-        
         let scrollView: UIScrollView = {
             let scrollView = UIScrollView()
             scrollView.backgroundColor = UIColor.appSecondaryColour()
             scrollView.translatesAutoresizingMaskIntoConstraints = false
             scrollView.layer.cornerRadius = 16
             scrollView.addSubview(contentStackView)
-            
             
             contentStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
             contentStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
@@ -149,7 +144,6 @@ class TermsVC: UIViewController {
             contentStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
             return scrollView
         }()
-        
         
         view.addSubview(scrollView)
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
@@ -169,7 +163,8 @@ class TermsVC: UIViewController {
             
             textView.text = NSLocalizedString("termsVC_mlPredict_message", comment: "")
         case .localityHelper:
-            header.configure(title: NSLocalizedString("termsVC_localityHelper_title", comment: ""))
+            header.configure(title: NSLocalizedString("Remember to confirm your position", comment: ""))
+            textView.text = NSLocalizedString("It is important for the quality of your collected data, that you make sure the position of the observation you are submitting are correct. You can see on the clip below how to adjust the position manually.\n\nIf a photo added to the observation contains a GPS tag, the app will suggest using the position from the image instead\n\nWe will remind you of this every once in a while. You can turn this reminder off in the settings.", comment: "")
             imageView.loadGif(name: "LocalityHelper")
             imageView.heightAnchor.constraint(equalToConstant: 276).isActive = true
         case .cameraHelper:
@@ -185,6 +180,8 @@ class TermsVC: UIViewController {
         switch terms {
             case .mlPredict:
                 UserDefaultsHelper.setHasAcceptedImagePredictionTerms(true)
+        case .localityHelper:
+            UserDefaultsHelper.setHasShownPositionReminder()
         default: break
         }
     

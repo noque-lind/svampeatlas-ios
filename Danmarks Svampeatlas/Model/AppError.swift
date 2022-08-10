@@ -6,9 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import ELKit
-
+import Foundation
 
 public enum mRecoveryAction {
     case openSettings

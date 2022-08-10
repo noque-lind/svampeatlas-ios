@@ -36,8 +36,7 @@ class SearchCell: UITableViewCell {
         return view
     }()
 
-    var searchButtonPressed: (() -> ())?
-    
+    var searchButtonPressed: (() -> Void)?
 
     @objc private func pressed() {
         searchButtonPressed?()
@@ -51,7 +50,6 @@ class SearchCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    
     
     private func setupView() {
         backgroundColor = UIColor.white
@@ -71,7 +69,6 @@ class SearchCell: UITableViewCell {
         label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
         label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
         label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        
         
         contentView.addSubview(containerView)
         containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true

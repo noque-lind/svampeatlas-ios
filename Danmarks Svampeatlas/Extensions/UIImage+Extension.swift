@@ -54,7 +54,7 @@ extension UIImage {
             
             guard var newResImage = self.jpegData(compressionQuality: mid) else {return nil}
             
-            while(index < 7) {
+            while index < 7 {
                 index += 1
                 
                 if newResImage.count < (allowedSizeInBytes - deltaInBytes) {

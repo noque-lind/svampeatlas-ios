@@ -6,9 +6,9 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
-import Then
 import MapKit.MKTypes
+import Then
+import UIKit
 
 class MapViewCell: UITableViewCell {
     private lazy var mapView = NewMapView(type: .observations(detailed: false)).then({
@@ -82,7 +82,6 @@ class MapViewCell: UITableViewCell {
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         mapView.addLocationAnnotation(location: coordinate)
         mapView.setRegion(center: coordinate, zoomMetres: 5000)
-        
         
         if let locality = observation.locality {
             precisionView.isHidden = false

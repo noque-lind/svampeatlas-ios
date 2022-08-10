@@ -32,7 +32,7 @@ class PickerViewCell: UITableViewCell {
         fatalError()
     }
     
-    var didPickDate: ((_ date: Date) -> ())?
+    var didPickDate: ((_ date: Date) -> Void)?
     
     private func setupView() {
         backgroundColor = UIColor.appWhite()
@@ -141,7 +141,6 @@ class TableViewPickerCell: UITableViewCell {
             self.cells = cells
         }
     }
-    
    
     private var switchHeaderView: SwitchHeaderView = {
        let view = SwitchHeaderView()
@@ -179,8 +178,8 @@ class TableViewPickerCell: UITableViewCell {
         }
     }
     
-    var didSelectCell: ((_ cellType: Section.CellType, _ isLocked: Bool) -> ())?
-    var presentVC: ((UIViewController) -> ())?
+    var didSelectCell: ((_ cellType: Section.CellType, _ isLocked: Bool) -> Void)?
+    var presentVC: ((UIViewController) -> Void)?
     var isLocked: Bool = false {
         didSet {
             switchHeaderView.isOn = isLocked
@@ -221,12 +220,10 @@ class TableViewPickerCell: UITableViewCell {
     }
 }
 
-
 extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
         return tableViewState.itemsCount()
     }
-
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let section = tableViewState.value(row: section) else {return 0}
@@ -307,7 +304,6 @@ extension TableViewPickerCell: UITableViewDataSource, UITableViewDelegate {
             case .substrateCell(let substrate):
                 tableView.allowsMultipleSelection = false
                     cell.textLabel?.text = "   - \(substrate.name)"
-            
                 
                 return cell
             case .vegetationTypeCell(let vegetationType):

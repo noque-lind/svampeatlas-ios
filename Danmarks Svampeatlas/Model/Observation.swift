@@ -9,7 +9,7 @@
 import Foundation
 import MapKit.MKTypes
 
-fileprivate struct PrivateObservation: Decodable {
+private struct PrivateObservation: Decodable {
     var id: Int
     var createdAt: String
     var observationDate: String
@@ -58,8 +58,7 @@ fileprivate struct PrivateObservation: Decodable {
     }
 }
 
-
-fileprivate struct PrivateGeoNames: Decodable {
+private struct PrivateGeoNames: Decodable {
     var geonameId: Int
     var name: String
     var countryName: String
@@ -71,7 +70,7 @@ fileprivate struct PrivateGeoNames: Decodable {
     var fclName: String
 }
 
-fileprivate struct PrivateSubstrate: Decodable {
+private struct PrivateSubstrate: Decodable {
     let _id: Int
     let name: String
     let name_uk: String
@@ -81,18 +80,18 @@ fileprivate struct PrivateSubstrate: Decodable {
     let group_cz: String?
 }
 
-fileprivate struct PrivateVegetationType: Decodable {
+private struct PrivateVegetationType: Decodable {
     let _id: Int
     let name: String
     let name_uk: String
-    let name_cz:String?
+    let name_cz: String?
 }
 
-fileprivate struct PrivateGeom: Decodable {
+private struct PrivateGeom: Decodable {
     var coordinates: [Double]
 }
 
-fileprivate struct PrivateDeterminationView: Decodable {
+private struct PrivateDeterminationView: Decodable {
     public private(set) var taxon_id: Int
     public private(set) var taxon_FullName: String
     public private(set) var taxon_vernacularname_dk: String?
@@ -102,7 +101,7 @@ fileprivate struct PrivateDeterminationView: Decodable {
     let confidence: String?
 }
 
-fileprivate struct PrivatePrimaryDeterminationView: Decodable {
+private struct PrivatePrimaryDeterminationView: Decodable {
     public private(set) var score: Int?
     public private(set) var validation: String?
     public private(set) var Taxon: PrivateTaxon
@@ -110,16 +109,16 @@ fileprivate struct PrivatePrimaryDeterminationView: Decodable {
     
 }
 
-fileprivate struct PrivateAssociatedTaxa: Decodable {
+private struct PrivateAssociatedTaxa: Decodable {
     let _id: Int
     let DKname: String?
     let LatinName: String
 }
-fileprivate struct PrivateTaxon: Decodable {
+private struct PrivateTaxon: Decodable {
     public private(set) var acceptedTaxon: AcceptedTaxon
 }
 
-fileprivate struct PrivateImages: Decodable {
+private struct PrivateImages: Decodable {
     var _id: Int
     var name: String
     var createdAt: String
@@ -134,17 +133,17 @@ fileprivate struct PrivateImages: Decodable {
     }
 }
 
-fileprivate struct PrivatePrimaryUser: Decodable {
+private struct PrivatePrimaryUser: Decodable {
     var profile: PrivateProfile?
 }
 
-fileprivate struct PrivateProfile: Decodable {
+private struct PrivateProfile: Decodable {
     var name: String?
     var Initialer: String?
     var facebook: String?
 }
 
-fileprivate struct PrivateLocality: Decodable {
+private struct PrivateLocality: Decodable {
     var _id: Int
     var name: String?
     var kommune: String?
@@ -152,7 +151,7 @@ fileprivate struct PrivateLocality: Decodable {
     let decimalLongitude: Double?
 }
 
-fileprivate struct PrivateForum: Decodable {
+private struct PrivateForum: Decodable {
     var _id: Int?
     var createdAt: String?
     var content: String?
@@ -177,7 +176,6 @@ struct Observation: Decodable, Equatable {
         case unknown
     }
     
-    
     public private(set) var id: Int
     let createdAt: String
     public private(set) var coordinates: [Double]
@@ -194,7 +192,6 @@ struct Observation: Decodable, Equatable {
     public private(set) var substrate: Substrate?
     public private(set) var vegetationType: VegetationType?
     public private(set) var hosts: [Host]
-
     
     init(from decoder: Decoder) throws {
         let privateObservation = try PrivateObservation(from: decoder)
@@ -202,7 +199,6 @@ struct Observation: Decodable, Equatable {
         id = privateObservation.id
         coordinates = privateObservation.geom.coordinates
         createdAt = privateObservation.createdAt
-        
         
         if let latitude = privateObservation.geom.coordinates.last, let longitude = privateObservation.geom.coordinates.first {
             location = CLLocation.init(coordinate: .init(latitude: latitude, longitude: longitude), altitude: -1, horizontalAccuracy: Double(privateObservation.accuracy ?? -1), verticalAccuracy: -1.0, timestamp: Date())
@@ -261,7 +257,6 @@ struct Observation: Decodable, Equatable {
         } else if let substrateID = privateObservation.substrate_id {
             substrate = CoreDataHelper.fetchSubstrateGroup(withID: substrateID)
         }
-        
         
         if let determinationView = privateObservation.determinationView {
             determination = Determination(id: determinationView.taxon_id, fullName: determinationView.taxon_FullName, danishName: determinationView.taxon_vernacularname_dk, confidence: determinationView.confidence)
@@ -341,4 +336,3 @@ func == (lhs: Observation, rhs: Observation) -> Bool {
         return false
     }
 }
-

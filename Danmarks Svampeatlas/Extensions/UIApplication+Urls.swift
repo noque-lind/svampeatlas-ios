@@ -15,8 +15,7 @@ extension UIApplication {
             if application.canOpenURL(URL(string: url)!) {
                 if #available(iOS 10.0, *) {
                     application.open(URL(string: url)!, options: [:], completionHandler: nil)
-                }
-                else {
+                } else {
                     application.openURL(URL(string: url)!)
                 }
                 return
@@ -29,4 +28,3 @@ extension UIApplication {
         UIApplication.shared.open(settingsURL)
     }
 }
-

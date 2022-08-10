@@ -6,11 +6,11 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
-import Photos
 import CoreLocation
 import ELKit
+import Photos
+import UIKit
 
 protocol AVViewDelegate: class {
     func error(error: AVView.AVViewError)
@@ -73,7 +73,6 @@ class AVView: UIView {
     private var input: AVCaptureInput?
     private var output: AVCapturePhotoOutput?
     
-    
     override func layoutSubviews() {
         super.layoutSubviews()
         previewLayer.frame = self.bounds
@@ -130,7 +129,6 @@ class AVView: UIView {
             } catch {
                 delegate?.error(error: AVViewError.cameraError(error: error))
             }
-            
             
         } else {
             AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) -> Void in
@@ -200,7 +198,7 @@ class AVView: UIView {
                 longitudeRef = "E"
             }
                    
-            settings.metadata = [String(kCGImagePropertyGPSDictionary):  [
+            settings.metadata = [String(kCGImagePropertyGPSDictionary): [
             String(kCGImagePropertyGPSAltitude): location.altitude,
             String( kCGImagePropertyGPSLatitude): latitude,
             String(kCGImagePropertyGPSLatitudeRef): latitudeRef,

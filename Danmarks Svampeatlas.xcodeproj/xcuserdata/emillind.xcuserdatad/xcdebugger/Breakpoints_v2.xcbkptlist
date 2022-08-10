@@ -505,16 +505,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A4D0D948-F197-44E6-9C1B-CB1DDD77086C"
+            uuid = "A201899D-A42A-4C33-B505-E0C92F88BD21"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Danmarks Svampeatlas/Repository/NotesRepository.swift"
+            filePath = "Danmarks Svampeatlas/View/AddObservationVC/Cells/ObservationLocationCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
-            landmarkName = "mapValues(note:userObservation:)"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
+            landmarkName = "configureObservationLocation(location:locked:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -528,8 +528,40 @@
             filePath = "Danmarks Svampeatlas/Repository/CoreDataHelper.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "349"
-            endingLineNumber = "349"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "setup(completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A6F932E7-446D-4311-AFD0-38B85B2C19AB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Controllers/AddObservationVC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "339"
+            endingLineNumber = "339"
+            landmarkName = "setupViewModel()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "40E69D1E-30AC-4AE9-904F-A63C3E1403DB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Danmarks Svampeatlas/Controllers/AddObservationVC.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "344"
+            endingLineNumber = "344"
             landmarkName = "setupViewModel()"
             landmarkType = "7">
          </BreakpointContent>

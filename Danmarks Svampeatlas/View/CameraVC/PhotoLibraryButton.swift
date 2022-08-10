@@ -10,7 +10,7 @@ import UIKit
 
 class PhotoLibraryButton: UIButton {
     
-    var pressed: (() -> ())?
+    var pressed: (() -> Void)?
     
     init() {
         super.init(frame: CGRect.zero)

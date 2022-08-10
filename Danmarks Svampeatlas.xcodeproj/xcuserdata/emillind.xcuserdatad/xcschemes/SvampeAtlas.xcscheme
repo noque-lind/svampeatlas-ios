@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4A69BC752038D96500D3B88B"
-               BuildableName = "SvampeAtlas.app"
-               BlueprintName = "SvampeAtlas"
-               ReferencedContainer = "container:SvampeAtlas.xcodeproj">
+               BuildableName = "Danmarks Svampeatlas.app"
+               BlueprintName = "Danmarks Svampeatlas"
+               ReferencedContainer = "container:Danmarks Svampeatlas.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -74,11 +74,15 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4A69BC752038D96500D3B88B"
-            BuildableName = "SvampeAtlas.app"
-            BlueprintName = "SvampeAtlas"
-            ReferencedContainer = "container:SvampeAtlas.xcodeproj">
+            BuildableName = "Danmarks Svampeatlas.app"
+            BlueprintName = "Danmarks Svampeatlas"
+            ReferencedContainer = "container:Danmarks Svampeatlas.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <LocationScenarioReference
+         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+         referenceType = "1">
+      </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

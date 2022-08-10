@@ -6,14 +6,14 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import CoreLocation.CLLocation
 import ELKit
+import UIKit
 
 enum Result<ReturnValue, ErrorType> {
     case failure(ErrorType)
     case success(ReturnValue)
-
+    
     func onSuccess(_ handler: (ReturnValue) -> Void) {
         switch self {
         case .success(let returnValue):
@@ -21,7 +21,7 @@ enum Result<ReturnValue, ErrorType> {
         case .failure: return
         }
     }
-
+    
     func onFailure(_ handler: (ErrorType) -> Void) {
         switch self {
         case .success: return
@@ -82,6 +82,7 @@ class DataService {
     }
 
     enum URLSessionError: AppError {
+        
         case noInternet
         case timeout
         case invalidResponse
@@ -89,6 +90,7 @@ class DataService {
         case unAuthorized
         case unknown(debugMessage: String)
         case payloadTooLarge
+        
         var message: String {
             switch self {
             case .noInternet:
@@ -134,17 +136,18 @@ class DataService {
             }
         }
     }
+    
     private init() {}
     static let instance = DataService()
     weak var sessionDelegate: SessionDelegate?
     private let imagesCache = NSCache<NSString, UIImage>()
     private let mushroomCache = NSCache<NSString, NSData>()
     private var currentlyDownloading = [String: URLSessionTask]()
-
+    
     lazy var observationsRepository = ObservationsData(ds: self)
-
-    // CLASS FUNCTIONS
-
+    
+    //CLASS FUNCTIONS
+    
     internal func createDataTaskRequest(url: String, method: String = "GET", data: Data? = nil, contentType: String? = nil, contentLenght: Int? = nil, token: String? = nil, largeDownload: Bool = false, completion: @escaping (Result<Data, URLSessionError>) -> Void) {
         var request = URLRequest(url: URL.init(string: url)!)
         if !largeDownload {
@@ -165,6 +168,7 @@ class DataService {
         if let token = token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
+        
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             do {
 
@@ -178,7 +182,7 @@ class DataService {
         }
         task.resume()
     }
-
+    
     internal func handleURLSession(data: Data?, response: URLResponse?, error: Error?) throws -> Data {
         guard error == nil, let response = response as? HTTPURLResponse else {
             throw handleURLSessionError(error: error)
@@ -191,6 +195,7 @@ class DataService {
         guard let data = data else {throw URLSessionError.invalidResponse}
         return data
     }
+    
     internal func handleURLSessionError(error: Error?) -> URLSessionError {
         let error = error! as NSError
         switch error.code {
@@ -218,11 +223,11 @@ class DataService {
 }
 
 extension DataService {
-
-    // FUNCTIONS THAT RETURN MUSHROOM/S
-
+    
+    //FUNCTIONS THAT RETURN MUSHROOM/S
+    
     func getMushrooms(searchString: String?, speciesQueries: [API.SpeciesQueries] = [API.SpeciesQueries.danishNames, API.SpeciesQueries.attributes(presentInDenmark: nil), API.SpeciesQueries.images(required: false), API.SpeciesQueries.statistics, API.SpeciesQueries.redlistData, .tag(id: 16)], limit: Int?, offset: Int = 0, largeDownload: Bool = false, useCache: Bool = true, completion: @escaping (Result<[Mushroom], AppError>) -> Void) {
-
+        
         let api = API.Request.Mushrooms(searchString: searchString, speciesQueries: speciesQueries, limit: limit, offset: offset).encodedURL
 
         func handleData(data: Data) {
@@ -239,6 +244,7 @@ extension DataService {
                                           completion(Result.failure(DataServiceError.decodingError(error)))
                                       }
         }
+        
         if useCache, let data = mushroomCache.object(forKey: NSString(string: api)) {
             handleData(data: Data(data))
         } else {
@@ -252,7 +258,7 @@ extension DataService {
                    }
         }
     }
-
+    
     func getMushroom(withID id: Int, completion: @escaping (Result<Mushroom, AppError>) -> Void) {
         createDataTaskRequest(url: API.Request.Mushroom(id: id).encodedURL) { (result) in
             switch result {
@@ -273,7 +279,7 @@ extension DataService {
 extension DataService {
 
     // FUNCTIONS THAT RETURN OBSERVATION/S
-
+    
     func getObservation(withID id: Int, completion: @escaping (Result<Observation, AppError>) -> Void) {
         createDataTaskRequest(url: API.observationWithIDURL(observationID: id)) { (result) in
             switch result {
@@ -289,7 +295,7 @@ extension DataService {
             }
         }
     }
-
+    
     func getObservationsForMushroom(withID id: Int, limit: Int, offset: Int, completion: @escaping (Result<[Observation], AppError>) -> Void) {
         createDataTaskRequest(url: API.observationsURL(includeQueries: [.comments, .determinationView(taxonID: id), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: limit, offset: offset)) { (result) in
             switch result {
@@ -305,7 +311,7 @@ extension DataService {
             }
         }
     }
-
+    
     func getObservationsWithin(geometry: API.Geometry, taxonID: Int? = nil, ageInYear: Int? = nil, completion: @escaping (Result<[Observation], AppError>) -> Void) {
         createDataTaskRequest(url: API.Request.Observations(geometry: geometry, ageInYear: ageInYear, include: [.comments, .determinationView(taxonID: taxonID), .geomNames, .images, .locality, .user(responseFilteredByUserID: nil)], limit: nil, offset: nil).encodedURL) { (result) in
             switch result {
@@ -331,9 +337,9 @@ extension DataService {
 extension DataService {
 
     // UTILITY DOWNLOADS
-
+    
     func getLocalitiesNearby(coordinates: CLLocationCoordinate2D, radius: API.Radius = API.Radius.smallest, completion: @escaping (Result<[Locality], AppError>) -> Void) {
-
+        
         createDataTaskRequest(url: API.localitiesURL(coordinates: coordinates, radius: radius)) { (result) in
             switch result {
             case .failure(let error):
@@ -365,6 +371,7 @@ extension DataService {
                         }
                     } else {
                         guard let geoName = (try JSONDecoder().decode(GeoNames.self, from: data)).geonames.first else {completion(Result.failure(DataServiceError.extractionError)); return}
+                        
                         completion(Result.success([Locality(id: geoName.geonameId, name: "\(geoName.name), \(geoName.countryCode)", latitude: Double(geoName.lat)!, longitude: Double(geoName.lng)!, geoName: geoName)]))
                     }
                 } catch {
@@ -373,9 +380,9 @@ extension DataService {
             }
         }
     }
-
+    
     func getSubstrateGroups(overrideOutdateError: Bool? = false, completion: @escaping (Result<[SubstrateGroup], AppError>) -> Void) {
-
+    
     func sortAndComplete(substrateGroups: [SubstrateGroup]) {
         let sortedSubstrateGroups = substrateGroups.sorted(by: {$0.id < $1.id})
         completion(Result.success(sortedSubstrateGroups))
@@ -399,7 +406,7 @@ extension DataService {
                 switch result {
                 case .success(let substrateGroups):
                     sortAndComplete(substrateGroups: substrateGroups)
-                case .failure(_):
+                case .failure:
                     self.getSubstrateGroups(overrideOutdateError: true, completion: completion)
                     }
             })
@@ -407,7 +414,7 @@ extension DataService {
         }
     }
     }
-
+    
     func downloadSubstrateGroups(completion: @escaping (Result<[SubstrateGroup], AppError>) -> Void) {
         createDataTaskRequest(url: API.substrateURL()) { (result) in
             switch result {
@@ -423,9 +430,10 @@ extension DataService {
                     if let index = substrateGroups.firstIndex(where: {$0.dkName == group_dk}) {
                         substrateGroups[index].appendSubstrate(substrate: Substrate(id: id, dkName: name, enName: name_uk, czName: object["name_cz"] as? String))
                     } else {
-                        substrateGroups.append(SubstrateGroup(dkName: group_dk, enName: group_uk, czName: object["group_cz"] as? String, substrates: [Substrate(id: id, dkName: name, enName: name_uk ,czName: object["name_cz"] as? String)]))
+                        substrateGroups.append(SubstrateGroup(dkName: group_dk, enName: group_uk, czName: object["group_cz"] as? String, substrates: [Substrate(id: id, dkName: name, enName: name_uk, czName: object["name_cz"] as? String)]))
                     }
                 }
+        
                 CoreDataHelper.saveSubstrateGroups(substrateGroups: substrateGroups)
                 completion(Result.success(substrateGroups))
 
@@ -434,7 +442,7 @@ extension DataService {
             }
         }
     }
-
+    
     func getVegetationTypes(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[VegetationType], AppError>) -> Void) {
         CoreDataHelper.fetchVegetationTypes(overrideOutdateWarning: overrideOutdateWarning, completion: { (result) in
             switch result {
@@ -459,7 +467,7 @@ extension DataService {
                         case .success(let vegetationTypes):
                             let sortedVegetationTypes = vegetationTypes.sorted(by: {$0.id < $1.id})
                             completion(Result.success(sortedVegetationTypes))
-                        case .failure(_):
+                        case .failure:
                             self.getVegetationTypes(overrideOutdateWarning: true, completion: completion)
                         }
                     })
@@ -469,7 +477,7 @@ extension DataService {
             }
         })
     }
-
+   
     func downloadVegetationTypes(completion: @escaping (Result<[VegetationType], AppError>) -> Void) {
         createDataTaskRequest(url: API.vegetationTypeURL(), completion: { (result) in
             switch result {
@@ -489,7 +497,7 @@ extension DataService {
             }
         })
     }
-
+    
     func getPopularHosts(overrideOutdateWarning: Bool? = false, completion: @escaping (Result<[Host], AppError>) -> Void) {
         CoreDataHelper.fetchHosts(overrideOutdateWarning: overrideOutdateWarning) { (result) in
             switch result {
@@ -511,7 +519,7 @@ extension DataService {
                 case .contentOutdated:
                     downloadHosts(shouldSave: true, completion: { (result) in
                         switch result {
-                        case .failure(_):
+                        case .failure:
                             self.getPopularHosts(overrideOutdateWarning: true, completion: completion)
                         case .success(let hosts):
                             let sortedHosts = hosts.sorted(by: {$0.probability > $1.probability})
@@ -523,7 +531,7 @@ extension DataService {
             }
         }
     }
-
+    
     func downloadHosts(shouldSave: Bool, searchString: String? = nil, completion: @escaping (Result<[Host], AppError>) -> Void) {
         createDataTaskRequest(url: API.Request.Hosts(searchString: searchString).encodedURL, completion: { (result) in
             switch result {
@@ -544,7 +552,6 @@ extension DataService {
             }
         })
     }
-    
 
     enum ImageSize: String {
         case full = ""
@@ -575,10 +582,10 @@ extension DataService {
         }
         task.resume()
     }
-
+    
     func getImagePredictions(image: UIImage, completion: @escaping (Result<[PredictionResult], AppError>) -> Void) {
         DispatchQueue.global(qos: .default).async {
-             let parameters = ["instances": [["image_in": ["b64": image.rotate().toBase64()]]]] as [String : Any]
+             let parameters = ["instances": [["image_in": ["b64": image.rotate().toBase64()]]]] as [String: Any]
                    let data = try! JSONSerialization.data(withJSONObject: parameters, options: [])
             self.createDataTaskRequest(url: API.Post.imagePredict(speciesQueries: [.attributes(presentInDenmark: nil), .danishNames, .images(required: false), .redlistData, .statistics, .acceptedTaxon]).encodedURL, method: "POST", data: data, contentType: "application/json", contentLenght: nil, token: nil) { (result) in
                        switch result {
@@ -596,4 +603,3 @@ extension DataService {
         }
 }
 }
-

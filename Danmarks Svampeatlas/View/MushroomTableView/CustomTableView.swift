@@ -6,9 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
-
+import UIKit
 
 class AnimatingTableView: UITableView {
     
@@ -60,7 +59,6 @@ class AppTableView: UITableView {
         fatalError()
     }
     
-    
     override func reloadData() {
         super.reloadData()
         if self.visibleCells.count > 0 {
@@ -88,7 +86,7 @@ class AppTableView: UITableView {
         }
     }
     
-    func showError(_ appError: AppError, handler: ((RecoveryAction?) -> ())?) {
+    func showError(_ appError: AppError, handler: ((RecoveryAction?) -> Void)?) {
         DispatchQueue.main.async {
             let view = ErrorView()
             view.configure(error: appError, handler: handler)

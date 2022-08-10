@@ -43,7 +43,6 @@ class NotificationCell: UITableViewCell {
         fatalError()
     }
     
-    
     private func setupView() {
         contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 70 + (8*2)).isActive = true
         backgroundColor = UIColor.clear
@@ -53,7 +52,6 @@ class NotificationCell: UITableViewCell {
         contentView.addSubview(profileImageView)
         profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         profileImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
-        
         
         contentView.addSubview(primaryLabel)
         primaryLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
@@ -94,7 +92,6 @@ class NotificationCell: UITableViewCell {
             } else {
                 profileImageView.configure(image: #imageLiteral(resourceName: "Images_Icon"))
             }
-            
             
             primaryText.deleteCharacters(in: NSRange(location: 0, length: primaryText.length))
             primaryText.append(NSAttributedString(string: NSLocalizedString("notificationCell_determinationApproved_1", comment: ""), attributes: [NSAttributedString.Key.font: UIFont.appPrimary()]))

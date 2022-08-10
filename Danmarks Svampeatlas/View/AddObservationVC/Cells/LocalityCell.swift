@@ -20,7 +20,6 @@ class LocalityCell: UICollectionViewCell {
         return view
     }()
     
-    
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.appSecondaryColour()

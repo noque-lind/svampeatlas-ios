@@ -21,7 +21,6 @@ enum NavigationItem {
     case settings
     case about
     
-    
     var title: String {
         switch self {
         case .loginVC:

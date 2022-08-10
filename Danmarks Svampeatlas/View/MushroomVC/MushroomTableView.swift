@@ -15,8 +15,8 @@ class MushroomTableView: ELTableViewOld<MushroomTableView.Item> {
         case loadMore(offset: Int)
     }
     
-    var mushroomSwiped: ((Mushroom, IndexPath) -> ())?
-    var isAtTop: ((Bool) -> ())?
+    var mushroomSwiped: ((Mushroom, IndexPath) -> Void)?
+    var isAtTop: ((Bool) -> Void)?
     
     override init() {
         super.init()
@@ -60,7 +60,7 @@ class MushroomTableView: ELTableViewOld<MushroomTableView.Item> {
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let item = sections[indexPath.section].itemAt(index: indexPath.row), case Item.mushroom(let mushroom) = item else {return nil}
-        let action = UIContextualAction(style: .normal, title: nil) { (action, view, completion) in
+        let action = UIContextualAction(style: .normal, title: nil) { (_, _, completion) in
             self.mushroomSwiped?(mushroom, indexPath)
             completion(true)
         }

@@ -1,911 +1,348 @@
-// No comment provided by engineer.
-//"✔︎ Ready for upload" = "✔︎ Klar til upload";
-//
-//"Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded" = "Men der skete en fejl med at uploade billedet/ne. %d ud af %d billeder er blevet uploaded";
-//"Cancel" = "Annuller";
-//"Cancel upload" = "Annuller upload";
-//"Could not delete" = "Kunne ikke slette";
-//"Date: %@" = "Dato: %@";
-//"Delete note" = "Slet note";
-//"Delete observation" = "Slet observation";
-//"Deletions are final" = "Sletning af billedet er permanent";
-//"Do you want to fetch data?" = "Vil du gerne hente data til offline brug?";
-//"Downloading metadata" = "Henter metadata";
-//"Downloading offline data" = "Henter data til offline brug ...";
-//"Downloading taxons" = "Henter svampe til offline brug ...";
-//"Edit note" = "Rediger note";
-//"Edit observation" = "Rediger observation";
-//"In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?" = "For at du kan bruge denne funktionalitet, skal du have data downloaded til offline brug. Hvis du allerede har hentet data, skal dataen opdateres. Gør kun dette hvis du har en god internet forbindelse. Er du klar?";
-//"Low accuracy" = "Upræcis observationsplacering";
-//"New note" = "Ny note";
-//"No, I'll adjust it myself" = "Nej, jeg justere placeringen selv";
-//"No, continue with the upload" = "Nej, fortsæt med at uploade";
-//"No, not right now" = "Nej, ikke lige nu";
-//"Notebook" = "Notesbog";
-//"Observation with ID: %d" = "Observation med ID: %d";
-//"Precision %0.2f m." = "Præcision %0.2f m.";
-//"Recieve reminders regarding importance of correct and precise position attached to records" = "Modtag påmindelser vedrørende kontrol af position";
-//"Record unidentifed mushroom" = "Indlæg en ubestemt svamp";
-//"Reminders" = "Påmindelser";
-//"Save" = "Gem";
-//"Save as note" = "Gem som note";
-//"Saving to local storage" = "Gemmer til lokal database";
-//"Success" = "Færdig!";
-//"The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties" = "Muligheden for at tilføje bestemmelser til en allerede bestemt observation kommer snart. For nu, kan du kun redigere de andre variabler";
-//"The location accuracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "Den nuværende præcision er: %0.2f m, hvilket er for upræcist. Vil du bruge din nuværende placering i stedet for?";
-//"The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "Den nuværende præcision er: %0.2f m, hvilket er for upræcist. Vil du bruge din nuværende placering i stedet for?";
-//"The note has been saved in local storage, you can see it in your notebook" = "Noten er blevet gemt i din lokale database, og du kan se det i din notesbog";
-//"The note is saved" = "Noten er blevet gemt";
-//"The observation was successfully edited" = "Observationen blev opdateret";
-//"Try again" = "Prøv igen";
-//"Upload now" = "Indsend nu!";
-//"Whats new?" = "Hvad er nyt?";
-//"When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again" = "Når du redigere en observation, er sletning af uploadede billeder permanente, også selvom du ikke uploader andre ændringer. Denne besked vises kun en gang, or du skal slette billedet igen hvis du ønsker at det skal slettes.";
-//"Yes, fetch data" = "Ja, hent data";
-//"Yes, find my current location" = "Ja, find min nuværende placering";
-//"Yes, find my location" = "Ja, find min placering";
-//"You are editing an observation" = "Du er igang med at redigere en observation";
-//"You do not yet have any saved notes. This functionality enables you to save your observations locally, without uploading it before you are ready. Perhaps once you have a better internet connection" = "Du har ingen gemte noter. Denne funktionalitet lader dig gemme observationer lokalt uden at indsende dem før du er klar. Det er smart hvis du tit har dårlig forbindelse når du er ude og finde svampe.";
-//"You have the options below:" = "Du har nedenstående valgmuligheder.";
-//"Your device now has the newest update to the taxon database. Get out there!" = "Din enhed har nu den nyeste opdatering til taxon databasen.";
-//"aboutVC_generalTerms_message" = "Når du opretter dig som bruger/indrapportør på Danmarks Svampeatlas, har du mulighed for at indlægge svampefund og kommentere på andres fund. Nedenfor gennemgår vi mere detaljeret de betingelser og retningslinier, som vi arbejder efter.
-//
-///* (No Comment) */
-//"aboutVC_generalTerms_message" = "Når du opretter dig som bruger/indrapportør på Danmarks Svampeatlas, har du mulighed for at indlægge svampefund og kommentere på andres fund. Nedenfor gennemgår vi mere detaljeret de betingelser og retningslinier, som vi arbejder efter.\n\nAlle kan oprette sig som brugere på Danmarks Svampeatlas. Alle indrapporteringer og kommentarer er åbent tilgængelige for alle brugere. Vi henstiller til en god og konstruktiv omgangstone og gør opmærksom på, at du er ansvarlig for de handlinger, der bliver foretaget med dit login på netstedet. Ved gentagne brud på de specifikke retningslinjer som gennemgås nedenfor, forbeholder Danmarks Svampeatlas sig ret til at slette din profil og/eller stoppe din brugeradgang. Det samme kan ske i tilfælde af grov og gentagen forsømmelse af almindelige regler for god omgangstone på nettet.\n\nVi ser meget gerne at du uploader fotos og tekst som dokumentation for dine svampefund. I mange tilfælde kan et godt foto være et krav for, at dine fund kan valideres. Hvis du anvender fotos eller tekster, der ikke er dine egne, skal du sikre at du har rettigheder til at bruge disse. Du er desuden forpligtet til så vidt muligt at sikre, at de geografiske koordinater knyttet til hvert fund er præcise, og at det valgte zoom-niveau ikke resulterer i en højere præcision end der er belæg for.\n\nInformationer og fotos, som du har videregivet til Danmarks Svampeatlas, vises på projektets hjemmeside, under det enkelte fund og ved gallerivisninger for de arter som fundene repræsenterer. Fotos og andre informationer er knyttet til det enkelte svampefund og udgør i mange tilfælde en vigtig dokumentation som derfor ikke slettes. Ved visning på Danmarks Svampeatlas vil fotografens navn tydeligt fremgå. Brug af billederne, ud over de nævnte, vil kun finde sted efter direkte aftale med brugerne, som beholder alle rettigheder til egne fotos. Sender du belæg som dokumentation for enkelte fund, vil den enkelte ekspert beslutte om belægget skal gemmes for eftertiden i samlingerne på Statens Naturhistoriske Museum ved Københavns Universitet eller ved en anden internationalt anerkendt samling.\n\nDe fund-data du indtaster i Danmarks Svampeatlas, videregives til den Globale Biodiversisetets Facilitet (GBIF) under OECD og er internationlt søgbare via gbif.org under OECD. Billeder som er uploadet som dokumentation af hvert fund er linket til dette og er således synlige hos GBIF. Ønsker du ikke at links til dine billeder videregives til GBIF, så send venligst en email til atlas@svampe.dk\n\nHvis du på et tidspunkt vælger at få slettet din profil, forbliver alle informationer og materiale indlagt med denne profil synlige og søgbare på projektets hjemmeside.\n\nValidatorer og administratorer har ret til at slette/ændre information, som vedrører dine observationer, så længe retningslinjerne for information ikke bliver overtrådt derved.";
-//
-///* (No Comment) */
-//"aboutVC_generalTerms_title" = "Generelle betingelser";
-//
-///* (No Comment) */
-//"aboutVC_guidelines_message" = "Simple funddata kan søges via webinterfacet på Danmarks Svampeatlas og kan frit bruges i alle typer af forvaltningsopgaver på såvel lokalt som nationalt plan, fx i forbindelse med miljøvurderinger (VVM’er), udarbejdelse af plejeplaner samt til lokal og national prioritering af naturbeskyttelse i Danmark. Danmarks Svampeatlas bør i hvert tilfælde citeres som kilde. Data kan på tilsvarende vis bruges i forskningssammenhæng. Bemærk at databasen indeholder både godkendte, uvaliderede og afviste fund, hvilket er specificeret under hvert fund.\n\nValideringsprocessen omfatter artsbestemmelsen, og de grovere geografiske data. Især ældre fund har ofte meget upræcise fund-koordinater, men også for helt nye fund kan de være upræcist angivet. Den brugerdefinerede usikkerhed på fund-koordinater er angivet i meter for hvert fund, og skal betragtes som vejledende, fx ved udarbejdelse af detaljerede lokale forvaltningsplaner. Danmarks Svampeatlas rummer et meget stort antal standardnavne for lokaliteter, som vælges af rapportøren. Det betyder, at fund af den samme svamp kan være indrapporteret med flere forskellige lokalitetsnavne af forskellige brugere, og tillige med forskellige koordinater. I praksis er dette mest aktuelt for meget sjældne og karismatiske arter, fx pindsvinepigsvamp og safrangul fedtporesvamp.";
-//
-///* (No Comment) */
-//"aboutVC_guidelines_title" = "Retningslinier for brug af data fra Danmarks Svampeatlas";
-//
-///* (No Comment) */
-//"aboutVC_qualityAssurance_message" = "For at sikre at de informationer, der ligger i svampebasen er troværdige, undergår alle fund kvalitetssikring. Fund af arter uden valideringskrav bliver automatisk godkendt, mens fund af arter med valideringskrav som udgangspunkt er uvaliderede, indtil de er godkendt af en validator. For de valideringskrævende arter er der angivet en række valideringskrav. Hvis disse krav ikke er opfyldt i forbindelse med indlæggelse af fund, kan man ikke regne med en seriøs behandling af observationen og fundet afvises. Godkendte fund, også af arter, der ikke kræver validering, kan senere afvises af validatorer, fx hvis det vurderes at der ikke er tilstrækkelig dokumentation til at fundet kan godkendes eller at den vedlagte dokumentation viser, at det er en anden men ubestemmelig art. Alle brugere har mulighed for at kommentere på alle fund - både uvaliderede, godkendte og afviste. Kvalitetssikring/validering kræver ofte mikroskopisk undersøgelse af materiale, hvorfor behandlingstiden kan være lang.";
-//
-///* (No Comment) */
-//"aboutVC_qualityAssurance_title" = "Kvalitetssikring/validering";
-//
-///* (No Comment) */
-//"aboutVC_recognition_message" = "Brug af automatisk billedegenkendelse kan aldrig være helt præcis, og det er derfor vigtigt at systemet bruges med endnu mere kritisk sans end din svampebog. Spis aldrig svampe uden at søge hjælp fra svampekyndige mennesker. Danmarks Svampeatlas og Noque ApS frasiger sig ethvert ansvar for eventuelle forgiftninger eller andre sundhedsskadelige forhold.\n\nBilledegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
-//
-///* (No Comment) */
-//"aboutVC_recognition_title" = "Artsbestemmelse";
-//
-///* AboutVC */
-//"aboutVC_title" = "Om";
-//
-///* (No Comment) */
-//"addObservationVC_localityFound_message" = "Navn: %@\nKoordinater: %.02f - %.02f\nPræcision: %.02f m.";
-//
-///* (No Comment) */
-//"addObservationVC_localityFound_title" = "Fundets placering er blevet bestemt";
-//
-///* (No Comment) */
-//"addObservationVC_localityFoundError_title" = "Nærmeste placering kunne ikke findes.";
-//
-///* (No Comment) */
-//"addObservationVC_observationCategories_details" = "Detajler";
-//
-///* (No Comment) */
-//"addObservationVC_observationCategories_location" = "Lokalitet";
-//
-///* (No Comment) */
-//"addObservationVC_observationCategories_species" = "Art";
-//
-///* (No Comment) */
-//"addObservationVC_successfullUpload_title" = "Dit fund er blevet oprettet";
-//
-///* AddObservationVC */
-//"addObservationVC_title" = "Nyt fund";
-//
-///* (No Comment) */
-//"addObservationVC_useImageMetadata_message" = "Et tilføjet billede har en anden placering og tid, end den nuværende. Vil du bruge billedets GPS-information og dato i stedet for?\n\nBilledets GPS-Præcision: %@ m";
-//
-///* (No Comment) */
-//"addObservationVC_useImageMetadata_negative" = "Nej";
-//
-///* (No Comment) */
-//"addObservationVC_useImageMetadata_positive" = "Ja, brug billedets informationer";
-//
-///* (No Comment) */
-//"addObservationVC_useImageMetadata_title" = "Forslag til placering";
-//
-///* (No Comment) */
-//"Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded" = "Men der skete en fejl med at uploade billedet/ne. %d ud af %d billeder er blevet uploaded";
-//
-///* AppScrollView */
-//"appScrollView_informationHeaderTitle" = "Information";
-//
-///* (No Comment) */
-//"avViewError_cameraError_title" = "Kamera fejl";
-//
-///* (No Comment) */
-//"avViewError_permissionsError_message" = "Du kan give appen tilladelse til at bruge kameraet i indstillinger.";
-//
-///* AVView */
-//"avViewError_permissionsError_title" = "Manglende tilladelse";
-//
-///* (No Comment) */
-//"avViewError_unknown_message" = "Der skete en ukendt fejl";
-//
-///* (No Comment) */
-//"avViewError_unknown_title" = "Ukendt fejl";
-//
-///* CameraControlsTextButton */
-//"cameraControlTextButton_noPhoto" = "Intet billede";
-//
-///* (No Comment) */
-//"cameraControlTextButton_usePhoto" = "Brug billede";
-//
-///* (No Comment) */
-//"cameraVC_shouldSaveImagesPrompt_message" = "Hvis du er interesseret, kan vi oprette et album til de billeder du tager i denne app.";
-//
-///* (No Comment) */
-//"cameraVC_shouldSaveImagesPrompt_message_negative" = "Nej";
-//
-///* (No Comment) */
-//"cameraVC_shouldSaveImagesPrompt_message_positive" = "Ja, gem billederne";
-//
-///* CameraVC */
-//"cameraVC_shouldSaveImagesPrompt_title" = "Skal dine billeder gemmes?";
-//
-///* No comment provided by engineer. */
-//"Cancel" = "Afbryd";
-//
-///* (No Comment) */
-//"Cancel upload" = "Annuller upload";
-//
-///* CautionCell */
-//"cautionCell_lowConfidence" = "Bemærk at ingen af de nedenstående forslag har en særlig stor sandsynlighed.";
-//
-///* CommentsTableView */
-//"commentsTableView_cell_title" = "Skriv en kommentar";
-//"common_continue" = "Fortsæt";
-//"common_upload" = "Indsend";
-//"containedResultCell_genus" = "Slægt: ";
-//
-///* No comment provided by engineer. */
-//"Could not delete" = "Kunne ikke slette";
-//
-///* CreditationCell */
-//"creditationCell_ai" = "Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
-//
-///* (No Comment) */
-//"creditationCell_aiNewObservation" = "Disse navneforslag er baseret på det første billede du har tilføjet til dette fund. Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
-//
-///* (No Comment) */
-//"databaseError_contentOutdated_message" = "Den gemte data er outdated";
-//
-///* (No Comment) */
-//"databaseError_contentOutdated_title" = "Databasen skal opdateres";
-//
-///* (No Comment) */
-//"databaseError_initError_message" = "Der skete en fejl med at indlæse appen's lokale database. Appen kan derfor desværre ikke starte korrekt uden at slette den gamle database og oprette en på ny. Dette betyder at din gemte data vil blive slettet. Vi beklager meget fejlen, tryk nedenfor for at fortsætte.";
-//
-///* DatabaseError */
-//"databaseError_initError_title" = "Database fejl";
-//
-///* (No Comment) */
-//"databaseError_noEntries_favoritedMushrooms_message" = "Du har ingen gemte favoritter. Du kan gøre en svamp til en favorit ved at swippe til venstre.";
-//
-///* (No Comment) */
-//"databaseError_noEntries_message" = "Der var ingen gemt data.";
-//
-///* (No Comment) */
-//"databaseError_noEntries_title" = "Fandt intet";
-//
-///* (No Comment) */
-//"databaseError_readError_message" = "Der var desværre problemer med at læse data fra disken";
-//
-///* (No Comment) */
-//"databaseError_readError_title" = "Læsefejl";
-//
-///* (No Comment) */
-//"databaseError_saveError_message" = "Kunne ikke gemme, prøv igen.";
-//
-///* (No Comment) */
-//"databaseError_saveError_title" = "Gemme-fejl";
-//
-///* (No Comment) */
-//"dataServiceError_decodingError_message" = "Den modtagne data kunne ikke læses";
-//
-///* (No Comment) */
-//"dataServiceError_decodingError_title" = "Dekodningsfejl";
-//
-///* (No Comment) */
-//"dataServiceError_empty_message" = "Svaret indeholdte ingen data";
-//
-///* (No Comment) */
-//"dataServiceError_empty_title" = "Ugyldigt tomt svar";
-//
-///* (No Comment) */
-//"dataServiceError_encodingError_message" = "";
-//
-///* (No Comment) */
-//"dataServiceError_encodingError_title" = "Fejl";
-//
-///* (No Comment) */
-//"dataServiceError_loginError_message" = "Prøv nogle andre initialer eller et andet kodeord";
-//
-///* (No Comment) */
-//"dataServiceError_loginError_title" = "Log ind fejl";
-//
-///* (No Comment) */
-//"dataServiceError_searchResponseEmpty_message" = "Det du søgte efter kunne ikke findes, prøv at søg efter noget andet";
-//
-///* Dataservice */
-//"dataServiceError_searchResponseEmpty_title" = "Fandt intet";
-//
-///* (No Comment) */
-//"dataServiceError_unknown_message" = "Der skete en ukendt fejl";
-//
-///* (No Comment) */
-//"dataServiceError_unknown_title" = "Ukendt fejl";
-//
-///* (No Comment) */
-//"Date: %@" = "Dato: %@";
-//
-///* (No Comment) */
-//"dateFormatting_1dayHasPassed" = "1 dag siden";
-//
-///* (No Comment) */
-//"dateFormatting_daysPassed" = "%d dage siden";
-//
-///* (No Comment) */
-//"dateFormatting_hoursSince" = "%d timer siden";
-//
-///* Date stringable */
-//"dateFormatting_rightNow" = "Lige nu";
-//
-///* (No Comment) */
-//"dateFormatting_today" = "I dag";
-//
-///* No comment provided by engineer. */
-//"Delete note" = "Slet note";
-//
-///* No comment provided by engineer. */
-//"Delete observation" = "Slet observation";
-//
-///* (No Comment) */
-//"Deletions are final" = "Sletning af billedet er permanent";
-//
-///* (No Comment) */
-//"detailsVC_newSightingPrompt" = "Nyt fund";
-//
-///* DetailsVC */
-//"detailsVC_observationTitle" = "Fund af: %@";
-//
-///* No comment provided by engineer. */
-//"Do you want to fetch data?" = "Vil du gerne hente data til offline brug?";
-//
-///* No comment provided by engineer. */
-//"Downloading metadata" = "Henter metadata";
-//
-///* No comment provided by engineer. */
-//"Downloading offline data" = "Henter data til offline brug ...";
-//
-///* No comment provided by engineer. */
-//"Downloading taxons" = "Henter svampe til offline brug ...";
-//
-///* No comment provided by engineer. */
-//"Edit note" = "Rediger note";
-//
-///* No comment provided by engineer. */
-//"Edit observation" = "Rediger observation";
-//
-///* (No Comment) */
-//"elFileManagerError_imageSavingError_message" = "Der skete en fejl i forbindelse med at gemme billedet til telefonens midlertidige lagerplads.";
-//
-///* ELFileManager */
-//"elFileManagerError_imageSavingError_title" = "Gemme fejl";
-//
-///* (No Comment) */
-//"elPhotosError_notAuthorized_message" = "Du har ikke givet appen tilladelse til at skrive og læse til dit fotobibliotek. Du kan ændre det i indstillinger, men bemærk at dette genstarter appen.";
-//
-///* ELPhotos */
-//"elPhotosError_notAuthorized_title" = "Mangler tilladelse";
-//
-///* (No Comment) */
-//"elPhotosError_unknownFetchError_message" = "Der skete en ukendt fejl i forbindelse med at få adgang til det valgte billede.";
-//
-///* (No Comment) */
-//"elPhotosError_unknownFetchError_title" = "Ukendt fejl";
-//
-///* (No Comment) */
-//"elPhotosError_unknownSaveError_message" = "Der skete en ukendt fejl i forbindelse med at gemme billedet til dit fotoalbum.";
-//
-///* (No Comment) */
-//"elPhotosError_unknownSaveError_title" = "Ukendt fejl";
-//
-///* No comment provided by engineer. */
-//"In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?" = "For at du kan bruge denne funktionalitet, skal du have data downloaded til offline brug. Hvis du allerede har hentet data, skal dataen opdateres. Gør kun dette hvis du har en god internet forbindelse. Er du klar?";
-//
-///* LocationAnnotation */
-//"locationAnnotation_title" = "Fundets placering";
-//
-///* (No Comment) */
-//"locationManagerError_badAccuracy_message" = "Det var ikke muligt at finde din lokation med en tilstrækkelig sikkerhed.";
-//
-///* (No Comment) */
-//"locationManagerError_badAccuracy_title" = "Utilstrækelig nøjagtighed";
-//
-///* (No Comment) */
-//"locationManagerError_networkError_message" = "Det lader til at der skete en netværks fejl med din telefons GPS-komponent.";
-//
-///* (No Comment) */
-//"locationManagerError_networkError_title" = "Netværksfejl";
-//
-///* (No Comment) */
-//"locationManagerError_permissionDenied_message" = "Du har afvist at appen skal kunne tilgå din GPS lokation, hvilket den skal kunne for at vise dig den her data.";
-//
-///* LocationManager */
-//"locationManagerError_permissionDenied_title" = "Manglende tilladelse";
-//
-///* (No Comment) */
-//"locationManagerError_permissionsUndetermined_message" = "For at vise dig den her data, skal appen kunne finde ud af hvor du er.";
-//
-///* (No Comment) */
-//"locationManagerError_permissionsUndetermined_title" = "Hvor er du henne?";
-//
-///* (No Comment) */
-//"locationManagerError_unknown_message" = "Der skete en ukendt fejl i forsøget på at finde din GPS lokation.";
-//
-///* (No Comment) */
-//"locationManagerError_unknown_title" = "Ukendt fejl";
-//
-///* (No Comment) */
-//"loginVC_createNewAccountButton" = "Klik her for at oprette en ny konto";
-//
-///* (No Comment) */
-//"loginVC_detailsLabel" = "Bidrag til viden om Danske svampe ved at dele dine fund med andre, samt modtage valideringer af dine fund fra danmarks førende svampeeksperter.";
-//
-///* (No Comment) */
-//"loginVC_initialsTextField_error" = "Du skal udfylde dit brugernavn";
-//
-///* (No Comment) */
-//"loginVC_initialsTextField_placeholder" = "Initialer";
-//
-///* (No Comment) */
-//"loginVC_loginButton" = "Log ind";
-//
-///* (No Comment) */
-//"loginVC_lowerLabel" = "Danmarks Svampeatlas";
-//
-///* (No Comment) */
-//"loginVC_passwordTextField_error" = "Du skal skrive dit kodeord";
-//
-///* (No Comment) */
-//"loginVC_passwordTextField_placeholder" = "Kodeord";
-//
-///* LoginVC */
-//"loginVC_upperLabel" = "Log ind på";
-//
-///* (No Comment) */
-//"Low accuracy" = "Upræcis observationsplacering";
-//
-///* MapVC */
-//"mapVC_title" = "Fundets lokation";
-//
-///* MapView */
-//"mapViewCategories_regular" = "Standard";
-//
-///* (No Comment) */
-//"mapViewCategories_satelite" = "Luftfoto";
-//
-///* (No Comment) */
-//"mapViewCategories_topographical" = "Topografisk";
-//
-///* MapViewFilteringSettings */
-//"mapViewFilteringSettings_ageOfSighting" = "Fundets alder: ";
-//
-///* (No Comment) */
-//"mapViewSettingsView_newSearch" = "Ny søgning";
-//
-///* MapViewSettingsView */
-//"mapViewSettingsView_year" = "%d år";
-//"modal_localityHelper_message" = "Det er vigtigt for kvaliteten af den indsamlede data, at du kontrollerer at placeringen til din observation er korrekt. Du kan se på klippet nedenfor, hvordan du justerer placeringen manuelt.
-//
-//Hvis det første tilføjede billede indeholder et GPS koordinat, vil appen foreslå at bruge billedets placering istedet for.
-//
-//Vi vil minde dig om dette engang imellem - du kan slå dette fra i indstillinger.";
-//"modal_localityHelper_title" = "Husk at kontrollere din placering";
-//"mushroomDetailsScrollView_acceptedRecords" = "Accepterede fund:";
-//
-///* (No Comment) */
-//"mushroomDetailsScrollView_description" = "Beskrivelse";
-//
-///* (No Comment) */
-//"mushroomDetailsScrollView_eatability" = "Spiselighedsrapport";
-//
-///* (No Comment) */
-//"mushroomDetailsScrollView_ecology" = "Økologi";
-//
-///* (No Comment) */
-//"mushroomDetailsScrollView_heatMap" = "Fund i nærheden";
-//
-///* (No Comment) */
-//"mushroomDetailsScrollView_latestAcceptedRecord" = "Seneste accepteret fund:";
-//
-///* (No Comment) */
-//"mushroomDetailsScrollView_latestObservations" = "Seneste observationer";
-//
-///* (No Comment) */
-//"mushroomDetailsScrollView_latestUpdated" = "Sidst opdateret d.:";
-//
-///* (No Comment) */
-//"mushroomDetailsScrollView_similarities" = "Forvekslingsmuligheder";
-//
-///* MushroomDetailsScrollView */
-//"mushroomDetailsScrollView_validationTips" = "Valideringstips";
-//
-///* (No Comment) */
-//"mushroomVC_category_favorites" = "Mine favoritter";
-//
-///* (No Comment) */
-//"mushroomVC_category_species" = "Svampearter";
-//
-///* (No Comment) */
-//"mushroomVC_favoriteSucces_message" = "Du har hurtig adgang til at se svampen og dens billeder, også uden internet - under mine favoritter.";
-//
-///* (No Comment) */
-//"mushroomVC_favoriteSucces_title" = "%@ er nu markeret som favorit";
-//
-///* MushroomVC */
-//"mushroomVC_title" = "Svampebog";
-//
-///* (No Comment) */
-//"mushroomView_lastUpdate" = "Sidst opdateret d.:";
-//
-///* (No Comment) */
-//"mushroomView_latestObservation" = "Seneste fund:";
-//
-///* MushroomView */
-//"mushroomView_numberOfRecords" = "Antal danske fund:";
-//
-///* (No Comment) */
-//"myPageScrollView_logout" = "Log ud";
-//
-///* MyPageScrollView */
-//"myPageScrollView_notificationsHeader" = "Notifikationer";
-//
-///* (No Comment) */
-//"myPageScrollView_observationsHeader" = "Observationer";
-//
-///* (No Comment) */
-//"navigationItem_about" = "Om";
-//
-///* (No Comment) */
-//"navigationItem_cameraVC" = "Navneforslag";
-//
-///* (No Comment) */
-//"navigationItem_facebook" = "Facebook";
-//
-///* NavigationItems */
-//"navigationItem_loginVC" = "Log ind";
-//
-///* (No Comment) */
-//"navigationItem_mushroomsVC" = "Svampebog";
-//
-///* (No Comment) */
-//"navigationItem_myPageVC" = "Min side";
-//
-///* (No Comment) */
-//"navigationItem_nearbyVC" = "I nærheden";
-//
-///* (No Comment) */
-//"navigationItem_newObservationVC" = "Nyt fund";
-//
-///* No comment provided by engineer. */
-//"navigationItem_notebook" = "Notesbog";
-//
-///* (No Comment) */
-//"navigationItem_settings" = "Indstillinger";
-//
-///* NearbyVC */
-//"nearbyVC_title" = "I nærheden";
-//
-///* No comment provided by engineer. */
-//"New" = "Indtast";
-//
-///* NewObservationError */
-//"newObservationError_missingInformation" = "Manglende information";
-//
-///* (No Comment) */
-//"newObservationError_noCoordinates_message" = "Dine koordinater kunne ikke findes automatisk, så du skal selv angive fundets position.";
-//
-///* (No Comment) */
-//"newObservationError_noCoordinates_title" = "Ingen koordinater";
-//
-///* (No Comment) */
-//"newObservationError_noLocality_message" = "Dine koordinater er blevet bestemt, men det var ikke muligt at finde et nærliggende stedsnavn. Prøv venligst igen.";
-//
-///* (No Comment) */
-//"newObservationError_noLocality_title" = "Hvor er du?";
-//
-///* (No Comment) */
-//"newObservationError_noMushroom_message" = "Du mangler at fortælle hvilken svampeart du har fundet. Hvis du ikke ved det, kan du trykke på knappen 'Ubestemt svamp'.";
-//
-///* (No Comment) */
-//"newObservationError_noSubstrateGroup_message" = "Du mangler at angive et substrat.";
-//
-///* (No Comment) */
-//"newObservationError_noVegetationType_message" = "Du mangler at angive en vegetationstype.";
-//
-///* (No Comment) */
-//"No, continue with the upload" = "Nej, fortsæt med at uploade";
-//
-///* No comment provided by engineer. */
-//"No, I'll adjust it myself" = "Nej, jeg justere placeringen selv";
-//
-///* No comment provided by engineer. */
-//"No, not right now" = "Nej, ikke lige nu";
-//
-///* No comment provided by engineer. */
-//"Notebook" = "Notesbog";
-//
-///* NotificationCell */
-//"notificationCell_commentAdded_1" = "har kommenteret på et fund af: ";
-//
-///* (No Comment) */
-//"notificationCell_commentAdded_2" = "som du følger.";
-//
-///* (No Comment) */
-//"notificationCell_determinationAdded_1" = " har tilføjet bestemmelsen: ";
-//
-///* (No Comment) */
-//"notificationCell_determinationAdded_2" = " til et fund som du følger.";
-//
-///* (No Comment) */
-//"notificationCell_determinationApproved_1" = "Et fund du følger er blevet valideret og godkendt som: ";
-//
-///* (No Comment) */
-//"notificationCell_determinationExpertApproved" = " er blevet ekspertgodkendt";
-//
-///* No comment provided by engineer. */
-//"Observation with ID: %d" = "Observation med ID: %d";
-//
-///* (No Comment) */
-//"observationDetailsCell_date" = "Dato:";
-//
-///* (No Comment) */
-//"observationDetailsCell_ecologyNotes_message" = "På sandjord blandt mos ...";
-//
-///* (No Comment) */
-//"observationDetailsCell_ecologyNotes_title" = "Kommentarer om voksested";
-//
-///* (No Comment) */
-//"observationDetailsCell_host" = "Vært:";
-//
-///* ObservationDetailsCell */
-//"observationDetailsCell_mostUsed" = "Mest brugt";
-//
-///* (No Comment) */
-//"observationDetailsCell_notes_message" = "Lugt melagtig ...";
-//
-///* (No Comment) */
-//"observationDetailsCell_notes_title" = "Andre noter";
-//
-///* (No Comment) */
-//"observationDetailsCell_substrate" = "Substrat:";
-//
-///* (No Comment) */
-//"observationDetailsCell_vegetationType" = "Vegetationstype:";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_comments" = "Kommentarer";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_ecologyNotes" = "Kommentarer om voksested";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_location" = "Placering";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_notes" = "Andre noter";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_observationDate" = "Fundets dato:";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_rapportContent_abort" = "Afbryd";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_rapportContent_message" = "Finder du en kommentar, eller brugergeneret indhold stødende? Giv en begrundelse her, så kikker vi på det.";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_rapportContent_placeholder" = "Eg. stødende billeder";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_rapportContent_thankYou_message" = "Din rapportering er med til at gøre Svampeatlas et sikkert sted";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_rapportContent_thankYou_title" = "Mange tak";
-//
-///* ObservationDetailsScrollView */
-//"observationDetailsScrollView_rapportContent_title" = "Rapporter stødende indhold";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_species" = "Art";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_substrate" = "Substrat:";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_validationStatus" = "Valideringsstatus:";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_validationStatus_approved" = "Godkendt";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_validationStatus_declined" = "Afvist";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_validationStatus_unknown" = "Vides ikke";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_validationStatus_verifying" = "Valideres";
-//
-///* (No Comment) */
-//"observationDetailsScrollView_vegetationType" = "Vegetationstype:";
-//
-///* ObservationLocationCell */
-//"observationLocationCell_precision" = "Præcision: %.02f m";
-//
-///* (No Comment) */
-//"observationSpeciesCell_chooseGenus" = "Vælg slægt";
-//
-///* (No Comment) */
-//"observationSpeciesCell_choosenGenus" = "Valgte slægt";
-//
-///* (No Comment) */
-//"observationSpeciesCell_choosenSpecies" = "Valgte art";
-//
-///* ObservationSpeciesCell */
-//"observationSpeciesCell_chooseSpecies" = "Vælg art";
-//
-///* (No Comment) */
-//"observationSpeciesCell_deselect" = "Fravælg";
-//
-///* (No Comment) */
-//"observationSpeciesCell_myFavorites" = "Mine favoritter";
-//
-///* (No Comment) */
-//"observationSpeciesCell_predictionsHeader" = "Navneforslag";
-//
-///* (No Comment) */
-//"observationSpeciesCell_searchResults" = "Søgeresultater";
-//
-///* PickerCell */
-//"pickerCell_rememberChoice" = "Husk mit valg";
-//
-///* (No Comment) */
-//"Precision %0.2f m." = "Præcision %0.2f m.";
-//
-///* No comment provided by engineer. */
-//"Record unidentifed mushroom" = "Indlæg en ubestemt svamp";
-//
-///* (No Comment) */
-//"recoveryAction_activate" = "Aktivér";
-//
-///* (No Comment) */
-//"recoveryAction_login" = "Log ind";
-//
-///* RecoveryActions */
-//"recoveryAction_openSettings" = "Åben indstillinger";
-//
-///* (No Comment) */
-//"recoveryAction_tryAgain" = "Prøv igen";
-//
-///* (No Comment) */
-//"redlistView_cren" = "Truet art";
-//
-///* (No Comment) */
-//"redlistView_dd" = "Vides ikke";
-//
-///* RedlistView */
-//"redlistView_lcnt" = "Ikke en truet art";
-//
-///* (No Comment) */
-//"redlistView_vu" = "Sårbar art";
-//
-///* ReloadCell */
-//"reloadCell_showMore" = "Vis mere";
-//
-///* (No Comment) */
-//"reloadCell_tryAgain" = "Prøv igen";
-//
-///* (No Comment) */
-//"resultsView_header_message" = "Bemærk at disse forslag er vejledende og aldrig må stå alene, hvis du ønsker at spise de svampe du har fundet.";
-//
-///* ResultsView */
-//"resultsView_header_title" = "Vi har %d forslag til dig";
-//
-///* No comment provided by engineer. */
-//"Save" = "Gem";
-//
-///* No comment provided by engineer. */
-//"Save as note" = "Gem som note";
-//
-///* No comment provided by engineer. */
-//"Saving to local storage" = "Gemmer til lokal database";
-//
-///* Searchbar */
-//"searchBar_placeholder" = "Søg efter en art her ...";
-//
-///* SearchCell */
-//"searchCell_title" = "Søg på en vært her 👇";
-//
-///* (No Comment) */
-//"searchVC_cancelButton" = "Annuller";
-//
-///* SearchVC */
-//"searchVC_searchBar_placeholder" = "Søg efter en vært her ...";
-//
-///* (No Comment) */
-//"selectedSpeciesCell_confident_genus" = "Det er helt sikkert den her slægt";
-//
-///* (No Comment) */
-//"selectedSpeciesCell_confident_species" = "Det er helt sikkert den her art";
-//
-///* (No Comment) */
-//"selectedSpeciesCell_likely_genus" = "Det er sandsynligvis denne slægt";
-//
-///* (No Comment) */
-//"selectedSpeciesCell_likely_species" = "Det er sandsynligvis denne art";
-//
-///* (No Comment) */
-//"selectedSpeciesCell_possible_genus" = "Det er muligvis denne slægt";
-//
-///* (No Comment) */
-//"selectedSpeciesCell_possible_species" = "Det er muligvis denne art";
-//
-///* SelectedSpeciesCell */
-//"selectedSpeciesCell_question" = "Hvor sikker er du?";
-//
-///* (No Comment) */
-//"sessionError_noNotifications_message" = "Så har du mere tid til at gå ud og finde svampe.";
-//
-///* (No Comment) */
-//"sessionError_noNotifications_title" = "Du har ingen notifikationer";
-//
-///* (No Comment) */
-//"sessionError_noObservations_message" = "Skynd dig ud i felten og hvis os hvad du kan finde.";
-//
-///* (No Comment) */
-//"sessionError_noObservations_title" = "Du har ingen observationer";
-//
-///* (No Comment) */
-//"sessionError_notLoggedIn_message" = "Du er ikke logget ind, og bør ikke kunne gøre dette.";
-//
-///* Session */
-//"sessionError_notLoggedIn_title" = "Ikke logget ind";
-//
-///* (No Comment) */
-//"sessionError_tokenInvalid_message" = "Dit login er ikke længere gyldig, login igen.";
-//
-///* (No Comment) */
-//"sessionError_tokenInvalid_title" = "Ugyldigt log ind";
-//
-///* (No Comment) */
-//"settings_general_header" = "Generelt";
-//
-///* (No Comment) */
-//"settingsCell_database" = "Ryd offline indhold";
-//
-///* (No Comment) */
-//"settingsCell_language" = "Sprog";
-//
-///* (No Comment) */
-//"settingsInformationCell_message" = "Her har du mulighed for at finjustere din app oplevelse. Lige nu kan du ikke så meget, men der kommer flere muligheder til, jo mere vi kan fornemme i har brug for.";
-//"settings_general_header" = "Generelt";
-//"settings_locality_message" = "De her indstillinger kan hjælpe dig i situationer hvor du har dårligt internet, og du gerne vil indrapportere en masse observationer fra samme sted.";
-//"settings_locality_title" = "Placerings indstillinger";
-//"settings_remember_locality" = "Husk denne placering (navn på lokationen)";
-//"settings_remember_location" = "Husk disse koordinater";
-//"termsVC_cameraHelper_message" = "Når du fotografere svampe til bestemmelse så husk følgende:
-//\tAt fotografere i bredformat (vandret). Tjek at din telefon ikke har rotationslås aktiveret
-//\t- At få både unge og gamle frugtlegemer med på foto (hvis muligt)
-//\t- At vise både hat, lameller og evt. slør. læg et par svampe ned - både unge og gamle
-//\t- At fotografere i medlys (ikke modlys) og skygge for direkte sollys, fx med din egen krop
-//\t- Fotografere du rørhatte så skær gerne et frugtlegeme igennem på langs";
-//"termsVC_cameraHelper_title" = "Sådan tager du de bedste billeder";
-//
-///* TermsVC */
-//"termsVC_dismissButton" = "Forstået";
-//
-///* (No Comment) */
-//"termsVC_localityHelper_title" = "Sådan justerer du dit funds placering";
-//
-///* (No Comment) */
-//"termsVC_mlPredict_message" = "Brug af automatisk billedegenkendelse kan aldrig være helt præcis, og det er derfor vigtigt at systemet bruges med endnu mere kritisk sans end din svampebog. Spis aldrig svampe uden at søge hjælp fra svampekyndige mennesker. Danmarks Svampeatlas og Noque ApS frasiger sig ethvert ansvar for eventuelle forgiftninger eller andre sundhedsskadelige forhold.\nSystemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas. Systemet er baseret på kunstig intelligens og er trænet med alle de fotos I har biddraget med til Svampeatlasset. Jo mere du bidrager med observationer og gode billeder, jo bedre vil vi kunne udvikle teknologien i fremtiden.\nDette system er stadig i udviklingsfase og vi vil meget gerne have jeres feedback så det kan laves endnu bedre i fremtiden. Start en tråd på vores Facebook gruppe, eller send en mail til app@noque.dk";
-//
-///* (No Comment) */
-//"termsVC_mlPredict_title" = "Automatisk billedgenkendelse - du skal acceptere vores betingelser.";
-//
-///* (No Comment) */
-//"The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties" = "Muligheden for at tilføje bestemmelser til en allerede bestemt observation kommer snart. For nu, kan du kun redigere de andre variabler";
-//
-///* (No Comment) */
-//"The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "Den nuværende præcision er: %0.2f m, hvilket er for upræcist. Vil du bruge din nuværende placering i stedet for?";
-//
-///* No comment provided by engineer. */
-//"The note has been saved in local storage, you can see it in your notebook" = "Noten er blevet gemt i din lokale database, og du kan se det i din notesbog";
-//
-///* No comment provided by engineer. */
-//"The note is saved" = "Noten er blevet gemt";
-//
-///* No comment provided by engineer. */
-//"The observation was successfully edited" = "Observationen blev opdateret";
-//
-///* ToxicityLevels */
-//"toxicityLevel_poisonous" = "Giftig";
-//
-///* No comment provided by engineer. */
-//"Try again" = "Prøv igen";
-//
-///* (No Comment) */
-//"unknownSpeciesButton_message" = "Klik her for at indlægge en ubestemt svamp - fælleskabet vil prøve at hjælpe med bestemmelsen";
-//
-///* UnknownSpeciesButton */
-//"unknownSpeciesButton_title" = "Ubestemt svamp";
-//
-///* No comment provided by engineer. */
-//"Upload" = "Indsend!";
-//
-///* No comment provided by engineer. */
-//"Upload now" = "Indsend nu!";
-//
-///* (No Comment) */
-//"urlSessionError_invalidResponse_message" = "Svaret jeg fik tilbage fra serveren, giver desværre ingen mening.";
-//
-///* (No Comment) */
-//"urlSessionError_invalidResponse_title" = "Ugyldigt svar";
-//
-///* (No Comment) */
-//"urlSessionError_noInternet_message" = "Din enhed har ingen forbindelse til internettet.";
-//
-///* (No Comment) */
-//"urlSessionError_noInternet_title" = "Ingen internet";
-//
-///* (No Comment) */
-//"urlSessionError_payloadTooLarge_message" = "Serveren kan ikke håndtere så stor en datamængde.";
-//
-///* (No Comment) */
-//"urlSessionError_payloadTooLarge_title" = "Anmodningen var for stor";
-//
-///* (No Comment) */
-//"urlSessionError_serverError_message" = "Det lader til at der er et problem med serveren lige nu. Måske trænger den til et kram?";
-//
-///* (No Comment) */
-//"urlSessionError_serverError_title" = "Server fejl";
-//
-///* (No Comment) */
-//"urlSessionError_timeout_message" = "Det tog for lang tid før svaret nåede frem. Prøv igen, det kan være jeg var for utålmodig";
-//
-///* (No Comment) */
-//"urlSessionError_timeout_title" = "Time-out";
-//
-///* (No Comment) */
-//"urlSessionError_unAuthorized_message" = "Din konto kunne ikke verificeres, du skal muligvis logge på igen.";
-//
-///* (No Comment) */
-//"urlSessionError_unAuthorized_title" = "Uautoriseret";
-//
-///* (No Comment) */
-//"urlSessionError_unknown_message" = "Der skete en ukendt fejl";
-//
-///* (No Comment) */
-//"urlSessionError_unknown_title" = "Ukendt fejl";
-//
-///* (No Comment) */
-//"userView_guest_message" = "Log ind for at få den bedste oplevelse";
-//
-///* UserView */
-//"userView_guest_title" = "Svampeatlas";
-//
-///* Utilities */
-//"utilities_photoAlbumName" = "Svampeatlas";
-//
+/*
+Created by simplelocalize.io
+*/
+
+"Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded" = "Men der skete en fejl med at uploade billedet/ne. %d ud af %d billeder er blevet uploaded";
+"Cancel" = "Annuller";
+"Cancel upload" = "Annuller upload";
+"Could not delete" = "Kunne ikke slette";
+"Date: %@" = "Dato: %@";
+"Delete note" = "Slet note";
+"Delete observation" = "Slet observation";
+"Deletions are final" = "Sletning af billedet er permanent";
+"Do you want to fetch data?" = "Vil du gerne hente data til offline brug?";
+"Downloading metadata" = "Henter metadata";
+"Downloading offline data" = "Henter data til offline brug ...";
+"Downloading taxons" = "Henter svampe til offline brug ...";
+"Edit note" = "Rediger note";
+"Edit observation" = "Rediger observation";
+"In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?" = "For at du kan bruge denne funktionalitet, skal du have data downloaded til offline brug. Hvis du allerede har hentet data, skal dataen opdateres. Gør kun dette hvis du har en god internet forbindelse. Er du klar?";
+"It is important for the quality of your collected data, that you make sure the position of the observation you are submitting are correct. You can see on the clip below how to adjust the position manually.\n\nIf a photo added to the observation contains a GPS tag, the app will suggest using the position from the image instead\n\nWe will remind you of this every once in a while. You can turn this reminder off in the settings." = "Det er vigtigt for kvaliteten af den indsamlede data, at du kontrollerer at placeringen til din observation er korrekt. Du kan se på klippet nedenfor, hvordan du justerer placeringen manuelt.
+
+Hvis det første tilføjede billede indeholder et GPS koordinat, vil appen foreslå at bruge billedets placering istedet for.
+
+Vi vil minde dig om dette engang imellem - du kan slå dette fra i indstillinger.";
+"Low accuracy" = "Upræcis observationsplacering";
+"New note" = "Ny note";
+"No, I'll adjust it myself" = "Nej, jeg justere placeringen selv";
+"No, continue with the upload" = "Nej, fortsæt med at uploade";
+"No, not right now" = "Nej, ikke lige nu";
+"Notebook" = "Notesbog";
+"Observation with ID: %d" = "Observation med ID: %d";
+"Precision %0.2f m." = "Præcision %0.2f m.";
+"Recieve reminders regarding importance of correct and precise position attached to records" = "Modtag påmindelser vedrørende kontrol af position";
+"Record unidentifed mushroom" = "Indlæg en ubestemt svamp";
+"Remember to confirm your position" = "Husk at kontrollere din placering";
+"Reminders" = "Påmindelser";
+"Save" = "Gem";
+"Save as note" = "Gem som note";
+"Saving to local storage" = "Gemmer til lokal database";
+"Success" = "Færdig!";
+"The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties" = "Muligheden for at tilføje bestemmelser til en allerede bestemt observation kommer snart. For nu, kan du kun redigere de andre variabler";
+"The location accuracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "Den nuværende præcision er: %0.2f m, hvilket er for upræcist. Vil du bruge din nuværende placering i stedet for?";
+"The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "Den nuværende præcision er: %0.2f m, hvilket er for upræcist. Vil du bruge din nuværende placering i stedet for?";
+"The note has been saved in local storage, you can see it in your notebook" = "Noten er blevet gemt i din lokale database, og du kan se det i din notesbog";
+"The note is saved" = "Noten er blevet gemt";
+"The observation was successfully edited" = "Observationen blev opdateret";
+"Try again" = "Prøv igen";
+"Upload now" = "Indsend nu!";
+"Whats new?" = "Hvad er nyt?";
+"When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again" = "Når du redigere en observation, er sletning af uploadede billeder permanente, også selvom du ikke uploader andre ændringer. Denne besked vises kun en gang, or du skal slette billedet igen hvis du ønsker at det skal slettes.";
+"Yes, fetch data" = "Ja, hent data";
+"Yes, find my current location" = "Ja, find min nuværende placering";
+"Yes, find my location" = "Ja, find min placering";
+"You are editing an observation" = "Du er igang med at redigere en observation";
+"You do not yet have any saved notes. This functionality enables you to save your observations locally, without uploading it before you are ready. Perhaps once you have a better internet connection" = "Du har ingen gemte noter. Denne funktionalitet lader dig gemme observationer lokalt uden at indsende dem før du er klar. Det er smart hvis du tit har dårlig forbindelse når du er ude og finde svampe.";
+"You have the options below:" = "Du har nedenstående valgmuligheder.";
+"Your device now has the newest update to the taxon database. Get out there!" = "Din enhed har nu den nyeste opdatering til taxon databasen.";
+"aboutVC_generalTerms_message" = "Når du opretter dig som bruger/indrapportør på Danmarks Svampeatlas, har du mulighed for at indlægge svampefund og kommentere på andres fund. Nedenfor gennemgår vi mere detaljeret de betingelser og retningslinier, som vi arbejder efter.
+
+Alle kan oprette sig som brugere på Danmarks Svampeatlas. Alle indrapporteringer og kommentarer er åbent tilgængelige for alle brugere. Vi henstiller til en god og konstruktiv omgangstone og gør opmærksom på, at du er ansvarlig for de handlinger, der bliver foretaget med dit login på netstedet. Ved gentagne brud på de specifikke retningslinjer som gennemgås nedenfor, forbeholder Danmarks Svampeatlas sig ret til at slette din profil og/eller stoppe din brugeradgang. Det samme kan ske i tilfælde af grov og gentagen forsømmelse af almindelige regler for god omgangstone på nettet.
+
+Vi ser meget gerne at du uploader fotos og tekst som dokumentation for dine svampefund. I mange tilfælde kan et godt foto være et krav for, at dine fund kan valideres. Hvis du anvender fotos eller tekster, der ikke er dine egne, skal du sikre at du har rettigheder til at bruge disse. Du er desuden forpligtet til så vidt muligt at sikre, at de geografiske koordinater knyttet til hvert fund er præcise, og at det valgte zoom-niveau ikke resulterer i en højere præcision end der er belæg for.
+
+Informationer og fotos, som du har videregivet til Danmarks Svampeatlas, vises på projektets hjemmeside, under det enkelte fund og ved gallerivisninger for de arter som fundene repræsenterer. Fotos og andre informationer er knyttet til det enkelte svampefund og udgør i mange tilfælde en vigtig dokumentation som derfor ikke slettes. Ved visning på Danmarks Svampeatlas vil fotografens navn tydeligt fremgå. Brug af billederne, ud over de nævnte, vil kun finde sted efter direkte aftale med brugerne, som beholder alle rettigheder til egne fotos. Sender du belæg som dokumentation for enkelte fund, vil den enkelte ekspert beslutte om belægget skal gemmes for eftertiden i samlingerne på Statens Naturhistoriske Museum ved Københavns Universitet eller ved en anden internationalt anerkendt samling.
+
+De fund-data du indtaster i Danmarks Svampeatlas, videregives til den Globale Biodiversisetets Facilitet (GBIF) under OECD og er internationlt søgbare via gbif.org under OECD. Billeder som er uploadet som dokumentation af hvert fund er linket til dette og er således synlige hos GBIF. Ønsker du ikke at links til dine billeder videregives til GBIF, så send venligst en email til atlas@svampe.dk
+
+Hvis du på et tidspunkt vælger at få slettet din profil, forbliver alle informationer og materiale indlagt med denne profil synlige og søgbare på projektets hjemmeside.
+
+Validatorer og administratorer har ret til at slette/ændre information, som vedrører dine observationer, så længe retningslinjerne for information ikke bliver overtrådt derved.";
+"aboutVC_generalTerms_title" = "Generelle betingelser";
+"aboutVC_general_message" = "Svampeatlas 2.0 bygger videre på atlasprojektet Danmarks Svampeatlas, som kortlagde danske storsvampe, med hovedfokus på basidiesvampene i en femårig periode fra 2009-13. Projektet var støttet af Aage V. Jensen Naturfond og havde som hovedformål at øge vores viden om svampenes udbredelse og økologi i Danmark, og at gøre denne viden tilgængelig for offentligheden.
+
+Mere end 400 frivillige var involveret i Danmarks Svampeatlas, hvor de bidrog med ca. 250.000 kvalitetstjekkede svampefund. Siden er yderligere ca. 50.000 nye svampefund kommet til, mens godt 230.000 gamle svampefund er importeret i projektdatabasen som nu indeholder mere end 600.000 kvalitetstjekkede svampefund. Projektet har medført et langt bedre kendskab til Danmarks funga. Mere end 180 basidiesvampe er blevet føjet til listen over kendte danske arter, og flere arter der var regnet som uddøde er genfundet. Samtidigt er der udviklet en række søge- og hjælpefunktioner der præsenterer vores viden om de enkelte svampearter i overskuelig form, og som gør det meget nemmere at inddrage viden om truede svampearter i naturforvaltningen.
+
+I Svampeatlas 2.0 er det målet at fastholde, fremtidssikre og videreudvikle de ressourcer der er opbygget gennem Danmarks Svampeatlas, til glæde for alle naturinteresserede og til gavn for alle der arbejder med naturforvaltning professionelt. Dette vil bl.a. ske gennem udvikling af en ny databasestruktur, og et interaktivt brugerinterface, der i høj grad inddrager de frivillige svampekyndige som aktive medspillere i processen med at sikre høj datakvalitet. Samtidigt vil vi indbygge smarte filtre, baseret på eksisterende viden om svampenes fænologi og udbredelse i Danmark, der automatisk kan registrere om et nyt svampefund kan regnes som sandsynligt.
+
+Udover udviklingen af nye database og web-funktioner vil projektet udvikle en mobil-app til bestemmelse og registrering af svampefund i felten. Derudover er det målet at fastholde projektets overordnede koncept og resultater i en sammenfattende bog om Danmarks Svampeatlas, samt at skrive et nyt bestemmelsesværk for Danmarks basidiesvampe, baseret på de bestemmelsesnøgler der blev lavet i Danmarks Svampeatlas.
+
+Svampeatlas 2.0 udføres i et samarbejde mellem Center for Makroøkologi, Evolution og Klima (CMEC) ved Statens Naturhistoriske Museum (SNM), Københavns Universitet, Foreningen til Svampekundskabens Fremme og MycoKey. Projektgruppen består af Tobias Guldberg Frøslev, Thomas Stjernegaard Jeppesen, Thomas Læssøe (SNM) og Jens H. Petersen med Jacob Heilmann-Clausen som projektleder. Projektet er støttet af Aage V. Jensens Naturfond.";
+"aboutVC_general_title" = "Generelt";
+"aboutVC_guidelines_message" = "Simple funddata kan søges via webinterfacet på Danmarks Svampeatlas og kan frit bruges i alle typer af forvaltningsopgaver på såvel lokalt som nationalt plan, fx i forbindelse med miljøvurderinger (VVM’er), udarbejdelse af plejeplaner samt til lokal og national prioritering af naturbeskyttelse i Danmark. Danmarks Svampeatlas bør i hvert tilfælde citeres som kilde. Data kan på tilsvarende vis bruges i forskningssammenhæng. Bemærk at databasen indeholder både godkendte, uvaliderede og afviste fund, hvilket er specificeret under hvert fund.
+
+Valideringsprocessen omfatter artsbestemmelsen, og de grovere geografiske data. Især ældre fund har ofte meget upræcise fund-koordinater, men også for helt nye fund kan de være upræcist angivet. Den brugerdefinerede usikkerhed på fund-koordinater er angivet i meter for hvert fund, og skal betragtes som vejledende, fx ved udarbejdelse af detaljerede lokale forvaltningsplaner. Danmarks Svampeatlas rummer et meget stort antal standardnavne for lokaliteter, som vælges af rapportøren. Det betyder, at fund af den samme svamp kan være indrapporteret med flere forskellige lokalitetsnavne af forskellige brugere, og tillige med forskellige koordinater. I praksis er dette mest aktuelt for meget sjældne og karismatiske arter, fx pindsvinepigsvamp og safrangul fedtporesvamp.";
+"aboutVC_guidelines_title" = "Retningslinier for brug af data fra Danmarks Svampeatlas";
+"aboutVC_qualityAssurance_message" = "For at sikre at de informationer, der ligger i svampebasen er troværdige, undergår alle fund kvalitetssikring. Fund af arter uden valideringskrav bliver automatisk godkendt, mens fund af arter med valideringskrav som udgangspunkt er uvaliderede, indtil de er godkendt af en validator. For de valideringskrævende arter er der angivet en række valideringskrav. Hvis disse krav ikke er opfyldt i forbindelse med indlæggelse af fund, kan man ikke regne med en seriøs behandling af observationen og fundet afvises. Godkendte fund, også af arter, der ikke kræver validering, kan senere afvises af validatorer, fx hvis det vurderes at der ikke er tilstrækkelig dokumentation til at fundet kan godkendes eller at den vedlagte dokumentation viser, at det er en anden men ubestemmelig art. Alle brugere har mulighed for at kommentere på alle fund - både uvaliderede, godkendte og afviste. Kvalitetssikring/validering kræver ofte mikroskopisk undersøgelse af materiale, hvorfor behandlingstiden kan være lang.";
+"aboutVC_qualityAssurance_title" = "Kvalitetssikring/validering";
+"aboutVC_recognition_message" = "Brug af automatisk billedegenkendelse kan aldrig være helt præcis, og det er derfor vigtigt at systemet bruges med endnu mere kritisk sans end din svampebog. Spis aldrig svampe uden at søge hjælp fra svampekyndige mennesker. Danmarks Svampeatlas og Noque ApS frasiger sig ethvert ansvar for eventuelle forgiftninger eller andre sundhedsskadelige forhold.
+
+Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
+"aboutVC_recognition_title" = "Artsbestemmelse";
+"aboutVC_title" = "Om";
+"addObservationVC_localityFoundError_title" = "Nærmeste placering kunne ikke findes.";
+"addObservationVC_localityFound_message" = "Navn: %@
+Koordinater: %.02f - %.02f
+Præcision: %.02f m.";
+"addObservationVC_localityFound_title" = "Fundets placering er blevet bestemt";
+"addObservationVC_observationCategories_details" = "Detajler";
+"addObservationVC_observationCategories_location" = "Lokalitet";
+"addObservationVC_observationCategories_species" = "Art";
+"addObservationVC_successfullUpload_title" = "Dit fund er blevet oprettet";
+"addObservationVC_title" = "Nyt fund";
+"addObservationVC_useImageMetadata_message" = "Et tilføjet billede har en anden placering og tid, end den nuværende. Vil du bruge billedets GPS-information og dato i stedet for?
+
+Billedets GPS-Præcision: %@ m";
+"addObservationVC_useImageMetadata_negative" = "Nej";
+"addObservationVC_useImageMetadata_positive" = "Ja, brug billedets informationer";
+"addObservationVC_useImageMetadata_title" = "Forslag til placering";
+"appScrollView_informationHeaderTitle" = "Information";
+"avViewError_cameraError_title" = "Kamera fejl";
+"avViewError_permissionsError_message" = "Du kan give appen tilladelse til at bruge kameraet i indstillinger.";
+"avViewError_permissionsError_title" = "Manglende tilladelse";
+"avViewError_unknown_message" = "Der skete en ukendt fejl";
+"avViewError_unknown_title" = "Ukendt fejl";
+"cameraControlTextButton_noPhoto" = "Intet billede";
+"cameraControlTextButton_usePhoto" = "Brug billede";
+"cameraVC_shouldSaveImagesPrompt_message" = "Hvis du er interesseret, kan vi oprette et album til de billeder du tager i denne app.";
+"cameraVC_shouldSaveImagesPrompt_message_negative" = "Nej";
+"cameraVC_shouldSaveImagesPrompt_message_positive" = "Ja, gem billederne";
+"cameraVC_shouldSaveImagesPrompt_title" = "Skal dine billeder gemmes?";
+"cautionCell_lowConfidence" = "Bemærk at ingen af de nedenstående forslag har en særlig stor sandsynlighed.";
+"commentsTableView_cell_title" = "Skriv en kommentar";
+"containedResultCell_genus" = "Slægt: ";
+"creditationCell_ai" = "Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
+"creditationCell_aiNewObservation" = "Disse navneforslag er baseret på det første billede du har tilføjet til dette fund. Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
+"dataServiceError_decodingError_message" = "Den modtagne data kunne ikke læses";
+"dataServiceError_decodingError_title" = "Dekodningsfejl";
+"dataServiceError_empty_message" = "Svaret indeholdte ingen data";
+"dataServiceError_empty_title" = "Ugyldigt tomt svar";
+"dataServiceError_encodingError_message" = "";
+"dataServiceError_encodingError_title" = "Fejl";
+"dataServiceError_loginError_message" = "Prøv nogle andre initialer eller et andet kodeord";
+"dataServiceError_loginError_title" = "Log ind fejl";
+"dataServiceError_searchResponseEmpty_message" = "Det du søgte efter kunne ikke findes, prøv at søg efter noget andet";
+"dataServiceError_searchResponseEmpty_title" = "Fandt intet";
+"dataServiceError_unknown_message" = "Der skete en ukendt fejl";
+"dataServiceError_unknown_title" = "Ukendt fejl";
+"databaseError_contentOutdated_message" = "Den gemte data er outdated";
+"databaseError_contentOutdated_title" = "Databasen skal opdateres";
+"databaseError_initError_message" = "Der skete en fejl med at indlæse appen's lokale database. Appen kan derfor desværre ikke starte korrekt uden at slette den gamle database og oprette en på ny. Dette betyder at din gemte data vil blive slettet. Vi beklager meget fejlen, tryk nedenfor for at fortsætte.";
+"databaseError_initError_title" = "Database fejl";
+"databaseError_noEntries_favoritedMushrooms_message" = "Du har ingen gemte favoritter. Du kan gøre en svamp til en favorit ved at swippe til venstre.";
+"databaseError_noEntries_message" = "Der var ingen gemt data.";
+"databaseError_noEntries_title" = "Fandt intet";
+"databaseError_readError_message" = "Der var desværre problemer med at læse data fra disken";
+"databaseError_readError_title" = "Læsefejl";
+"databaseError_saveError_message" = "Kunne ikke gemme, prøv igen.";
+"databaseError_saveError_title" = "Gemme-fejl";
+"dateFormatting_1dayHasPassed" = "1 dag siden";
+"dateFormatting_daysPassed" = "%d dage siden";
+"dateFormatting_hoursSince" = "%d timer siden";
+"dateFormatting_rightNow" = "Lige nu";
+"dateFormatting_today" = "I dag";
+"detailsVC_newSightingPrompt" = "Nyt fund";
+"detailsVC_observationTitle" = "Fund af: %@";
+"elFileManagerError_imageSavingError_message" = "Der skete en fejl i forbindelse med at gemme billedet til telefonens midlertidige lagerplads.";
+"elFileManagerError_imageSavingError_title" = "Gemme fejl";
+"elPhotosError_notAuthorized_message" = "Du har ikke givet appen tilladelse til at skrive og læse til dit fotobibliotek. Du kan ændre det i indstillinger, men bemærk at dette genstarter appen.";
+"elPhotosError_notAuthorized_title" = "Mangler tilladelse";
+"elPhotosError_unknownFetchError_message" = "Der skete en ukendt fejl i forbindelse med at få adgang til det valgte billede.";
+"elPhotosError_unknownFetchError_title" = "Ukendt fejl";
+"elPhotosError_unknownSaveError_message" = "Der skete en ukendt fejl i forbindelse med at gemme billedet til dit fotoalbum.";
+"elPhotosError_unknownSaveError_title" = "Ukendt fejl";
+"locationAnnotation_title" = "Fundets placering";
+"locationManagerError_badAccuracy_message" = "Det var ikke muligt at finde din lokation med en tilstrækkelig sikkerhed.";
+"locationManagerError_badAccuracy_title" = "Utilstrækelig nøjagtighed";
+"locationManagerError_networkError_message" = "Det lader til at der skete en netværks fejl med din telefons GPS-komponent.";
+"locationManagerError_networkError_title" = "Netværksfejl";
+"locationManagerError_permissionDenied_message" = "Du har afvist at appen skal kunne tilgå din GPS lokation, hvilket den skal kunne for at vise dig den her data.";
+"locationManagerError_permissionDenied_title" = "Manglende tilladelse";
+"locationManagerError_permissionsUndetermined_message" = "For at vise dig den her data, skal appen kunne finde ud af hvor du er.";
+"locationManagerError_permissionsUndetermined_title" = "Hvor er du henne?";
+"locationManagerError_unknown_message" = "Der skete en ukendt fejl i forsøget på at finde din GPS lokation.";
+"locationManagerError_unknown_title" = "Ukendt fejl";
+"loginVC_createNewAccountButton" = "Klik her for at oprette en ny konto";
+"loginVC_detailsLabel" = "Bidrag til viden om Danske svampe ved at dele dine fund med andre, samt modtage valideringer af dine fund fra danmarks førende svampeeksperter.";
+"loginVC_initialsTextField_error" = "Du skal udfylde dit brugernavn";
+"loginVC_initialsTextField_placeholder" = "Initialer";
+"loginVC_loginButton" = "Log ind";
+"loginVC_lowerLabel" = "Danmarks Svampeatlas";
+"loginVC_passwordTextField_error" = "Du skal skrive dit kodeord";
+"loginVC_passwordTextField_placeholder" = "Adgangskode";
+"loginVC_upperLabel" = "Log ind på";
+"mapVC_title" = "Fundets lokation";
+"mapViewCategories_regular" = "Standard";
+"mapViewCategories_satelite" = "Luftfoto";
+"mapViewCategories_topographical" = "Topografisk";
+"mapViewFilteringSettings_ageOfSighting" = "Fundets alder: ";
+"mapViewSettingsView_newSearch" = "Ny søgning";
+"mapViewSettingsView_year" = "%d år";
+"mushroomDetailsScrollView_acceptedRecords" = "Accepterede fund:";
+"mushroomDetailsScrollView_description" = "Beskrivelse";
+"mushroomDetailsScrollView_eatability" = "Spiselighedsrapport";
+"mushroomDetailsScrollView_ecology" = "Økologi";
+"mushroomDetailsScrollView_heatMap" = "Fund i nærheden";
+"mushroomDetailsScrollView_latestAcceptedRecord" = "Seneste accepteret fund:";
+"mushroomDetailsScrollView_latestObservations" = "Seneste observationer";
+"mushroomDetailsScrollView_latestUpdated" = "Sidst opdateret d.:";
+"mushroomDetailsScrollView_similarities" = "Forvekslingsmuligheder";
+"mushroomDetailsScrollView_validationTips" = "Valideringstips";
+"mushroomVC_category_favorites" = "Mine favoritter";
+"mushroomVC_category_species" = "Svampearter";
+"mushroomVC_favoriteSucces_message" = "Du har hurtig adgang til at se svampen og dens billeder, også uden internet - under mine favoritter.";
+"mushroomVC_favoriteSucces_title" = "%@ er nu markeret som favorit";
+"mushroomVC_title" = "Svampebog";
+"mushroomView_lastUpdate" = "Sidst opdateret d.:";
+"mushroomView_latestObservation" = "Seneste fund:";
+"mushroomView_numberOfRecords" = "Antal danske fund:";
+"myPageScrollView_logout" = "Log ud";
+"myPageScrollView_notificationsHeader" = "Notifikationer";
+"myPageScrollView_observationsHeader" = "Observationer";
+"navigationItem_about" = "Om";
+"navigationItem_cameraVC" = "Navneforslag";
+"navigationItem_facebook" = "Facebook";
+"navigationItem_loginVC" = "Log ind";
+"navigationItem_mushroomsVC" = "Svampebog";
+"navigationItem_myPageVC" = "Min side";
+"navigationItem_nearbyVC" = "I nærheden";
+"navigationItem_newObservationVC" = "Nyt fund";
+"navigationItem_notebook" = "Notesbog";
+"navigationItem_settings" = "Indstillinger";
+"nearbyVC_title" = "I nærheden";
+"newObservationError_missingInformation" = "Manglende information";
+"newObservationError_noCoordinates_message" = "Dine koordinater kunne ikke findes automatisk, så du skal selv angive fundets position.";
+"newObservationError_noCoordinates_title" = "Ingen koordinater";
+"newObservationError_noLocality_message" = "Dine koordinater er blevet bestemt, men det var ikke muligt at finde et nærliggende stedsnavn. Prøv venligst igen.";
+"newObservationError_noLocality_title" = "Hvor er du?";
+"newObservationError_noMushroom_message" = "Du mangler at fortælle hvilken svampeart du har fundet. Hvis du ikke ved det, kan du trykke på knappen 'Ubestemt svamp'.";
+"newObservationError_noSubstrateGroup_message" = "Du mangler at angive et substrat.";
+"newObservationError_noVegetationType_message" = "Du mangler at angive en vegetationstype.";
+"notificationCell_commentAdded_1" = "har kommenteret på et fund af: ";
+"notificationCell_commentAdded_2" = "som du følger.";
+"notificationCell_determinationAdded_1" = " har tilføjet bestemmelsen: ";
+"notificationCell_determinationAdded_2" = " til et fund som du følger.";
+"notificationCell_determinationApproved_1" = "Et fund du følger er blevet valideret og godkendt som: ";
+"notificationCell_determinationExpertApproved" = " er blevet ekspertgodkendt";
+"observationDetailsCell_date" = "Dato:";
+"observationDetailsCell_ecologyNotes_message" = "På sandjord blandt mos ...";
+"observationDetailsCell_ecologyNotes_title" = "Kommentarer om voksested";
+"observationDetailsCell_host" = "Vært:";
+"observationDetailsCell_mostUsed" = "Mest brugt";
+"observationDetailsCell_notes_message" = "Lugt melagtig ...";
+"observationDetailsCell_notes_title" = "Andre noter";
+"observationDetailsCell_substrate" = "Substrat:";
+"observationDetailsCell_vegetationType" = "Vegetationstype:";
+"observationDetailsScrollView_comments" = "Kommentarer";
+"observationDetailsScrollView_ecologyNotes" = "Kommentarer om voksested";
+"observationDetailsScrollView_location" = "Lokalitet";
+"observationDetailsScrollView_notes" = "Andre noter";
+"observationDetailsScrollView_observationDate" = "Fundets dato:";
+"observationDetailsScrollView_rapportContent_abort" = "Annuller";
+"observationDetailsScrollView_rapportContent_message" = "Finder du en kommentar, eller brugergeneret indhold stødende? Giv en begrundelse her, så kikker vi på det.";
+"observationDetailsScrollView_rapportContent_placeholder" = "Eg. stødende billeder";
+"observationDetailsScrollView_rapportContent_thankYou_message" = "Din rapportering er med til at gøre Svampeatlas et sikkert sted";
+"observationDetailsScrollView_rapportContent_thankYou_title" = "Mange tak";
+"observationDetailsScrollView_rapportContent_title" = "Rapporter stødende indhold";
+"observationDetailsScrollView_species" = "Art";
+"observationDetailsScrollView_substrate" = "Substrat:";
+"observationDetailsScrollView_validationStatus" = "Valideringsstatus:";
+"observationDetailsScrollView_validationStatus_approved" = "Godkendt";
+"observationDetailsScrollView_validationStatus_declined" = "Afvist";
+"observationDetailsScrollView_validationStatus_unknown" = "Vides ikke";
+"observationDetailsScrollView_validationStatus_verifying" = "Valideres";
+"observationDetailsScrollView_vegetationType" = "Vegetationstype:";
+"observationLocationCell_precision" = "Præcision: %.02f m";
+"observationSpeciesCell_chooseGenus" = "Vælg slægt";
+"observationSpeciesCell_chooseSpecies" = "Vælg art";
+"observationSpeciesCell_choosenGenus" = "Valgte slægt";
+"observationSpeciesCell_choosenSpecies" = "Valgte art";
+"observationSpeciesCell_deselect" = "Fravælg";
+"observationSpeciesCell_myFavorites" = "Mine favoritter";
+"observationSpeciesCell_predictionsHeader" = "Navneforslag";
+"observationSpeciesCell_searchResults" = "Søgeresultater";
+"pickerCell_rememberChoice" = "Husk mit valg";
+"recoveryAction_activate" = "Aktivér";
+"recoveryAction_login" = "Log ind";
+"recoveryAction_openSettings" = "Åben indstillinger";
+"recoveryAction_tryAgain" = "Prøv igen";
+"redlistView_cren" = "Truet art";
+"redlistView_dd" = "Vides ikke";
+"redlistView_lcnt" = "Ikke en truet art";
+"redlistView_vu" = "Sårbar art";
+"reloadCell_showMore" = "Vis mere";
+"reloadCell_tryAgain" = "Prøv igen";
+"resultsView_header_message" = "Bemærk at disse forslag er vejledende og aldrig må stå alene, hvis du ønsker at spise de svampe du har fundet.";
+"resultsView_header_title" = "Vi har %d forslag til dig";
+"searchBar_placeholder" = "Søg efter en art her ...";
+"searchCell_title" = "Søg på en vært her 👇";
+"searchVC_cancelButton" = "Annuller";
+"searchVC_searchBar_placeholder" = "Søg efter en vært her ...";
+"selectedSpeciesCell_confident_genus" = "Det er helt sikkert den her slægt";
+"selectedSpeciesCell_confident_species" = "Det er helt sikkert den her art";
+"selectedSpeciesCell_likely_genus" = "Det er sandsynligvis denne slægt";
+"selectedSpeciesCell_likely_species" = "Det er sandsynligvis denne art";
+"selectedSpeciesCell_possible_genus" = "Det er muligvis denne slægt";
+"selectedSpeciesCell_possible_species" = "Det er muligvis denne art";
+"selectedSpeciesCell_question" = "Hvor sikker er du?";
+"sessionError_noNotifications_message" = "Så har du mere tid til at gå ud og finde svampe.";
+"sessionError_noNotifications_title" = "Du har ingen notifikationer";
+"sessionError_noObservations_message" = "Skynd dig ud i felten og hvis os hvad du kan finde.";
+"sessionError_noObservations_title" = "Du har ingen observationer";
+"sessionError_notLoggedIn_message" = "Du er ikke logget ind, og bør ikke kunne gøre dette.";
+"sessionError_notLoggedIn_title" = "Ikke logget ind";
+"sessionError_tokenInvalid_message" = "Dit login er ikke længere gyldig, login igen.";
+"sessionError_tokenInvalid_title" = "Ugyldigt log ind";
+"settingsCell_database" = "Ryd offline indhold";
+"settingsCell_language" = "Sprog";
+"settingsInformationCell_message" = "Her har du mulighed for at finjustere din app oplevelse. Lige nu kan du ikke så meget, men der kommer flere muligheder til, jo mere vi kan fornemme i har brug for.";
+"settings_general_header" = "Generelt";
+"termsVC_cameraHelper_message" = "Når du fotografere svampe til bestemmelse så husk følgende:
+\tAt fotografere i bredformat (vandret). Tjek at din telefon ikke har rotationslås aktiveret
+\t- At få både unge og gamle frugtlegemer med på foto (hvis muligt)
+\t- At vise både hat, lameller og evt. slør. læg et par svampe ned - både unge og gamle
+\t- At fotografere i medlys (ikke modlys) og skygge for direkte sollys, fx med din egen krop
+\t- Fotografere du rørhatte så skær gerne et frugtlegeme igennem på langs";
+"termsVC_cameraHelper_title" = "Sådan tager du de bedste billeder";
+"termsVC_dismissButton" = "Forstået";
+"termsVC_localityHelper_title" = "Sådan justerer du dit funds placering";
+"termsVC_mlPredict_message" = "Brug af automatisk billedegenkendelse kan aldrig være helt præcis, og det er derfor vigtigt at systemet bruges med endnu mere kritisk sans end din svampebog. Spis aldrig svampe uden at søge hjælp fra svampekyndige mennesker. Danmarks Svampeatlas og Noque ApS frasiger sig ethvert ansvar for eventuelle forgiftninger eller andre sundhedsskadelige forhold.
+Systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas. Systemet er baseret på kunstig intelligens og er trænet med alle de fotos I har biddraget med til Svampeatlasset. Jo mere du bidrager med observationer og gode billeder, jo bedre vil vi kunne udvikle teknologien i fremtiden.
+Dette system er stadig i udviklingsfase og vi vil meget gerne have jeres feedback så det kan laves endnu bedre i fremtiden. Start en tråd på vores Facebook gruppe, eller send en mail til app@noque.dk";
+"termsVC_mlPredict_title" = "Automatisk billedgenkendelse - du skal acceptere vores betingelser.";
+"toxicityLevel_poisonous" = "Giftig";
+"unknownSpeciesButton_message" = "Klik her for at indlægge en ubestemt svamp - fælleskabet vil prøve at hjælpe med bestemmelsen";
+"unknownSpeciesButton_title" = "Ubestemt svamp";
+"urlSessionError_invalidResponse_message" = "Svaret jeg fik tilbage fra serveren, giver desværre ingen mening.";
+"urlSessionError_invalidResponse_title" = "Ugyldigt svar";
+"urlSessionError_noInternet_message" = "Din enhed har ingen forbindelse til internettet.";
+"urlSessionError_noInternet_title" = "Ingen internet";
+"urlSessionError_payloadTooLarge_message" = "Serveren kan ikke håndtere så stor en datamængde.";
+"urlSessionError_payloadTooLarge_title" = "Anmodningen var for stor";
+"urlSessionError_serverError_message" = "Det lader til at der er et problem med serveren lige nu. Måske trænger den til et kram?";
+"urlSessionError_serverError_title" = "Server fejl";
+"urlSessionError_timeout_message" = "Det tog for lang tid før svaret nåede frem. Prøv igen, det kan være jeg var for utålmodig";
+"urlSessionError_timeout_title" = "Time-out";
+"urlSessionError_unAuthorized_message" = "Din konto kunne ikke verificeres, du skal muligvis logge på igen.";
+"urlSessionError_unAuthorized_title" = "Uautoriseret";
+"urlSessionError_unknown_message" = "Der skete en ukendt fejl";
+"urlSessionError_unknown_title" = "Ukendt fejl";
+"userView_guest_message" = "Log ind for at få den bedste oplevelse";
+"userView_guest_title" = "Svampeatlas";
+"utilities_photoAlbumName" = "Svampeatlas";
+"✔︎ Ready for upload" = "✔︎ Klar til upload";
+"✗ Not ready for upload" = "✗ Ikke klar til upload";
+
+
+"Continue" = "Fortsæt";
+"Upload" = "Indsend";

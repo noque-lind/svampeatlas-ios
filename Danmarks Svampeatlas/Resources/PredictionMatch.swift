@@ -28,5 +28,3 @@ class PredictionMatcher {
         return species.map({$0.components(separatedBy: " ").last!.replacingOccurrences(of: "_", with: " ")})
     }
 }
-
-

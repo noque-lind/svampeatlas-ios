@@ -6,8 +6,8 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class DeterminationStatusView: UIView {
     
@@ -32,7 +32,6 @@ class DeterminationStatusView: UIView {
         $0.font = .appPrimary(customSize: 12)
         $0.textColor = .appWhite()
     })
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)

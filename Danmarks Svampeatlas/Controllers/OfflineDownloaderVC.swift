@@ -6,8 +6,8 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class OfflineDownloader: UIViewController {
     
@@ -16,7 +16,7 @@ class OfflineDownloader: UIViewController {
         view.backgroundColor = .clear
         let header = SectionHeaderView().then({
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.configure(title:  NSLocalizedString("Downloading offline data", comment: ""))
+            $0.configure(title: NSLocalizedString("Downloading offline data", comment: ""))
         })
         view.addSubview(header)
         header.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
@@ -64,7 +64,6 @@ class OfflineDownloader: UIViewController {
         let maxHeight: CGFloat = (UIScreen.main.bounds.height / 4) * 3
             heightAnchor.constant = maxHeight
     }
-    
     
     private func setupView() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
@@ -118,6 +117,3 @@ class OfflineDownloader: UIViewController {
     }
     
 }
-
-
-

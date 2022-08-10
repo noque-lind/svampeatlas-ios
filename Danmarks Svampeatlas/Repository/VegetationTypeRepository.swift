@@ -20,10 +20,9 @@ class VegetationTypeRepository: Repository, RepositoryDelegate {
         }
     }
     
-    
     typealias Item = VegetationType
     
-    func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         backgroundThread.performAndWait {
             do {
                 try backgroundThread.execute(NSBatchDeleteRequest(fetchRequest: NSFetchRequest.init(entityName: "CDVegetationType")))
@@ -39,7 +38,7 @@ class VegetationTypeRepository: Repository, RepositoryDelegate {
         }
     }
     
-    func save(items: [VegetationType], completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func save(items: [VegetationType], completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         backgroundThread.performAndWait {
             do {
                 for item in items {

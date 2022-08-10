@@ -71,7 +71,6 @@ class MushroomView: UIView {
             return stackView
     }()
     
-    
     private lazy var redlistView: RedlistView = {
         let redlistView = RedlistView(detailed: true)
         redlistView.translatesAutoresizingMaskIntoConstraints = false
@@ -94,7 +93,6 @@ class MushroomView: UIView {
             return stackView
         }()
         
-        
         let contentContainerView: UIView = {
             let view = UIView()
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +110,6 @@ class MushroomView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-
     
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(mushroomViewWasTapped))
@@ -123,7 +120,7 @@ class MushroomView: UIView {
     private var fullyRounded: Bool
     public private(set) var mushroom: Mushroom?
     
-    var onTap: ((_ mushroom: Mushroom) -> ())? {
+    var onTap: ((_ mushroom: Mushroom) -> Void)? {
         didSet {
             if onTap != nil {
                 tapGestureRecognizer.isEnabled = true
@@ -149,7 +146,6 @@ class MushroomView: UIView {
         layer.cornerRadius = 5.0
         layer.maskedCorners = fullyRounded ? [.layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner, .layerMinXMaxYCorner]: [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         
-        
         addSubview(contentStackView)
         contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
@@ -172,7 +168,6 @@ class MushroomView: UIView {
     func configure(mushroom: Mushroom) {
         informationView.reset()
         
-        
         self.mushroom = mushroom
 
         if let image = mushroom.images?.first {
@@ -181,7 +176,6 @@ class MushroomView: UIView {
         } else {
             thumbImage.isHidden = true
         }
-       
         
         if let danishName =  mushroom.localizedName {
             titleLabel.attributedText = nil

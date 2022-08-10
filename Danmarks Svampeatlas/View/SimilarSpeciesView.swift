@@ -19,7 +19,6 @@ class SimilarSpeciesView: UIView {
         return label
     }()
     
-    
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -133,7 +132,6 @@ class SimilarSpeciesCell: UICollectionViewCell {
 //        DataService.instance.getThumbImageForMushroom(url: mushroom.images![0].thumbUrl!) { (image) in
 //            self.imageView.image = image
 //        }
-        
         
         titleLabel.text = mushroom.localizedName ?? mushroom.fullName
     }

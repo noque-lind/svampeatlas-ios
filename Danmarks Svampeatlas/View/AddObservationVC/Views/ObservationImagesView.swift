@@ -6,8 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import Photos
+import UIKit
 
 class ObservationImagesView: UIView {
     
@@ -39,9 +39,9 @@ class ObservationImagesView: UIView {
     static let collapsedHeight: CGFloat = 92
     static let expandedHeight: CGFloat = 200
     
-    var onAddImageButtonPressed: (() -> ())?
-    var imageDeleted: ((UserObservation.Image) -> ())?
-    var shouldAnimateHeight: ((CGFloat) -> ())?
+    var onAddImageButtonPressed: (() -> Void)?
+    var imageDeleted: ((UserObservation.Image) -> Void)?
+    var shouldAnimateHeight: ((CGFloat) -> Void)?
     
     var isExpanded: Bool = false
     
@@ -208,7 +208,6 @@ protocol ObservationImageCellDelegate: class {
 }
 
 class ObservationImageCell: UICollectionViewCell {
-    
 
     private var lockedView = UIImageView().then({
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -228,7 +227,7 @@ class ObservationImageCell: UICollectionViewCell {
     }()
     
     private var imageURL: URL?
-    var onSwipeUp: ((URL) -> ())?
+    var onSwipeUp: ((URL) -> Void)?
     
     private var animator = UIViewPropertyAnimator()
     private var panGestureRecognizer = UIPanGestureRecognizer()
@@ -253,7 +252,6 @@ class ObservationImageCell: UICollectionViewCell {
     
     private func setupView() {
         clipsToBounds = false
-        
         
         let imageViewContainerView: UIView = {
             let view = UIView()
@@ -321,7 +319,6 @@ class ObservationImageCell: UICollectionViewCell {
         }
     }
     
-    
     func configureCell(newObservationImage: UserObservation.Image) {
         if newObservationImage.isDeletable {
             lockedView.isHidden = true
@@ -344,5 +341,3 @@ extension ObservationImageCell: UIGestureRecognizerDelegate {
     }
     
 }
-
-

@@ -89,6 +89,7 @@
 		DB3C4929219AEF11001894B5 /* ReloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C4928219AEF11001894B5 /* ReloadCell.swift */; };
 		DB3C6EB7289017760049A0DB /* LocalityHelper.gif in Resources */ = {isa = PBXBuildFile; fileRef = DB3C6EB6289017760049A0DB /* LocalityHelper.gif */; };
 		DB3C6EBA2891276D0049A0DB /* SwitchSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3C6EB92891276D0049A0DB /* SwitchSettingCell.swift */; };
+		DB3EE45F28A44019001FF5E3 /* LocalitySettingsModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EE45C28A44019001FF5E3 /* LocalitySettingsModal.swift */; };
 		DB3EF6952550A40E000D9F51 /* ELTableView+build.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF6942550A40E000D9F51 /* ELTableView+build.swift */; };
 		DB3EF69E2550AF5F000D9F51 /* MapViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3EF69D2550AF5F000D9F51 /* MapViewCell.swift */; };
 		DB402BB823D9EED90020D68B /* ELKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB402BB523D9EEC70020D68B /* ELKit.framework */; };
@@ -321,6 +322,7 @@
 		DB3C4928219AEF11001894B5 /* ReloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadCell.swift; sourceTree = "<group>"; };
 		DB3C6EB6289017760049A0DB /* LocalityHelper.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = LocalityHelper.gif; sourceTree = "<group>"; };
 		DB3C6EB92891276D0049A0DB /* SwitchSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchSettingCell.swift; sourceTree = "<group>"; };
+		DB3EE45C28A44019001FF5E3 /* LocalitySettingsModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalitySettingsModal.swift; sourceTree = "<group>"; };
 		DB3EF6942550A40E000D9F51 /* ELTableView+build.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ELTableView+build.swift"; sourceTree = "<group>"; };
 		DB3EF69D2550AF5F000D9F51 /* MapViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCell.swift; sourceTree = "<group>"; };
 		DB402BAF23D9EEC60020D68B /* ELKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ELKit.xcodeproj; path = ../../../ELKit/ELKit.xcodeproj; sourceTree = "<group>"; };
@@ -636,6 +638,7 @@
 		4A69457420456BCE0041824E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				DB3EE45C28A44019001FF5E3 /* LocalitySettingsModal.swift */,
 				DB0C5A0E2277056A0071B15C /* OnboardingVC.swift */,
 				DB8CF0A6217BA99200ADAFB0 /* LoginVC.swift */,
 				4A69457520456C010041824E /* NavigationVC.swift */,
@@ -653,7 +656,6 @@
 				DB893119232BCE52000BDCD1 /* AboutVC.swift */,
 				DB81C8AD2519275F006E45B9 /* SettingsVC.swift */,
 				DB4E002926DE2A6700485AB7 /* OfflineDownloaderVC.swift */,
-				3B2F62F7375DE13102A1F69B /* LocalitySettingsModal.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1072,7 +1074,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n    swiftlint --fix\n    swiftlint\nelse\n    echo \"Not installed\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n    #swiftlint --fix\n    #swiftlint\n    echo \"Not installed\"\nelse\n    echo \"Not installed\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1210,6 +1212,7 @@
 				4A69BCAC2039805100D3B88B /* Mushroom.swift in Sources */,
 				DB03EE5C26DA712A0019D9F7 /* ActionButton.swift in Sources */,
 				DB03EE5E26DB8E140019D9F7 /* UserObservation.swift in Sources */,
+				DB3EE45F28A44019001FF5E3 /* LocalitySettingsModal.swift in Sources */,
 				DB460DF2289B04370063197A /* AutoLabel.swift in Sources */,
 				DB78CDA123DDEBC90014B0E6 /* Version 1 to 1.2.xcmappingmodel in Sources */,
 				DBD27B2B231ECB2F00391CCF /* PredictionMatch.swift in Sources */,
@@ -1249,7 +1252,6 @@
 				4A300A90208365DC003CB2A5 /* ObservationPinView.swift in Sources */,
 				DBCCB0B423C3702E00DFB04F /* VegetationTypeRepository.swift in Sources */,
 				DB7F04F022A941FF00785AF8 /* MushroomTableView.swift in Sources */,
-				3B2F6E9F95CDCC7E7D111C49 /* LocalitySettingsModal.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

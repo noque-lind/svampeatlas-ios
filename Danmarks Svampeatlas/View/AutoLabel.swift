@@ -12,14 +12,14 @@ class AutoLabel: UILabel {
 
     override var bounds: CGRect {
         didSet {
-            if (bounds.size.width != oldValue.size.width) {
-                self.setNeedsUpdateConstraints();
+            if bounds.size.width != oldValue.size.width {
+                self.setNeedsUpdateConstraints()
             }
         }
     }
 
     override func updateConstraints() {
-        if(self.preferredMaxLayoutWidth != self.bounds.size.width) {
+        if self.preferredMaxLayoutWidth != self.bounds.size.width {
             self.preferredMaxLayoutWidth = self.bounds.size.width
         }
         super.updateConstraints()

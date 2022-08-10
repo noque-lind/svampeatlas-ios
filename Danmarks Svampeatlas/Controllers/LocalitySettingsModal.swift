@@ -3,10 +3,10 @@
 // Copyright (c) 2022 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import Then
 import ELKit
+import Foundation
+import Then
+import UIKit
 
 class LocalitySettingsModal: UIViewController {
 
@@ -39,8 +39,8 @@ class LocalitySettingsModal: UIViewController {
         return view
     }()
     
-    var localityLockedSet: ((Bool) -> ())?
-    var locationLockedSet: ((Bool) -> ())?
+    var localityLockedSet: ((Bool) -> Void)?
+    var locationLockedSet: ((Bool) -> Void)?
     
     init(locationLocked: Bool, localityLocked: Bool) {
         super.init(nibName: nil, bundle: nil)
@@ -62,7 +62,6 @@ class LocalitySettingsModal: UIViewController {
         super.viewDidLayoutSubviews()
         preferredContentSize = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
-    
     
     private func setupView() {
         view.backgroundColor = .appPrimaryColour()
@@ -115,9 +114,9 @@ class LocalitySettingsModal: UIViewController {
     }
     
     @objc private func switchValueSet(view: UISwitch) {
-        if (view.tag == 0) {
+        if view.tag == 0 {
             locationLockedSet?(view.isOn)
-        } else if (view.tag == 1) {
+        } else if view.tag == 1 {
             localityLockedSet?(view.isOn)
         }
     }

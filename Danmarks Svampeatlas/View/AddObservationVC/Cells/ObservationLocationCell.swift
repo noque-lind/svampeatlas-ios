@@ -143,8 +143,6 @@ class ObservationLocationCell: UICollectionViewCell {
             $0.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
             $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         })
-            
-     
         
             settingsButton.do({
                 $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true

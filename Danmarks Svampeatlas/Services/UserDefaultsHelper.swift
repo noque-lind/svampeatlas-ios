@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
 
 struct UserDefaultsHelper {
     static var token: String? {

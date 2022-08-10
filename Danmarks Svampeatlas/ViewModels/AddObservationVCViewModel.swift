@@ -270,7 +270,7 @@ class AddObservationViewModel: NSObject {
         case .new, .newNote:
             userObservation = UserObservation()
             setupState.set(.items(item: ()))
-            if (userObservation.observationLocation?.item == nil) {
+            if userObservation.observationLocation?.item == nil {
                 locationManager.start()
             } else if let location = observationLocation.value?.item, userObservation.locality?.locality == nil {
                 findLocality(location: location.item)

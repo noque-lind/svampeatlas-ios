@@ -36,7 +36,6 @@ struct Locality: Decodable, Encodable, Equatable {
             }
         }
     }
-
     
     private enum CodingKeys: String, CodingKey {
         case id = "_id"

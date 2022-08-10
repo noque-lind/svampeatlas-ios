@@ -16,7 +16,6 @@
       <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/AddObservationVC.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/AddObservationVC.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/ModalVC.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/Controllers/ModalVC.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/Services/DataService.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/Services/DataService.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/View/AddObservationVC/Cells/ObservationLocationCell.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/View/AddObservationVC/Cells/ObservationLocationCell.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/da.lproj/Localizable.strings" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/da.lproj/Localizable.strings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Danmarks Svampeatlas/en.lproj/Localizable.strings" beforeDir="false" afterPath="$PROJECT_DIR$/../Danmarks Svampeatlas/en.lproj/Localizable.strings" afterDir="false" />
     </list>
@@ -75,7 +74,7 @@
       <updated>1658929346118</updated>
       <workItem from="1658929348154" duration="1777000" />
       <workItem from="1659548071610" duration="1454000" />
-      <workItem from="1659552526000" duration="1455000" />
+      <workItem from="1659552526000" duration="2052000" />
     </task>
     <servers />
   </component>

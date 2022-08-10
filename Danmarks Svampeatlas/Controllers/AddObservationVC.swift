@@ -417,7 +417,7 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell = cell as? ObservationLocationCell {
             // We want to check reminder state, every time position screen is shown
-            validateReminderState()
+//            validateReminderState()
             if let location = viewModel.observationLocation.value?.item {
                 cell.configureObservationLocation(location: location.item, locked: location.locked)
             }

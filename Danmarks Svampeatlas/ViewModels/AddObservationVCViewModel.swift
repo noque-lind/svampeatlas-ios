@@ -413,12 +413,8 @@ func reset() {
                 self?._localities.set(.error(error: error, handler: nil))
                 self?.showNotification.post(value: (.localityError(error: error), .error(actions: nil)))
             }
-        case .failure(let error):
-            self?._localities.set(.error(error: error, handler: nil))
-            self?.showNotification.post(value: (.localityError(error: error), .error(actions: nil)))
         }
     }
-}
 
 private func getPredictions(imageURL: URL) {
     guard let image = UIImage(url: imageURL) else {return}

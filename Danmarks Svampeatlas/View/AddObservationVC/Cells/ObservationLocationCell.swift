@@ -66,7 +66,7 @@ class ObservationLocationCell: UICollectionViewCell {
         let view = NewMapView(type: .localities)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.showsUserLocation = false
-        view.filterByCategory(category: .topography)
+        view.filterByCategory(category: .regular)
         view.localityPicked = { [unowned self] locality in
             if locality != self.viewModel?.locality.value?.locality {
                 self.didSelectLocality(locality: locality)
@@ -170,7 +170,15 @@ class ObservationLocationCell: UICollectionViewCell {
     }
 
     @objc private func openSettingsModal() {
-        let vc = LocalitySettingsModal(locationLocked: viewModel?.observationLocation.value?.item?.locked ?? false, localityLocked: viewModel?.locality.value?.locked ?? false)
+        let localityLockPossible: Bool
+        switch viewModel?.context {
+        case .newNote, .editNote, .edit:
+            localityLockPossible = false
+        default: localityLockPossible = true
+        }
+        
+        let vc = LocalitySettingsModal(locationLocked: viewModel?.observationLocation.value?.item?.locked ?? false, localityLocked: viewModel?.locality.value?.locked ?? false, localityLockPossible: localityLockPossible)
+        
         vc.localityLockedSet = { [weak self] value in
             self?.viewModel?.setLocalityLockedState(locked: value)
         }
@@ -178,6 +186,7 @@ class ObservationLocationCell: UICollectionViewCell {
             self?.viewModel?.setLocationLockedState(locked: value)
         }
         vc.modalPresentationStyle = .popover
+        vc.popoverPresentationController?.permittedArrowDirections = [.up, .left]
         vc.popoverPresentationController?.sourceView = settingsButton
         delegate?.presentVC(vc)
     }
@@ -214,18 +223,14 @@ class ObservationLocationCell: UICollectionViewCell {
     private func didSelectLocality(locality: Locality) {
         viewModel?.setLocality(locality: locality)
     }
-    
-    func configureViewModel(viewModel: AddObservationViewModel) {
-        self.viewModel = viewModel
-    }
-    
+        
     func configureLocalities(localities: [Locality]) {
         self.localities = localities
         collectionView.reloadData()
         mapView.addLocalityAnnotations(localities: localities)
     }
     
-    func configureObservationLocation(location: CLLocation, locked: Bool) {
+    func configureLocation(location: CLLocation, locked: Bool) {
         mapView.clearAnnotations()
         mapView.addLocationAnnotation(location: location.coordinate)
         precisionLabel.text = (locked ? "🔒 ": "") + String.localizedStringWithFormat(NSLocalizedString("Precision %0.2f m.", comment: ""), location.horizontalAccuracy.rounded(toPlaces: 2))
@@ -236,6 +241,12 @@ class ObservationLocationCell: UICollectionViewCell {
     func configureLocality(locality: Locality, locked: Bool) {
         self.collectionView.reloadData()
         self.mapView.selectAnnotationAtCoordinate(locality.location.coordinate)
+        if let selected = collectionView.indexPathsForSelectedItems {
+            collectionView.reloadItems(at: selected)
+        }
+    
+        guard let row = self.localities.firstIndex(of: locality) else {return}
+        self.collectionView.selectItem(at: IndexPath(row: row, section: 0), animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
     }
 }
 

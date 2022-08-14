@@ -48,17 +48,26 @@ class MushroomsRepository: Repository {
         backgroundThread.perform {
             do {
                 let predicate: Predicate<CDMushroom>
+                let speciesSearchResult = SearchStringParser.parseSpeciesSearch(searchString: searchString, unicode: false)
                 
                 switch Utilities.appLanguage() {
                 case .danish:
-                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.danishName).contains(searchString)
+                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.danishName).contains(searchString) || ((\CDMushroom.fullName).beginsWith(speciesSearchResult.genus) && (\CDMushroom.taxonName).contains(speciesSearchResult.taxonName))
                 case .czech:
-                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.attributes?.czName).contains(searchString)
+                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.attributes?.czName).contains(searchString) || ((\CDMushroom.fullName).beginsWith(speciesSearchResult.genus) && (\CDMushroom.taxonName).contains(speciesSearchResult.taxonName))
                 case .english:
-                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.attributes?.enName).contains(searchString)
+                    predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.attributes?.enName).contains(searchString) || ((\CDMushroom.fullName).beginsWith(speciesSearchResult.genus) && (\CDMushroom.taxonName).contains(speciesSearchResult.taxonName))
                 }
                 
-                let mushrooms: [CDMushroom] =  try self.backgroundThread.fetch(where: predicate).result()
+                struct Inspector: NSFetchRequestInspector {
+                  func inspect<Result>(_ request: NSFetchRequest<Result>) {
+                    print(request)
+                  }
+                }
+                
+                let mushrooms: [CDMushroom] =  try self.backgroundThread.fetch(where: predicate).inspect(on: Inspector()).sorted(by: \.probability, .descending).result()
+                
+                
                 if mushrooms.isEmpty {
                     completion(.failure(.noEntries(category: .favoritedMushrooms)))
                 } else {
@@ -131,7 +140,6 @@ class MushroomsRepository: Repository {
                     completion(.success(()))
                 }
             } catch {
-                print(error)
                 DispatchQueue.main.async {
                     completion(.failure(.saveError))
                 }
@@ -233,14 +241,17 @@ class MushroomsRepository: Repository {
     func mapValue(item: Mushroom, cdMushroom: CDMushroom, saveImages: Bool) {
         cdMushroom.id = Int32(item.id)
         cdMushroom.fullName = item.fullName
+        cdMushroom.taxonName = item.taxonName
         cdMushroom.danishName = item.localizedName
         cdMushroom.redlistStatus = item.redlistStatus
         cdMushroom.updatedAt = item.updatedAt
+        cdMushroom.probability = Int64(item.probability ?? 0)
         
         item.attributes?.toDatabase(cdMushroom: cdMushroom, context: backgroundThread)
         if let images = item.images {
-            for image in images {
+            for (index, image) in images.enumerated() {
                 let cdImage = NSEntityDescription.insertNewObject(forEntityName: "CDImage", into: backgroundThread) as! CDImage
+                cdImage.index = Int16(index)
                 cdImage.url = image.url
                 cdImage.photographer = image.photographer
                 cdMushroom.addToImages(cdImage)

@@ -29,7 +29,7 @@ class DownloaderviewModel: NSObject {
         
         _state.set(.Loading(message: NSLocalizedString("Downloading taxons", comment: "")))
         
-        DataService.instance.getMushrooms(searchString: nil, speciesQueries: [.images(required: false), .danishNames], limit: nil, offset: 0, largeDownload: true, useCache: false) { [weak self] result in
+        DataService.instance.getMushrooms(searchString: nil, speciesQueries: [.images(required: false), .danishNames, Utilities.appLanguage() != .danish ? .attributes(presentInDenmark: false): nil].compactMap({$0}), limit: nil, offset: 0, largeDownload: true, useCache: false) { [weak self] result in
             switch result {
             case .success(let mushrooms):
                 let dispatchGroup = DispatchGroup()

@@ -76,8 +76,8 @@ class NotesVC: UIViewController {
             vm.deleteNote(note: item, indexPath: indexPath)
         }
         
-        $0.uploadNote.handleEvent { [unowned vm] (item, indexPath) in
-            vm.uploadNote(note: item, indexPath: indexPath)
+        $0.uploadNote.handleEvent { [unowned self] (item, indexPath) in
+            self.navigationController?.pushViewController(AddObservationVC(type: .uploadNote(note: item), session: self.session), animated: true)
         }
     })).then({
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -125,6 +125,7 @@ class NotesVC: UIViewController {
         navigationItem.rightBarButtonItem?.width = 100
         navigationItem.setRightBarButton(.init(customView: ActionButton().then({
             $0.addTarget(self, action: #selector(newNote), for: .touchUpInside)
+            $0.addInteraction(UIContextMenuInteraction(delegate: self))
             $0.configure(text: NSLocalizedString("New note", comment: ""), icon: UIImage.init(systemName: "plus"))
         })), animated: false)
             
@@ -183,4 +184,19 @@ class NotesVC: UIViewController {
     @objc private func newNote() {
         navigationController?.pushViewController(AddObservationVC(type: .newNote, session: session), animated: true)
     }
+}
+
+
+extension NotesVC: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+                
+        let refetchTaxon = UIAction(title: NSLocalizedString("action_refresh_data", comment: ""), image: #imageLiteral(resourceName: "Glyphs_Reload").withRenderingMode(.alwaysTemplate)) { [weak self] _ in
+            self?.present(OfflineDownloader(), animated: true)
+        }
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            return  UIMenu(title: "", children: [ refetchTaxon ])
+        }
+    }
+    
 }

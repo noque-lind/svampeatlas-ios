@@ -246,7 +246,7 @@ class ObservationSpecieCell: UICollectionViewCell {
     func configureCell(viewModel: AddObservationViewModel, action: AddObservationVC.Action) {
         self.viewModel = viewModel
         switch action {
-        case .new, .newNote, .editNote:
+        case .new, .newNote, .editNote, .uploadNote:
             configureUpperSection()
             configurePredictions()
             configureFavoritesSection()

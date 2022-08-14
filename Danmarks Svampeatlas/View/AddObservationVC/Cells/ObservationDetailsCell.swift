@@ -98,17 +98,16 @@ class ObservationDetailsCell: UICollectionViewCell {
             
         case .hostCell(let host, let selected):
             if selected {
-                viewModel?.hosts.append(host)
-            } else if let indexPath = viewModel?.hosts.firstIndex(where: {$0.id == host.id}) {
-                viewModel?.hosts.remove(at: indexPath)
+                viewModel?.hosts.items.append(host)
+            } else if let indexPath = viewModel?.hosts.items.firstIndex(where: {$0.id == host.id}) {
+                viewModel?.hosts.items.remove(at: indexPath)
             }
+            viewModel?.hosts.locked = isLocked
             
             if isLocked == true, let hosts = viewModel?.hosts {
-                UserDefaultsHelper.setDefaultHosts(hosts: hosts)
-                viewModel?.lockedHosts = true
+                UserDefaultsHelper.setDefaultHosts(hosts: hosts.items)
             } else {
                 UserDefaultsHelper.setDefaultHosts(hosts: [])
-                viewModel?.lockedHosts = false
             }
             
             guard let index = rows.firstIndex(of: .Host) else {return}
@@ -247,7 +246,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
             case .failure:
                 cell.tableViewState = .Items([.init(title: nil, cells: [.searchCell])])
             case .success(var hosts):
-                let selectedHosts = self.viewModel?.hosts ?? []
+                let selectedHosts = self.viewModel?.hosts.items ?? []
                 
                 let userHosts = hosts.filter({$0.userFound})
                 hosts = hosts.filter({!$0.userFound})
@@ -296,7 +295,7 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 return cell
             case .HostSelector:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewPickerCell", for: indexPath) as! TableViewPickerCell
-                cell.isLocked = viewModel?.lockedHosts ?? false
+                cell.isLocked = viewModel?.hosts.locked ?? false
                 cell.didSelectCell = { [unowned self] cellType, isLocked in
                     self.didSelectCell(cellType: cellType, isLocked: isLocked)
                 }
@@ -335,9 +334,9 @@ extension ObservationDetailsCell: UITableViewDelegate, UITableViewDataSource {
                 
                     cell.configureCell(icon: #imageLiteral(resourceName: "Glyphs_VegetationType"), description: NSLocalizedString("observationDetailsCell_vegetationType", comment: ""), content: string)
                 case .Host:
-                    var string = viewModel?.lockedHosts == true ? "🔒 ": ""
+                    var string = viewModel?.hosts.locked == true ? "🔒 ": ""
                 
-                    if let hosts = viewModel?.hosts, hosts.count != 0 {
+                    if let hosts = viewModel?.hosts.items, hosts.count != 0 {
                         for host in hosts {
                             switch Utilities.appLanguage() {
                             case .czech, .english: string.append(contentsOf: "\(host.latinName ?? ""), ")

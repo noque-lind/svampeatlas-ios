@@ -144,7 +144,7 @@ class NotesRepository: Repository, RepositoryDelegate {
         
         note.hosts?.allObjects.forEach({note.removeFromHosts($0 as! CDHost)})
         
-        userObservation.hosts.forEach({
+        userObservation.hosts.items.forEach({
             let cdHost = CDHost(context: backgroundThread)
             cdHost.id = Int16($0.id)
             cdHost.dkName = $0.dkName

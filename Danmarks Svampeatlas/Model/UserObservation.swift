@@ -79,8 +79,7 @@ class UserObservation {
     var observationDateAccuracy = "day"
     var substrate: Substrate?
     var vegetationType: VegetationType?
-    var hosts = [Host]()
-    var lockedHosts = false
+    var hosts: (items: [Host], locked: Bool) = (items: [], false)
     var ecologyNote: String?
     var mushroom: Mushroom?
     var determinationConfidence: DeterminationConfidence = .certain
@@ -102,8 +101,7 @@ class UserObservation {
         }
         
         if let hostsIDS = UserDefaultsHelper.defaultHostsIDS {
-            hosts = hostsIDS.compactMap({CoreDataHelper.fetchHost(withID: $0)})
-            lockedHosts = true
+            hosts = (items: hostsIDS.compactMap({CoreDataHelper.fetchHost(withID: $0)}), locked: true)
         }
         
         if let locality = UserDefaultsHelper.lockedLocality {
@@ -118,7 +116,7 @@ class UserObservation {
     init(_ note: CDNote) {
         ecologyNote = note.ecologyNote
         self.note = note.note
-        hosts = (note.hosts?.allObjects as? [CDHost])?.map({Host(from: $0)}) ?? []
+        hosts = (items: (note.hosts?.allObjects as? [CDHost])?.map({Host(from: $0)}) ?? [], locked: false)
         observationDate = note.observationDate ?? Date()
         
         if let specie = note.specie, let confidence = note.confidence, let dConfidence = DeterminationConfidence(rawValue: confidence) {
@@ -135,11 +133,12 @@ class UserObservation {
         }
         
         if let location = note.location {
-            observationLocation = (CLLocation.init(coordinate: .init(latitude: location.latitude, longitude: location.longitude), altitude: 0, horizontalAccuracy: location.accuracy, verticalAccuracy: location.accuracy, timestamp: location.date ?? Date()), false)
+            let location = CLLocation.init(coordinate: .init(latitude: location.latitude, longitude: location.longitude), altitude: 0, horizontalAccuracy: location.accuracy, verticalAccuracy: location.accuracy, timestamp: location.date ?? Date())
+            observationLocation =  (location, location.timestamp == UserDefaultsHelper.lockedLocation?.timestamp)
         }
         
         if let cdLocality = note.locality, let locality = Locality(cdLocality) {
-            self.locality = (locality, false)
+            self.locality = (locality, locality == UserDefaultsHelper.lockedLocality)
         }
         
         if let images = note.images?.allObjects as? [CDNoteImage] {
@@ -156,7 +155,7 @@ class UserObservation {
         vegetationType = observation.vegetationType
         ecologyNote = observation.ecologyNote
         note = observation.note
-        hosts = observation.hosts
+        hosts = (items: observation.hosts, false)
         
         if let dateString = observation.observationDate, let date = Date(ISO8601String: dateString) {
             observationDate = date
@@ -180,14 +179,14 @@ class UserObservation {
     }
     
     func validate(overrideAccuracy: Bool) -> ValidationError? {
-        guard mushroom != nil else {return .noMushroom}
-        guard substrate != nil else {return .noSubstrateGroup}
-        guard vegetationType != nil else {return .noVegetationType}
         guard locality != nil else {return .noLocality}
         guard let observationLocation = observationLocation?.item else {return .noCoordinates}
         if !overrideAccuracy {
-            guard observationLocation.horizontalAccuracy <= 500 else {return .lowAccuracy(accurracy: observationLocation.horizontalAccuracy)}
+            guard observationLocation.horizontalAccuracy <= 150 else {return .lowAccuracy(accurracy: observationLocation.horizontalAccuracy)}
         }
+        guard substrate != nil else {return .noSubstrateGroup}
+        guard vegetationType != nil else {return .noVegetationType}
+        guard mushroom != nil else {return .noMushroom}
         return nil
     }
     
@@ -215,10 +214,10 @@ class UserObservation {
             dict["note"] = note
         }
 
-        if hosts.count > 0 {
+        if hosts.items.count > 0 {
             var hostArray = [[String: Any]]()
 
-            for host in hosts {
+            for host in hosts.items {
                 hostArray.append(["_id": host.id])
             }
 

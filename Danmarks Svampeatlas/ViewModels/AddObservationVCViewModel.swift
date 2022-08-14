@@ -15,92 +15,80 @@ import UIKit
 class AddObservationViewModel: NSObject {
     
     enum Notification {
-        case userObservationValidationError(error: UserObservation.ValidationError)
+        case validationError(error: UserObservation.ValidationError)
         case error(error: AppError)
-        case localityError(error: AppError?)
-        case foundLocationAndLocality(observationLocation: CLLocation, locality: Locality)
         case useImageMetadata(precision: Double)
-        case successfullUpload(id: Int)
-        case uploadWithError(message: String)
+        case uploaded(id: Int)
+        case uploadedWithError(message: String)
         case editCompleted(id: Int)
-        case deleteSuccesful
+        case deleted
         case noteSave
         case editWithError(message: String)
         
         var title: String {
             switch self {
-            case .deleteSuccesful:
+            case .deleted:
                 return ""
-            case .editWithError:
-                return NSLocalizedString("The observation was successfully edited", comment: "")
-            case .editCompleted:
+            case .editWithError, .editCompleted:
                 return NSLocalizedString("The observation was successfully edited", comment: "")
             case .noteSave:
                 return NSLocalizedString("The note is saved", comment: "")
-            case .uploadWithError:
+            case .uploadedWithError:
                 return NSLocalizedString("addObservationVC_successfullUpload_title", comment: "")
-            case .successfullUpload:
+            case .uploaded:
                 return NSLocalizedString("addObservationVC_successfullUpload_title", comment: "")
-            case .userObservationValidationError(error: let error):
+            case .validationError(error: let error):
                 return error.title
             case .error(error: let error): return error.title
             case .useImageMetadata: return NSLocalizedString("addObservationVC_useImageMetadata_title", comment: "")
-            case .localityError:
-                return NSLocalizedString("addObservationVC_localityFoundError_title", comment: "")
-            case .foundLocationAndLocality:
-                return NSLocalizedString("addObservationVC_localityFound_title", comment: "")
             }
         }
         
         var message: String {
             switch self {
-            case .deleteSuccesful: return ""
+            case .deleted: return ""
             case .noteSave:
                 return NSLocalizedString("The note has been saved in local storage, you can see it in your notebook", comment: "")
             case .editWithError(message: let message):
                 return message
             case .editCompleted(id: let id):
                 return "DMS: \(id)"
-            case .uploadWithError(message: let message):
+            case .uploadedWithError(message: let message):
                 return message
-            case .successfullUpload(id: let id):
+            case .uploaded(id: let id):
                 return "DMS: \(id)"
-            case .userObservationValidationError(error: let error):
+            case .validationError(error: let error):
                 return error.message
             case .error(error: let error): return error.message
             case .useImageMetadata(precision: let precision):
                 return String(format: NSLocalizedString("addObservationVC_useImageMetadata_message", comment: ""), "\(precision.rounded(toPlaces: 2))")
-            case .localityError(error: let error):
-                return error?.message ?? ""
-            case .foundLocationAndLocality(observationLocation: let observationLocation, locality: let locality):
-                return String.localizedStringWithFormat(NSLocalizedString("addObservationVC_localityFound_message", comment: ""), locality.name, observationLocation.coordinate.longitude.rounded(toPlaces: 2), observationLocation.coordinate.latitude.rounded(toPlaces: 2), observationLocation.horizontalAccuracy.rounded(toPlaces: 2))
             }
         }
     }
     
     let session: Session
-    let action: AddObservationVC.Action
+    let context: AddObservationVC.Action
     
+    // We initialize with a new UserObservation just to make sure, when we actually init viewModel, we get the didSet callback
     private var userObservation: UserObservation = UserObservation() {
         didSet {
-            if userObservation.observationLocation?.item != self.observationLocation.value?.item?.item {
-                if let observationLocation = userObservation.observationLocation {
-                    _observationLocation.set(.items(item: observationLocation))
-                } else {
-                    _observationLocation.set(.empty)
-                }
+            // When a new userObservation is assigned, we always want to make sure the location listener contains the newest value
+            if let observationLocation = userObservation.observationLocation {
+                _observationLocation.set(.items(item: observationLocation))
+            } else {
+                _observationLocation.set(.empty)
             }
             
-            if userObservation.locality?.locality != self.locality.value?.locality {
-                if let locality = userObservation.locality {
-                    _locality.set(locality)
-                    _localities.set(.items(item: [locality.locality]))
-                } else {
-                    _locality.set(nil)
-                    _localities.set(.empty)
-                }
+            // When a new userObservation is assigned, we always want to make sure the locality listener contains the newest value
+            if let locality = userObservation.locality {
+                _locality.set(locality)
+                _localities.set(.items(item: [locality.locality]))
+            } else {
+                _locality.set(nil)
+                _localities.set(.empty)
             }
-            
+
+            // When a new userObservation is assigned, we always want to make sure the images listener contains the newest value
             if userObservation.images != self.images.value {
                 _images.set(userObservation.images)
             }
@@ -113,6 +101,8 @@ class AddObservationViewModel: NSObject {
         }
         set {
             userObservation.mushroom = newValue
+            
+            // If the selected mushroom is one of the predictionresults, we add it to the determination notes.
             guard let mushroom = newValue, case Section<PredictionResult>.State.items(items: let predictionResults) = _predictionResults.value, let predictionResult = predictionResults.first(where: {$0.mushroom.id == mushroom.id}) else {userObservation.determinationNotes = nil; return}
             var string = "#imagevision_score: \(predictionResult.score.rounded(toPlaces: 2)) #imagevision_list: "
             predictionResults.forEach({
@@ -158,7 +148,7 @@ class AddObservationViewModel: NSObject {
         }
     }
     
-    var hosts: [Host] {
+    var hosts: (items: [Host], locked: Bool) {
         get {
             return userObservation.hosts
         }
@@ -166,9 +156,7 @@ class AddObservationViewModel: NSObject {
             userObservation.hosts = newValue
         }
     }
-    
-    var lockedHosts = false
-    
+        
     var note: String? {
         get {
             return userObservation.note
@@ -189,18 +177,34 @@ class AddObservationViewModel: NSObject {
     
     private lazy var _images = ELListener<[UserObservation.Image]>.init([]) { [weak self] value in
         self?.userObservation.images = value
+        if value.count >= 1 && self?.mushroom == nil {
+            switch self?.context {
+            case .new, .uploadNote: self?.getPredictions(imageURL: value[0].url)
+            default: break
+            }
+        }
     }
+    
     lazy var images = ELListenerImmutable(_images)
     
     private lazy var _locality = ELListener<(locality: Locality, locked: Bool)?>.init(nil) { [weak self] value in
         self?.userObservation.locality = value
         UserDefaultsHelper.lockedLocality = (value?.locked ?? false) ? value?.locality: nil
+        
+        // If locality is set to nil & location has been found, we want to start finding locality
+        guard value == nil, let location = self?.observationLocation.value?.item else {return }
+        self?.findLocality(location: location.item)
     }
+
     lazy var locality = ELListenerImmutable(_locality)
     
     private  lazy var _observationLocation = ELListener<SimpleState<(item: CLLocation, locked: Bool)>?>.init(nil) { [weak self] value in
         self?.userObservation.observationLocation = value?.item
         UserDefaultsHelper.lockedLocation = (value?.item?.locked ?? false) ? value?.item?.item: nil
+        
+        // If Observation location state is set to .empty, then we want to start location manager
+        guard case .empty = value else {return}
+        self?.locationManager.start()
     }
     lazy var observationLocation = ELListenerImmutable(_observationLocation)
     
@@ -216,16 +220,20 @@ class AddObservationViewModel: NSObject {
     let addedImage = ELEvent<UserObservation.Image>.init()
     let removedImage = ELEvent<Int>.init()
     
-    let showNotification = ELEvent<(Notification, ELNotificationView.Style)>.init()
+    let notification = ELEvent<(Notification, ELNotificationView.Style)>.init()
     let presentVC = ELEvent<UIViewController>.init()
     
-    init(action: AddObservationVC.Action, session: Session) {
-        self.action = action
+    init(action: AddObservationVC.Action, session: Session, predictionResults: [PredictionResult]? = nil) {
+        self.context = action
         self.session = session
         super.init()
         self.start(action: action)
+        if let predictionResults = predictionResults {
+            _predictionResults.set(.items(items: predictionResults))
+        }
     }
     
+    // This object handles location fetching
     private lazy var locationManager: LocationManager = {
         let manager = LocationManager.init(accuracy: .high)
         manager.state.observe(listener: { [weak self, weak manager] state in
@@ -241,7 +249,7 @@ class AddObservationViewModel: NSObject {
                 }))
             case .foundLocation(location: let location):
                 if let imageLocation = self?._images.value.first?.url.getExifLocation(), location.distance(from: imageLocation) > imageLocation.horizontalAccuracy {
-                    self?.showNotification.post(value:
+                    self?.notification.post(value:
                                                     (Notification.useImageMetadata(precision: imageLocation.horizontalAccuracy),
                                                      .action(backgroundColor: UIColor.appSecondaryColour(), actions: [
                                                         .positive(NSLocalizedString("addObservationVC_useImageMetadata_positive", comment: ""), { [weak self] in
@@ -256,6 +264,7 @@ class AddObservationViewModel: NSObject {
                                                         })])))
                     
                 } else {
+                    // When a location has been found, we want to fetch locality normally.
                     self?._observationLocation.set(.items(item: (location, false)))
                     self?.findLocality(location: location)
                 }
@@ -270,13 +279,9 @@ class AddObservationViewModel: NSObject {
         case .new, .newNote:
             userObservation = UserObservation()
             setupState.set(.items(item: ()))
-            if userObservation.observationLocation?.item == nil {
-                locationManager.start()
-            } else if let location = observationLocation.value?.item, userObservation.locality?.locality == nil {
-                findLocality(location: location.item)
-            }
         case .editNote(node: let note):
             userObservation = UserObservation(note)
+            setupState.set(.items(item: ()))
         case .edit(observationID: let id):
             setupState.set(.loading)
             DataService.instance.getObservation(withID: id) { [weak self] (result) in
@@ -288,6 +293,9 @@ class AddObservationViewModel: NSObject {
                     self?.setupState.set(.items(item: ()))
                 }
             }
+        case .uploadNote(note: let note):
+            userObservation = UserObservation(note)
+            setupState.set(.items(item: ()))
         }
     }
     
@@ -300,13 +308,16 @@ class AddObservationViewModel: NSObject {
     
     func addImage(newObservationImage: UserObservation.Image) {
         if _images.value.count == 0 && mushroom == nil {
-            getPredictions(imageURL: newObservationImage.url)
+            switch context {
+            case .new, .uploadNote: getPredictions(imageURL: newObservationImage.url)
+            default: break
+            }
         }
         
         _images.value.append(newObservationImage)
         addedImage.post(value: newObservationImage)
         if let imageLocation = newObservationImage.url.getExifLocation(), let currentObservationLocation = _observationLocation.value?.item, currentObservationLocation.item.distance(from: imageLocation) > imageLocation.horizontalAccuracy {
-            showNotification.post(value: (Notification.useImageMetadata(precision: imageLocation.horizontalAccuracy),
+            notification.post(value: (Notification.useImageMetadata(precision: imageLocation.horizontalAccuracy),
                                           .action(backgroundColor: UIColor.appSecondaryColour(), actions: [
                                             .positive(NSLocalizedString("addObservationVC_useImageMetadata_positive", comment: ""), { [weak self] in
                                                 self?._observationLocation.set(.items(item: (imageLocation, false)))
@@ -330,7 +341,7 @@ class AddObservationViewModel: NSObject {
                 switch result {
                 case .failure(let error):
                     self?._images.set(self?._images.value ?? [])
-                    self?.showNotification.post(value: (Notification.error(error: error), .error(actions: nil)))
+                    self?.notification.post(value: (Notification.error(error: error), .error(actions: nil)))
                 case .success:
                     self?._images.value.remove(at: index)
                     self?.removedImage.post(value: index)
@@ -375,12 +386,18 @@ class AddObservationViewModel: NSObject {
             _observationLocation.set(.items(item: (location.item, locked)))
         }
     }
-    
-    func setPredictionResults(_ pr: Section<PredictionResult>.State) {
-        _predictionResults.set(pr)
-    }
-    
+
     private func findLocality(location: CLLocation) {
+        // If context is a new note, or an edit of a note, we do not find localities at all
+        switch context {
+        case .newNote, .editNote:
+            if locality.value != nil {
+                _locality.set(nil)
+                _localities.set(.empty)
+            }
+            return
+        default: break
+        }
         _localities.set(.loading)
         DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self] result in
             switch result {
@@ -390,35 +407,30 @@ class AddObservationViewModel: NSObject {
                 
                 if let closest = closest {
                     self?._locality.set((closest, false))
-                    self?.showNotification.post(value: (Notification.foundLocationAndLocality(observationLocation: location, locality: closest),
-                                                        .success))
-                } else {
-                    self?.showNotification.post(value: (.localityError(error: nil), .error(actions: nil)))
                 }
             case .failure(let error):
                 self?._localities.set(.error(error: error, handler: nil))
-                self?.showNotification.post(value: (.localityError(error: error), .error(actions: nil)))
             }
         }
     }
-
-private func getPredictions(imageURL: URL) {
-    guard let image = UIImage(url: imageURL) else {return}
-    _predictionResults.set(.loading)
-    DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
-        switch result {
-        case .failure(let error):
-            self?._predictionResults.set(.error(error: error, handler: nil))
-        case .success(let predictionResults):
-            self?._predictionResults.set(.items(items: predictionResults))
+    
+    private func getPredictions(imageURL: URL) {
+        guard let image = UIImage(url: imageURL) else {return}
+        _predictionResults.set(.loading)
+        DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
+            switch result {
+            case .failure(let error):
+                self?._predictionResults.set(.error(error: error, handler: nil))
+            case .success(let predictionResults):
+                self?._predictionResults.set(.items(items: predictionResults))
+            }
         }
     }
-}
     
     func performAction() {
-        switch action {
-        case .new:
-            uploadNew()
+        switch context {
+        case .new, .uploadNote:
+            upload()
         case .edit(observationID: let id):
             edit(id: id)
         case .newNote:
@@ -428,16 +440,17 @@ private func getPredictions(imageURL: URL) {
         }
     }
     
+    ///Check if current object is valid, and post error to user if not.
     private func isValid() -> Bool {
         if let validationError = userObservation.validate(overrideAccuracy: false) {
             switch validationError {
             case .lowAccuracy:
-                showNotification.post(value: (Notification.userObservationValidationError(error: validationError), ELNotificationView.Style.action(backgroundColor: .appSecondaryColour(), actions: [
+                notification.post(value: (Notification.validationError(error: validationError), ELNotificationView.Style.action(backgroundColor: .appSecondaryColour(), actions: [
                     .positive(NSLocalizedString("Yes, find my location", comment: ""), { [weak self] in
                         self?.locationManager.start()
                     }),
                     .negative(NSLocalizedString("No, I'll adjust it myself", comment: ""), {})])))
-            default: showNotification.post(value: (Notification.userObservationValidationError(error: validationError), ELNotificationView.Style.error(actions: nil)))
+            default: notification.post(value: (Notification.validationError(error: validationError), ELNotificationView.Style.error(actions: nil)))
             }
             return false
         } else {
@@ -445,22 +458,31 @@ private func getPredictions(imageURL: URL) {
         }
     }
     
-    func uploadNew() {
+    
+    /// Upload current object and post result to user
+    func upload() {
         guard isValid() else {return}
         uploadState.set(.loading)
         session.uploadObservation(userObservation: userObservation) { [weak self] result in
             switch result {
             case .failure(let error):
-                self?.showNotification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
+                self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
             case .success(let data):
                 if data.uploadedImagesCount == self?._images.value.count {
-                    self?.showNotification.post(value: (Notification.successfullUpload(id: data.observationID), ELNotificationView.Style.success))
+                    self?.notification.post(value: (Notification.uploaded(id: data.observationID), ELNotificationView.Style.success))
                 } else {
-                    self?.showNotification.post(value: (Notification.uploadWithError(message: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), data.uploadedImagesCount, self?._images.value.count ?? 0)), ELNotificationView.Style.warning(actions: nil)))
+                    self?.notification.post(value: (Notification.uploadedWithError(message: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), data.uploadedImagesCount, self?._images.value.count ?? 0)), ELNotificationView.Style.warning(actions: nil)))
                 }
             }
             
-            self?.uploadState.set(.empty)
+            // If context is a note that is saved to storage, we need to delete it.
+            switch self?.context {
+            case .uploadNote(note: let note):
+                Database.instance.notesRepository.delete(note: note) { _ in }
+            case .editNote(node: let note):
+                Database.instance.notesRepository.delete(note: note) { _ in }
+            default: self?.uploadState.set(.empty)
+            }
         }
     }
     
@@ -470,12 +492,12 @@ private func getPredictions(imageURL: URL) {
         session.editObservation(id: id, userObservation: userObservation) { [weak self] (result) in
             switch result {
             case .failure(let error):
-                self?.showNotification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
+                self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
             case .success(let data):
                 if data.uploadedImagesCount == self?.userObservation.images.filter({$0.type == .new}).count {
-                    self?.showNotification.post(value: (Notification.editCompleted(id: data.observationID), ELNotificationView.Style.success))
+                    self?.notification.post(value: (Notification.editCompleted(id: data.observationID), ELNotificationView.Style.success))
                 } else {
-                    self?.showNotification.post(value: (Notification.editWithError(message: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), data.uploadedImagesCount, self?._images.value.count ?? 0)), ELNotificationView.Style.warning(actions: nil)))
+                    self?.notification.post(value: (Notification.editWithError(message: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), data.uploadedImagesCount, self?._images.value.count ?? 0)), ELNotificationView.Style.warning(actions: nil)))
                 }
             }
         }
@@ -486,9 +508,9 @@ private func getPredictions(imageURL: URL) {
         Database.instance.notesRepository.save(userObservation: userObservation) { [weak self] result in
             switch result {
             case .failure(let error):
-                self?.showNotification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
+                self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
             case .success:
-                self?.showNotification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
+                self?.notification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
             }
             
             self?.uploadState.set(.empty)
@@ -500,9 +522,9 @@ private func getPredictions(imageURL: URL) {
         Database.instance.notesRepository.saveChanges(note: note, userObservation: userObservation) { [weak self] result in
             switch result {
             case .failure(let error):
-                self?.showNotification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
+                self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
             case .success:
-                self?.showNotification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
+                self?.notification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
             }
             
             self?.uploadState.set(.empty)
@@ -510,10 +532,14 @@ private func getPredictions(imageURL: URL) {
     }
     
     func deleteNote() {
-        switch action {
+        switch context {
+        case .uploadNote(note: let cdNote):
+            Database.instance.notesRepository.delete(note: cdNote) { [weak self] _ in
+                self?.notification.post(value: (Notification.deleted, .success))
+            }
         case .editNote(node: let cdNote):
             Database.instance.notesRepository.delete(note: cdNote) { [weak self] _ in
-                self?.showNotification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
+                self?.notification.post(value: (Notification.deleted, .success))
             }
         default: return
         }
@@ -521,13 +547,13 @@ private func getPredictions(imageURL: URL) {
     
     func deleteObservation() {
         uploadState.set(.loading)
-        switch action {
+        switch context {
         case .edit(observationID: let id):
             session.deleteObservation(id: id) { [weak self] (result) in
                 switch result {
                 case .failure(let error): break
                 case .success:
-                    self?.showNotification.post(value: (Notification.deleteSuccesful, ELNotificationView.Style.success))
+                    self?.notification.post(value: (Notification.deleted, ELNotificationView.Style.success))
                 }
                 
             }

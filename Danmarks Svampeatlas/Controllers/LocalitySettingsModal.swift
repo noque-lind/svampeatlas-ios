@@ -16,7 +16,6 @@ class LocalitySettingsModal: UIViewController {
         $0.textColor = .appWhite()
         $0.text = NSLocalizedString("settings_locality_message", comment: "")
         $0.numberOfLines = 0
-//        $0.setContentCompressionResistancePriority(.required, for: .vertical)
     })
     
     private lazy var locationLock: UISwitch = {
@@ -39,10 +38,13 @@ class LocalitySettingsModal: UIViewController {
         return view
     }()
     
+    
+    let localityLockPossible: Bool
     var localityLockedSet: ((Bool) -> Void)?
     var locationLockedSet: ((Bool) -> Void)?
     
-    init(locationLocked: Bool, localityLocked: Bool) {
+    init(locationLocked: Bool, localityLocked: Bool, localityLockPossible: Bool) {
+        self.localityLockPossible = localityLockPossible
         super.init(nibName: nil, bundle: nil)
         locationLock.isOn = locationLocked
         localityLock.isOn = localityLocked
@@ -99,7 +101,9 @@ class LocalitySettingsModal: UIViewController {
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }))
             $0.addArrangedSubview(createSwitchStackView(title: NSLocalizedString("settings_remember_location", comment: ""), switcher: locationLock))
-            $0.addArrangedSubview(createSwitchStackView(title: NSLocalizedString("settings_remember_locality", comment: ""), switcher: localityLock))
+            if localityLockPossible {
+                $0.addArrangedSubview(createSwitchStackView(title: NSLocalizedString("settings_remember_locality", comment: ""), switcher: localityLock))
+            }
         })
         
         view.do({
@@ -116,6 +120,10 @@ class LocalitySettingsModal: UIViewController {
     @objc private func switchValueSet(view: UISwitch) {
         if view.tag == 0 {
             locationLockedSet?(view.isOn)
+            if view.isOn {
+                localityLock.setOn(true, animated: true)
+                localityLockedSet?(true)
+            }
         } else if view.tag == 1 {
             localityLockedSet?(view.isOn)
         }

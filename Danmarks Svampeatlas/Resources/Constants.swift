@@ -299,32 +299,14 @@ struct API {
     }
     
     private static func createSearchQuery(searchString: String) -> String {
-        var genus = ""
-        var fullSearchTerm = ""
-        var taxonName = ""
-        
-        for word in searchString.components(separatedBy: " ") {
-            guard word != "" else {break}
-            if fullSearchTerm == "" {
-                fullSearchTerm = word
-                genus = word
-            } else {
-                fullSearchTerm += "+\(word)"
-                if taxonName == "" {
-                    taxonName = word
-                } else {
-                    taxonName += "+\(word)"
-                }
-            }
-        }
-    
+        let speciesSearchResult = SearchStringParser.parseSpeciesSearch(searchString: searchString)
         switch Utilities.appLanguage() {
         case .czech:
-            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$attributes.vernacular_name_CZ$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(speciesSearchResult.fullSearch)%\"}},{\"$attributes.vernacular_name_CZ$\":{\"like\":\"%\(speciesSearchResult.fullSearch)%\"}},{\"FullName\":{\"like\":\"\(speciesSearchResult.genus)%\"},\"TaxonName\":{\"like\":\"\(speciesSearchResult.taxonName)%\"}}]}"
         case .danish:
-            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$Vernacularname_DK.vernacularname_dk$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(speciesSearchResult.fullSearch)%\"}},{\"$Vernacularname_DK.vernacularname_dk$\":{\"like\":\"%\(speciesSearchResult.fullSearch)%\"}},{\"FullName\":{\"like\":\"\(speciesSearchResult.genus)%\"},\"TaxonName\":{\"like\":\"\(speciesSearchResult.taxonName)%\"}}]}"
         case .english:
-            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"$attributes.vernacular_name_GB$\":{\"like\":\"%\(fullSearchTerm)%\"}},{\"FullName\":{\"like\":\"\(genus)%\"},\"TaxonName\":{\"like\":\"\(taxonName)%\"}}]}"
+            return "{\"RankID\":{\"gt\":4999},\"$or\":[{\"FullName\":{\"like\":\"%\(speciesSearchResult.fullSearch)%\"}},{\"$attributes.vernacular_name_GB$\":{\"like\":\"%\(speciesSearchResult.fullSearch)%\"}},{\"FullName\":{\"like\":\"\(speciesSearchResult.genus)%\"},\"TaxonName\":{\"like\":\"\(speciesSearchResult.taxonName)%\"}}]}"
         }
     }
     

@@ -33,7 +33,7 @@ class ErrorView: UIView {
         button.setTitleColor(UIColor.appThird(), for: [])
         button.titleLabel?.font = UIFont.appPrimaryHightlighed()
         button.isHidden = true
-        button.addTarget(self, action: #selector(actionButtonPressed), for: UIControl.Event.touchUpInside)
+        button.addTarget(ErrorView.self, action: #selector(actionButtonPressed), for: UIControl.Event.touchUpInside)
         return button
     }()
     

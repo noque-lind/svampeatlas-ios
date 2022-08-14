@@ -17,7 +17,6 @@ Created by simplelocalize.io
 "Edit note" = "Edit note";
 "Edit observation" = "Edit observation";
 "In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?" = "In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?";
-"It is important for the quality of your collected data, that you make sure the position of the observation you are submitting are correct. You can see on the clip below how to adjust the position manually.\n\nIf a photo added to the observation contains a GPS tag, the app will suggest using the position from the image instead\n\nWe will remind you of this every once in a while. You can turn this reminder off in the settings." = "It is important for the quality of your collected data, that you make sure the position of the observation you are submitting are correct. You can see on the clip below how to adjust the position manually.\n\nIf a photo added to the observation contains a GPS tag, the app will suggest using the position from the image instead\n\nWe will remind you of this every once in a while. You can turn this reminder off in the settings.";
 "Low accuracy" = "Low accuracy";
 "New note" = "New note";
 "No, I'll adjust it myself" = "No, I'll adjust it myself";
@@ -28,7 +27,6 @@ Created by simplelocalize.io
 "Precision %0.2f m." = "Precision %0.2f m.";
 "Recieve reminders regarding importance of correct and precise position attached to records" = "Recieve reminders regarding importance of correct and precise position attached to records";
 "Record unidentifed mushroom" = "Record unidentifed mushroom";
-"Remember to confirm your position" = "Remember to confirm your position";
 "Reminders" = "Reminders";
 "Save" = "Save";
 "Save as note" = "Save as note";
@@ -62,6 +60,9 @@ Created by simplelocalize.io
 "aboutVC_recognition_message" = "Use of automatic image recognitions can't always be precise, and it is therefore of crucial importance that the system is used with great caution. Never eat a mushroom without consulting an expert. Danmarks Svampeatlas (Fungal atlas) and Noque ApS disclaims any responsibility for any poisoning or other harmful health conditions.\n\nThe image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas). The system is based on artificial intelligence and has been trained on all the images contibuted by our users. The more you contribute with observations and great images, the better we can train and develop the technology in the future.";
 "aboutVC_recognition_title" = "Automatic image recognition";
 "aboutVC_title" = "About";
+"action_refresh_data" = "Redownload taxon list";
+"action_save_changes" = "Save changes";
+"action_upload_note" = "Upload note";
 "addObservationVC_localityFoundError_title" = "Couldn't find nearby location";
 "addObservationVC_localityFound_message" = "Name: %@\nCoordinates: %.02f - %.02f\nAccuracy: %.02f m";
 "addObservationVC_localityFound_title" = "The location of your observation has been determined";
@@ -90,80 +91,6 @@ Created by simplelocalize.io
 "commentsTableView_cell_title" = "Write a comment";
 "common_continue" = "Continue";
 "common_upload" = "Upload";
-"containedResultCell_genus" = "Genus: ";
-"creditationCell_ai" = "The image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas).";
-"creditationCell_aiNewObservation" = "These name suggestions are based on the first image you have added to the observation. The image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas).";
-"dataServiceError_decodingError_message" = "The received data could not be read";
-"dataServiceError_decodingError_title" = "Decoding error";
-"dataServiceError_empty_message" = "The server response contained no data";
-"dataServiceError_empty_title" = "Invalid empty response";
-"dataServiceError_encodingError_message" = "";
-"dataServiceError_encodingError_title" = "Error";
-"dataServiceError_loginError_message" = "Try using a different username or password";
-"dataServiceError_loginError_title" = "Login error";
-"dataServiceError_searchResponseEmpty_message" = "What you searched for couldn't be found, try to search after something else.";
-"dataServiceError_searchResponseEmpty_title" = "Found nothing";
-"dataServiceError_unknown_message" = "An unknown error occurred";
-"dataServiceError_unknown_title" = "Unknown error";
-"databaseError_contentOutdated_message" = "The stored data is outdated";
-"databaseError_contentOutdated_title" = "The data stored needs an update";
-"databaseError_initError_message" = "An error occured while creating/loading the database. This means that the app will need to delete the previous one, and create a new one from scratch resulting in all of your saved data being deleted. We apologize for the inconvenience. Press the button below to continue.";
-"databaseError_initError_title" = "Database error";
-"databaseError_initError_message" = "An error occured while creating/loading the database. This means that the app will need to delete the previous one, and create a new one from scratch resulting in all of your saved data being deleted. We apologize for the inconvenience. Press the button below to continue.";
-"databaseError_contentOutdated_title" = "The data stored needs an update";
-"databaseError_contentOutdated_message" = "The stored data is outdated";
-"databaseError_noEntries_title" = "Found nothing";
-"databaseError_noEntries_message" = "There was no saved data";
-"databaseError_noEntries_favoritedMushrooms_message" = "You don't have any favorited mushrooms. By swiping left, you can a mushroom as a favorite.";
-"databaseError_readError_title" = "Read error";
-"databaseError_readError_message" = "An error occured while reading data from the disk";
-"databaseError_saveError_title" = "Save error";
-"databaseError_saveError_message" = "An error occured while saving data to the disk";
-
-// Date stringable
-"dateFormatting_rightNow" = "Right now";
-"dateFormatting_hoursSince" = "%d hours ago";
-"dateFormatting_today" = "I dag";
-"dateFormatting_1dayHasPassed" = "1 day ago";
-"dateFormatting_daysPassed" = "%d days ago";
-
-// LoginVC
-"loginVC_upperLabel" = "Login at";
-"loginVC_lowerLabel" = "Fungal atlas";
-"loginVC_detailsLabel" = "Contribute to knowledge about fungi species by sharing your observations with others, and that way receive validation on your identification by the leading experts on fungi in Denmark";
-"loginVC_initialsTextField_placeholder" = "Initials";
-"loginVC_initialsTextField_error" = "You have to enter an username";
-"loginVC_passwordTextField_placeholder" = "Password";
-"loginVC_passwordTextField_error" = "You have to write your password";
-"loginVC_loginButton" = "Log in";
-"loginVC_createNewAccountButton" = "Press here to create a new account";
-
-//AddObservationVC
-"addObservationVC_title" = "New sighting";
-"addObservationVC_observationCategories_species" = "Species";
-"addObservationVC_observationCategories_details" = "Details";
-"addObservationVC_observationCategories_location" = "Location";
-"addObservationVC_observationCategories_species" = "Species";
-"addObservationVC_successfullUpload_title" = "You observation has been created";
-"addObservationVC_title" = "New sighting";
-"addObservationVC_useImageMetadata_message" = "An added image seems to have been taken at a different time and place than now. Would you like to use the information from the image instead?\n\nImage GPS-Precision: %@ m";
-"addObservationVC_useImageMetadata_negative" = "No";
-"addObservationVC_useImageMetadata_positive" = "Yes, use the image metadata";
-"addObservationVC_useImageMetadata_title" = "Location suggestion";
-"appScrollView_informationHeaderTitle" = "Information";
-"avViewError_cameraError_title" = "Camera error";
-"avViewError_permissionsError_message" = "You can give the app permission to use the camera in the settings.";
-"avViewError_permissionsError_title" = "Missing permission";
-"avViewError_unknown_message" = "An unknown error occurred.";
-"avViewError_unknown_title" = "Unknown error";
-"cameraControlTextButton_noPhoto" = "No photo";
-"cameraControlTextButton_usePhoto" = "Use photo";
-"cameraVC_shouldSaveImagesPrompt_message" = "If you are interested, your images can be put in an album for all the images you take using this app.";
-"cameraVC_shouldSaveImagesPrompt_message_negative" = "No";
-"cameraVC_shouldSaveImagesPrompt_message_positive" = "Yes, save the images";
-"cameraVC_shouldSaveImagesPrompt_title" = "Should your images be saved?";
-"cautionCell_lowConfidence" = "None of the below suggestions have a likely probability to be correct.";
-"commentsTableView_cell_title" = "Write a comment";
 "containedResultCell_genus" = "Genus: ";
 "creditationCell_ai" = "The image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas).";
 "creditationCell_aiNewObservation" = "These name suggestions are based on the first image you have added to the observation. The image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas).";
@@ -382,12 +309,16 @@ Created by simplelocalize.io
 "urlSessionError_unknown_title" = "Unknown error";
 "userView_guest_message" = "Login to get the best possible experience";
 "userView_guest_title" = "Fungal atlas";
-"userView_guest_message" = "Login to get the best possible experience";
-"userView_guest_title" = "Fungal atlas";
 "utilities_photoAlbumName" = "Fungal atlas";
+"whats_new_2_0" = "Vi har netop lanceret en ny version af Svampeatlas appen (version 2.0), og denne gang med ganske væsentlige ændringer og forbedringer. Mest væsentligt er:
+
+1)    Ændret indberetningsflow. Vi har byttet om på rækkefølgen når man opretter et nyt fund, så man starter med lokalitet, dernæst vælger habitat, substrat og vært for til sidst at vælge art. Ændringen skyldes først og fremmest at vi snart vil lancere en ny forbedret version af vores billedgenkendelses AI, som vil give bedre artsforslag baseret på data om habitat og substrat. Ønsker du fremover at starte med at få et artsforslag kan du stadig bruge funktionen navneforslag i sidemenuen
+
+2)    Mulighed for at låse lokalitetnavn og koordinater. Vi har gjort det muligt at låse lokalitetsnavn og eventuelt også fund-koordinater, hvis man indberetter mange fund fra den samme lokalitet, eller fra et enkelt hotspot. Dermed kan man spare tid og batteri i felten og samtidigt få mere konsistente lokalitetsnavne på dine fund. Funktionen kan nulstilles manuelt eller automatisk efter en time.
+
+3)    Forenkling af notesbogfunktion. Vi har nu opdateret notesbogfunktionen så den ikke kan anvende AI til artsbestemmelse eller søge efter lokalitetsnavne når du opretter nye noter. Du kan stadig vælge artsnavne fra din artsliste på telefonen og tilføje metadata, men AI og valg af lokalitet aktiveres først når du åbner fundet fra notesbogen igen for at redigere det inden du oploader det til Svampeatlas. Formålet med ændringen er at spare tid og batteri i felten, så du udelukkende kan koncentrere dig om at oprette svampefund. Koordinater kobles enten til de foto du tilføjer i notesbogen eller din placering når en ny fundnote oprettes uden foto. Husk derfor at tage fotos eller oprette noter lige der hvor din svamp er fundet.
+
+Derudover er der gennemført en række mindre forbedringer og bug fixes. Man kan igen søge arter ved hjælp af 3 + 3 koder (fx ama mus for Amanita muscaria), ligesom billedvisning på artspræsentationer er forbedret.   ";
 "✔︎ Ready for upload" = "✔︎ Ready for upload";
 "✗ Not ready for upload" = "✗ Not ready for upload";
 
-
-"Continue" = "Continue";
-"Upload" = "Upload";

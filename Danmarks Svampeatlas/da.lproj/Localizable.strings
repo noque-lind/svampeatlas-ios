@@ -17,11 +17,6 @@ Created by simplelocalize.io
 "Edit note" = "Rediger note";
 "Edit observation" = "Rediger observation";
 "In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?" = "For at du kan bruge denne funktionalitet, skal du have data downloaded til offline brug. Hvis du allerede har hentet data, skal dataen opdateres. Gør kun dette hvis du har en god internet forbindelse. Er du klar?";
-"It is important for the quality of your collected data, that you make sure the position of the observation you are submitting are correct. You can see on the clip below how to adjust the position manually.\n\nIf a photo added to the observation contains a GPS tag, the app will suggest using the position from the image instead\n\nWe will remind you of this every once in a while. You can turn this reminder off in the settings." = "Det er vigtigt for kvaliteten af den indsamlede data, at du kontrollerer at placeringen til din observation er korrekt. Du kan se på klippet nedenfor, hvordan du justerer placeringen manuelt.
-
-Hvis det første tilføjede billede indeholder et GPS koordinat, vil appen foreslå at bruge billedets placering istedet for.
-
-Vi vil minde dig om dette engang imellem - du kan slå dette fra i indstillinger.";
 "Low accuracy" = "Upræcis observationsplacering";
 "New note" = "Ny note";
 "No, I'll adjust it myself" = "Nej, jeg justere placeringen selv";
@@ -32,7 +27,6 @@ Vi vil minde dig om dette engang imellem - du kan slå dette fra i indstillinger
 "Precision %0.2f m." = "Præcision %0.2f m.";
 "Recieve reminders regarding importance of correct and precise position attached to records" = "Modtag påmindelser vedrørende kontrol af position";
 "Record unidentifed mushroom" = "Indlæg en ubestemt svamp";
-"Remember to confirm your position" = "Husk at kontrollere din placering";
 "Reminders" = "Påmindelser";
 "Save" = "Gem";
 "Save as note" = "Gem som note";
@@ -90,6 +84,9 @@ Valideringsprocessen omfatter artsbestemmelsen, og de grovere geografiske data. 
 Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
 "aboutVC_recognition_title" = "Artsbestemmelse";
 "aboutVC_title" = "Om";
+"action_refresh_data" = "Opdater taxonliste";
+"action_save_changes" = "Gem ændringer";
+"action_upload_note" = "Indsend note";
 "addObservationVC_localityFoundError_title" = "Nærmeste placering kunne ikke findes.";
 "addObservationVC_localityFound_message" = "Navn: %@
 Koordinater: %.02f - %.02f
@@ -120,6 +117,8 @@ Billedets GPS-Præcision: %@ m";
 "cameraVC_shouldSaveImagesPrompt_title" = "Skal dine billeder gemmes?";
 "cautionCell_lowConfidence" = "Bemærk at ingen af de nedenstående forslag har en særlig stor sandsynlighed.";
 "commentsTableView_cell_title" = "Skriv en kommentar";
+"common_continue" = "Fortsæt";
+"common_upload" = "Indsend";
 "containedResultCell_genus" = "Slægt: ";
 "creditationCell_ai" = "Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
 "creditationCell_aiNewObservation" = "Disse navneforslag er baseret på det første billede du har tilføjet til dette fund. Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
@@ -188,6 +187,12 @@ Billedets GPS-Præcision: %@ m";
 "mapViewFilteringSettings_ageOfSighting" = "Fundets alder: ";
 "mapViewSettingsView_newSearch" = "Ny søgning";
 "mapViewSettingsView_year" = "%d år";
+"modal_localityHelper_message" = "Det er vigtigt for kvaliteten af den indsamlede data, at du kontrollerer at placeringen til din observation er korrekt. Du kan se på klippet nedenfor, hvordan du justerer placeringen manuelt.
+
+Hvis det første tilføjede billede indeholder et GPS koordinat, vil appen foreslå at bruge billedets placering istedet for.
+
+Vi vil minde dig om dette engang imellem - du kan slå dette fra i indstillinger.";
+"modal_localityHelper_title" = "Husk at kontrollere din placering";
 "mushroomDetailsScrollView_acceptedRecords" = "Accepterede fund:";
 "mushroomDetailsScrollView_description" = "Beskrivelse";
 "mushroomDetailsScrollView_eatability" = "Spiselighedsrapport";
@@ -307,6 +312,12 @@ Billedets GPS-Præcision: %@ m";
 "settingsCell_language" = "Sprog";
 "settingsInformationCell_message" = "Her har du mulighed for at finjustere din app oplevelse. Lige nu kan du ikke så meget, men der kommer flere muligheder til, jo mere vi kan fornemme i har brug for.";
 "settings_general_header" = "Generelt";
+"settings_locality_message" = "De her indstillinger kan hjælpe dig i situationer hvor du har dårligt internet, og du gerne vil indrapportere en masse observationer fra samme sted.
+
+Dine valg nulstilles efter 1 time, for at forhindre fejlindrapporteringer";
+"settings_locality_title" = "Placerings indstillinger";
+"settings_remember_locality" = "Husk denne placering (navn på lokationen)";
+"settings_remember_location" = "Husk disse koordinater";
 "termsVC_cameraHelper_message" = "Når du fotografere svampe til bestemmelse så husk følgende:
 \tAt fotografere i bredformat (vandret). Tjek at din telefon ikke har rotationslås aktiveret
 \t- At få både unge og gamle frugtlegemer med på foto (hvis muligt)
@@ -340,9 +351,16 @@ Dette system er stadig i udviklingsfase og vi vil meget gerne have jeres feedbac
 "userView_guest_message" = "Log ind for at få den bedste oplevelse";
 "userView_guest_title" = "Svampeatlas";
 "utilities_photoAlbumName" = "Svampeatlas";
+"whats_new_2_0" = "Vi har netop lanceret en ny version af Svampeatlas appen (version 2.0), og denne gang med ganske væsentlige ændringer og forbedringer. Mest væsentligt er:
+
+1)    Ændret indberetningsflow. Vi har byttet om på rækkefølgen når man opretter et nyt fund, så man starter med lokalitet, dernæst vælger habitat, substrat og vært for til sidst at vælge art. Ændringen skyldes først og fremmest at vi snart vil lancere en ny forbedret version af vores billedgenkendelses AI, som vil give bedre artsforslag baseret på data om habitat og substrat. Ønsker du fremover at starte med at få et artsforslag kan du stadig bruge funktionen navneforslag i sidemenuen
+
+2)    Mulighed for at låse lokalitetnavn og koordinater. Vi har gjort det muligt at låse lokalitetsnavn og eventuelt også fund-koordinater, hvis man indberetter mange fund fra den samme lokalitet, eller fra et enkelt hotspot. Dermed kan man spare tid og batteri i felten og samtidigt få mere konsistente lokalitetsnavne på dine fund. Funktionen kan nulstilles manuelt eller automatisk efter en time.
+
+3)    Forenkling af notesbogfunktion. Vi har nu opdateret notesbogfunktionen så den ikke kan anvende AI til artsbestemmelse eller søge efter lokalitetsnavne når du opretter nye noter. Du kan stadig vælge artsnavne fra din artsliste på telefonen og tilføje metadata, men AI og valg af lokalitet aktiveres først når du åbner fundet fra notesbogen igen for at redigere det inden du oploader det til Svampeatlas. Formålet med ændringen er at spare tid og batteri i felten, så du udelukkende kan koncentrere dig om at oprette svampefund. Koordinater kobles enten til de foto du tilføjer i notesbogen eller din placering når en ny fundnote oprettes uden foto. Husk derfor at tage fotos eller oprette noter lige der hvor din svamp er fundet.
+
+Derudover er der gennemført en række mindre forbedringer og bug fixes. Man kan igen søge arter ved hjælp af 3 + 3 koder (fx ama mus for Amanita muscaria), ligesom billedvisning på artspræsentationer er forbedret.   ";
 "✔︎ Ready for upload" = "✔︎ Klar til upload";
 "✗ Not ready for upload" = "✗ Ikke klar til upload";
 
 
-"Continue" = "Fortsæt";
-"Upload" = "Indsend";

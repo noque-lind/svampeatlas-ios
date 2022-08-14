@@ -172,12 +172,14 @@ class ModalVC: UIViewController {
             textView.text = NSLocalizedString("termsVC_cameraHelper_message", comment: "")
         case .whatsNew:
             header.configure(title: NSLocalizedString("Whats new?", comment: ""))
-            textView.text = NSLocalizedString("We're so happy that you are still here!\n\nYour app has been updated with some new exciting features:\n\n- New design in mushroom and observation details\n- You can now edit an observation after it has been uploaded\n- You can delete observations (only within the firt 48h of the upload)\n- Major stability improvements\n- Prepareness for more exiciting features such as: Local storage of observations when internet is limited, interactive validation of observations, add extra finders to an observation", comment: "")
+            textView.text = NSLocalizedString("whats_new_2_0", comment: "")
         }
     }
     
     @objc private func acceptButtonPressed() {
         switch terms {
+        case .whatsNew:
+            UserDefaultsHelper.hasSeenWhatsNew = true
             case .mlPredict:
                 UserDefaultsHelper.setHasAcceptedImagePredictionTerms(true)
         case .localityHelper:

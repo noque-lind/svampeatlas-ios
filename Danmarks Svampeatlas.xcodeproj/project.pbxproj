@@ -134,6 +134,8 @@
 		DB7F04F922AD099C00785AF8 /* CaviarDreams_Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */; };
 		DB81C8AE2519275F006E45B9 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB81C8AD2519275F006E45B9 /* SettingsVC.swift */; };
 		DB830A22253C565900223D3A /* AddObservationVCViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB830A21253C565900223D3A /* AddObservationVCViewModel.swift */; };
+		DB83F86B28A69887003F314E /* UIApplication+Versions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB83F86A28A69887003F314E /* UIApplication+Versions.swift */; };
+		DB83F87028A8F86A003F314E /* SearchStringParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB83F86F28A8F86A003F314E /* SearchStringParser.swift */; };
 		DB878C1426D958CC008C1A23 /* NotebookViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB878C1326D958CC008C1A23 /* NotebookViewModel.swift */; };
 		DB878C1626D95927008C1A23 /* NotesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB878C1526D95927008C1A23 /* NotesRepository.swift */; };
 		DB893117232BCBEA000BDCD1 /* UIApplication+Urls.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */; };
@@ -365,6 +367,8 @@
 		DB7F04F722AD094100785AF8 /* CaviarDreams_Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = CaviarDreams_Bold.ttf; sourceTree = "<group>"; };
 		DB81C8AD2519275F006E45B9 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		DB830A21253C565900223D3A /* AddObservationVCViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddObservationVCViewModel.swift; sourceTree = "<group>"; };
+		DB83F86A28A69887003F314E /* UIApplication+Versions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Versions.swift"; sourceTree = "<group>"; };
+		DB83F86F28A8F86A003F314E /* SearchStringParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStringParser.swift; sourceTree = "<group>"; };
 		DB878C1326D958CC008C1A23 /* NotebookViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookViewModel.swift; sourceTree = "<group>"; };
 		DB878C1526D95927008C1A23 /* NotesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesRepository.swift; sourceTree = "<group>"; };
 		DB893116232BCBEA000BDCD1 /* UIApplication+Urls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Urls.swift"; sourceTree = "<group>"; };
@@ -683,6 +687,7 @@
 		4A69BC782038D96500D3B88B /* Danmarks Svampeatlas */ = {
 			isa = PBXGroup;
 			children = (
+				DB83F86E28A8F85A003F314E /* Utilities */,
 				DB830A1E253C564100223D3A /* ViewModels */,
 				DB1C86ED23B66588009DB71C /* Repository */,
 				DBF33C6322F436FD00F383D4 /* Danmarks Svampeatlas.entitlements */,
@@ -842,6 +847,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		DB83F86E28A8F85A003F314E /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				DB83F86F28A8F86A003F314E /* SearchStringParser.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		DB897AFD21DD506F00E74C00 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -885,6 +898,7 @@
 				DB03EE6326DBC9030019D9F7 /* CLLocation+toCD.swift */,
 				DB4E002526DE288000485AB7 /* CDNoteImage+Url.swift */,
 				DBA96F9626ECABDC0092EAA0 /* UILabel+SetMargins.swift */,
+				DB83F86A28A69887003F314E /* UIApplication+Versions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1166,6 +1180,8 @@
 				4A70A5DD20D8E61E007B6214 /* CameraControlsView.swift in Sources */,
 				DB4AE10B22BE89DA006F6516 /* SearchVC.swift in Sources */,
 				DB9F59952175F4D9007790D3 /* MapViewSettingsView.swift in Sources */,
+				DB83F87028A8F86A003F314E /* SearchStringParser.swift in Sources */,
+				DB83F86B28A69887003F314E /* UIApplication+Versions.swift in Sources */,
 				DB2EC90C216D285F00B980A0 /* Double+Extension.swift in Sources */,
 				DB42E37421777811003C3585 /* ProfileImageView.swift in Sources */,
 				4A72AB8620EE530900F9E45C /* CoreDataHelper.swift in Sources */,
@@ -1433,7 +1449,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Danmarks Svampeatlas/Danmarks Svampeatlas.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1441,7 +1457,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.noque.fungalatlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1455,7 +1471,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Danmarks Svampeatlas/Danmarks Svampeatlas.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_TEAM = 8XW2A3LKCS;
 				INFOPLIST_FILE = "Danmarks Svampeatlas/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1463,7 +1479,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.noque.fungalatlas;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

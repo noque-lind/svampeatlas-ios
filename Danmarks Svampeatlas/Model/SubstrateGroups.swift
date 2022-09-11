@@ -67,7 +67,6 @@ struct SubstrateGroup {
         }
     }
     }
-    
 
 struct Substrate {
     public private(set) var id: Int

@@ -26,7 +26,6 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         view.setContentView(view: userView, ignoreSafeAreaLayoutGuide: false, maxHeight: 180, topPadding: 30.0, bottomPadding: 30.0)
         return view
     }()
-
     
     private lazy var menuButton: UIBarButtonItem = {
         let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
@@ -121,4 +120,3 @@ extension MyPageVC: NavigationDelegate {
         }
     }
 }
-

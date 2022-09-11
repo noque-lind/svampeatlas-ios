@@ -71,7 +71,6 @@ class AboutVC: UIViewController {
                 stackView.addArrangedSubview(messageLabelStackView)
                 return stackView
                 }
-        
     
             let stackView = UIStackView()
             stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +98,6 @@ class AboutVC: UIViewController {
             stackView.addArrangedSubview(createText(title: NSLocalizedString("aboutVC_guidelines_title", comment: ""), message: NSLocalizedString("aboutVC_guidelines_message", comment: "")))
             return stackView
         }()
-        
         
         let scrollView: UIScrollView = {
             let scrollView = UIScrollView()

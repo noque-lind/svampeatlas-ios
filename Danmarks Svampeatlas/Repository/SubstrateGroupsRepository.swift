@@ -6,16 +6,15 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 import PredicateKit
-
 
 class SubstrateGroupsRepository: Repository, RepositoryDelegate {
     
     typealias Item = SubstrateGroup
     
-    func deleteAll(completion: ((Result<Void, CoreDataError>) -> ())) {        
+    func deleteAll(completion: ((Result<Void, CoreDataError>) -> Void)) {        
         backgroundThread.performAndWait {
             do {
                 try backgroundThread.execute(NSBatchDeleteRequest(fetchRequest: NSFetchRequest.init(entityName: "CDSubstrateGroup")))
@@ -27,7 +26,7 @@ class SubstrateGroupsRepository: Repository, RepositoryDelegate {
         }
     }
     
-    func save(items: [SubstrateGroup], completion: ((Result<Void, CoreDataError>) -> ())) {
+    func save(items: [SubstrateGroup], completion: ((Result<Void, CoreDataError>) -> Void)) {
         backgroundThread.performAndWait {
             for item in items {
                 let _: CDSubstrateGroup = {
@@ -95,7 +94,6 @@ class SubstrateGroupsRepository: Repository, RepositoryDelegate {
         let substrates: [CDSubstrate] = try backgroundThread.fetch(where: \CDSubstrate.id == Int16(substrate.id)).result()
         return substrates.first
     }
-    
     
     func create(substrate: Substrate) -> CDSubstrate {
         return (NSEntityDescription.insertNewObject(forEntityName: "CDSubstrate", into: backgroundThread) as! CDSubstrate).then({

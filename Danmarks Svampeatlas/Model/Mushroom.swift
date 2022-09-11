@@ -6,9 +6,9 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
+import CoreData
 import Foundation
 import UIKit
-import CoreData
 
 struct Mushroom: Decodable, Equatable {
     static func == (lhs: Mushroom, rhs: Mushroom) -> Bool {
@@ -19,6 +19,7 @@ struct Mushroom: Decodable, Equatable {
     
     public private(set) var id: Int
     public private(set) var fullName: String
+    public private(set) var taxonName: String?
     public private(set) var fullNameAuthor: String?
     public private(set) var updatedAt: String?
     public private(set) var probability: Int?
@@ -58,7 +59,7 @@ struct Mushroom: Decodable, Equatable {
         case updatedAt
         case probability
         case rankName = "RankName"
-        
+        case taxonName = "TaxonName"
         case vernacularNameDK = "Vernacularname_DK"
         case redlistData = "redlistdata"
         case attributes
@@ -91,28 +92,29 @@ struct Mushroom: Decodable, Equatable {
         isPlaceholder = true
     }
     
-    
     init(from cdMushroom: CDMushroom) {
         id = Int(cdMushroom.id)
         fullName = cdMushroom.fullName ?? "[...]"
         vernacularNameDK = VernacularNameDK(vernacularname_dk: cdMushroom.danishName, source: nil)
+        taxonName = cdMushroom.taxonName
         updatedAt = cdMushroom.updatedAt
         redlistData = [RedlistData(status: cdMushroom.redlistStatus)]
-
+        probability = Int(cdMushroom.probability)
+        
         if let cdAttributes = cdMushroom.attributes {
             attributes = Attributes(cdAttributes)
         }
-        
 
         if let cdImages = cdMushroom.images?.allObjects as? [CDImage], cdImages.count != 0 {
             _images = [Image]()
-            for cdImage in cdImages {
+            for cdImage in cdImages.sorted(by: { lhs, rhs in
+                return lhs.index < rhs.index
+            }) {
                 guard let url = cdImage.url else {continue}
                 _images?.append(Image(id: id, thumbURL: nil, url: url, photographer: cdImage.photographer))
             }
         }
     }
-
     
     static func genus() -> Mushroom {
         return Mushroom(id: 60212, fullName: "Fungi Sp.", isGenus: true)
@@ -143,8 +145,6 @@ struct Attributes: Decodable {
         case enName = "vernacular_name_GB"
         case czName = "vernacular_name_CZ"
     }
-    
-    
     
     var description: String? {
         switch Utilities.appLanguage() {
@@ -193,19 +193,7 @@ struct Attributes: Decodable {
             return false
         }
     }
-    
-//    init(presentInDenmark: Bool?, similarities: String?, ecology: String?, eatability: String?, tipsForValidation: String?, enName: String?, diagnosis: String?, diagnosisEn: String?) {
-//        self.presentInDenmark = presentInDenmark
-//        self._similarities = similarities
-//        self._ecology = ecology
-//        self._eatability = eatability
-//        self._tipsForValidation = tipsForValidation
-//        self.enName =
-//        self.vernacularNameEN = vernacularNameEN
-//        self._diagnosis = diagnosis
-//        self._diagnosisEn = diagnosisEn
-//    }
-    
+        
     init(_ model: CDMushroomAttribute) {
         self.presentInDenmark = nil
         self.czName = model.czName
@@ -231,13 +219,11 @@ struct Attributes: Decodable {
         cdAttributes.mDescription = dkDescription
         cdAttributes.mDescriptionEN = enDescription
     }
-    
    
 }
 
 enum ToxicityLevel: String {
     case toxic = "GIFTIG"
-    
     
     var description: String {
         switch self {
@@ -258,13 +244,6 @@ struct Statistics: Decodable {
     }
 }
 
-
-
-
 struct RedlistData: Decodable {
     var status: String?
 }
-
-
-
-

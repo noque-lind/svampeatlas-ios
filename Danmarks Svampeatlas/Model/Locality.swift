@@ -6,11 +6,11 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
-import CoreLocation
 import CoreData
+import CoreLocation
+import Foundation
 
-struct Locality: Decodable, Equatable {
+struct Locality: Decodable, Encodable, Equatable {
     static func == (lhs: Locality, rhs: Locality) -> Bool {
         if lhs.id == rhs.id {return true} else {return false}
     }

@@ -47,7 +47,7 @@ class TextCell: UITableViewCell {
         paragraphStyle.hyphenationFactor = 1.0
         
         // Swift 4.2++
-        let attributedString = NSMutableAttributedString(string: text.capitalizeFirst(), attributes: [NSAttributedString.Key.paragraphStyle:paragraphStyle])
+        let attributedString = NSMutableAttributedString(string: text.capitalizeFirst(), attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
         label.attributedText = attributedString
     }
     

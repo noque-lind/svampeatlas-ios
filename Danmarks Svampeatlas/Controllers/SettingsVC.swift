@@ -6,15 +6,15 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
-
+import UIKit
 
 class SettingsVC: UIViewController {
     
     enum Item {
         case header
         case language
+        case localityReminderToggle
     }
     
     class CellProvider: ELTableViewCellProvider {
@@ -27,6 +27,7 @@ class SettingsVC: UIViewController {
         func registerCells(tableView: UITableView) {
             tableView.register(SettingsInformationCell.self, forCellReuseIdentifier: SettingsInformationCell.identifier)
             tableView.register(SettingCell.self, forCellReuseIdentifier: String(describing: SettingCell.self))
+            tableView.register(SwitchSettingCell.self, forCellReuseIdentifier: String(describing: SwitchSettingCell.self))
         }
         
         func cellForItem(_ item: SettingsVC.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
@@ -36,6 +37,9 @@ class SettingsVC: UIViewController {
             case .language: return tableView.dequeueReusableCell(withIdentifier: String(describing: SettingCell.self), for: indexPath).then({
                 ($0 as? SettingCell)?.configureCell(icon: nil, description: NSLocalizedString("settingsCell_language", comment: ""), content: Locale.current.localizedString(forIdentifier: Locale.current.identifier)?.capitalizeFirst() ?? "")
             })
+            case .localityReminderToggle: return tableView.dequeueReusableCell(withIdentifier: String(describing: SwitchSettingCell.self), for: indexPath).then({($0 as? SwitchSettingCell)?.configureCell(description: NSLocalizedString("settings_reminders_title", comment: ""), value: UserDefaultsHelper.shouldShowPositionReminderToggle, onValueSet: { newValue in
+                UserDefaultsHelper.shouldShowPositionReminderToggle = newValue
+            })})
             }
         }
         
@@ -43,7 +47,8 @@ class SettingsVC: UIViewController {
     
     private lazy var tableView = ELTableView<Item, CellProvider>.build(provider: CellProvider()).then({
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setSections(sections: [.init(title: nil, state: .items(items: [.header])), .init(title: NSLocalizedString("settings_general_header", comment: ""), state: .items(items: [.language]))])
+        $0.setSections(sections: [.init(title: nil, state: .items(items: [.header])), .init(title: NSLocalizedString("settings_general_header", comment: ""), state: .items(items: [.language])), .init(title: NSLocalizedString("settings_reminders", comment: ""), state: .items(items: [.localityReminderToggle]))])
+        
         $0.didSelectItem.handleEvent { (value) in
             switch value.Item {
             case .language: UIApplication.openAppSettings()

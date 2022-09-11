@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class SectionHeaderView: UITableViewHeaderFooterView, ELSectionHeaderCell {
     
@@ -26,7 +26,6 @@ class SectionHeaderView: UITableViewHeaderFooterView, ELSectionHeaderCell {
         super.init(reuseIdentifier: reuseIdentifier)
         setupView()
     }
-    
     
     convenience init() {
         self.init(reuseIdentifier: SectionHeaderView.identifier)
@@ -65,7 +64,6 @@ class SectionHeaderView: UITableViewHeaderFooterView, ELSectionHeaderCell {
             view.addArrangedSubview(contentView)
             return view
         }()
-        
         
     addSubview(stackView)
         stackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true

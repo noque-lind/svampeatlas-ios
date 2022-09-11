@@ -6,13 +6,13 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
-import Vision
-import ELKit
 import CoreLocation
+import ELKit
 import Foundation
 import Photos
+import UIKit
+import Vision
 
 class CameraVC: UIViewController {
     
@@ -56,7 +56,7 @@ class CameraVC: UIViewController {
         return photos
     }()
     
-    var onImageCaptured: ((URL) -> ())?
+    var onImageCaptured: ((URL) -> Void)?
     
     private var currentImageURL: URL?
     private let usage: Usage
@@ -88,7 +88,7 @@ class CameraVC: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
         
         if case .mlPredict = usage, !UserDefaultsHelper.hasAcceptedmagePredictionTerms {
-            let vc = TermsVC(terms: .mlPredict)
+            let vc = ModalVC(terms: .mlPredict)
             presentVC(vc)
             
             vc.wasDismissed = { [unowned avView] in
@@ -104,7 +104,6 @@ class CameraVC: UIViewController {
         NotificationCenter.default.removeObserver(self)
         super.viewDidDisappear(animated)
     }
-    
 
     private func setupView() {
         view.backgroundColor = UIColor.black
@@ -202,7 +201,7 @@ class CameraVC: UIViewController {
     }
     
     @objc private func informationButtonPressed() {
-        presentVC(TermsVC(terms: .cameraHelper))
+        presentVC(ModalVC(terms: .cameraHelper))
     }
     
     private func handleImageSaving(photoData: Data) {
@@ -240,7 +239,7 @@ class CameraVC: UIViewController {
         
         // When CameraVC is in the context of creating a newObservation Record and show the AddObservationVC.
         
-        let vm = AddObservationViewModel(action: .new, session: session)
+        let vm = AddObservationViewModel(action: .new, session: session, predictionResults: predictionResults)
         
         if let mushroom = mushroom {
             vm.mushroom = mushroom
@@ -249,10 +248,6 @@ class CameraVC: UIViewController {
         if let imageURL = imageURL {
             vm.addImage(newObservationImage: UserObservation.Image(type: .new, url: imageURL, filename: ""))
         }
-        if let predictionResults = predictionResults {
-            vm.setPredictionResults(.items(items: predictionResults))
-        }
-        
 
         self.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: AddObservationVC.init(viewModel: vm)))
     }
@@ -272,7 +267,6 @@ class CameraVC: UIViewController {
         }
     }
 }
-
 
 extension CameraVC: CameraViewDelegate {
     func move(expanded: Bool) {
@@ -324,7 +318,7 @@ extension CameraVC: CameraViewDelegate {
         switch usage {
         case .mlPredict(session: let session):
             if let session = session {
-                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom), session: session, takesSelection: (selected: false, title: NSLocalizedString("detailsVC_newSightingPrompt", comment: ""), handler: { [unowned self] (selected) in
+                navigationController?.pushViewController(DetailsViewController(detailsContent: .mushroom(mushroom: predictionResult.mushroom), session: session, takesSelection: (selected: false, title: NSLocalizedString("detailsVC_newSightingPrompt", comment: ""), handler: { [unowned self] (_) in
                     self.createNewObservationRecord(imageURL: self.currentImageURL, mushroom: predictionResult.mushroom, predictionResults: predictionResults, session: session)
                 })), animated: true)
                 

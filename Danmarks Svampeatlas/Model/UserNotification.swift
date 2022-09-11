@@ -8,7 +8,7 @@
 
 import Foundation
 
-class UserNotificationJSON:Decodable {
+class UserNotificationJSON: Decodable {
     public private(set) var endOfRecords: Bool
     public private(set) var results: [UserNotification]
 }

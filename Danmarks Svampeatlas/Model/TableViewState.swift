@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import ELKit
+import Foundation
 
 class Section<T>: Hashable {
     
@@ -19,11 +19,10 @@ class Section<T>: Hashable {
         hasher.combine(uid.hashValue)
     }
 
-
     enum State {
         case items(items: [T])
         case loading
-        case error(error: AppError, handler: ((RecoveryAction?) -> ())? = nil)
+        case error(error: AppError, handler: ((RecoveryAction?) -> Void)? = nil)
         case empty
     }
     
@@ -74,7 +73,6 @@ class Section<T>: Hashable {
         }
     }
     
-    
     func setTitle(title: String?) {
         self._title = title
     }
@@ -86,7 +84,7 @@ class Section<T>: Hashable {
 
 enum TableViewState<T> {
     case Loading
-    case Error(AppError, ((RecoveryAction?) ->())?)
+    case Error(AppError, ((RecoveryAction?) -> Void)?)
     case Items([T])
     case Paging(items: [T], max: Int?)
     case Empty

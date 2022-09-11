@@ -1,756 +1,322 @@
-/* (No Comment) */
-"aboutVC_general_message" = "(Not translated) Svampeatlas 2.0 bygger videre på atlasprojektet Danmarks Svampeatlas, som kortlagde danske storsvampe, med hovedfokus på basidiesvampene i en femårig periode fra 2009-13. Projektet var støttet af Aage V. Jensen Naturfond og havde som hovedformål at øge vores viden om svampenes udbredelse og økologi i Danmark, og at gøre denne viden tilgængelig for offentligheden.\n\nMere end 400 frivillige var involveret i Danmarks Svampeatlas, hvor de bidrog med ca. 250.000 kvalitetstjekkede svampefund. Siden er yderligere ca. 50.000 nye svampefund kommet til, mens godt 230.000 gamle svampefund er importeret i projektdatabasen som nu indeholder mere end 600.000 kvalitetstjekkede svampefund. Projektet har medført et langt bedre kendskab til Danmarks funga. Mere end 180 basidiesvampe er blevet føjet til listen over kendte danske arter, og flere arter der var regnet som uddøde er genfundet. Samtidigt er der udviklet en række søge- og hjælpefunktioner der præsenterer vores viden om de enkelte svampearter i overskuelig form, og som gør det meget nemmere at inddrage viden om truede svampearter i naturforvaltningen.\n\nI Svampeatlas 2.0 er det målet at fastholde, fremtidssikre og videreudvikle de ressourcer der er opbygget gennem Danmarks Svampeatlas, til glæde for alle naturinteresserede og til gavn for alle der arbejder med naturforvaltning professionelt. Dette vil bl.a. ske gennem udvikling af en ny databasestruktur, og et interaktivt brugerinterface, der i høj grad inddrager de frivillige svampekyndige som aktive medspillere i processen med at sikre høj datakvalitet. Samtidigt vil vi indbygge smarte filtre, baseret på eksisterende viden om svampenes fænologi og udbredelse i Danmark, der automatisk kan registrere om et nyt svampefund kan regnes som sandsynligt.\n\nUdover udviklingen af nye database og web-funktioner vil projektet udvikle en mobil-app til bestemmelse og registrering af svampefund i felten. Derudover er det målet at fastholde projektets overordnede koncept og resultater i en sammenfattende bog om Danmarks Svampeatlas, samt at skrive et nyt bestemmelsesværk for Danmarks basidiesvampe, baseret på de bestemmelsesnøgler der blev lavet i Danmarks Svampeatlas.\n\nSvampeatlas 2.0 udføres i et samarbejde mellem Center for Makroøkologi, Evolution og Klima (CMEC) ved Statens Naturhistoriske Museum (SNM), Københavns Universitet, Foreningen til Svampekundskabens Fremme og MycoKey. Projektgruppen består af Tobias Guldberg Frøslev, Thomas Stjernegaard Jeppesen, Thomas Læssøe (SNM) og Jens H. Petersen med Jacob Heilmann-Clausen som projektleder. Projektet er støttet af Aage V. Jensens Naturfond.";
+/*
+Created by simplelocalize.io
+*/
 
-/* (No Comment) */
-"aboutVC_general_title" = "(Not translated) Generelt";
-
-"Date: %@" = "Date: %@";
-
-
-/* (No Comment) */
 "aboutVC_generalTerms_message" = "(Not translated) Når du opretter dig som bruger/indrapportør på Danmarks Svampeatlas, har du mulighed for at indlægge svampefund og kommentere på andres fund. Nedenfor gennemgår vi mere detaljeret de betingelser og retningslinier, som vi arbejder efter.\n\nAlle kan oprette sig som brugere på Danmarks Svampeatlas. Alle indrapporteringer og kommentarer er åbent tilgængelige for alle brugere. Vi henstiller til en god og konstruktiv omgangstone og gør opmærksom på, at du er ansvarlig for de handlinger, der bliver foretaget med dit login på netstedet. Ved gentagne brud på de specifikke retningslinjer som gennemgås nedenfor, forbeholder Danmarks Svampeatlas sig ret til at slette din profil og/eller stoppe din brugeradgang. Det samme kan ske i tilfælde af grov og gentagen forsømmelse af almindelige regler for god omgangstone på nettet.\n\nVi ser meget gerne at du uploader fotos og tekst som dokumentation for dine svampefund. I mange tilfælde kan et godt foto være et krav for, at dine fund kan valideres. Hvis du anvender fotos eller tekster, der ikke er dine egne, skal du sikre at du har rettigheder til at bruge disse. Du er desuden forpligtet til så vidt muligt at sikre, at de geografiske koordinater knyttet til hvert fund er præcise, og at det valgte zoom-niveau ikke resulterer i en højere præcision end der er belæg for.\n\nInformationer og fotos, som du har videregivet til Danmarks Svampeatlas, vises på projektets hjemmeside, under det enkelte fund og ved gallerivisninger for de arter som fundene repræsenterer. Fotos og andre informationer er knyttet til det enkelte svampefund og udgør i mange tilfælde en vigtig dokumentation som derfor ikke slettes. Ved visning på Danmarks Svampeatlas vil fotografens navn tydeligt fremgå. Brug af billederne, ud over de nævnte, vil kun finde sted efter direkte aftale med brugerne, som beholder alle rettigheder til egne fotos. Sender du belæg som dokumentation for enkelte fund, vil den enkelte ekspert beslutte om belægget skal gemmes for eftertiden i samlingerne på Statens Naturhistoriske Museum ved Københavns Universitet eller ved en anden internationalt anerkendt samling.\n\nDe fund-data du indtaster i Danmarks Svampeatlas, videregives til den Globale Biodiversisetets Facilitet (GBIF) under OECD og er internationlt søgbare via gbif.org under OECD. Billeder som er uploadet som dokumentation af hvert fund er linket til dette og er således synlige hos GBIF. Ønsker du ikke at links til dine billeder videregives til GBIF, så send venligst en email til atlas@svampe.dk\n\nHvis du på et tidspunkt vælger at få slettet din profil, forbliver alle informationer og materiale indlagt med denne profil synlige og søgbare på projektets hjemmeside.\n\nValidatorer og administratorer har ret til at slette/ændre information, som vedrører dine observationer, så længe retningslinjerne for information ikke bliver overtrådt derved.";
-
-/* (No Comment) */
-"aboutVC_generalTerms_title" = "(Not translated) Generelle betingelser";
-
-/* (No Comment) */
+"aboutVC_generalTerms_title" = "Všeobecné obchodní podmínky";
+"aboutVC_general_message" = "(Not translated) Svampeatlas 2.0 bygger videre på atlasprojektet Danmarks Svampeatlas, som kortlagde danske storsvampe, med hovedfokus på basidiesvampene i en femårig periode fra 2009-13. Projektet var støttet af Aage V. Jensen Naturfond og havde som hovedformål at øge vores viden om svampenes udbredelse og økologi i Danmark, og at gøre denne viden tilgængelig for offentligheden.\n\nMere end 400 frivillige var involveret i Danmarks Svampeatlas, hvor de bidrog med ca. 250.000 kvalitetstjekkede svampefund. Siden er yderligere ca. 50.000 nye svampefund kommet til, mens godt 230.000 gamle svampefund er importeret i projektdatabasen som nu indeholder mere end 600.000 kvalitetstjekkede svampefund. Projektet har medført et langt bedre kendskab til Danmarks funga. Mere end 180 basidiesvampe er blevet føjet til listen over kendte danske arter, og flere arter der var regnet som uddøde er genfundet. Samtidigt er der udviklet en række søge- og hjælpefunktioner der præsenterer vores viden om de enkelte svampearter i overskuelig form, og som gør det meget nemmere at inddrage viden om truede svampearter i naturforvaltningen.\n\nI Svampeatlas 2.0 er det målet at fastholde, fremtidssikre og videreudvikle de ressourcer der er opbygget gennem Danmarks Svampeatlas, til glæde for alle naturinteresserede og til gavn for alle der arbejder med naturforvaltning professionelt. Dette vil bl.a. ske gennem udvikling af en ny databasestruktur, og et interaktivt brugerinterface, der i høj grad inddrager de frivillige svampekyndige som aktive medspillere i processen med at sikre høj datakvalitet. Samtidigt vil vi indbygge smarte filtre, baseret på eksisterende viden om svampenes fænologi og udbredelse i Danmark, der automatisk kan registrere om et nyt svampefund kan regnes som sandsynligt.\n\nUdover udviklingen af nye database og web-funktioner vil projektet udvikle en mobil-app til bestemmelse og registrering af svampefund i felten. Derudover er det målet at fastholde projektets overordnede koncept og resultater i en sammenfattende bog om Danmarks Svampeatlas, samt at skrive et nyt bestemmelsesværk for Danmarks basidiesvampe, baseret på de bestemmelsesnøgler der blev lavet i Danmarks Svampeatlas.\n\nSvampeatlas 2.0 udføres i et samarbejde mellem Center for Makroøkologi, Evolution og Klima (CMEC) ved Statens Naturhistoriske Museum (SNM), Københavns Universitet, Foreningen til Svampekundskabens Fremme og MycoKey. Projektgruppen består af Tobias Guldberg Frøslev, Thomas Stjernegaard Jeppesen, Thomas Læssøe (SNM) og Jens H. Petersen med Jacob Heilmann-Clausen som projektleder. Projektet er støttet af Aage V. Jensens Naturfond.";
+"aboutVC_general_title" = "Obecné";
 "aboutVC_guidelines_message" = "(Not translated) Simple funddata kan søges via webinterfacet på Danmarks Svampeatlas og kan frit bruges i alle typer af forvaltningsopgaver på såvel lokalt som nationalt plan, fx i forbindelse med miljøvurderinger (VVM’er), udarbejdelse af plejeplaner samt til lokal og national prioritering af naturbeskyttelse i Danmark. Danmarks Svampeatlas bør i hvert tilfælde citeres som kilde. Data kan på tilsvarende vis bruges i forskningssammenhæng. Bemærk at databasen indeholder både godkendte, uvaliderede og afviste fund, hvilket er specificeret under hvert fund.\n\nValideringsprocessen omfatter artsbestemmelsen, og de grovere geografiske data. Især ældre fund har ofte meget upræcise fund-koordinater, men også for helt nye fund kan de være upræcist angivet. Den brugerdefinerede usikkerhed på fund-koordinater er angivet i meter for hvert fund, og skal betragtes som vejledende, fx ved udarbejdelse af detaljerede lokale forvaltningsplaner. Danmarks Svampeatlas rummer et meget stort antal standardnavne for lokaliteter, som vælges af rapportøren. Det betyder, at fund af den samme svamp kan være indrapporteret med flere forskellige lokalitetsnavne af forskellige brugere, og tillige med forskellige koordinater. I praksis er dette mest aktuelt for meget sjældne og karismatiske arter, fx pindsvinepigsvamp og safrangul fedtporesvamp.";
-
-/* (No Comment) */
-"aboutVC_guidelines_title" = "(Not translated) Retningslinier for brug af data fra Danmarks Svampeatlas";
-
-/* (No Comment) */
+"aboutVC_guidelines_title" = "Pokyny pro použití dat z Danmarks Svampeatlas";
 "aboutVC_qualityAssurance_message" = "(Not translated) For at sikre at de informationer, der ligger i svampebasen er troværdige, undergår alle fund kvalitetssikring. Fund af arter uden valideringskrav bliver automatisk godkendt, mens fund af arter med valideringskrav som udgangspunkt er uvaliderede, indtil de er godkendt af en validator. For de valideringskrævende arter er der angivet en række valideringskrav. Hvis disse krav ikke er opfyldt i forbindelse med indlæggelse af fund, kan man ikke regne med en seriøs behandling af observationen og fundet afvises. Godkendte fund, også af arter, der ikke kræver validering, kan senere afvises af validatorer, fx hvis det vurderes at der ikke er tilstrækkelig dokumentation til at fundet kan godkendes eller at den vedlagte dokumentation viser, at det er en anden men ubestemmelig art. Alle brugere har mulighed for at kommentere på alle fund - både uvaliderede, godkendte og afviste. Kvalitetssikring/validering kræver ofte mikroskopisk undersøgelse af materiale, hvorfor behandlingstiden kan være lang.";
-
-/* (No Comment) */
-"aboutVC_qualityAssurance_title" = "(Not translated) Kvalitetssikring/validering";
-
-/* (No Comment) */
-"aboutVC_recognition_message" = "Použití automatického rozpoznávání obrazu nemůže být vždy přesné a směrodatné, a proto je zásadní, aby byl systém používán s velkou obezřetností. Nikdy nejezte houbu bez konzultace s odborníkem. Danmarks Svampeatlas (Atlas hub) a Noque ApS se zříká jakékoli odpovědnosti za otravu nebo jiné nežádoucí zdravotní komplikace.\n\nSystém rozpoznávání obrazu vyvinuli Milan Šulc a Jiří Matas z ČVUT v Praze a Lukáš Picek z ZČU v Plzni a Danmarks Svampeatlas (Atlas hub). Systém je založen na umělé inteligenci a byl vyškolen na všechny obrázky, které nashromáždili naši uživatelé. Čím více přispíváte pozorováními a kvalitními obrázky, tím lépe můžeme v budoucnu technologii dále vyvíjet a školit.";
-
-/* (No Comment) */
+"aboutVC_qualityAssurance_title" = "Zajištění kvality/ověřování";
+"aboutVC_recognition_message" = "Použití automatického rozpoznávání obrazu nemůže být vždy přesné a směrodatné, a proto je zásadní, aby byl systém používán s velkou obezřetností. Nikdy nejezte houbu bez konzultace s odborníkem. Danmarks Svampeatlas (Atlas hub) a Noque ApS se zříká jakékoli odpovědnosti za otravu nebo jiné nežádoucí zdravotní komplikace.\n\nSystém rozpoznávání obrazu vyvinuli Milan Šulc a Jiří Matas z ČVUT v Praze a Lukáš Picek ze ZČU v Plzni a Danmarks Svampeatlas (Atlas hub). Systém je založen na umělé inteligenci a byl vyškolen na všechny obrázky, které nashromáždili naši uživatelé. Čím více přispíváte pozorováními a kvalitními obrázky, tím lépe můžeme v budoucnu technologii dále vyvíjet a školit.";
 "aboutVC_recognition_title" = "Automatické rozpoznávání obrázku";
-
-/* AboutVC */
 "aboutVC_title" = "O aplikaci";
-
-/* (No Comment) */
-"addObservationVC_localityFound_message" = "Název: %@\nPoloha: %.02f - %.02f\nAccuracy: %.02f m";
-
-/* (No Comment) */
-"addObservationVC_localityFound_title" = "Místo vašeho pozorování bylo určeno";
-
-/* (No Comment) */
+"action_adjustSelf" = "Ne, upravit ručně";
+"action_cancel" = "Zrušit";
+"action_cancelUpload" = "Zrušit nahrávání";
+"action_continueUpload" = "Ne, pokračovat v nahrávání";
+"action_deleteNote" = "Smazat poznámku";
+"action_deleteObservation" = "Smazat pozorování";
+"action_editNote" = "Upravit poznámku";
+"action_editObservation" = "Upravit pozorování";
+"action_fetchData" = "Ano, načíst data";
+"action_findLocation" = "Ano, najít moji polohu";
+"action_newNote" = "Nová poznámka";
+"action_no" = "Nyní ne";
+"action_refresh_data" = "Znovu stáhnout seznam taxonů";
+"action_save" = "Uložit";
+"action_saveAsNote" = "Uložit jako poznámku";
+"action_save_changes" = "Uložit změny";
+"action_selectUnknownSpecie" = "Záznam neidentifikované houby";
+"action_tryAgain" = "Zkusit znovu";
+"action_uploadNow" = "Nahrát nyní";
+"action_upload_note" = "Nahrát poznámku";
+"addObservationError_imageUploadError" = "Přestože při nahrávání obrázku/ů došlo k chybě, %1$d z %2$d obrázků bylo úspěšně nahráno.";
 "addObservationVC_localityFoundError_title" = "V blízkosti nic nenalezeno";
-
-/* (No Comment) */
+"addObservationVC_localityFound_title" = "Místo vašeho pozorování bylo určeno";
 "addObservationVC_observationCategories_details" = "Detaily";
-
-/* (No Comment) */
 "addObservationVC_observationCategories_location" = "Lokace";
-
-/* (No Comment) */
 "addObservationVC_observationCategories_species" = "Druh";
-
-/* (No Comment) */
 "addObservationVC_successfullUpload_title" = "Vaše pozorování bylo vytvořeno";
-
-/* AddObservationVC */
 "addObservationVC_title" = "Nové pozorování";
-
-/* (No Comment) */
 "addObservationVC_useImageMetadata_message" = "Zdá se, že přidaný obrázek byl pořízen více než 500 metrů od aktuálního umístění pozorování. Chcete použít informace o GPS a datu z obrázku?\n\nImage GPS-Precision: %@ m.";
-
-//ObservationLocationCell
-"observationLocationCell_precision" = "Precision: %.02f m";
-"Precision %0.2f m." = "Precision %0.2f m.";
-"Low accuracy" = "Low accuracy";
-"The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?";
-"Yes, find my current location" = "Yes, find my current location";
-"No, continue with the upload" = "No, continue with the upload";
-"Cancel upload" = "Cancel upload";
-
-"Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded" = "Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded";
-
-"You are editing an observation" = "You are editing an observation";
-"The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties" = "The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties";
-
-"Deletions are final" = "Deletions are final";
-"When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again" = "When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again.";
-
-/* (No Comment) */
 "addObservationVC_useImageMetadata_negative" = "Ne";
-
-/* (No Comment) */
 "addObservationVC_useImageMetadata_positive" = "Ano, použijte metadata obrázku";
-
-/* (No Comment) */
 "addObservationVC_useImageMetadata_title" = "Návrh umístění";
-
-/* AppScrollView */
 "appScrollView_informationHeaderTitle" = "Informace";
-
-/* (No Comment) */
 "avViewError_cameraError_title" = "Chyba fotoaparátu";
-
-/* (No Comment) */
 "avViewError_permissionsError_message" = "V nastavení můžete aplikaci povolit používání fotoaparátu.";
-
-/* AVView */
 "avViewError_permissionsError_title" = "Chybějící povolení";
-
-/* (No Comment) */
 "avViewError_unknown_message" = "Došlo k neznámé chybě";
-
-/* (No Comment) */
 "avViewError_unknown_title" = "Neznámá chyba";
-
-/* CameraControlsTextButton */
 "cameraControlTextButton_noPhoto" = "Žádná fotografie";
-
-/* (No Comment) */
 "cameraControlTextButton_usePhoto" = "Použít fotografii";
-
-/* (No Comment) */
 "cameraVC_shouldSaveImagesPrompt_message" = "Pokud máte zájem, můžete si své obrázky uložit do alba, kde všechny pořízené obrázky najdete na jednom místě.";
-
-/* (No Comment) */
 "cameraVC_shouldSaveImagesPrompt_message_negative" = "Ne";
-
-/* (No Comment) */
 "cameraVC_shouldSaveImagesPrompt_message_positive" = "Ano, uložte obrázky";
-
-/* CameraVC */
 "cameraVC_shouldSaveImagesPrompt_title" = "Chcete uložit vaše fotografie?";
-
-/* CautionCell */
 "cautionCell_lowConfidence" = "Žádný z níže uvedených návrhů pravděpodobně není správný.";
-
-/* CommentsTableView */
 "commentsTableView_cell_title" = "Napsat komentář";
-
-/* (No Comment) */
+"common_clearAll" = "Vymazat vše";
+"common_continue" = "Pokračovat";
+"common_date" = "Datum: %@";
+"common_localityNotSelected" = "Nebyla vybrána žádná lokalita";
+"common_success" = "Hotovo!";
+"common_twoChoices" = "Máte následující možnosti:";
+"common_upload" = "Nahrát";
 "containedResultCell_genus" = "Rod: ";
-
-/* CreditationCell */
-"creditationCell_ai" = "Systém rozpoznávání obrazu vyvinuli Milan Šulc a Jiří Matas z ČVUT v Praze a Lukáš Picek z ZČU v Plzni a Danmarks Svampeatlas (Atlas hub).";
-
-/* (No Comment) */
-"creditationCell_aiNewObservation" = "Tyto návrhy jsou založeny na prvním obrázku, který jste přidali k pozorování. Systém rozpoznávání obrazu vyvinuli Milan Šulc a Jiří Matas z ČVUT v Praze a Lukáš Picek z ZČU v Plzni a Danmarks Svampeatlas (Atlas hub).";
-
-/* (No Comment) */
-"databaseError_contentOutdated_message" = "Uložená data nejsou aktuální";
-
-/* (No Comment) */
-"databaseError_contentOutdated_title" = "Uložená data vyžadují aktualizaci";
-
-/*  */
-"databaseError_contentOutdated_message" = "Uložená data nejsou aktuální";
-
-/*  */
-"databaseError_contentOutdated_title" = "Uložená data vyžadují aktualizaci";
-
-/*  */
-"databaseError_initError_message" = "Při vytváření / načítání databáze došlo k chybě. To znamená, že můžete mít problémy s načítáním uložených dat. Pokud se vyskytnou nějaké problémy, zkuste aplikaci restartovat.";
-
-/* DatabaseError */
-"databaseError_initError_title" = "Chyba databáze";
-
-/*  */
-"databaseError_noEntries_favoritedMushrooms_message" = "Nemáte žádné uložené oblíbené položky. Položku přidáte mezi oblíbené posunutím doleva.";
-
-/*  */
-"databaseError_noEntries_message" = "Nebyla uložena žádná data";
-
-/*  */
-"databaseError_noEntries_title" = "Nenalezeno";
-
-/*  */
-"databaseError_readError_message" = "Při čtení dat došlo k chybě";
-
-/*  */
-"databaseError_readError_title" = "Chyba načítání";
-
-/*  */
-"databaseError_saveError_message" = "Při ukládání dat došlo k chybě";
-
-/*  */
-"databaseError_saveError_title" = "Chyba uložení";
-
-/* (No Comment) */
+"creditationCell_ai" = "Systém rozpoznávání obrazu vyvinuli Milan Šulc a Jiří Matas z ČVUT v Praze a Lukáš Picek ze ZČU v Plzni a Danmarks Svampeatlas (Atlas hub).";
+"creditationCell_aiNewObservation" = "Tyto návrhy jsou založeny na prvním obrázku, který jste přidali k pozorování. Systém rozpoznávání obrazu vyvinuli Milan Šulc a Jiří Matas z ČVUT v Praze a Lukáš Picek ze ZČU v Plzni a Danmarks Svampeatlas (Atlas hub).";
 "dataServiceError_decodingError_message" = "Přijatá data nelze přečíst";
-
-/* (No Comment) */
 "dataServiceError_decodingError_title" = "Chyba dekódování";
-
-/* (No Comment) */
 "dataServiceError_empty_message" = "Odpověď serveru neobsahuje žádná data";
-
-/* (No Comment) */
 "dataServiceError_empty_title" = "Neplatná prázdná odpověď";
-
-/* (No Comment) */
-"dataServiceError_encodingError_message" = "";
-
-/* (No Comment) */
+"dataServiceError_encodingError_message" = "Chyba kódování";
 "dataServiceError_encodingError_title" = "Chyba";
-
-/* (No Comment) */
 "dataServiceError_loginError_message" = "Zkuste použít jiné uživatelské jméno nebo heslo";
-
-/* (No Comment) */
 "dataServiceError_loginError_title" = "Chyba přihlášení";
-
-/* (No Comment) */
 "dataServiceError_searchResponseEmpty_message" = "Podle vašeho vyhledávání nebylo nic nalezeno, zkuste upravit zadání.";
-
-/* Dataservice */
 "dataServiceError_searchResponseEmpty_title" = "Nenalezeno";
-
-/* (No Comment) */
 "dataServiceError_unknown_message" = "Došlo k neznámé chybě";
-
-/* (No Comment) */
 "dataServiceError_unknown_title" = "Neznámá chyba";
-
-/* (No Comment) */
-"dateFormatting_1dayHasPassed" = "Před 1 dnem";
-
-/* (No Comment) */
+"databaseError_contentOutdated_message" = "Uložená data nejsou aktuální";
+"databaseError_contentOutdated_title" = "Uložená data vyžadují aktualizaci";
+"databaseError_initError_message" = "Při vytváření / načítání databáze došlo k chybě. To znamená, že můžete mít problémy s načítáním uložených dat. Pokud se vyskytnou nějaké problémy, zkuste aplikaci restartovat.";
+"databaseError_initError_title" = "Chyba databáze";
+"databaseError_noEntries_favoritedMushrooms_message" = "Nemáte žádné uložené oblíbené položky. Položku přidáte mezi oblíbené posunutím doleva.";
+"databaseError_noEntries_message" = "Nebyla uložena žádná data";
+"databaseError_noEntries_title" = "Nenalezeno";
+"databaseError_readError_message" = "Při čtení dat došlo k chybě";
+"databaseError_readError_title" = "Chyba načítání";
+"databaseError_saveError_message" = "Při ukládání dat došlo k chybě";
+"databaseError_saveError_title" = "Chyba uložení";
 "dateFormatting_daysPassed" = "před %d dny";
-
-/* (No Comment) */
 "dateFormatting_hoursSince" = "před %d hodinami";
-
-/* Date stringable */
 "dateFormatting_rightNow" = "Teď";
-
-/* (No Comment) */
 "dateFormatting_today" = "Dnes";
-
-/* (No Comment) */
+"detailsPickerFragment_hostsPicker" = "Vyberte hostitele";
+"detailsPickerFragment_substratePicker" = "Vyberte substrát";
+"detailsPickerFragment_vegetationTypesPicker" = "Vyberte typ vegetace";
 "detailsVC_newSightingPrompt" = "Nové pozorování";
-
-/* DetailsVC */
 "detailsVC_observationTitle" = "Pozorování: %@";
-
-/* (No Comment) */
+"downloader_message_data" = "Stahování offline dat";
+"downloader_message_taxon" = "Stahování taxonů";
+"downloader_readingFile" = "Čtení souboru";
+"downloader_success" = "Vaše zařízení má nyní nejnovější aktualizaci databáze taxonů.";
+"downloader_title" = "Stahování metadat";
 "elFileManagerError_imageSavingError_message" = "Při pokusu o uložení obrázku do dočasného úložiště v telefonu došlo k chybě.";
-
-/* ELFileManager */
 "elFileManagerError_imageSavingError_title" = "Chyba při ukládání";
-
-/* (No Comment) */
 "elPhotosError_notAuthorized_message" = "Nepovolili jste aplikaci číst a zapisovat do vaší galerie. Oprávnění udělíte v nastavení telefonu. Provedená změna restartuje aplikaci.";
-
-/* ELPhotos */
 "elPhotosError_notAuthorized_title" = "Nepovoleno";
-
-/* (No Comment) */
 "elPhotosError_unknownFetchError_message" = "Při pokusu o získání přístupu k vybranému obrázku došlo k neznámé chybě.";
-
-/* (No Comment) */
 "elPhotosError_unknownFetchError_title" = "Neznámá chyba";
-
-/* (No Comment) */
 "elPhotosError_unknownSaveError_message" = "Při pokusu o uložení obrázku do galerie došlo k neznámé chybě.";
-
-/* (No Comment) */
 "elPhotosError_unknownSaveError_title" = "Neznámá chyba";
-
-/* LocationAnnotation */
+"error_addObservationError_lowAccuracy" = "Nepřesné";
+"error_cantDelete" = "Nelze smazat";
+"language_czech" = "čeština";
+"language_danish" = "dánština";
+"language_english" = "Angličtina";
 "locationAnnotation_title" = "Místo pozorování";
-
-/* (No Comment) */
 "locationManagerError_badAccuracy_message" = "Nebylo možné určit vaši polohu s dostatečnou přesností.";
-
-/* (No Comment) */
 "locationManagerError_badAccuracy_title" = "Nepřesné";
-
-/* (No Comment) */
 "locationManagerError_networkError_message" = "Zdá se, že došlo k chybě určování polohy ve vašem zařízení.";
-
-/* (No Comment) */
 "locationManagerError_networkError_title" = "Chyba sítě";
-
-/* (No Comment) */
 "locationManagerError_permissionDenied_message" = "Nepovolili jste aplikaci přístup k vaší GPS poloze, což je nezbytné, aby se vám tato data mohla zobrazit.";
-
-/* LocationManager */
 "locationManagerError_permissionDenied_title" = "Chybějící povolení";
-
-/* (No Comment) */
 "locationManagerError_permissionsUndetermined_message" = "Pro zobrazení dat, musí aplikace znát vaši polohu, kde se nacházíte.";
-
-/* (No Comment) */
 "locationManagerError_permissionsUndetermined_title" = "Kde se nacházíte?";
-
-/* (No Comment) */
 "locationManagerError_unknown_message" = "Při hledání polohy GPS došlo k neznámé chybě.";
-
-/* (No Comment) */
 "locationManagerError_unknown_title" = "Neznámá chyba";
-
-/* (No Comment) */
 "loginVC_createNewAccountButton" = "Kliknutím zde vytvoříte nový účet";
-
-/* (No Comment) */
 "loginVC_detailsLabel" = "Sdílejte svá pozorování s ostatními a přispějte k poznání druhů hub, zároveň tak získejte potvrzení vaší identifikace od předních odborníků v Dánsku";
-
-/* (No Comment) */
 "loginVC_initialsTextField_error" = "Musíte zadat uživatelské jméno";
-
-/* (No Comment) */
 "loginVC_initialsTextField_placeholder" = "Uživatelské jméno";
-
-/* (No Comment) */
 "loginVC_loginButton" = "Přihlásit";
-
-/* (No Comment) */
 "loginVC_lowerLabel" = "Atlas hub";
-
-/* (No Comment) */
 "loginVC_passwordTextField_error" = "Musíte zadat vaše heslo";
-
-/* (No Comment) */
 "loginVC_passwordTextField_placeholder" = "Heslo";
-
-/* LoginVC */
 "loginVC_upperLabel" = "Přihlášení";
-
-/* MapVC */
 "mapVC_title" = "Místo pozorování";
-
-/* MapView */
 "mapViewCategories_regular" = "Mapa";
-
-/* (No Comment) */
 "mapViewCategories_satelite" = "Satelitní";
-
-/* (No Comment) */
 "mapViewCategories_topographical" = "Terén";
-
-/* MapViewFilteringSettings */
 "mapViewFilteringSettings_ageOfSighting" = "Věk: ";
-
-/* (No Comment) */
 "mapViewSettingsView_newSearch" = "Nové hledání";
-
-/* MapViewSettingsView */
 "mapViewSettingsView_year" = "%d rok";
-
-/* (No Comment) */
+"mapViewSettings_title" = "Filtrovat vyhledávání";
+"message_deletionsAreFinal" = "Odstranění bylo dokončeno";
+"message_editingObservation" = "Upravujete pozorování";
+"message_imageDeletetionsPermanent" = "Při úpravách pozorování jsou smazání snímků nevratné, i když své další změny neodešlete. Tato zpráva se zobrazí pouze jednou, pokud přesto chcete obrázek smazat, budete vyzváni k potvrzení tohoto kroku.";
+"message_noteSaved" = "Poznámka je uložena";
+"message_noteSaved_message" = "Poznámka byla uložena v lokálním úložišti, můžete ji vidět ve svém zápisníku";
+"message_observationUpdated" = "Pozorování bylo úspěšně upraveno";
+"message_savingToStorage" = "Ukládání do lokálního úložiště";
+"modal_localityHelper_message" = "Pro kvalitu vašich získaných dat je důležité, abyste se ujistili, že pozice vašeho pozorování je správná. Níže můžete vidět, jak polohu upravit ručně.\n\nPokud fotografie přidaná k pozorování obsahuje polohu GPS, aplikace navrhne k uložení tuto polohu\n\nJednou za čas vám to připomeneme. Připomínání můžete vypnout v nastavení.";
+"modal_localityHelper_title" = "Nezapomeňte potvrdit svoji pozici";
 "mushroomDetailsScrollView_acceptedRecords" = "Přijaté záznamy:";
-
-/* (No Comment) */
 "mushroomDetailsScrollView_description" = "Popis";
-
-/* (No Comment) */
 "mushroomDetailsScrollView_eatability" = "Poživatelnost";
-
-/* (No Comment) */
 "mushroomDetailsScrollView_ecology" = "Ekologie";
-
-/* (No Comment) */
 "mushroomDetailsScrollView_heatMap" = "Pozorování v okolí";
-
-/* (No Comment) */
 "mushroomDetailsScrollView_latestAcceptedRecord" = "Poslední přijatý záznam:";
-
-/* (No Comment) */
 "mushroomDetailsScrollView_latestObservations" = "Poslední pozorování";
-
-/* (No Comment) */
 "mushroomDetailsScrollView_latestUpdated" = "Poslední aktualizace:";
-
-/* (No Comment) */
 "mushroomDetailsScrollView_similarities" = "Podobnost";
-
-/* MushroomDetailsScrollView */
 "mushroomDetailsScrollView_validationTips" = "Doporučení pro ověření";
-
-/* (No Comment) */
 "mushroomVC_category_favorites" = "Oblíbené";
-
-/* (No Comment) */
 "mushroomVC_category_species" = "Druh";
-
-/* (No Comment) */
 "mushroomVC_favoriteSucces_message" = "Nyní máte přístup k houbám a jejím obrázkům, a to i bez internetu - na záložce „Moje oblíbené“.";
-
-/* (No Comment) */
 "mushroomVC_favoriteSucces_title" = "%@ označeno jako oblíbené";
-
-/* MushroomVC */
 "mushroomVC_title" = "Atlas hub";
-
-/* (No Comment) */
 "mushroomView_lastUpdate" = "Poslední aktualizace:";
-
-/* (No Comment) */
-"mushroomView_latestObservation" = "Poslední pozorování (DK):";
-
-/* MushroomView */
-"mushroomView_numberOfRecords" = "Počet pozorování (DK):";
-
-/* (No Comment) */
+"mushroomView_latestObservation" = "Poslední pozorování:";
+"mushroomView_numberOfRecords" = "Počet pozorování:";
 "myPageScrollView_logout" = "Odhlásit";
-
-/* MyPageScrollView */
 "myPageScrollView_notificationsHeader" = "Oznámení";
-
-/* (No Comment) */
 "myPageScrollView_observationsHeader" = "Pozorování";
-
-/* (No Comment) */
 "navigationItem_about" = "O aplikaci";
-
-/* (No Comment) */
 "navigationItem_cameraVC" = "Rozpoznávání";
-
-/* (No Comment) */
 "navigationItem_facebook" = "Facebook";
-
-/* NavigationItems */
 "navigationItem_loginVC" = "Přihlášení";
-
-/* (No Comment) */
 "navigationItem_mushroomsVC" = "Atlas hub";
-
-/* (No Comment) */
 "navigationItem_myPageVC" = "Moje stránka";
-
-/* (No Comment) */
 "navigationItem_nearbyVC" = "Ve vašem okolí";
-
-/* (No Comment) */
 "navigationItem_newObservationVC" = "Nové pozorování";
-
+"navigationItem_notebook" = "Zápisník";
 "navigationItem_settings" = "Nastavení";
-
-"navigationItem_notebook" = "Notebook";
-
-/* NearbyVC */
 "nearbyVC_title" = "Nedaleko";
-
-/* NewObservationError */
 "newObservationError_missingInformation" = "Chybějící informace";
-
-/* (No Comment) */
-"newObservationError_noCoordinates_title" = "Žádné souřadnice";
-
 "newObservationError_noCoordinates_message" = "Vaše poloha nemohla být automaticky stanovena, musíte určit místo svého pozorování.";
-
-/* (No Comment) */
-"newObservationError_noLocality_title" = "Kde se nacházíte?";
-
+"newObservationError_noCoordinates_title" = "Žádné souřadnice";
 "newObservationError_noLocality_message" = "Vaše poloha byla určena, ačkoli nebylo možné najít odpovídající název místa. Prosím zkuste to znovu.";
-
-
+"newObservationError_noLocality_title" = "Kde se nacházíte?";
 "newObservationError_noMushroom_message" = "Musíte určit druh, který jste našli. Pokud si nejste jisti, můžete stisknout tlačítko „Neznámý druh“.";
-
-/* (No Comment) */
 "newObservationError_noSubstrateGroup_message" = "Musíte zadat typ podkladu";
-
-/* (No Comment) */
 "newObservationError_noVegetationType_message" = "Musíte zadat typ vegetace";
-
-/* NotificationCell */
-"notificationCell_commentAdded_1" = "okomentována poznámka od:";
-
-/* (No Comment) */
-"notificationCell_commentAdded_2" = "jsou následující";
-
-/* (No Comment) */
-"notificationCell_determinationAdded_1" = "určení přidáno:";
-
-/* (No Comment) */
-"notificationCell_determinationAdded_2" = "k pozorování, které sledujete.";
-
-/* (No Comment) */
-"notificationCell_determinationApproved_1" = "Pozorování, které sledujete, bylo potvrzeno a schváleno jako:";
-
-/* (No Comment) */
+"newObservationError_tooInaccurate" = "Přesnost umístění je: %0,2f m, což není přesné. Chcete místo toho použít svou aktuální polohu?";
+"notebook_message" = "Ještě nemáte žádné uložené poznámky. Tato funkce vám umožňuje ukládat vaše pozorování lokálně, aniž byste je museli nahrávat, než budou zcela připravena. Možná až budete mít lepší připojení k internetu.";
+"notebook_title" = "Zápisník";
 "notificationCell_determinationExpertApproved" = "schváleno odborníkem.";
-
-/* (No Comment) */
+"observationDetailsCell_collectors" = "Viděno";
 "observationDetailsCell_date" = "Datum:";
-
-/* (No Comment) */
 "observationDetailsCell_ecologyNotes_message" = "Na písčité půdě ...";
-
-/* (No Comment) */
 "observationDetailsCell_ecologyNotes_title" = "Komentáře k ekologii";
-
-/* (No Comment) */
 "observationDetailsCell_host" = "Hostitel:";
-
-/* ObservationDetailsCell */
 "observationDetailsCell_mostUsed" = "Nejpoužívanější";
-
-/* (No Comment) */
 "observationDetailsCell_notes_message" = "Vůně, výtrusný prach, ...";
-
-/* (No Comment) */
 "observationDetailsCell_notes_title" = "Další poznámky";
-
-/* (No Comment) */
 "observationDetailsCell_substrate" = "Podklad:";
-
-/* (No Comment) */
 "observationDetailsCell_vegetationType" = "Typ vegetace:";
-
-/* (No Comment) */
 "observationDetailsScrollView_comments" = "Komentáře";
-
-/* (No Comment) */
 "observationDetailsScrollView_ecologyNotes" = "Komentáře k ekologii";
-
-/* (No Comment) */
 "observationDetailsScrollView_location" = "Lokace";
-
-/* (No Comment) */
 "observationDetailsScrollView_notes" = "Další poznámky";
-
-/* (No Comment) */
 "observationDetailsScrollView_observationDate" = "Datum pozorování:";
-
-/* (No Comment) */
 "observationDetailsScrollView_rapportContent_abort" = "Zrušit";
-
-/* (No Comment) */
 "observationDetailsScrollView_rapportContent_message" = "Chcete nahlásit nevhodný nebo urážlivý obsah? Vysvětlete důvod, podíváme se na to.";
-
-/* (No Comment) */
 "observationDetailsScrollView_rapportContent_placeholder" = "Např. nevhodné obrázky";
-
-/* (No Comment) */
 "observationDetailsScrollView_rapportContent_thankYou_message" = "Vaše zpráva je důležitá součást, aby se Atlas hub stal bezpečnějším místem.";
-
-/* (No Comment) */
 "observationDetailsScrollView_rapportContent_thankYou_title" = "Děkujeme";
-
-/* ObservationDetailsScrollView */
 "observationDetailsScrollView_rapportContent_title" = "Nahlásit nevhodný obsah";
-
-/* (No Comment) */
 "observationDetailsScrollView_species" = "Druh";
-
-/* (No Comment) */
 "observationDetailsScrollView_substrate" = "Podklad:";
-
-/* (No Comment) */
 "observationDetailsScrollView_validationStatus" = "Stav ověřování:";
-
-/* (No Comment) */
 "observationDetailsScrollView_validationStatus_approved" = "Schváleno";
-
-/* (No Comment) */
 "observationDetailsScrollView_validationStatus_declined" = "Zamítnuto";
-
-/* (No Comment) */
 "observationDetailsScrollView_validationStatus_unknown" = "Neznámý";
-
-/* (No Comment) */
 "observationDetailsScrollView_validationStatus_verifying" = "Probíhá ověřování";
-
-/* (No Comment) */
 "observationDetailsScrollView_vegetationType" = "Typ vegetace:";
-
-/* (No Comment) */
+"observationEdit_changeValidation" = "Možnost změnit své rozhodnutí pro jedno z již nahraných pozorování bude brzy k dispozici. Prozatím můžete upravovat pouze ostatní vlastnosti.";
+"observationLocationCell_precision" = "Přesnost: %.02f m";
 "observationSpeciesCell_chooseGenus" = "Vyberte rod";
-
-/* (No Comment) */
-"observationSpeciesCell_choosenGenus" = "Vybraný rod";
-
-/* (No Comment) */
-"observationSpeciesCell_choosenSpecies" = "Vybraný druh";
-
-/* ObservationSpeciesCell */
 "observationSpeciesCell_chooseSpecies" = "Vyberte druh";
-
-/* (No Comment) */
+"observationSpeciesCell_choosenGenus" = "Vybraný rod";
+"observationSpeciesCell_choosenSpecies" = "Vybraný druh";
 "observationSpeciesCell_deselect" = "Zrušit výběr";
-
-/* (No Comment) */
-"observationSpeciesCell_predictionsHeader" = "Rozpoznávání";
-
-/* (No Comment) */
-"observationSpeciesCell_searchResults" = "Výsledky vyhledávání";
-
 "observationSpeciesCell_myFavorites" = "Oblíbené";
-
-
-/* PickerCell */
+"observationSpeciesCell_predictionsHeader" = "Rozpoznávání";
+"observationSpeciesCell_searchResults" = "Výsledky vyhledávání";
+"observation_id" = "Pozorování s ID: %d";
 "pickerCell_rememberChoice" = "Pamatovat moje nastavení";
-
-/* (No Comment) */
+"precision" = "Přesnost %.2f m.";
+"prompt_taxonData_message" = "Abyste mohli tuto funkci používat, musíte si stáhnout data pro offline použití. Pokud jste tak již učinili, může se vám toto oznámení zobrazovat dokud neaktualizujete stažená data. Aktualizaci proveďte jakmile budete mít stabilní připojení k internetu. Připraven?";
+"prompt_taxonData_title" = "Chcete stáhnout data?";
 "recoveryAction_activate" = "Spustit";
-
-/* (No Comment) */
 "recoveryAction_login" = "Přihlášení";
-
-/* RecoveryActions */
 "recoveryAction_openSettings" = "Otevřít nastavení";
-
-/* (No Comment) */
 "recoveryAction_tryAgain" = "Zkusit znovu";
-
-/* (No Comment) */
 "redlistView_cren" = "Ohrožené druhy";
-
-/* (No Comment) */
 "redlistView_dd" = "Neznamý";
-
-/* RedlistView */
 "redlistView_lcnt" = "Není ohrožený druh";
-
-/* (No Comment) */
 "redlistView_vu" = "Zranitelný druh";
-
-/* ReloadCell */
 "reloadCell_showMore" = "Zobrazit více";
-
-/* (No Comment) */
 "reloadCell_tryAgain" = "Zkusit znovu";
-
-/* ResultsView */
+"resultsView_header_message" = "Upozornění: Pokud se chystáte konzumovat houby, které jste našli, nespoléhejte pouze na tuto navrhovanou identifikaci.";
 "resultsView_header_title" = "Máme pro vás %d doporučení";
-
-"resultsView_header_message" = "Be advised: Do not rely on these suggested identifications if you wish to eat the mushrooms you have found.";
-
-/* Searchbar */
 "searchBar_placeholder" = "Vyhledávání ...";
-
-/* SearchCell */
-"searchCell_title" = "Search for a host here ... 👇";
-
-/* (No Comment) */
+"searchCell_title" = "Zde vyhledejte hostitele ... 👇";
 "searchVC_cancelButton" = "Zrušit";
-
-/* SearchVC */
-"searchVC_searchBar_placeholder" = "Search for a host here ...";
-
-/* (No Comment) */
+"searchVC_searchBar_placeholder" = "Zde hledejte hostitele ...";
 "selectedSpeciesCell_confident_genus" = "Jsem si jistý, že rod je správně";
-
-/* (No Comment) */
 "selectedSpeciesCell_confident_species" = "Jsem si jistý, že druh je správně";
-
-/* (No Comment) */
 "selectedSpeciesCell_likely_genus" = "Myslím si, že rod je správně";
-
-/* (No Comment) */
 "selectedSpeciesCell_likely_species" = "Myslím si, že druh je správně";
-
-/* (No Comment) */
 "selectedSpeciesCell_possible_genus" = "Domnívám se, že rod je správně";
-
-/* (No Comment) */
 "selectedSpeciesCell_possible_species" = "Domnívám se, že druh je správně";
-
-/* SelectedSpeciesCell */
 "selectedSpeciesCell_question" = "Jste si jistí?";
-
-/* (No Comment) */
 "sessionError_noNotifications_message" = "To znamená, že máte více času na hledání hub";
-
-/* (No Comment) */
 "sessionError_noNotifications_title" = "Nemáte žádná oznámení";
-
-/* (No Comment) */
 "sessionError_noObservations_message" = "Rychle vyraž ven a ukaž, co si našel.";
-
-/* (No Comment) */
 "sessionError_noObservations_title" = "Zatím nemáte žádná pozorování.";
-
-/* (No Comment) */
 "sessionError_notLoggedIn_message" = "Nejste přihlášeni a neměli byste mít možnost provádět tyto změny.";
-
-/* Session */
 "sessionError_notLoggedIn_title" = "Nepřihlášen";
-
-/* (No Comment) */
 "sessionError_tokenInvalid_message" = "Vaše přihlášení vypršelo, přihlaste se znovu.";
-
-/* (No Comment) */
 "sessionError_tokenInvalid_title" = "Neplatné přihlášení";
-
-/* (No Comment) */
+"settingsCell_database" = "Vymazat databázi";
+"settingsCell_language" = "Jazyk";
+"settingsInformationCell_message" = "Zde můžete tuto aplikaci upravit tak, aby vyhovovala vašim potřebám. Zatím toho k nastavení moc není, ale pokud zjistíme, že je potřeba přidat další nastavení, přidáme je na tuto stránku.";
+"settings_general_header" = "Obecné";
+"settings_locality_message" = "Tato nastavení jsou užitečná, pokud máte špatné připojení k internetu, a pokoušíte se zaznamenat více pozorování na stejném místě.\n\nVaše volby se resetují po 1 hodině.";
+"settings_locality_title" = "Nastavení polohy";
+"settings_remember_locality" = "Zapamatovat si tuto polohu (název místa)";
+"settings_remember_location" = "Zapamatovat tyto souřadnice";
+"settings_reminders" = "Připomenutí";
+"settings_reminders_title" = "Dostávat upozornění týkající se důležitosti správného zadávání polohy k záznamům";
 "termsVC_cameraHelper_message" = "Při fotografování hub je třeba řídit se následujícími pokyny:\n- Foťte pouze ve formátu na šířku (přesvědčte se, že váš telefon nemá aktivovaný zámek otáčení dispeje).\n- V jednom snímku zachyťte mladou i starší plodnici\n- Pokud je to možné, zachyťte všechny části plodnice (klobouk, třeň, výtrusné rouško,...), položte mladší a starší plodnice vedle sebe\n- Foťte při dobrém osvětlení, ale plodnice zastiňte proti přímému slunečnímu světlu, např. vlastním tělem\n- Foťte rourky nebo lupeny, poté podélně prořízněte celé tělo plodnice";
-
-/* (No Comment) */
 "termsVC_cameraHelper_title" = "Takto pořídíte nejlepší snímky";
-
-/* TermsVC */
 "termsVC_dismissButton" = "Rozumím";
-
-/* (No Comment) */
 "termsVC_localityHelper_title" = "Takto upravíte místo vašeho pozorování";
-
-/* (No Comment) */
-"termsVC_mlPredict_message" = "Použití automatického rozpoznávání obrazu nemůže být vždy přesné a směrodatné, a proto je zásadní, aby byl systém používán s velkou obezřetností. Nikdy nejezte houbu bez konzultace s odborníkem. Danmarks Svampeatlas (Atlas hub) a Noque ApS se zříká jakékoli odpovědnosti za otravu nebo jiné nežádoucí zdravotní komplikace.\n\nSystém rozpoznávání obrazu vyvinuli Milan Šulc a Jiří Matas z ČVUT v Praze a Lukáš Picek z ZČU v Plzni a Danmarks Svampeatlas (Atlas hub). Systém je založen na umělé inteligenci a byl vyškolen na všechny obrázky, které nashromáždili naši uživatelé. Čím více přispíváte pozorováními a kvalitními obrázky, tím lépe můžeme v budoucnu technologii dále vyvíjet a školit.";
-
-/* (No Comment) */
+"termsVC_mlPredict_message" = "Použití automatického rozpoznávání obrazu nemůže být vždy přesné a směrodatné, a proto je zásadní, aby byl systém používán s velkou obezřetností. Nikdy nejezte houbu bez konzultace s odborníkem. Danmarks Svampeatlas (Atlas hub) a Noque ApS se zříká jakékoli odpovědnosti za otravu nebo jiné nežádoucí zdravotní komplikace.\n\nSystém rozpoznávání obrazu vyvinuli Milan Šulc a Jiří Matas z ČVUT v Praze a Lukáš Picek ze ZČU v Plzni a Danmarks Svampeatlas (Atlas hub). Systém je založen na umělé inteligenci a byl vyškolen na všechny obrázky, které nashromáždili naši uživatelé. Čím více přispíváte pozorováními a kvalitními obrázky, tím lépe můžeme v budoucnu technologii dále vyvíjet a školit.";
 "termsVC_mlPredict_title" = "Automatické rozpoznávání obrázku - musíte přijmout podmínky.";
-
-/* ToxicityLevels */
 "toxicityLevel_poisonous" = "Jedovatý";
-
-/* (No Comment) */
 "unknownSpeciesButton_message" = "Klikněte zde, pokud chcete zaznamenat dosud nerozpoznanou houbu - odborníci se pokusí pomoci s identifikací.";
-
-/* UnknownSpeciesButton */
 "unknownSpeciesButton_title" = "Neznámý druh";
-
-/* (No Comment) */
 "urlSessionError_invalidResponse_message" = "Server vrátil neočekávanou odpověď";
-
-/* (No Comment) */
 "urlSessionError_invalidResponse_title" = "Neplatná odpověď";
-
-/* (No Comment) */
 "urlSessionError_noInternet_message" = "Vaše zařízení nemá přístup k internetu.";
-
-/* (No Comment) */
 "urlSessionError_noInternet_title" = "Bez připojení";
-
-/* (No Comment) */
 "urlSessionError_payloadTooLarge_message" = "Server má problém s nadměrným zatížením.";
-
-/* (No Comment) */
 "urlSessionError_payloadTooLarge_title" = "Překročena velikost souboru";
-
-/* (No Comment) */
 "urlSessionError_serverError_message" = "Zda se, že je momentálně problém se serverem. Možná by potřeboval obejmout :)";
-
-/* (No Comment) */
 "urlSessionError_serverError_title" = "Chyba serveru";
-
-/* (No Comment) */
 "urlSessionError_timeout_message" = "Odpověď serveru trvala příliš dlouho. Prosím, zkuste to znovu.";
-
-/* (No Comment) */
 "urlSessionError_timeout_title" = "Time-out";
-
-/* (No Comment) */
 "urlSessionError_unAuthorized_message" = "Váš účet nemohl být ověřen, budete se muset přihlásit znovu.";
-
-/* (No Comment) */
 "urlSessionError_unAuthorized_title" = "Neoprávněný";
-
-/* (No Comment) */
 "urlSessionError_unknown_message" = "Došlo k neznámé chybě";
-
-/* (No Comment) */
 "urlSessionError_unknown_title" = "Neznámá chyba";
-
-/* (No Comment) */
-"userView_guest_message" = "Přihlaste se pro lepší zážitek z aplikace";
-
-/* UserView */
+"userView_guest_message" = "Pro lepší zážitek z aplikace se přihlaste";
 "userView_guest_title" = "Atlas hub";
-
-/* Utilities */
 "utilities_photoAlbumName" = "Atlas hub";
+"whats_new_title" = "Co je nového?";
+"dateFormatting_1dayHasPassed" = "Před 1 dnem";
+"notificationCell_commentAdded_1" = "okomentována poznámka od:";
+"notificationCell_determinationAdded_1" = "určení přidáno:";
+"notificationCell_determinationApproved_1" = "Pozorování, které sledujete, bylo potvrzeno a schváleno jako:";
+"notificationCell_commentAdded_2" = "jsou následující";
+"notificationCell_determinationAdded_2" = "k pozorování, které sledujete.";
+"whats_new_2_0" = "Právě jsme spustili novou verzi aplikace Svampeatlas (verze 2.0), tentokrát s poměrně výraznými změnami a vylepšeními. Nejdůležitější jsou:";
 

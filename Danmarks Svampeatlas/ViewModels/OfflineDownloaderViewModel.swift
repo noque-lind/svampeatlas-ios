@@ -6,8 +6,8 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import ELKit
+import Foundation
 
 class DownloaderviewModel: NSObject {
     
@@ -25,25 +25,22 @@ class DownloaderviewModel: NSObject {
         fetch()
     }
     
-    
     private func fetch() {
-  
         
-        _state.set(.Loading(message: NSLocalizedString("Downloading taxons", comment: "")))
+        _state.set(.Loading(message: NSLocalizedString("downloader_message_taxon", comment: "")))
         
-        
-        DataService.instance.getMushrooms(searchString: nil, speciesQueries: [.images(required: false), .danishNames], limit: nil, offset: 0, largeDownload: true, useCache: false) { [weak self] result in
+        DataService.instance.getMushrooms(searchString: nil, speciesQueries: [.images(required: false), .danishNames, Utilities.appLanguage() != .danish ? .attributes(presentInDenmark: false): nil].compactMap({$0}), limit: nil, offset: 0, largeDownload: true, useCache: false) { [weak self] result in
             switch result {
             case .success(let mushrooms):
                 let dispatchGroup = DispatchGroup()
                 dispatchGroup.enter()
-                self?._state.set(.Loading(message: NSLocalizedString("Downloading metadata", comment: "")))
-                DataService.instance.downloadSubstrateGroups(completion: { result in
+                self?._state.set(.Loading(message: NSLocalizedString("downloader_title", comment: "")))
+                DataService.instance.downloadSubstrateGroups(completion: { _ in
                     dispatchGroup.leave()
                 })
                 
                 dispatchGroup.enter()
-                DataService.instance.downloadVegetationTypes() { result in
+                DataService.instance.downloadVegetationTypes { _ in
                     dispatchGroup.leave()
                 }
                 
@@ -58,10 +55,10 @@ class DownloaderviewModel: NSObject {
     }
     
     private func saveToDatabase(mushrooms: [Mushroom]) {
-        _state.set(.Loading(message: NSLocalizedString("Saving to local storage", comment: "")))
+        _state.set(.Loading(message: NSLocalizedString("message_savingToStorage", comment: "")))
         Database.instance.mushroomsRepository.save(items: mushrooms) { [weak self] result in
             switch result {
-            case .success(): self?._state.set(.Completed);  UserDefaultsHelper.lastDataUpdateDate = Date()
+            case .success: self?._state.set(.Completed);  UserDefaultsHelper.lastDataUpdateDate = Date()
             case .failure(let error):
                 self?._state.set(.Error(error: error))
             }

@@ -1,394 +1,322 @@
-/* 
-  Localizable.strings
-  Danmarks Svampeatlas
-
-  Created by Emil Møller Lind on 22/01/2020.
-  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
+/*
+Created by simplelocalize.io
 */
 
-// RecoveryActions
-"recoveryAction_openSettings" = "Open Settings";
-"recoveryAction_tryAgain" = "Try again";
-"recoveryAction_login" = "Login";
-"recoveryAction_activate" = "Activate";
-
-// NavigationItems
-"navigationItem_loginVC" = "Login";
-"navigationItem_myPageVC" = "My page";
-"navigationItem_newObservationVC" = "New sighting";
-"navigationItem_nearbyVC" = "Near you";
-"navigationItem_mushroomsVC" = "Mushrooms";
-"navigationItem_cameraVC" = "Name suggestions";
-"navigationItem_facebook" = "Facebook";
-"navigationItem_about" = "About";
-"navigationItem_settings" = "Settings";
-"navigationItem_notebook" = "Notebook";
-
-//ToxicityLevels
-"toxicityLevel_poisonous" = "Poisonous";
-
-//MapViewFilteringSettings
-"mapViewFilteringSettings_ageOfSighting" = "Age: ";
-
-//NewObservationError
-"newObservationError_missingInformation" = "Missing information";
-"newObservationError_noLocality_title" = "Where are you?";
-"newObservationError_noLocality_message" = "Your coordinates have been determined, although it was not possible to find an appropiate location name. Please try again.";
-"newObservationError_noCoordinates_title" = "No coordinates";
-"newObservationError_noCoordinates_message" = "Your coodinates could not be automatically determined, you have to specify the location manually.";
-"newObservationError_noSubstrateGroup_message" = "You need to specify a substrate";
-"newObservationError_noVegetationType_message" = "You need to specify a vegetationtype";
-"newObservationError_noMushroom_message" = "You need to specify what you have found. If you are not sure, just press the 'Unkown species' button.";
-
-// DatabaseError
-"databaseError_initError_title" = "Database error";
-"databaseError_initError_message" = "An error occured while creating/loading the database. This means that the app will need to delete the previous one, and create a new one from scratch resulting in all of your saved data being deleted. We apologize for the inconvenience. Press the button below to continue.";
-"databaseError_contentOutdated_title" = "The data stored needs an update";
-"databaseError_contentOutdated_message" = "The stored data is outdated";
-"databaseError_noEntries_title" = "Found nothing";
-"databaseError_noEntries_message" = "There was no saved data";
-"databaseError_noEntries_favoritedMushrooms_message" = "You don't have any favorited mushrooms. By swiping left, you can a mushroom as a favorite.";
-"databaseError_readError_title" = "Read error";
-"databaseError_readError_message" = "An error occured while reading data from the disk";
-"databaseError_saveError_title" = "Save error";
-"databaseError_saveError_message" = "An error occured while saving data to the disk";
-
-// Date stringable
-"dateFormatting_rightNow" = "Right now";
-"dateFormatting_hoursSince" = "%d hours ago";
-"dateFormatting_today" = "I dag";
-"dateFormatting_1dayHasPassed" = "1 day ago";
-"dateFormatting_daysPassed" = "%d days ago";
-
-// LoginVC
-"loginVC_upperLabel" = "Login at";
-"loginVC_lowerLabel" = "Fungal atlas";
-"loginVC_detailsLabel" = "Contribute to knowledge about fungi species by sharing your observations with others, and that way receive validation on your identification by the leading experts on fungi in Denmark";
-"loginVC_initialsTextField_placeholder" = "Initials";
-"loginVC_initialsTextField_error" = "You have to enter an username";
-"loginVC_passwordTextField_placeholder" = "Password";
-"loginVC_passwordTextField_error" = "You have to write your password";
-"loginVC_loginButton" = "Log in";
-"loginVC_createNewAccountButton" = "Press here to create a new account";
-
-//AddObservationVC
-"addObservationVC_title" = "New sighting";
-"addObservationVC_observationCategories_species" = "Species";
+"aboutVC_generalTerms_message" = "(Not translated) Når du opretter dig som bruger/indrapportør på Danmarks Svampeatlas, har du mulighed for at indlægge svampefund og kommentere på andres fund. Nedenfor gennemgår vi mere detaljeret de betingelser og retningslinier, som vi arbejder efter.\n\nAlle kan oprette sig som brugere på Danmarks Svampeatlas. Alle indrapporteringer og kommentarer er åbent tilgængelige for alle brugere. Vi henstiller til en god og konstruktiv omgangstone og gør opmærksom på, at du er ansvarlig for de handlinger, der bliver foretaget med dit login på netstedet. Ved gentagne brud på de specifikke retningslinjer som gennemgås nedenfor, forbeholder Danmarks Svampeatlas sig ret til at slette din profil og/eller stoppe din brugeradgang. Det samme kan ske i tilfælde af grov og gentagen forsømmelse af almindelige regler for god omgangstone på nettet.\n\nVi ser meget gerne at du uploader fotos og tekst som dokumentation for dine svampefund. I mange tilfælde kan et godt foto være et krav for, at dine fund kan valideres. Hvis du anvender fotos eller tekster, der ikke er dine egne, skal du sikre at du har rettigheder til at bruge disse. Du er desuden forpligtet til så vidt muligt at sikre, at de geografiske koordinater knyttet til hvert fund er præcise, og at det valgte zoom-niveau ikke resulterer i en højere præcision end der er belæg for.\n\nInformationer og fotos, som du har videregivet til Danmarks Svampeatlas, vises på projektets hjemmeside, under det enkelte fund og ved gallerivisninger for de arter som fundene repræsenterer. Fotos og andre informationer er knyttet til det enkelte svampefund og udgør i mange tilfælde en vigtig dokumentation som derfor ikke slettes. Ved visning på Danmarks Svampeatlas vil fotografens navn tydeligt fremgå. Brug af billederne, ud over de nævnte, vil kun finde sted efter direkte aftale med brugerne, som beholder alle rettigheder til egne fotos. Sender du belæg som dokumentation for enkelte fund, vil den enkelte ekspert beslutte om belægget skal gemmes for eftertiden i samlingerne på Statens Naturhistoriske Museum ved Københavns Universitet eller ved en anden internationalt anerkendt samling.\n\nDe fund-data du indtaster i Danmarks Svampeatlas, videregives til den Globale Biodiversisetets Facilitet (GBIF) under OECD og er internationlt søgbare via gbif.org under OECD. Billeder som er uploadet som dokumentation af hvert fund er linket til dette og er således synlige hos GBIF. Ønsker du ikke at links til dine billeder videregives til GBIF, så send venligst en email til atlas@svampe.dk\n\nHvis du på et tidspunkt vælger at få slettet din profil, forbliver alle informationer og materiale indlagt med denne profil synlige og søgbare på projektets hjemmeside.\n\nValidatorer og administratorer har ret til at slette/ændre information, som vedrører dine observationer, så længe retningslinjerne for information ikke bliver overtrådt derved.";
+"aboutVC_generalTerms_title" = "General terms and conditions";
+"aboutVC_general_message" = "(Not translated) Svampeatlas 2.0 bygger videre på atlasprojektet Danmarks Svampeatlas, som kortlagde danske storsvampe, med hovedfokus på basidiesvampene i en femårig periode fra 2009-13. Projektet var støttet af Aage V. Jensen Naturfond og havde som hovedformål at øge vores viden om svampenes udbredelse og økologi i Danmark, og at gøre denne viden tilgængelig for offentligheden.\n\nMere end 400 frivillige var involveret i Danmarks Svampeatlas, hvor de bidrog med ca. 250.000 kvalitetstjekkede svampefund. Siden er yderligere ca. 50.000 nye svampefund kommet til, mens godt 230.000 gamle svampefund er importeret i projektdatabasen som nu indeholder mere end 600.000 kvalitetstjekkede svampefund. Projektet har medført et langt bedre kendskab til Danmarks funga. Mere end 180 basidiesvampe er blevet føjet til listen over kendte danske arter, og flere arter der var regnet som uddøde er genfundet. Samtidigt er der udviklet en række søge- og hjælpefunktioner der præsenterer vores viden om de enkelte svampearter i overskuelig form, og som gør det meget nemmere at inddrage viden om truede svampearter i naturforvaltningen.\n\nI Svampeatlas 2.0 er det målet at fastholde, fremtidssikre og videreudvikle de ressourcer der er opbygget gennem Danmarks Svampeatlas, til glæde for alle naturinteresserede og til gavn for alle der arbejder med naturforvaltning professionelt. Dette vil bl.a. ske gennem udvikling af en ny databasestruktur, og et interaktivt brugerinterface, der i høj grad inddrager de frivillige svampekyndige som aktive medspillere i processen med at sikre høj datakvalitet. Samtidigt vil vi indbygge smarte filtre, baseret på eksisterende viden om svampenes fænologi og udbredelse i Danmark, der automatisk kan registrere om et nyt svampefund kan regnes som sandsynligt.\n\nUdover udviklingen af nye database og web-funktioner vil projektet udvikle en mobil-app til bestemmelse og registrering af svampefund i felten. Derudover er det målet at fastholde projektets overordnede koncept og resultater i en sammenfattende bog om Danmarks Svampeatlas, samt at skrive et nyt bestemmelsesværk for Danmarks basidiesvampe, baseret på de bestemmelsesnøgler der blev lavet i Danmarks Svampeatlas.\n\nSvampeatlas 2.0 udføres i et samarbejde mellem Center for Makroøkologi, Evolution og Klima (CMEC) ved Statens Naturhistoriske Museum (SNM), Københavns Universitet, Foreningen til Svampekundskabens Fremme og MycoKey. Projektgruppen består af Tobias Guldberg Frøslev, Thomas Stjernegaard Jeppesen, Thomas Læssøe (SNM) og Jens H. Petersen med Jacob Heilmann-Clausen som projektleder. Projektet er støttet af Aage V. Jensens Naturfond.";
+"aboutVC_general_title" = "General";
+"aboutVC_guidelines_message" = "(Not translated) Simple funddata kan søges via webinterfacet på Danmarks Svampeatlas og kan frit bruges i alle typer af forvaltningsopgaver på såvel lokalt som nationalt plan, fx i forbindelse med miljøvurderinger (VVM’er), udarbejdelse af plejeplaner samt til lokal og national prioritering af naturbeskyttelse i Danmark. Danmarks Svampeatlas bør i hvert tilfælde citeres som kilde. Data kan på tilsvarende vis bruges i forskningssammenhæng. Bemærk at databasen indeholder både godkendte, uvaliderede og afviste fund, hvilket er specificeret under hvert fund.\n\nValideringsprocessen omfatter artsbestemmelsen, og de grovere geografiske data. Især ældre fund har ofte meget upræcise fund-koordinater, men også for helt nye fund kan de være upræcist angivet. Den brugerdefinerede usikkerhed på fund-koordinater er angivet i meter for hvert fund, og skal betragtes som vejledende, fx ved udarbejdelse af detaljerede lokale forvaltningsplaner. Danmarks Svampeatlas rummer et meget stort antal standardnavne for lokaliteter, som vælges af rapportøren. Det betyder, at fund af den samme svamp kan være indrapporteret med flere forskellige lokalitetsnavne af forskellige brugere, og tillige med forskellige koordinater. I praksis er dette mest aktuelt for meget sjældne og karismatiske arter, fx pindsvinepigsvamp og safrangul fedtporesvamp.";
+"aboutVC_guidelines_title" = "Guidelines for using data from Danmarks Svampeatlas";
+"aboutVC_qualityAssurance_message" = "(Not translated) For at sikre at de informationer, der ligger i svampebasen er troværdige, undergår alle fund kvalitetssikring. Fund af arter uden valideringskrav bliver automatisk godkendt, mens fund af arter med valideringskrav som udgangspunkt er uvaliderede, indtil de er godkendt af en validator. For de valideringskrævende arter er der angivet en række valideringskrav. Hvis disse krav ikke er opfyldt i forbindelse med indlæggelse af fund, kan man ikke regne med en seriøs behandling af observationen og fundet afvises. Godkendte fund, også af arter, der ikke kræver validering, kan senere afvises af validatorer, fx hvis det vurderes at der ikke er tilstrækkelig dokumentation til at fundet kan godkendes eller at den vedlagte dokumentation viser, at det er en anden men ubestemmelig art. Alle brugere har mulighed for at kommentere på alle fund - både uvaliderede, godkendte og afviste. Kvalitetssikring/validering kræver ofte mikroskopisk undersøgelse af materiale, hvorfor behandlingstiden kan være lang.";
+"aboutVC_qualityAssurance_title" = "Quality assurance/validation";
+"aboutVC_recognition_message" = "Use of automatic image recognitions can't always be precise, and it is therefore of crucial importance that the system is used with great caution. Never eat a mushroom without consulting an expert. Danmarks Svampeatlas (Fungal atlas) and Noque ApS disclaims any responsibility for any poisoning or other harmful health conditions.\n\nThe image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas). The system is based on artificial intelligence and has been trained on all the images contibuted by our users. The more you contribute with observations and great images, the better we can train and develop the technology in the future.";
+"aboutVC_recognition_title" = "Automatic image recognition";
+"aboutVC_title" = "About";
+"action_adjustSelf" = "No, I'll adjust it myself";
+"action_cancel" = "Cancel";
+"action_cancelUpload" = "Cancel upload";
+"action_continueUpload" = "No, continue with the upload";
+"action_deleteNote" = "Delete note";
+"action_deleteObservation" = "Delete observation";
+"action_editNote" = "Edit note";
+"action_editObservation" = "Edit observation";
+"action_fetchData" = "Yes, fetch data";
+"action_findLocation" = "Yes, find my location";
+"action_newNote" = "New note";
+"action_no" = "No, not right now";
+"action_refresh_data" = "Redownload taxon list";
+"action_save" = "Save";
+"action_saveAsNote" = "Save as note";
+"action_save_changes" = "Save changes";
+"action_selectUnknownSpecie" = "Record unidentified mushroom";
+"action_tryAgain" = "Try again";
+"action_uploadNow" = "Upload now";
+"action_upload_note" = "Upload note";
+"addObservationError_imageUploadError" = "Although an error occurred uploading the image/s. %1$d out of %2$d images has been successfully uploaded";
+"addObservationVC_localityFoundError_title" = "Couldn't find nearby location";
+"addObservationVC_localityFound_title" = "The location of your observation has been determined";
 "addObservationVC_observationCategories_details" = "Details";
 "addObservationVC_observationCategories_location" = "Location";
+"addObservationVC_observationCategories_species" = "Species";
 "addObservationVC_successfullUpload_title" = "You observation has been created";
-"addObservationVC_useImageMetadata_positive" = "Yes, use the image metadata";
-"addObservationVC_useImageMetadata_negative" = "No";
-"addObservationVC_useImageMetadata_title" = "Location suggestion";
+"addObservationVC_title" = "New sighting";
 "addObservationVC_useImageMetadata_message" = "An added image seems to have been taken at a different time and place than now. Would you like to use the information from the image instead?\n\nImage GPS-Precision: %@ m";
-"addObservationVC_localityFound_title" = "The location of your observation has been determined";
-"addObservationVC_localityFound_message" = "Name: %@\nCoordinates: %.02f - %.02f\nAccuracy: %.02f m";
-"addObservationVC_localityFoundError_title" = "Couldn't find nearby location";
-
-"Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded" = "Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded";
-
-"You are editing an observation" = "You are editing an observation";
-"The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties" = "The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties";
-
-// NearbyVC
-"nearbyVC_title" = "Nearby";
-
-"Deletions are final" = "Deletions are final";
-"When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again" = "When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again.";
-
-
-// MushroomVC
-"mushroomVC_title" = "Altas of fungi";
-"mushroomVC_category_favorites" = "My favorites";
-"mushroomVC_category_species" = "Species";
-"mushroomVC_favoriteSucces_title" = "%@ has now been marked as a favorite";
-"mushroomVC_favoriteSucces_message" = "You now have access to the mushroom and its images, even without internet - in the 'My favorites' tab.";
-
-// DetailsVC
-"detailsVC_observationTitle" = "Observation of: %@";
-"detailsVC_newSightingPrompt" = "New sighting";
-
-
-//CameraVC
-
-"cameraVC_shouldSaveImagesPrompt_title" = "Should your images be saved?";
-"cameraVC_shouldSaveImagesPrompt_message" = "If you are interested, your images can be put in an album for all the images you take using this app.";
-"cameraVC_shouldSaveImagesPrompt_message_positive" = "Yes, save the images";
-"cameraVC_shouldSaveImagesPrompt_message_negative" = "No";
-
-// MapVC
-"mapVC_title" = "Sighting location";
-
-// SearchVC
-"searchVC_searchBar_placeholder" = "Search for a host here ...";
-"searchVC_cancelButton" = "Cancel";
-
-//TermsVC
-"termsVC_dismissButton" = "Understood";
-
-"termsVC_mlPredict_title" = "Automatic image recognition - you have to accept our terms.";
-"termsVC_mlPredict_message" = "Use of automatic image recognitioning can't always be precise, and it is therefore of crucial importance that the system is used with great caution. Never eat a mushroom without consulting an expert. Danmarks Svampeatlas (Fungal atlas) and Noque ApS disclaims any responsibility for any poisoning or other harmful health conditions.\n\nThe image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas). The system is based on artificial intelligence and has been trained on all the images contibuted by our users. The more you contribute with observations and great images, the better we can train and develop the technology in the future.";
-"termsVC_localityHelper_title" = "This is how you adjust the location of your observation";
-"termsVC_cameraHelper_title" = "This is how you take the best images";
-"termsVC_cameraHelper_message" = "When taking images of mushrooms for determination, please remember the following.\n\- Only taking images in landscape format (remember to ensure your phone does not have rotation-lock activated).\n\t- At få både unge og gamle frugtlegemer med på foto (hvis muligt) (Not translated)\n\t- At vise både hat, lameller og evt. slør. læg et par svampe ned - både unge og gamle (Not translated)\n\t- At fotografere i medlys (ikke modlys) og skygge for direkte sollys, fx med din egen krop (Not translated)\n\t- Fotografere du rørhatte så skær gerne et frugtlegeme igennem på langs (Not translated)";
-
-//AboutVC
-
-"aboutVC_title" = "About";
-"aboutVC_recognition_title" = "Automatic image recognition";
-"aboutVC_recognition_message" = "Use of automatic image recognitioning can't always be precise, and it is therefore of crucial importance that the system is used with great caution. Never eat a mushroom without consulting an expert. Danmarks Svampeatlas (Fungal atlas) and Noque ApS disclaims any responsibility for any poisoning or other harmful health conditions.\n\nThe image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas). The system is based on artificial intelligence and has been trained on all the images contibuted by our users. The more you contribute with observations and great images, the better we can train and develop the technology in the future.";
-"aboutVC_general_title" = "(Not translated) Generelt";
-"aboutVC_general_message" = "(Not translated) Svampeatlas 2.0 bygger videre på atlasprojektet Danmarks Svampeatlas, som kortlagde danske storsvampe, med hovedfokus på basidiesvampene i en femårig periode fra 2009-13. Projektet var støttet af Aage V. Jensen Naturfond og havde som hovedformål at øge vores viden om svampenes udbredelse og økologi i Danmark, og at gøre denne viden tilgængelig for offentligheden.\n\nMere end 400 frivillige var involveret i Danmarks Svampeatlas, hvor de bidrog med ca. 250.000 kvalitetstjekkede svampefund. Siden er yderligere ca. 50.000 nye svampefund kommet til, mens godt 230.000 gamle svampefund er importeret i projektdatabasen som nu indeholder mere end 600.000 kvalitetstjekkede svampefund. Projektet har medført et langt bedre kendskab til Danmarks funga. Mere end 180 basidiesvampe er blevet føjet til listen over kendte danske arter, og flere arter der var regnet som uddøde er genfundet. Samtidigt er der udviklet en række søge- og hjælpefunktioner der præsenterer vores viden om de enkelte svampearter i overskuelig form, og som gør det meget nemmere at inddrage viden om truede svampearter i naturforvaltningen.\n\nI Svampeatlas 2.0 er det målet at fastholde, fremtidssikre og videreudvikle de ressourcer der er opbygget gennem Danmarks Svampeatlas, til glæde for alle naturinteresserede og til gavn for alle der arbejder med naturforvaltning professionelt. Dette vil bl.a. ske gennem udvikling af en ny databasestruktur, og et interaktivt brugerinterface, der i høj grad inddrager de frivillige svampekyndige som aktive medspillere i processen med at sikre høj datakvalitet. Samtidigt vil vi indbygge smarte filtre, baseret på eksisterende viden om svampenes fænologi og udbredelse i Danmark, der automatisk kan registrere om et nyt svampefund kan regnes som sandsynligt.\n\nUdover udviklingen af nye database og web-funktioner vil projektet udvikle en mobil-app til bestemmelse og registrering af svampefund i felten. Derudover er det målet at fastholde projektets overordnede koncept og resultater i en sammenfattende bog om Danmarks Svampeatlas, samt at skrive et nyt bestemmelsesværk for Danmarks basidiesvampe, baseret på de bestemmelsesnøgler der blev lavet i Danmarks Svampeatlas.\n\nSvampeatlas 2.0 udføres i et samarbejde mellem Center for Makroøkologi, Evolution og Klima (CMEC) ved Statens Naturhistoriske Museum (SNM), Københavns Universitet, Foreningen til Svampekundskabens Fremme og MycoKey. Projektgruppen består af Tobias Guldberg Frøslev, Thomas Stjernegaard Jeppesen, Thomas Læssøe (SNM) og Jens H. Petersen med Jacob Heilmann-Clausen som projektleder. Projektet er støttet af Aage V. Jensens Naturfond.";
-"aboutVC_generalTerms_title" = "(Not translated) Generelle betingelser";
-"aboutVC_generalTerms_message" = "(Not translated) Når du opretter dig som bruger/indrapportør på Danmarks Svampeatlas, har du mulighed for at indlægge svampefund og kommentere på andres fund. Nedenfor gennemgår vi mere detaljeret de betingelser og retningslinier, som vi arbejder efter.\n\nAlle kan oprette sig som brugere på Danmarks Svampeatlas. Alle indrapporteringer og kommentarer er åbent tilgængelige for alle brugere. Vi henstiller til en god og konstruktiv omgangstone og gør opmærksom på, at du er ansvarlig for de handlinger, der bliver foretaget med dit login på netstedet. Ved gentagne brud på de specifikke retningslinjer som gennemgås nedenfor, forbeholder Danmarks Svampeatlas sig ret til at slette din profil og/eller stoppe din brugeradgang. Det samme kan ske i tilfælde af grov og gentagen forsømmelse af almindelige regler for god omgangstone på nettet.\n\nVi ser meget gerne at du uploader fotos og tekst som dokumentation for dine svampefund. I mange tilfælde kan et godt foto være et krav for, at dine fund kan valideres. Hvis du anvender fotos eller tekster, der ikke er dine egne, skal du sikre at du har rettigheder til at bruge disse. Du er desuden forpligtet til så vidt muligt at sikre, at de geografiske koordinater knyttet til hvert fund er præcise, og at det valgte zoom-niveau ikke resulterer i en højere præcision end der er belæg for.\n\nInformationer og fotos, som du har videregivet til Danmarks Svampeatlas, vises på projektets hjemmeside, under det enkelte fund og ved gallerivisninger for de arter som fundene repræsenterer. Fotos og andre informationer er knyttet til det enkelte svampefund og udgør i mange tilfælde en vigtig dokumentation som derfor ikke slettes. Ved visning på Danmarks Svampeatlas vil fotografens navn tydeligt fremgå. Brug af billederne, ud over de nævnte, vil kun finde sted efter direkte aftale med brugerne, som beholder alle rettigheder til egne fotos. Sender du belæg som dokumentation for enkelte fund, vil den enkelte ekspert beslutte om belægget skal gemmes for eftertiden i samlingerne på Statens Naturhistoriske Museum ved Københavns Universitet eller ved en anden internationalt anerkendt samling.\n\nDe fund-data du indtaster i Danmarks Svampeatlas, videregives til den Globale Biodiversisetets Facilitet (GBIF) under OECD og er internationlt søgbare via gbif.org under OECD. Billeder som er uploadet som dokumentation af hvert fund er linket til dette og er således synlige hos GBIF. Ønsker du ikke at links til dine billeder videregives til GBIF, så send venligst en email til atlas@svampe.dk\n\nHvis du på et tidspunkt vælger at få slettet din profil, forbliver alle informationer og materiale indlagt med denne profil synlige og søgbare på projektets hjemmeside.\n\nValidatorer og administratorer har ret til at slette/ændre information, som vedrører dine observationer, så længe retningslinjerne for information ikke bliver overtrådt derved.";
-"aboutVC_qualityAssurance_title" = "(Not translated) Kvalitetssikring/validering";
-"aboutVC_qualityAssurance_message" = "(Not translated) For at sikre at de informationer, der ligger i svampebasen er troværdige, undergår alle fund kvalitetssikring. Fund af arter uden valideringskrav bliver automatisk godkendt, mens fund af arter med valideringskrav som udgangspunkt er uvaliderede, indtil de er godkendt af en validator. For de valideringskrævende arter er der angivet en række valideringskrav. Hvis disse krav ikke er opfyldt i forbindelse med indlæggelse af fund, kan man ikke regne med en seriøs behandling af observationen og fundet afvises. Godkendte fund, også af arter, der ikke kræver validering, kan senere afvises af validatorer, fx hvis det vurderes at der ikke er tilstrækkelig dokumentation til at fundet kan godkendes eller at den vedlagte dokumentation viser, at det er en anden men ubestemmelig art. Alle brugere har mulighed for at kommentere på alle fund - både uvaliderede, godkendte og afviste. Kvalitetssikring/validering kræver ofte mikroskopisk undersøgelse af materiale, hvorfor behandlingstiden kan være lang.";
-"aboutVC_guidelines_title" = "(Not translated) Retningslinier for brug af data fra Danmarks Svampeatlas";
-"aboutVC_guidelines_message" = "(Not translated) Simple funddata kan søges via webinterfacet på Danmarks Svampeatlas og kan frit bruges i alle typer af forvaltningsopgaver på såvel lokalt som nationalt plan, fx i forbindelse med miljøvurderinger (VVM’er), udarbejdelse af plejeplaner samt til lokal og national prioritering af naturbeskyttelse i Danmark. Danmarks Svampeatlas bør i hvert tilfælde citeres som kilde. Data kan på tilsvarende vis bruges i forskningssammenhæng. Bemærk at databasen indeholder både godkendte, uvaliderede og afviste fund, hvilket er specificeret under hvert fund.\n\nValideringsprocessen omfatter artsbestemmelsen, og de grovere geografiske data. Især ældre fund har ofte meget upræcise fund-koordinater, men også for helt nye fund kan de være upræcist angivet. Den brugerdefinerede usikkerhed på fund-koordinater er angivet i meter for hvert fund, og skal betragtes som vejledende, fx ved udarbejdelse af detaljerede lokale forvaltningsplaner. Danmarks Svampeatlas rummer et meget stort antal standardnavne for lokaliteter, som vælges af rapportøren. Det betyder, at fund af den samme svamp kan være indrapporteret med flere forskellige lokalitetsnavne af forskellige brugere, og tillige med forskellige koordinater. I praksis er dette mest aktuelt for meget sjældne og karismatiske arter, fx pindsvinepigsvamp og safrangul fedtporesvamp.";
-
-
-// Utilities
-
-"utilities_photoAlbumName" = "Fungal atlas";
-
-// ELFileManager
-"elFileManagerError_imageSavingError_title" = "Saving error";
-"elFileManagerError_imageSavingError_message" = "An error occured while attempting to save the image to the temporary storage on your phone.";
-
-// ELPhotos
-"elPhotosError_notAuthorized_title" = "Not authorized";
-"elPhotosError_notAuthorized_message" = "You haven't allowed the app to read and write to your photolibrary. This can be changed in settings, but be aware that this restarts the app.";
-"elPhotosError_unknownSaveError_title" = "Unknown error";
-"elPhotosError_unknownSaveError_message" = "An unknown error occured while trying to save the image to your photolibrary.";
-"elPhotosError_unknownFetchError_title" = "Unknown error";
-"elPhotosError_unknownFetchError_message" = "An unknown error occured while trying to gain access to the choosen image.";
-
-//Dataservice
-"dataServiceError_searchResponseEmpty_title" = "Found nothing";
-"dataServiceError_searchResponseEmpty_message" = "What you searched for couldn't be found, try to search after something else.";
-"dataServiceError_loginError_title" = "Login error";
-"dataServiceError_loginError_message" = "Try using a different username or password";
-"dataServiceError_empty_title" = "Invalid empty response";
-"dataServiceError_empty_message" = "The server response contained no data";
-"dataServiceError_decodingError_title" = "Decoding error";
-"dataServiceError_decodingError_message" = "The recieved data could not be read";
-"dataServiceError_encodingError_title" = "Error";
-"dataServiceError_encodingError_message" = "";
-"dataServiceError_unknown_title" = "Unknown error";
-"dataServiceError_unknown_message" = "An unknown error occured";
-
-"urlSessionError_noInternet_title" = "No internet";
-"urlSessionError_noInternet_message" = "Your device seems to not have access to the internet.";
-"urlSessionError_invalidResponse_title" = "Invalid response";
-"urlSessionError_invalidResponse_message" = "The response recieved from the server is not the one expected.";
-"urlSessionError_serverError_title" = "Server error";
-"urlSessionError_serverError_message" = "It seems that there is an issue with the server currently. Maybe it needs a hug?";
-"urlSessionError_timeout_title" = "Time-out";
-"urlSessionError_timeout_message" = "The server took too long to answer. Try again, I might have been to impatient.";
-"urlSessionError_unknown_title" = "Unknown error";
-"urlSessionError_unknown_message" = "An unknown error occured";
-"urlSessionError_unAuthorized_title" = "Unauthorized";
-"urlSessionError_unAuthorized_message" = "Your account could not be verified, you might need to login again.";
-
-"urlSessionError_payloadTooLarge_title" = "The request was too large";
-"urlSessionError_payloadTooLarge_message" = "The server can't handle such a big payload.";
-
-
-//Session
-"sessionError_notLoggedIn_title" = "Not logged in";
-"sessionError_notLoggedIn_message" = "You are not logged in, and should not be able to what you're attempting to do.";
-"sessionError_tokenInvalid_title" = "Invalid login";
-"sessionError_tokenInvalid_message" = "Your login is no longer valid, login again.";
-"sessionError_noNotifications_title" = "You don't have any notifications";
-"sessionError_noNotifications_message" = "This means you have more time to go find mushrooms";
-"sessionError_noObservations_title" = "You don't have any observations yet.";
-"sessionError_noObservations_message" = "Hurry, get out there. Show us what you've got.";
-
-//LocationManager
-"locationManagerError_permissionDenied_title" = "Missing permissions";
-"locationManagerError_permissionDenied_message" = "You have not permitted the app to read your GPS location, which is necessary in order to show you this data.";
-"locationManagerError_permissionsUndetermined_title" = "Where are you?";
-"locationManagerError_permissionsUndetermined_message" = "To show you this data, the app needs to know where you are.";
-"locationManagerError_badAccuracy_title" = "Bad accuracy";
-"locationManagerError_badAccuracy_message" = "It was not possible to locate your location with a satisfactory accuracy.";
-"locationManagerError_networkError_title" = "Network error";
-"locationManagerError_networkError_message" = "It seems that there an error occured with your device's GPS component.";
-"locationManagerError_unknown_title" = "Unknown error";
-"locationManagerError_unknown_message" = "An unknown error occured while trying to find your GPS location.";
-
-//ReloadCell
-"reloadCell_showMore" = "Show more";
-"reloadCell_tryAgain" = "Try again";
-
-//MyPageScrollView
-"myPageScrollView_notificationsHeader" = "Notifications";
-"myPageScrollView_observationsHeader" = "Observations";
-"myPageScrollView_logout" = "Log out";
-
-//NotificationCell
-"notificationCell_commentAdded_1" = "has commented on an observation by: ";
-"notificationCell_commentAdded_2" = "which your are following.";
-"notificationCell_determinationAdded_1" = " has added the determination: ";
-"notificationCell_determinationAdded_2" = " to an observation you are following.";
-"notificationCell_determinationApproved_1" = "An observation you are following has been validated and approved as: ";
-"notificationCell_determinationExpertApproved" = " has been expert approved.";
-
-//MapViewSettingsView
-"mapViewSettingsView_year" = "%d year";
-"mapViewSettingsView_newSearch" = "New search";
-
-
-//ObservationSpeciesCell
-"observationSpeciesCell_chooseSpecies" = "Choose species";
-"observationSpeciesCell_chooseGenus" = "Choose genus";
-"observationSpeciesCell_choosenSpecies" = "Choosen species";
-"observationSpeciesCell_choosenGenus" = "Choosen genus";
-"observationSpeciesCell_deselect" = "Deselect";
-
-"observationSpeciesCell_predictionsHeader" = "Name suggestions";
-"observationSpeciesCell_searchResults" = "Searchresults";
-"observationSpeciesCell_myFavorites" = "My favorites";
-
-//ObservationDetailsCell
-"observationDetailsCell_mostUsed" = "Most used";
-"observationDetailsCell_date" = "Date:";
-"observationDetailsCell_substrate" = "Substrate:";
-"observationDetailsCell_vegetationType" = "Vegetationtype:";
-"observationDetailsCell_host" = "Host:";
-"observationDetailsCell_notes_title" = "Other notes";
-"observationDetailsCell_notes_message" = "Smells mealy ...";
-"observationDetailsCell_ecologyNotes_title" = "Comments on ecology";
-"observationDetailsCell_ecologyNotes_message" = "On sandy soil ...";
-
-
-"Date: %@" = "Date: %@";
-
-//ObservationLocationCell
-"observationLocationCell_precision" = "Precision: %.02f m";
-"Precision %0.2f m." = "Precision %0.2f m.";
-"Low accuracy" = "Low accuracy";
-"The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?" = "The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?";
-"Yes, find my current location" = "Yes, find my current location";
-"No, continue with the upload" = "No, continue with the upload";
-"Cancel upload" = "Cancel upload";
-
-
-//SearchCell
-"searchCell_title" = "Search for a host here ... 👇";
-
-//PickerCell
-"pickerCell_rememberChoice" = "Remember my choice";
-
-
-// CautionCell
-"cautionCell_lowConfidence" = "None of the below suggestions have a likely probability to be correct.";
-
-//AppScrollView
+"addObservationVC_useImageMetadata_negative" = "No";
+"addObservationVC_useImageMetadata_positive" = "Yes, use the image metadata";
+"addObservationVC_useImageMetadata_title" = "Location suggestion";
 "appScrollView_informationHeaderTitle" = "Information";
-
-//MushroomDetailsScrollView
-"mushroomDetailsScrollView_validationTips" = "Validation recommendations";
-"mushroomDetailsScrollView_description" = "Description";
-"mushroomDetailsScrollView_eatability" = "Eatability report";
-"mushroomDetailsScrollView_ecology" = "Ecology";
-"mushroomDetailsScrollView_similarities" = "Similarities";
-"mushroomDetailsScrollView_acceptedRecords" = "Accepted records:";
-"mushroomDetailsScrollView_latestAcceptedRecord" = "Latest accepted record:";
-"mushroomDetailsScrollView_latestUpdated" = "Last updated:";
-"mushroomDetailsScrollView_heatMap" = "Observations nearby";
-"mushroomDetailsScrollView_latestObservations" = "Latest observations";
-
-
-//ObservationDetailsScrollView
-"observationDetailsScrollView_rapportContent_title" = "Report offensive content";
-"observationDetailsScrollView_rapportContent_message" = "Do you find a comment, eller user generated content offensive? Explain why here, and we'll look at it.";
-"observationDetailsScrollView_rapportContent_placeholder" = "E.g. offensive images";
-"observationDetailsScrollView_rapportContent_thankYou_title" = "Thank you";
-"observationDetailsScrollView_rapportContent_thankYou_message" = "Your report is part of making Fungal atlas a more safe place.";
-"observationDetailsScrollView_rapportContent_abort" = "Cancel";
-"observationDetailsScrollView_ecologyNotes" = "Comments on ecology";
-"observationDetailsScrollView_notes" = "Other notes";
-"observationDetailsScrollView_validationStatus" = "Validationstate:";
-"observationDetailsScrollView_validationStatus_approved" = "Approved";
-"observationDetailsScrollView_validationStatus_declined" = "Rejected";
-"observationDetailsScrollView_validationStatus_verifying" = "In validation";
-"observationDetailsScrollView_validationStatus_unknown" = "Unknown";
-"observationDetailsScrollView_observationDate" = "Date of observation:";
-"observationDetailsScrollView_substrate" = "Substrate:";
-"observationDetailsScrollView_vegetationType" = "Vegetationtype:";
-"observationDetailsScrollView_location" = "Location";
-"observationDetailsScrollView_species" = "Species";
-"observationDetailsScrollView_comments" = "Comments";
-
-
-// ResultsView
-"resultsView_header_title" = "We have %d suggestions for you";
-"resultsView_header_message" = "Be advised: Do not rely on these suggested identifications if you wish to eat the mushrooms you have found.";
-
-//AVView
-"avViewError_permissionsError_title" = "Missing permission";
-"avViewError_permissionsError_message" = "You can give the app permission to use the camera in the settings.";
-"avViewError_unknown_title" = "Unknown error";
-"avViewError_unknown_message" = "An unknown error occured.";
 "avViewError_cameraError_title" = "Camera error";
-
-//CameraControlsTextButton
-
+"avViewError_permissionsError_message" = "You can give the app permission to use the camera in the settings.";
+"avViewError_permissionsError_title" = "Missing permission";
+"avViewError_unknown_message" = "An unknown error occurred.";
+"avViewError_unknown_title" = "Unknown error";
 "cameraControlTextButton_noPhoto" = "No photo";
 "cameraControlTextButton_usePhoto" = "Use photo";
-
-// LocationAnnotation
-"locationAnnotation_title" = "Observation location";
-
-//UnknownSpeciesButton
-"unknownSpeciesButton_title" = "Unknown fungi";
-"unknownSpeciesButton_message" = "Press here if you want to record an unidentified mushroom - the community will attempt to help you with the identification.";
-
+"cameraVC_shouldSaveImagesPrompt_message" = "If you are interested, your images can be put in an album for all the images you take using this app.";
+"cameraVC_shouldSaveImagesPrompt_message_negative" = "No";
+"cameraVC_shouldSaveImagesPrompt_message_positive" = "Yes, save the images";
+"cameraVC_shouldSaveImagesPrompt_title" = "Should your images be saved?";
+"cautionCell_lowConfidence" = "None of the below suggestions have a likely probability to be correct.";
+"commentsTableView_cell_title" = "Write a comment";
+"common_clearAll" = "Clear all";
+"common_continue" = "Continue";
+"common_date" = "Date: %@";
+"common_localityNotSelected" = "No location picked";
+"common_success" = "Success";
+"common_twoChoices" = "You have the options below:";
+"common_upload" = "Upload";
 "containedResultCell_genus" = "Genus: ";
-
-//SelectedSpeciesCell
-"selectedSpeciesCell_question" = "How certain are you?";
-"selectedSpeciesCell_confident_species" = "I'm certain this is the correct species";
-"selectedSpeciesCell_confident_genus" = "I'm certain this is the correct genus";
-"selectedSpeciesCell_possible_species" = "I'm guessing this is the correct species";
-"selectedSpeciesCell_possible_genus" = "I'm guessing this is the correct genus";
-"selectedSpeciesCell_likely_species" = "I think this is the correct species";
-"selectedSpeciesCell_likely_genus" = "I think this is the correct genus";
-
-// CreditationCell
 "creditationCell_ai" = "The image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas).";
 "creditationCell_aiNewObservation" = "These name suggestions are based on the first image you have added to the observation. The image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas).";
-
-
-//UserView
-"userView_guest_title" = "Fungal atlas";
-"userView_guest_message" = "Login to get the best possible experience";
-
-//MushroomView
-"mushroomView_numberOfRecords" = "Amount of sightings (DK):";
-"mushroomView_latestObservation" = "Latest sighting (DK):";
-"mushroomView_lastUpdate" = "Last updated:";
-
-//MapView
+"dataServiceError_decodingError_message" = "The received data could not be read";
+"dataServiceError_decodingError_title" = "Decoding error";
+"dataServiceError_empty_message" = "The server response contained no data";
+"dataServiceError_empty_title" = "Invalid empty response";
+"dataServiceError_encodingError_message" = "Encoding error";
+"dataServiceError_encodingError_title" = "Error";
+"dataServiceError_loginError_message" = "Try using a different username or password";
+"dataServiceError_loginError_title" = "Login error";
+"dataServiceError_searchResponseEmpty_message" = "What you searched for couldn't be found, try to search after something else.";
+"dataServiceError_searchResponseEmpty_title" = "Found nothing";
+"dataServiceError_unknown_message" = "An unknown error occurred";
+"dataServiceError_unknown_title" = "Unknown error";
+"databaseError_contentOutdated_message" = "The stored data is outdated";
+"databaseError_contentOutdated_title" = "The data stored needs an update";
+"databaseError_initError_message" = "An error occured while creating/loading the database. This means that the app will need to delete the previous one, and create a new one from scratch resulting in all of your saved data being deleted. We apologize for the inconvenience. Press the button below to continue.";
+"databaseError_initError_title" = "Database error";
+"databaseError_noEntries_favoritedMushrooms_message" = "You don't have any favorited mushrooms. By swiping left, you can a mushroom as a favorite.";
+"databaseError_noEntries_message" = "There was no saved data";
+"databaseError_noEntries_title" = "Found nothing";
+"databaseError_readError_message" = "An error occured while reading data from the disk";
+"databaseError_readError_title" = "Read error";
+"databaseError_saveError_message" = "An error occured while saving data to the disk";
+"databaseError_saveError_title" = "Save error";
+"dateFormatting_daysPassed" = "%d days ago";
+"dateFormatting_hoursSince" = "%d hours ago";
+"dateFormatting_rightNow" = "Right now";
+"dateFormatting_today" = "I dag";
+"detailsPickerFragment_hostsPicker" = "Pick host(s)";
+"detailsPickerFragment_substratePicker" = "Pick substrate";
+"detailsPickerFragment_vegetationTypesPicker" = "Pick vegetationtype";
+"detailsVC_newSightingPrompt" = "New sighting";
+"detailsVC_observationTitle" = "Observation of: %@";
+"downloader_message_data" = "Downloading offline data";
+"downloader_message_taxon" = "Downloading taxons";
+"downloader_readingFile" = "Reading file";
+"downloader_success" = "Your device now has the newest update to the taxon database. Get out there!";
+"downloader_title" = "Downloading metadata";
+"elFileManagerError_imageSavingError_message" = "An error occurred while attempting to save the image to the temporary storage on your phone.";
+"elFileManagerError_imageSavingError_title" = "Saving error";
+"elPhotosError_notAuthorized_message" = "You haven't allowed the app to read and write to your photolibrary. This can be changed in settings, but be aware that this restarts the app.";
+"elPhotosError_notAuthorized_title" = "Not authorized";
+"elPhotosError_unknownFetchError_message" = "An unknown error occured while trying to gain access to the choosen image.";
+"elPhotosError_unknownFetchError_title" = "Unknown error";
+"elPhotosError_unknownSaveError_message" = "An unknown error occured while trying to save the image to your photolibrary.";
+"elPhotosError_unknownSaveError_title" = "Unknown error";
+"error_addObservationError_lowAccuracy" = "Low accuracy";
+"error_cantDelete" = "Could not delete";
+"language_czech" = "Czech";
+"language_danish" = "Danish";
+"language_english" = "English";
+"locationAnnotation_title" = "Observation location";
+"locationManagerError_badAccuracy_message" = "It was not possible to locate your location with a satisfactory accuracy.";
+"locationManagerError_badAccuracy_title" = "Bad accuracy";
+"locationManagerError_networkError_message" = "It seems that there an error occurred with your device's GPS component.";
+"locationManagerError_networkError_title" = "Network error";
+"locationManagerError_permissionDenied_message" = "You have not permitted the app to read your GPS location, which is necessary in order to show you this data.";
+"locationManagerError_permissionDenied_title" = "Missing permissions";
+"locationManagerError_permissionsUndetermined_message" = "To show you this data, the app needs to know where you are.";
+"locationManagerError_permissionsUndetermined_title" = "Where are you?";
+"locationManagerError_unknown_message" = "An unknown error occurred while trying to find your GPS location.";
+"locationManagerError_unknown_title" = "Unknown error";
+"loginVC_createNewAccountButton" = "Press here to create a new account";
+"loginVC_detailsLabel" = "Contribute to knowledge about fungi species by sharing your observations with others, and that way receive validation on your identification by the leading experts on fungi in Denmark";
+"loginVC_initialsTextField_error" = "You have to enter an username";
+"loginVC_initialsTextField_placeholder" = "Initials";
+"loginVC_loginButton" = "Log in";
+"loginVC_lowerLabel" = "Fungal atlas";
+"loginVC_passwordTextField_error" = "You have to write your password";
+"loginVC_passwordTextField_placeholder" = "Password";
+"loginVC_upperLabel" = "Login at";
+"mapVC_title" = "Sighting location";
 "mapViewCategories_regular" = "Regular";
 "mapViewCategories_satelite" = "Satelite";
 "mapViewCategories_topographical" = "Topographical";
-
-//RedlistView
-"redlistView_lcnt" = "Not an endangered species";
+"mapViewFilteringSettings_ageOfSighting" = "Age: ";
+"mapViewSettingsView_newSearch" = "New search";
+"mapViewSettingsView_year" = "%d year";
+"mapViewSettings_title" = "Filter search";
+"message_deletionsAreFinal" = "Deletions are final";
+"message_editingObservation" = "You are editing an observation";
+"message_imageDeletetionsPermanent" = "When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again.";
+"message_noteSaved" = "The note is saved";
+"message_noteSaved_message" = "The note has been saved in local storage, you can see it in your notebook";
+"message_observationUpdated" = "The observation was successfully edited";
+"message_savingToStorage" = "Saving to local storage";
+"modal_localityHelper_message" = "It is important for the quality of your collected data, that you make sure the position of the observation you are submitting are correct. You can see on the clip below how to adjust the position manually.\n\nIf a photo added to the observation contains a GPS tag, the app will suggest using the position from the image instead\n\nWe will remind you of this every once in a while. You can turn this reminder off in the settings.";
+"modal_localityHelper_title" = "Remember to confirm your position";
+"mushroomDetailsScrollView_acceptedRecords" = "Accepted records:";
+"mushroomDetailsScrollView_description" = "Description";
+"mushroomDetailsScrollView_eatability" = "Eatability report";
+"mushroomDetailsScrollView_ecology" = "Ecology";
+"mushroomDetailsScrollView_heatMap" = "Observations nearby";
+"mushroomDetailsScrollView_latestAcceptedRecord" = "Latest accepted record:";
+"mushroomDetailsScrollView_latestObservations" = "Latest observations";
+"mushroomDetailsScrollView_latestUpdated" = "Last updated:";
+"mushroomDetailsScrollView_similarities" = "Similarities";
+"mushroomDetailsScrollView_validationTips" = "Validation recommendations";
+"mushroomVC_category_favorites" = "My favorites";
+"mushroomVC_category_species" = "Species";
+"mushroomVC_favoriteSucces_message" = "You now have access to the mushroom and its images, even without internet - in the 'My favorites' tab.";
+"mushroomVC_favoriteSucces_title" = "%@ has now been marked as a favorite";
+"mushroomVC_title" = "Altas of fungi";
+"mushroomView_lastUpdate" = "Last updated:";
+"mushroomView_latestObservation" = "Latest sighting:";
+"mushroomView_numberOfRecords" = "Amount of sightings:";
+"myPageScrollView_logout" = "Log out";
+"myPageScrollView_notificationsHeader" = "Notifications";
+"myPageScrollView_observationsHeader" = "Observations";
+"navigationItem_about" = "About";
+"navigationItem_cameraVC" = "Name suggestions";
+"navigationItem_facebook" = "Facebook";
+"navigationItem_loginVC" = "Login";
+"navigationItem_mushroomsVC" = "Mushrooms";
+"navigationItem_myPageVC" = "My page";
+"navigationItem_nearbyVC" = "Near you";
+"navigationItem_newObservationVC" = "New sighting";
+"navigationItem_notebook" = "Notebook";
+"navigationItem_settings" = "Settings";
+"nearbyVC_title" = "Nearby";
+"newObservationError_missingInformation" = "Missing information";
+"newObservationError_noCoordinates_message" = "Your coodinates could not be automatically determined, you have to specify the location manually.";
+"newObservationError_noCoordinates_title" = "No coordinates";
+"newObservationError_noLocality_message" = "Your coordinates have been determined, although it was not possible to find an appropiate location name. Please try again.";
+"newObservationError_noLocality_title" = "Where are you?";
+"newObservationError_noMushroom_message" = "You need to specify what you have found. If you are not sure, just press the 'Unkown species' button.";
+"newObservationError_noSubstrateGroup_message" = "You need to specify a substrate";
+"newObservationError_noVegetationType_message" = "You need to specify a vegetationtype";
+"newObservationError_tooInaccurate" = "The location accuracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?";
+"notebook_message" = "You do not yet have any saved notes. This functionality enables you to save your observations locally, without uploading it before you are ready. Perhaps once you have a better internet connection.";
+"notebook_title" = "Notebook";
+"notificationCell_determinationExpertApproved" = " has been expert approved.";
+"observationDetailsCell_collectors" = "Sighted by";
+"observationDetailsCell_date" = "Date:";
+"observationDetailsCell_ecologyNotes_message" = "On sandy soil ...";
+"observationDetailsCell_ecologyNotes_title" = "Comments on ecology";
+"observationDetailsCell_host" = "Host:";
+"observationDetailsCell_mostUsed" = "Most used";
+"observationDetailsCell_notes_message" = "Smells mealy ...";
+"observationDetailsCell_notes_title" = "Other notes";
+"observationDetailsCell_substrate" = "Substrate:";
+"observationDetailsCell_vegetationType" = "Vegetation type:";
+"observationDetailsScrollView_comments" = "Comments";
+"observationDetailsScrollView_ecologyNotes" = "Comments on ecology";
+"observationDetailsScrollView_location" = "Location";
+"observationDetailsScrollView_notes" = "Other notes";
+"observationDetailsScrollView_observationDate" = "Date of observation:";
+"observationDetailsScrollView_rapportContent_abort" = "Cancel";
+"observationDetailsScrollView_rapportContent_message" = "Do you find a comment, eller user generated content offensive? Explain why here, and we'll look at it.";
+"observationDetailsScrollView_rapportContent_placeholder" = "E.g. offensive images";
+"observationDetailsScrollView_rapportContent_thankYou_message" = "Your report is part of making Fungal atlas a more safe place.";
+"observationDetailsScrollView_rapportContent_thankYou_title" = "Thank you";
+"observationDetailsScrollView_rapportContent_title" = "Report offensive content";
+"observationDetailsScrollView_species" = "Species";
+"observationDetailsScrollView_substrate" = "Substrate:";
+"observationDetailsScrollView_validationStatus" = "Validationstate:";
+"observationDetailsScrollView_validationStatus_approved" = "Approved";
+"observationDetailsScrollView_validationStatus_declined" = "Rejected";
+"observationDetailsScrollView_validationStatus_unknown" = "Unknown";
+"observationDetailsScrollView_validationStatus_verifying" = "In validation";
+"observationDetailsScrollView_vegetationType" = "Vegetation Type:";
+"observationEdit_changeValidation" = "The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties";
+"observationLocationCell_precision" = "Precision: %.02f m";
+"observationSpeciesCell_chooseGenus" = "Choose genus";
+"observationSpeciesCell_chooseSpecies" = "Choose species";
+"observationSpeciesCell_choosenGenus" = "Choosen genus";
+"observationSpeciesCell_choosenSpecies" = "Choosen species";
+"observationSpeciesCell_deselect" = "Deselect";
+"observationSpeciesCell_myFavorites" = "My favorites";
+"observationSpeciesCell_predictionsHeader" = "Name suggestions";
+"observationSpeciesCell_searchResults" = "Search-results";
+"observation_id" = "Observation with ID: %d";
+"pickerCell_rememberChoice" = "Remember my choice";
+"precision" = "Precision %.2f m.";
+"prompt_taxonData_message" = "In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?";
+"prompt_taxonData_title" = "Do you want to fetch data?";
+"recoveryAction_activate" = "Activate";
+"recoveryAction_login" = "Login";
+"recoveryAction_openSettings" = "Open Settings";
+"recoveryAction_tryAgain" = "Try again";
 "redlistView_cren" = "Endangered species";
-"redlistView_vu" = "Vulnerable species";
 "redlistView_dd" = "Not known";
-
-//Searchbar
+"redlistView_lcnt" = "Not an endangered species";
+"redlistView_vu" = "Vulnerable species";
+"reloadCell_showMore" = "Show more";
+"reloadCell_tryAgain" = "Try again";
+"resultsView_header_message" = "Be advised: Do not rely on these suggested identifications if you wish to eat the mushrooms you have found.";
+"resultsView_header_title" = "We have %d suggestions for you";
 "searchBar_placeholder" = "Search for a species here ...";
-
-
-//CommentsTableView
-"commentsTableView_cell_title" = "Write a comment";
-
-//
-"settingsInformationCell_message" = "This is where you are able to adjust this app so that it fits your needs. For now, you are not able to do much, but more options will come, if we fint that it is needed.";
-"settingsCell_language" = "Language";
+"searchCell_title" = "Search for a host here ... 👇";
+"searchVC_cancelButton" = "Cancel";
+"searchVC_searchBar_placeholder" = "Search for a host here ...";
+"selectedSpeciesCell_confident_genus" = "I'm certain this is the correct genus";
+"selectedSpeciesCell_confident_species" = "I'm certain this is the correct species";
+"selectedSpeciesCell_likely_genus" = "I think this is the correct genus";
+"selectedSpeciesCell_likely_species" = "I think this is the correct species";
+"selectedSpeciesCell_possible_genus" = "I'm guessing this is the correct genus";
+"selectedSpeciesCell_possible_species" = "I'm guessing this is the correct species";
+"selectedSpeciesCell_question" = "How certain are you?";
+"sessionError_noNotifications_message" = "This means you have more time to go find mushrooms";
+"sessionError_noNotifications_title" = "You don't have any notifications";
+"sessionError_noObservations_message" = "Hurry, get out there. Show us what you've got.";
+"sessionError_noObservations_title" = "You don't have any observations yet.";
+"sessionError_notLoggedIn_message" = "You are not logged in, and should not be able to what you're attempting to do.";
+"sessionError_notLoggedIn_title" = "Not logged in";
+"sessionError_tokenInvalid_message" = "Your login is no longer valid, login again.";
+"sessionError_tokenInvalid_title" = "Invalid login";
 "settingsCell_database" = "Clear database";
+"settingsCell_language" = "Language";
+"settingsInformationCell_message" = "This is where you are able to adjust this app so that it fits your needs. For now, you are not able to do much, but more options will come if we find that it is needed.";
 "settings_general_header" = "General";
+"settings_locality_message" = "These settings are useful if you are somewhere where the connection is bad, and you are attempting to record a bunch of observations at the same place. \n\nYour choices are reset after 1 hour.";
+"settings_locality_title" = "Location settings";
+"settings_remember_locality" = "Remember this location (name of location)";
+"settings_remember_location" = "Remember these coordinates";
+"settings_reminders" = "Reminders";
+"settings_reminders_title" = "Receive reminders regarding importance of correct and precise position attached to records";
+"termsVC_cameraHelper_message" = "When taking images of mushrooms for determination, please remember the following.\n\- Only taking images in landscape format (remember to ensure your phone does not have rotation-lock activated).\n\t- At få både unge og gamle frugtlegemer med på foto (hvis muligt) (Not translated)\n\t- At vise både hat, lameller og evt. slør. læg et par svampe ned - både unge og gamle (Not translated)\n\t- At fotografere i medlys (ikke modlys) og skygge for direkte sollys, fx med din egen krop (Not translated)\n\t- Fotografere du rørhatte så skær gerne et frugtlegeme igennem på langs (Not translated)";
+"termsVC_cameraHelper_title" = "This is how you take the best images";
+"termsVC_dismissButton" = "Understood";
+"termsVC_localityHelper_title" = "termsVC_localityHelper_title";
+"termsVC_mlPredict_message" = "Use of automatic image recognitions can't always be precise, and it is therefore of crucial importance that the system is used with great caution. Never eat a mushroom without consulting an expert. Danmarks Svampeatlas (Fungal atlas) and Noque ApS disclaims any responsibility for any poisoning or other harmful health conditions.\n\nThe image-based recognition system was developed by Milan Sulc and Jiri Matas from CTU in Prague and by Lukas Picek from UWB and Danmarks Svampeatlas (Fungal atlas). The system is based on artificial intelligence and has been trained on all the images contibuted by our users. The more you contribute with observations and great images, the better we can train and develop the technology in the future.";
+"termsVC_mlPredict_title" = "Automatic image recognition - you have to accept our terms.";
+"toxicityLevel_poisonous" = "Poisonous";
+"unknownSpeciesButton_message" = "Press here if you want to record an unidentified mushroom - the community will attempt to help you with the identification.";
+"unknownSpeciesButton_title" = "Unknown fungi";
+"urlSessionError_invalidResponse_message" = "The response received from the server is not the one expected.";
+"urlSessionError_invalidResponse_title" = "Invalid response";
+"urlSessionError_noInternet_message" = "Your device seems to not have access to the internet.";
+"urlSessionError_noInternet_title" = "No internet";
+"urlSessionError_payloadTooLarge_message" = "The server can't handle such a big payload.";
+"urlSessionError_payloadTooLarge_title" = "The request was too large";
+"urlSessionError_serverError_message" = "It seems that there is an issue with the server currently. Maybe it needs a hug?";
+"urlSessionError_serverError_title" = "Server error";
+"urlSessionError_timeout_message" = "The server took too long to answer. Try again, I might have been to impatient.";
+"urlSessionError_timeout_title" = "Time-out";
+"urlSessionError_unAuthorized_message" = "Your account could not be verified, you might need to login again.";
+"urlSessionError_unAuthorized_title" = "Unauthorized";
+"urlSessionError_unknown_message" = "An unknown error occurred";
+"urlSessionError_unknown_title" = "Unknown error";
+"userView_guest_message" = "Login to get the best possible experience";
+"userView_guest_title" = "Fungal atlas";
+"utilities_photoAlbumName" = "Fungal atlas";
+"whats_new_title" = "Whats new?";
+"dateFormatting_1dayHasPassed" = "1 day ago";
+"notificationCell_commentAdded_1" = "has commented on an observation by: ";
+"notificationCell_determinationAdded_1" = " has added the determination: ";
+"notificationCell_determinationApproved_1" = "An observation you are following has been validated and approved as: ";
+"notificationCell_commentAdded_2" = "which your are following.";
+"notificationCell_determinationAdded_2" = " to an observation you are following.";
+"whats_new_2_0" = "We have just launched a new version of the Svampeatlas app (version 2.0), this time with quite significant changes and improvements. Most important are:\n1)	Ændret indberetningsflow. Vi har byttet om på rækkefølgen når man opretter et nyt fund, så man starter med lokalitet, dernæst vælger habitat, substrat og vært for til sidst at vælge art. Ændringen skyldes først og fremmest at vi snart vil lancere en ny forbedret version af vores billedgenkendelses AI, som vil give bedre artsforslag baseret på data om habitat og substrat. Ønsker du fremover at starte med at få et artsforslag kan du stadig bruge funktionen navneforslag i sidemenuen\n\n2)	Mulighed for at låse lokalitetnavn og koordinater. Vi har gjort det muligt at låse lokalitetsnavn og eventuelt også fund-koordinater, hvis man indberetter mange fund fra den samme lokalitet, eller fra et enkelt hotspot. Dermed kan man spare tid og batteri i felten og samtidigt få mere konsistente lokalitetsnavne på dine fund. Funktionen kan nulstilles manuelt eller automatisk efter en time.\n\n3)	Forenkling af notesbogfunktion. Vi har nu opdateret notesbogfunktionen så den ikke kan anvende AI til artsbestemmelse eller søge efter lokalitetsnavne når du opretter nye noter. Du kan stadig vælge artsnavne fra din artsliste på telefonen og tilføje metadata, men AI og valg af lokalitet aktiveres først når du åbner fundet fra notesbogen igen for at redigere det inden du oploader det til Svampeatlas. Formålet med ændringen er at spare tid og batteri i felten, så du udelukkende kan koncentrere dig om at oprette svampefund. Koordinater kobles enten til de foto du tilføjer i notesbogen eller din placering når en ny fundnote oprettes uden foto. Husk derfor at tage fotos eller oprette noter lige der hvor din svamp er fundet.\n\nDerudover er der gennemført en række mindre forbedringer og bug fixes. Man kan igen søge arter ved hjælp af 3 + 3 koder (fx ama mus for Amanita muscaria), ligesom billedvisning på artspræsentationer er forbedret.   ";
+

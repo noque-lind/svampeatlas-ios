@@ -6,9 +6,9 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreLocation.CLLocation
 import ELKit
+import Foundation
 
 class UserObservation {
     
@@ -53,7 +53,7 @@ class UserObservation {
             case .noSubstrateGroup, .noVegetationType, .noMushroom: return NSLocalizedString("newObservationError_missingInformation", comment: "")
             case .noLocality: return NSLocalizedString("newObservationError_noLocality_title", comment: "")
             case .noCoordinates: return NSLocalizedString("newObservationError_noCoordinates_title", comment: "")
-            case .lowAccuracy: return NSLocalizedString("Low accuracy", comment: "")
+            case .lowAccuracy: return NSLocalizedString("error_addObservationError_lowAccuracy", comment: "")
             }
         }
         
@@ -64,7 +64,7 @@ class UserObservation {
             case .noVegetationType: return NSLocalizedString("newObservationError_noVegetationType_message", comment: "")
             case .noCoordinates: return NSLocalizedString("newObservationError_noCoordinates_message", comment: "")
             case .noLocality: return NSLocalizedString("newObservationError_noLocality_message", comment: "")
-            case .lowAccuracy(let accurracy): return String(format: NSLocalizedString("The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?", comment: ""), accurracy.rounded(toPlaces: 2))
+            case .lowAccuracy(let accurracy): return String(format: NSLocalizedString("newObservationError_tooInaccurate", comment: ""), accurracy.rounded(toPlaces: 2))
             }
         }
     }
@@ -75,21 +75,19 @@ class UserObservation {
         case possible = "mulig"
     }
     
-    
     var observationDate = Date()
     var observationDateAccuracy = "day"
     var substrate: Substrate?
     var vegetationType: VegetationType?
-    var hosts = [Host]()
-    var lockedHosts = false
+    var hosts: (items: [Host], locked: Bool) = (items: [], false)
     var ecologyNote: String?
     var mushroom: Mushroom?
     var determinationConfidence: DeterminationConfidence = .certain
     var determinationNotes: String?
     var note: String?
     var images = [Image]()
-    var observationLocation: CLLocation?
-    var locality: Locality?
+    var observationLocation: (item: CLLocation, locked: Bool)?
+    var locality: (locality: Locality, locked: Bool)?
     
     init() {
         if let substrateID = UserDefaultsHelper.defaultSubstrateID {
@@ -103,15 +101,22 @@ class UserObservation {
         }
         
         if let hostsIDS = UserDefaultsHelper.defaultHostsIDS {
-            hosts = hostsIDS.compactMap({CoreDataHelper.fetchHost(withID: $0)})
-            lockedHosts = true
+            hosts = (items: hostsIDS.compactMap({CoreDataHelper.fetchHost(withID: $0)}), locked: true)
+        }
+        
+        if let locality = UserDefaultsHelper.lockedLocality {
+            self.locality = (locality: locality, locked: true)
+        }
+        
+        if let location = UserDefaultsHelper.lockedLocation {
+            self.observationLocation = (item: location, locked: true)
         }
     }
     
     init(_ note: CDNote) {
         ecologyNote = note.ecologyNote
         self.note = note.note
-        hosts = (note.hosts?.allObjects as? [CDHost])?.map({Host(from: $0)}) ?? []
+        hosts = (items: (note.hosts?.allObjects as? [CDHost])?.map({Host(from: $0)}) ?? [], locked: false)
         observationDate = note.observationDate ?? Date()
         
         if let specie = note.specie, let confidence = note.confidence, let dConfidence = DeterminationConfidence(rawValue: confidence) {
@@ -128,11 +133,12 @@ class UserObservation {
         }
         
         if let location = note.location {
-            observationLocation = CLLocation.init(coordinate: .init(latitude: location.latitude, longitude: location.longitude), altitude: 0, horizontalAccuracy: location.accuracy, verticalAccuracy: location.accuracy, timestamp: location.date ?? Date())
+            let location = CLLocation.init(coordinate: .init(latitude: location.latitude, longitude: location.longitude), altitude: 0, horizontalAccuracy: location.accuracy, verticalAccuracy: location.accuracy, timestamp: location.date ?? Date())
+            observationLocation =  (location, location.timestamp == UserDefaultsHelper.lockedLocation?.timestamp)
         }
         
-        if let cdLocality = note.locality, let locality = Locality(cdLocality)  {
-            self.locality = locality
+        if let cdLocality = note.locality, let locality = Locality(cdLocality) {
+            self.locality = (locality, locality == UserDefaultsHelper.lockedLocality)
         }
         
         if let images = note.images?.allObjects as? [CDNoteImage] {
@@ -149,7 +155,7 @@ class UserObservation {
         vegetationType = observation.vegetationType
         ecologyNote = observation.ecologyNote
         note = observation.note
-        hosts = observation.hosts
+        hosts = (items: observation.hosts, false)
         
         if let dateString = observation.observationDate, let date = Date(ISO8601String: dateString) {
             observationDate = date
@@ -157,8 +163,8 @@ class UserObservation {
             observationDate = Date()
         }
         
-        observationLocation = observation.location
-        locality = observation.locality
+        observationLocation = (observation.location, false)
+        locality =  (observation.locality != nil) ? (observation.locality!, false): nil
         images = observation.images?.compactMap({
                                                     guard let url = URL(string: $0.url), let createdDate = $0.createdDate else {return nil}
                                                     return Image(type: .uploaded(id: $0.id, creationDate: Date(ISO8601String: createdDate), userIsValidator: session?.user.isValidator ?? false), url: url, filename: "")}) ?? []
@@ -173,14 +179,14 @@ class UserObservation {
     }
     
     func validate(overrideAccuracy: Bool) -> ValidationError? {
-        guard mushroom != nil else {return .noMushroom}
+        guard locality != nil else {return .noLocality}
+        guard let observationLocation = observationLocation?.item else {return .noCoordinates}
+        if !overrideAccuracy {
+            guard observationLocation.horizontalAccuracy <= 150 else {return .lowAccuracy(accurracy: observationLocation.horizontalAccuracy)}
+        }
         guard substrate != nil else {return .noSubstrateGroup}
         guard vegetationType != nil else {return .noVegetationType}
-        guard locality != nil else {return .noLocality}
-        guard let observationLocation =  observationLocation else {return .noCoordinates}
-        if !overrideAccuracy {
-            guard observationLocation.horizontalAccuracy <= 500 else {return .lowAccuracy(accurracy: observationLocation.horizontalAccuracy)}
-        }
+        guard mushroom != nil else {return .noMushroom}
         return nil
     }
     
@@ -196,9 +202,9 @@ class UserObservation {
         dict["browser"] = "Native App"
         dict["substrate_id"] = substrate.id
         dict["vegetationtype_id"] = vegetationType.id
-        dict["decimalLatitude"] = observationCoordinate.coordinate.latitude
-        dict["decimalLongitude"] = observationCoordinate.coordinate.longitude
-        dict["accuracy"] = observationCoordinate.horizontalAccuracy
+        dict["decimalLatitude"] = observationCoordinate.item.coordinate.latitude
+        dict["decimalLongitude"] = observationCoordinate.item.coordinate.longitude
+        dict["accuracy"] = observationCoordinate.item.horizontalAccuracy
 
         if let ecologyNote = ecologyNote {
             dict["ecologynote"] = ecologyNote
@@ -208,10 +214,10 @@ class UserObservation {
             dict["note"] = note
         }
 
-        if hosts.count > 0 {
+        if hosts.items.count > 0 {
             var hostArray = [[String: Any]]()
 
-            for host in hosts {
+            for host in hosts.items {
                 hostArray.append(["_id": host.id])
             }
 
@@ -220,11 +226,11 @@ class UserObservation {
 
         dict["users"] = [["_id": session.user.id, "Initialer": session.user.initials, "email": session.user.email, "facebook": session.user.facebookID ?? "", "name": session.user.name]]
 
-        if let geoName = locality.geoName {
+        if let geoName = locality.locality.geoName {
             dict["geonameId"] = geoName.geonameId
             dict["geoname"] = ["geonameId": geoName.geonameId, "name": geoName.name, "adminName1": geoName.adminName1, "lat": geoName.lat, "lng": geoName.lng, "countryName": geoName.countryName, "countryCode": geoName.countryCode, "fcodeName": geoName.fcodeName, "fclName": geoName.fclName]
         } else {
-            dict["locality_id"] = locality.id
+            dict["locality_id"] = locality.locality.id
         }
 
         if !isEdit {

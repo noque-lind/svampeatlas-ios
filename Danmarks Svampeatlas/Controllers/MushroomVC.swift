@@ -6,8 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class MushroomVC: UIViewController {
     
@@ -70,7 +70,6 @@ class MushroomVC: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     
     private lazy var tableView: MushroomTableView = {
         let tableView = MushroomTableView()
@@ -252,7 +251,6 @@ extension MushroomVC: CustomSearchBarDelegate {
     }
     
     func clearedSearchEntry() {
-        categoryView.selectCategory(category: Categories.species, force: true)
+        categoryView.selectCategory(category: Categories.species)
     }
 }
-

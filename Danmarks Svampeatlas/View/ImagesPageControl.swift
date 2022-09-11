@@ -24,7 +24,7 @@ class ELPageControl: UIPageControl {
         }
     }
     
-    public weak var delegate: ELPageControlDelegate? = nil
+    public weak var delegate: ELPageControlDelegate?
     
     init() {
         super.init(frame: CGRect.zero)
@@ -35,7 +35,6 @@ class ELPageControl: UIPageControl {
         super.init(coder: aDecoder)
         setupView()
     }
-    
     
     public func nextPage() {
         if currentPage == numberOfPages - 1 {

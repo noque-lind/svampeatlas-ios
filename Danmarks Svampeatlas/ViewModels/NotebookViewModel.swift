@@ -6,15 +6,14 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import ELKit
+import Foundation
 
 class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
         
     private let session: Session
     private let controller: NSFetchedResultsController<CDNote>
-    
     
     let notes = ELListener<SimpleState<[CDNote]>>.init(.empty)
     let deleteNote = ELEvent<IndexPath>.init()
@@ -60,11 +59,11 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     private func evaluteData() {
         func shouldDownload() {
-            show.post(value: .appNotification(style: .action(backgroundColor: .appPrimaryColour(), actions: [.positive(NSLocalizedString("Yes, fetch data", comment: ""), { [weak self] in
+            show.post(value: .appNotification(style: .action(backgroundColor: .appPrimaryColour(), actions: [.positive(NSLocalizedString("action_fetchData", comment: ""), { [weak self] in
                 self?.present.post(value: OfflineDownloader())
-            }), .neutral(NSLocalizedString("No, not right now", comment: ""), {
+            }), .neutral(NSLocalizedString("action_no", comment: ""), {
         
-            })]), primaryText: NSLocalizedString("Do you want to fetch data?", comment: ""), secondaryText: NSLocalizedString("In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?", comment: ""), location: .bottom))
+            })]), primaryText: NSLocalizedString("prompt_taxonData_title", comment: ""), secondaryText: NSLocalizedString("prompt_taxonData_message", comment: ""), location: .bottom))
         }
         
         if let lastUpdateDate = UserDefaultsHelper.lastDataUpdateDate {
@@ -80,7 +79,7 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
     func deleteNote(note: CDNote, indexPath: IndexPath) {
         Database.instance.notesRepository.delete(note: note) { [weak self] result in
             switch result {
-            case .success():
+            case .success:
                 print("here")
 //                self?.deleteNote.post(value: indexPath)
             case .failure(let error):
@@ -97,11 +96,11 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
             DispatchQueue.main.async {
                 switch result {
                 case .success((let id, let imageCount)):
-                    Database.instance.notesRepository.delete(note: note) { result in }
+                    Database.instance.notesRepository.delete(note: note) { _ in }
                     if imageCount == userObservation.images.count {
                         self?.show.post(value: .appNotification(style: .success, primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: "DMS: \(id)", location: .bottom))
                     } else {
-                        self?.show.post(value: .appNotification(style: .warning(actions: nil), primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), imageCount, userObservation.images.count), location: .bottom))
+                        self?.show.post(value: .appNotification(style: .warning(actions: nil), primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: String(format: NSLocalizedString("addObservationError_imageUploadError", comment: ""), imageCount, userObservation.images.count), location: .bottom))
                     }
                 case .failure(let error):
                     self?.show.post(value: .appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom))
@@ -109,6 +108,5 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
             }
         }
     }
-
 
 }

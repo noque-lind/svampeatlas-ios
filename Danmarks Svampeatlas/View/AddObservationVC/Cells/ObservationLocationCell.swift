@@ -6,11 +6,24 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import MapKit
+import UIKit
 
 class ObservationLocationCell: UICollectionViewCell {
-    
+
+    private lazy var settingsButton = UIButton().then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        $0.addTarget(self, action: #selector(openSettingsModal), for: UIControl.Event.touchUpInside)
+        let size: CGFloat = 40
+        $0.widthAnchor.constraint(equalToConstant: size).isActive = true
+        $0.heightAnchor.constraint(equalToConstant: size).isActive = true
+        let inset = (size / 2) - 14
+        $0.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        $0.setImage(#imageLiteral(resourceName: "Glyphs_Settings"), for: [])
+        $0.layer.cornerRadius = CGFloat.cornerRadius()
+    })
+
     private lazy var retryButton = UIButton().then({
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
@@ -53,9 +66,11 @@ class ObservationLocationCell: UICollectionViewCell {
         let view = NewMapView(type: .localities)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.showsUserLocation = false
-        view.filterByCategory(category: .topography)
+        view.filterByCategory(category: .regular)
         view.localityPicked = { [unowned self] locality in
-            self.didSelectLocality(locality: locality)
+            if locality != self.viewModel?.locality.value?.locality {
+                self.didSelectLocality(locality: locality)
+            }
         }
         return view
     }()
@@ -109,6 +124,7 @@ class ObservationLocationCell: UICollectionViewCell {
         contentView.do({
             $0.addSubview(mapView)
             $0.addSubview(collectionView)
+            $0.addSubview(settingsButton)
             $0.addSubview(retryButton)
             $0.addSubview(annotationButton)
             $0.addSubview(precisionView)
@@ -127,10 +143,15 @@ class ObservationLocationCell: UICollectionViewCell {
             $0.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
             $0.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         })
-    
+        
+            settingsButton.do({
+                $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
+                $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+            })
+            
         retryButton.do({
-            $0.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-            $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
+            $0.leadingAnchor.constraint(equalTo: settingsButton.leadingAnchor).isActive = true
+            $0.topAnchor.constraint(equalTo: settingsButton.bottomAnchor, constant: 8).isActive = true
         })
         
         annotationButton.do({
@@ -146,6 +167,28 @@ class ObservationLocationCell: UICollectionViewCell {
     
     @objc private func getNearbyLocalities() {
         viewModel?.refindLocation()
+    }
+
+    @objc private func openSettingsModal() {
+        let localityLockPossible: Bool
+        switch viewModel?.context {
+        case .newNote, .editNote, .edit:
+            localityLockPossible = false
+        default: localityLockPossible = true
+        }
+        
+        let vc = LocalitySettingsModal(locationLocked: viewModel?.observationLocation.value?.item?.locked ?? false, localityLocked: viewModel?.locality.value?.locked ?? false, localityLockPossible: localityLockPossible)
+        
+        vc.localityLockedSet = { [weak self] value in
+            self?.viewModel?.setLocalityLockedState(locked: value)
+        }
+        vc.locationLockedSet = { [weak self] value in
+            self?.viewModel?.setLocationLockedState(locked: value)
+        }
+        vc.modalPresentationStyle = .popover
+        vc.popoverPresentationController?.permittedArrowDirections = [.up, .left]
+        vc.popoverPresentationController?.sourceView = settingsButton
+        delegate?.presentVC(vc)
     }
     
     @objc func handleGesture(gesture: UIPanGestureRecognizer) {
@@ -174,38 +217,38 @@ class ObservationLocationCell: UICollectionViewCell {
     }
     
     @objc private func annotationButtonPressed() {
-        delegate?.presentVC(TermsVC(terms: .localityHelper))
+        delegate?.presentVC(ModalVC(terms: .localityHelper))
     }
     
     private func didSelectLocality(locality: Locality) {
         viewModel?.setLocality(locality: locality)
     }
-    
-    func configureViewModel(viewModel: AddObservationViewModel) {
-        self.viewModel = viewModel
-    }
-    
+        
     func configureLocalities(localities: [Locality]) {
         self.localities = localities
         collectionView.reloadData()
         mapView.addLocalityAnnotations(localities: localities)
     }
     
-    func configureObservationLocation(location: CLLocation) {
+    func configureLocation(location: CLLocation, locked: Bool) {
         mapView.clearAnnotations()
         mapView.addLocationAnnotation(location: location.coordinate)
-        precisionLabel.text = String.localizedStringWithFormat(NSLocalizedString("Precision %0.2f m.", comment: ""), location.horizontalAccuracy.rounded(toPlaces: 2))
+        precisionLabel.text = (locked ? "🔒 ": "") + String.localizedStringWithFormat(NSLocalizedString("precision", comment: ""), location.horizontalAccuracy.rounded(toPlaces: 2))
         mapView.addCirclePolygon(center: location.coordinate, radius: location.horizontalAccuracy, setRegion: false, clearPrevious: true)
         mapView.setRegion(center: location.coordinate)
     }
     
-    func configureLocality(locality: Locality) {
+    func configureLocality(locality: Locality, locked: Bool) {
+        self.collectionView.reloadData()
+        self.mapView.selectAnnotationAtCoordinate(locality.location.coordinate)
+        if let selected = collectionView.indexPathsForSelectedItems {
+            collectionView.reloadItems(at: selected)
+        }
+    
         guard let row = self.localities.firstIndex(of: locality) else {return}
         self.collectionView.selectItem(at: IndexPath(row: row, section: 0), animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
-        self.mapView.selectAnnotationAtCoordinate(locality.location.coordinate)
     }
 }
-
 
 ///CollectionView Extension
 extension ObservationLocationCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -215,10 +258,10 @@ extension ObservationLocationCell: UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "localityCell", for: indexPath) as! LocalityCell
-        cell.configureCell(locality: localities[indexPath.row])
+        let locality = localities[indexPath.row]
+        cell.configureCell(locality: localities[indexPath.row], locked: (viewModel?.locality.value?.locked ?? false) ? locality.id == viewModel?.locality.value?.locality.id: false)
         return cell
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if localities.count >= 3 {
@@ -235,6 +278,6 @@ extension ObservationLocationCell: UICollectionViewDelegate, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        (cell as? LocalityCell)?.isSelected = localities[indexPath.row] == viewModel?.locality.value
+        (cell as? LocalityCell)?.isSelected = localities[indexPath.row] == viewModel?.locality.value?.locality
     }
 }

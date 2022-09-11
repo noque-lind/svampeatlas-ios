@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class ErrorView: UIView {
     
@@ -33,7 +33,7 @@ class ErrorView: UIView {
         button.setTitleColor(UIColor.appThird(), for: [])
         button.titleLabel?.font = UIFont.appPrimaryHightlighed()
         button.isHidden = true
-        button.addTarget(self, action: #selector(actionButtonPressed), for: UIControl.Event.touchUpInside)
+        button.addTarget(ErrorView.self, action: #selector(actionButtonPressed), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -71,7 +71,7 @@ class ErrorView: UIView {
         handler?(recoveryAction)
     }
     
-    func configure(error: AppError, handler: ((RecoveryAction?) -> ())?) {
+    func configure(error: AppError, handler: ((RecoveryAction?) -> Void)?) {
         mainLabel.text = error.title
         secondaryLabel.text = error.message
         

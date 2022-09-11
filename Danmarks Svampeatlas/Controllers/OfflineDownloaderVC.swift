@@ -6,8 +6,8 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class OfflineDownloader: UIViewController {
     
@@ -16,7 +16,7 @@ class OfflineDownloader: UIViewController {
         view.backgroundColor = .clear
         let header = SectionHeaderView().then({
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.configure(title:  NSLocalizedString("Downloading offline data", comment: ""))
+            $0.configure(title: NSLocalizedString("downloader_message_data", comment: ""))
         })
         view.addSubview(header)
         header.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
@@ -65,7 +65,6 @@ class OfflineDownloader: UIViewController {
             heightAnchor.constant = maxHeight
     }
     
-    
     private func setupView() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         
@@ -106,10 +105,10 @@ class OfflineDownloader: UIViewController {
                     self?.spinner.start()
                     self?.messageLabel.text = message
                 case .Completed:
-                    ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("Success", comment: ""), secondaryText: NSLocalizedString("Your device now has the newest update to the taxon database. Get out there!", comment: ""), location: .bottom).show(animationType: .fromBottom, queuePosition: .front, onViewController: nil)
+                    ELNotificationView.appNotification(style: .success, primaryText: NSLocalizedString("common_success", comment: ""), secondaryText: NSLocalizedString("downloader_success", comment: ""), location: .bottom).show(animationType: .fromBottom, queuePosition: .front, onViewController: nil)
                     self?.dismiss(animated: true, completion: nil)
                 case .Error(error: let error):
-                    ELNotificationView.appNotification(style: .error(actions: [.neutral(NSLocalizedString("Try again", comment: ""), {
+                    ELNotificationView.appNotification(style: .error(actions: [.neutral(NSLocalizedString("action_tryAgain", comment: ""), {
                     })]), primaryText: error.title, secondaryText: error.message, location: .bottom).show(animationType: .fromBottom)
                 default: self?.spinner.stop()
                 }
@@ -118,6 +117,3 @@ class OfflineDownloader: UIViewController {
     }
     
 }
-
-
-

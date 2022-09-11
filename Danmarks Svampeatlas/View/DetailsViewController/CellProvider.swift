@@ -14,7 +14,7 @@ protocol CellProviderDelegate: ObservationDetailHeaderCellDelegate, AddCommentCe
 class CellProvider: NSObject, ELTableViewCellProvider {
     typealias CellItem = DetailsViewController.Item
     
-    weak var delegate: CellProviderDelegate? = nil
+    weak var delegate: CellProviderDelegate?
     
     func registerCells(tableView: UITableView) {
         tableView.register(ObservationDetailHeaderCell.self, forCellReuseIdentifier: String(describing: ObservationDetailHeaderCell.self))

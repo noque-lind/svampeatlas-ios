@@ -8,8 +8,6 @@
 
 import UIKit
 
-
-
 extension UILabel {
     func setMargins(margin: CGFloat = 10) {
         if let textString = self.text {

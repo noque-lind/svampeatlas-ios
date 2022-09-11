@@ -6,9 +6,9 @@
 //  Copyright © 2021 NaturhistoriskMuseum. All rights reserved.
 //
 
+import ELKit
 import Foundation
 import UIKit
-import ELKit
 
 class NotesVC: UIViewController {
     
@@ -27,7 +27,7 @@ class NotesVC: UIViewController {
             switch item {
             case .note(let note):
                 return tableView.dequeueReusableCell(withIdentifier: NoteCell.identifier, for: indexPath).then({
-                    ($0 as? NoteCell)?.configure(note: note);
+                    ($0 as? NoteCell)?.configure(note: note)
                     ($0 as? NoteCell)?.uploadPressed = { [weak self] in
                         self?.uploadNote.post(value: (note, indexPath))
                     }
@@ -43,7 +43,6 @@ class NotesVC: UIViewController {
             tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.identifier)
         }
         
-        
         func canSwipeItem(_ item: NotesVC.Item, tableView: UITableView, indexPath: IndexPath) -> Bool {
             return true
         }
@@ -51,7 +50,7 @@ class NotesVC: UIViewController {
         func actionForItem(_ item: NotesVC.Item, _ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
             switch item {
             case .note(let note):
-                let action = UIContextualAction(style: .destructive, title: nil) { [weak self] action, view, completion in
+                let action = UIContextualAction(style: .destructive, title: nil) { [weak self] _, _, completion in
                     self?.deleteNote.post(value: (note, indexPath))
                     completion(true)
                 }
@@ -66,8 +65,6 @@ class NotesVC: UIViewController {
         }
     }
     
-    
-    
     private var gradientView: GradientView = {
         let view = GradientView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -79,14 +76,14 @@ class NotesVC: UIViewController {
             vm.deleteNote(note: item, indexPath: indexPath)
         }
         
-        $0.uploadNote.handleEvent { [unowned vm] (item, indexPath) in
-            vm.uploadNote(note: item, indexPath: indexPath)
+        $0.uploadNote.handleEvent { [unowned self] (item, indexPath) in
+            self.navigationController?.pushViewController(AddObservationVC(type: .uploadNote(note: item), session: self.session), animated: true)
         }
     })).then({
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.separatorStyle = .singleLine
         
-        $0.didSelectItem.handleEvent { [unowned self] (item, indexPath) in
+        $0.didSelectItem.handleEvent { [unowned self] (item, _) in
             switch item {
             case .note(let note): self.navigationController?.pushViewController(AddObservationVC(type: .editNote(node: note), session: self.session), animated: true)
             }
@@ -123,14 +120,14 @@ class NotesVC: UIViewController {
     }
     
     private func setupView() {
-        title = NSLocalizedString("Notebook", comment: "")
+        title = NSLocalizedString("notebook_title", comment: "")
         navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: eLRevealViewController(), action: #selector(eLRevealViewController()?.toggleSideMenu)), animated: false)
         navigationItem.rightBarButtonItem?.width = 100
         navigationItem.setRightBarButton(.init(customView: ActionButton().then({
             $0.addTarget(self, action: #selector(newNote), for: .touchUpInside)
-            $0.configure(text: NSLocalizedString("New", comment: ""))
+            $0.addInteraction(UIContextMenuInteraction(delegate: self))
+            $0.configure(text: NSLocalizedString("action_newNote", comment: ""), icon: UIImage.init(systemName: "plus"))
         })), animated: false)
-        
             
         view.backgroundColor = UIColor.appPrimaryColour()
     
@@ -149,10 +146,8 @@ class NotesVC: UIViewController {
         $0.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         $0.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         })
-        
        
     }
-    
     
     private func setupViewModel() {
         vm.notes.observe { [weak tableView] state in
@@ -186,8 +181,22 @@ class NotesVC: UIViewController {
         }
     }
     
-    
     @objc private func newNote() {
         navigationController?.pushViewController(AddObservationVC(type: .newNote, session: session), animated: true)
     }
+}
+
+
+extension NotesVC: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+                
+        let refetchTaxon = UIAction(title: NSLocalizedString("action_refresh_data", comment: ""), image: #imageLiteral(resourceName: "Glyphs_Reload").withRenderingMode(.alwaysTemplate)) { [weak self] _ in
+            self?.present(OfflineDownloader(), animated: true)
+        }
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            return  UIMenu(title: "", children: [ refetchTaxon ])
+        }
+    }
+    
 }

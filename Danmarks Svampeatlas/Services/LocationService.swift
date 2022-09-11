@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import MapKit
 import ELKit
+import MapKit
 
 protocol LocationManagerDelegate: class {
     func locationInaccessible(error: LocationManager.LocationManagerError)
@@ -46,7 +46,6 @@ class LocationManager: NSObject {
             default: return .tryAgain
             }
         }
-        
         
         var message: String {
             switch self {
@@ -151,8 +150,6 @@ extension LocationManager: CLLocationManagerDelegate {
         guard let location = locations.last, location.horizontalAccuracy >= 0 else {return}
         if location.horizontalAccuracy <= manager.desiredAccuracy {
             
-            
-            
         }
         
         if accuracy == .high && location.timestamp.timeIntervalSinceNow > -2 {
@@ -191,5 +188,3 @@ extension LocationManager: CLLocationManagerDelegate {
         }
     }
 }
-
-

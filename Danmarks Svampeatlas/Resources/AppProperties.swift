@@ -6,8 +6,8 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 extension UIColor {
    class func appWhite() -> UIColor {
@@ -88,15 +88,9 @@ extension UIFont {
         }
     }
     
-    
-    
     class func appBold() -> UIFont {
         return UIFont(name: "AvenirNext-Bold", size: 12)!
     }
-    
-    
-    
-
     
     class func appText(customSize size: CGFloat = 13) -> UIFont {
         return UIFont(name: "AvenirNext-UltraLight", size: size)!

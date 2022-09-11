@@ -78,7 +78,6 @@ extension ImageVC: UIGestureRecognizerDelegate {
         let downwardMovement = fmaxf(Float(verticalMovement), 0.0)
         let downwardMovementPercent = fminf(downwardMovement, 1.0)
 
-
         let progress = CGFloat(downwardMovementPercent)
 
         guard let interactor = interactor else {return}
@@ -103,5 +102,3 @@ extension ImageVC: UIGestureRecognizerDelegate {
         }
 }
 }
-
-

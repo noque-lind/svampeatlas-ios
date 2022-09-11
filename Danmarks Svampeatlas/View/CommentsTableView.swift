@@ -6,14 +6,13 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class CommentsTableView: GenericTableView<Comment> {
 
     public private(set) var allowComments: Bool
-    var sendCommentHandler: ((_ comment: String) -> ())?
-    
+    var sendCommentHandler: ((_ comment: String) -> Void)?
     
     init(allowComments: Bool, automaticallyAdjustHeight: Bool) {
         self.allowComments = allowComments
@@ -31,7 +30,6 @@ class CommentsTableView: GenericTableView<Comment> {
         register(AddCommentCell.self, forCellReuseIdentifier: "addCommentCell")
         super.setupView()
     }
-
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if allowComments {
@@ -74,4 +72,3 @@ extension CommentsTableView: ELTextViewDelegate {
         return
     }
 }
-

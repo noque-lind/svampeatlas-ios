@@ -8,7 +8,6 @@
 
 import CoreData
 
-
 class NotesRepository: Repository, RepositoryDelegate {
     
     typealias Item = CDNote
@@ -23,7 +22,7 @@ class NotesRepository: Repository, RepositoryDelegate {
         }
     }
     
-    func save(items: [CDNote], completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func save(items: [CDNote], completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
                 backgroundThread.performAndWait {
                     do {
                         try backgroundThread.save()
@@ -39,7 +38,7 @@ class NotesRepository: Repository, RepositoryDelegate {
 
     }
     
-    func save(userObservation: UserObservation, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func save(userObservation: UserObservation, completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         backgroundThread.performAndWait {
             do {
                 let note = create()
@@ -57,7 +56,7 @@ class NotesRepository: Repository, RepositoryDelegate {
         }
     }
     
-    func saveChanges(note: CDNote, userObservation: UserObservation, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func saveChanges(note: CDNote, userObservation: UserObservation, completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         backgroundThread.performAndWait {
             do {
                 mapValues(note: note, userObservation: userObservation)
@@ -76,11 +75,11 @@ class NotesRepository: Repository, RepositoryDelegate {
         return NSEntityDescription.insertNewObject(forEntityName: "CDNote", into: backgroundThread) as! CDNote
     }
     
-    func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func deleteAll(completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         
     }
     
-    func delete(note: CDNote, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
+    func delete(note: CDNote, completion: @escaping ((Result<Void, CoreDataError>) -> Void)) {
         backgroundThread.performAndWait {
             do {
                 (note.images?.allObjects as? [CDNoteImage])?.forEach({
@@ -132,11 +131,11 @@ class NotesRepository: Repository, RepositoryDelegate {
         }
         
         if let locality = userObservation.locality {
-            note.locality = locality.toCD(context: backgroundThread)
+            note.locality = locality.locality.toCD(context: backgroundThread)
         }
         
         if let observationLocation = userObservation.observationLocation {
-            note.location = observationLocation.toCD(context: backgroundThread)
+            note.location = observationLocation.item.toCD(context: backgroundThread)
         }
         
         note.images?.allObjects.forEach({
@@ -145,7 +144,7 @@ class NotesRepository: Repository, RepositoryDelegate {
         
         note.hosts?.allObjects.forEach({note.removeFromHosts($0 as! CDHost)})
         
-        userObservation.hosts.forEach({
+        userObservation.hosts.items.forEach({
             let cdHost = CDHost(context: backgroundThread)
             cdHost.id = Int16($0.id)
             cdHost.dkName = $0.dkName
@@ -167,9 +166,6 @@ class NotesRepository: Repository, RepositoryDelegate {
             note.addToImages(cdNoteImage)
         })
     }
-    
-    
-   
     
 //    func fetchAll() -> Result<[VegetationType], CoreDataError> {
 //        do {

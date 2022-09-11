@@ -20,7 +20,6 @@ class LocalityCell: UICollectionViewCell {
         return view
     }()
     
-    
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.appSecondaryColour()
@@ -69,8 +68,8 @@ class LocalityCell: UICollectionViewCell {
             }
     }
     
-    func configureCell(locality: Locality) {
-        label.text = locality.name
+    func configureCell(locality: Locality, locked: Bool) {
+        label.text = locked ? "🔒 \(locality.name)": locality.name
         setSelectionState()
     }
 }

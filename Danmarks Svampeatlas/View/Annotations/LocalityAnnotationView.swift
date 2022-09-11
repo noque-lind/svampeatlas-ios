@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import MapKit
+import UIKit
 
 class LocalityAnnotation: NSObject, MKAnnotation {
    

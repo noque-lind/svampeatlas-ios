@@ -104,7 +104,7 @@ class BaseCell: UITableViewCell {
     }
 }
 
-fileprivate class HightlightableButton: UIButton {
+private class HightlightableButton: UIButton {
     
     override var isHighlighted: Bool {
         didSet {
@@ -118,7 +118,6 @@ class UnknownSpeciesCellButton: BaseCell {
     override class var identifier: String {
         return "UnknownSpeciesCellButton"
     }
-    
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         containerView.backgroundColor = highlighted ? UIColor.appThird(): UIColor.appWhite()
@@ -137,7 +136,6 @@ class UnknownSpeciesCellButton: BaseCell {
         roundedImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         roundedImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         
-        
         secondaryLabel.numberOfLines = 0
         textStackView.distribution = .fill
         containerView.addSubview(textStackView)
@@ -152,7 +150,7 @@ class UnknownSpeciesCellButton: BaseCell {
     }
     
     private func configure() {
-        titleLabel.text = NSLocalizedString("Record unidentifed mushroom", comment: "")
+        titleLabel.text = NSLocalizedString("action_selectUnknownSpecie", comment: "")
         secondaryLabel.isHidden = true
         roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Utils_Missing").withRenderingMode(.alwaysTemplate))
     }
@@ -175,7 +173,7 @@ class UnknownSpecieCell: BaseCell {
         return button
     }()
     
-    var deselectButtonPressed: (() -> ())?
+    var deselectButtonPressed: (() -> Void)?
     
     override func setupView(leadingConstant: CGFloat, trailingConstant: CGFloat) {
         roundedImageView.isMasked = false
@@ -253,7 +251,6 @@ class ContainedResultCell: BaseCell {
         roundedImageView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         roundedImageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         roundedImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
     
         let textStackView: UIStackView = {
             let stackView = UIStackView()
@@ -269,7 +266,6 @@ class ContainedResultCell: BaseCell {
         textStackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24).isActive = true
         textStackView.leadingAnchor.constraint(equalTo: roundedImageView.trailingAnchor, constant: 8).isActive = true
         textStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8).isActive = true
-        
     
         containerView.addSubview(toxicityView)
         toxicityView.topAnchor.constraint(equalTo: textStackView.bottomAnchor, constant: 8).isActive = true
@@ -341,7 +337,7 @@ class SelectedSpecieCell: ContainedResultCell {
     
     private var confidences = UserObservation.DeterminationConfidence.allCases
     private var isGenus: Bool = false
-    var confidenceSelected: ((UserObservation.DeterminationConfidence) -> ())?
+    var confidenceSelected: ((UserObservation.DeterminationConfidence) -> Void)?
     
     override func setupView(leadingConstant: CGFloat, trailingConstant: CGFloat) {
         super.setupView(leadingConstant: leadingConstant, trailingConstant: trailingConstant)
@@ -372,7 +368,6 @@ class SelectedSpecieCell: ContainedResultCell {
         picker.selectRow(confidences.firstIndex(of: confidence) ?? 0, inComponent: 0, animated: false)
         super.configureCell(mushroom: mushroom)
     }
-    
 
     private func getLabelForConfidence(confidence: UserObservation.DeterminationConfidence, isGenus: Bool) -> String {
         switch confidence {

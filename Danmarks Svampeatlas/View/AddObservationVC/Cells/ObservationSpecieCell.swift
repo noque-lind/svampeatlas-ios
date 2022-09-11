@@ -6,8 +6,8 @@
 //  Copyright © 2019 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
 import ELKit
+import UIKit
 
 class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTableView.Item> {
     
@@ -20,9 +20,8 @@ class AddObservationMushroomTableView: ELTableViewOld<AddObservationMushroomTabl
         case lowConfidence
     }
     
-    var isAtTop: ((Bool) -> ())?
-    var confidenceSelected: ((UserObservation.DeterminationConfidence) -> ())?
-    
+    var isAtTop: ((Bool) -> Void)?
+    var confidenceSelected: ((UserObservation.DeterminationConfidence) -> Void)?
     
     override init() {
         super.init()
@@ -96,11 +95,11 @@ class ObservationSpecieCell: UICollectionViewCell {
         case editing
         
         var title: String {
-            return NSLocalizedString("You are editing an observation", comment: "")
+            return NSLocalizedString("message_editingObservation", comment: "")
         }
         
         var message: String {
-            return NSLocalizedString("The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties", comment: "")
+            return NSLocalizedString("observationEdit_changeValidation", comment: "")
         }
         
         var recoveryAction: RecoveryAction? {
@@ -137,7 +136,7 @@ class ObservationSpecieCell: UICollectionViewCell {
             let vc: UIViewController
             switch item {
             case .unknownSpeciesButton:
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id), session: nil, takesSelection: (selected: false, title: NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""), handler: { (selected) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroomWithID(taxonID: Mushroom.genus().id), session: nil, takesSelection: (selected: false, title: NSLocalizedString("observationSpeciesCell_chooseGenus", comment: ""), handler: { (_) in
                     self.viewModel?.mushroom = Mushroom.genus()
                     self.configureUpperSection()
                     self.configurePredictions()
@@ -170,7 +169,7 @@ class ObservationSpecieCell: UICollectionViewCell {
                     }
                 }))
             case .selectedMushroom(let mushroom, _):
-                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom), session: nil, takesSelection: (selected: true, title: NSLocalizedString("observationSpeciesCell_deselect", comment: ""), handler: { (selected) in
+                vc = DetailsViewController(detailsContent: DetailsContent.mushroom(mushroom: mushroom), session: nil, takesSelection: (selected: true, title: NSLocalizedString("observationSpeciesCell_deselect", comment: ""), handler: { (_) in
                     self.viewModel?.mushroom = nil
                     self.configureUpperSection()
                     
@@ -191,7 +190,7 @@ class ObservationSpecieCell: UICollectionViewCell {
     weak var delegate: NavigationDelegate?
     weak var viewModel: AddObservationViewModel? {
         didSet {
-            viewModel?.predictionResults.observe(listener: { [weak self] (state) in
+            viewModel?.predictionResults.observe(listener: { [weak self] (_) in
                 DispatchQueue.main.async {
                     self?.tableView.performUpdates(updates: { [weak self] (updater) in
                         self?.configurePredictions()
@@ -201,7 +200,6 @@ class ObservationSpecieCell: UICollectionViewCell {
             })
         }
     }
-    
     
     private let upperSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .empty)
     private let middleSection = Section<AddObservationMushroomTableView.Item>.init(title: nil, state: .empty)
@@ -248,7 +246,7 @@ class ObservationSpecieCell: UICollectionViewCell {
     func configureCell(viewModel: AddObservationViewModel, action: AddObservationVC.Action) {
         self.viewModel = viewModel
         switch action {
-        case .new, .newNote, .editNote:
+        case .new, .newNote, .editNote, .uploadNote:
             configureUpperSection()
             configurePredictions()
             configureFavoritesSection()
@@ -259,7 +257,6 @@ class ObservationSpecieCell: UICollectionViewCell {
             tableView.setSections(sections: [.init(title: nil, state: .error(error: Error.editing, handler: nil))])
         }
     }
-    
     
     private func configureUpperSection() {
         if let selectedMushroom = viewModel?.mushroom, let selectedDeterminationConfidence = viewModel?.determinationConfidence {

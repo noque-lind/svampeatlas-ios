@@ -8,9 +8,6 @@
 
 import UIKit
 
-
-
-
 class ListView: UIView {
     
     private lazy var tableView: UIView = {
@@ -21,9 +18,8 @@ class ListView: UIView {
         return tableView
     }()
     
-    weak var delegate: MapViewDelegate? = nil
+    weak var delegate: MapViewDelegate?
     private var observations = [Observation]()
-    
     
     init() {
         super.init(frame: CGRect.zero)
@@ -42,7 +38,6 @@ class ListView: UIView {
         tableView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
-    
    
 }
 

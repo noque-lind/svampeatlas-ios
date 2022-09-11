@@ -6,10 +6,9 @@
 //  Copyright © 2018 NaturhistoriskMuseum. All rights reserved.
 //
 
-import UIKit
-import Photos
 import ELKit
-
+import Photos
+import UIKit
 
 protocol CameraControlsViewDelegate: class {
     func photoLibraryButtonPressed(state: CameraControlsView.State)
@@ -24,8 +23,6 @@ class CameraControlsView: UIView {
         case regular
         case loading
     }
-    
-   
     
     private lazy var captureButton: CaptureButton = {
         let button = CaptureButton()
@@ -85,7 +82,7 @@ class CameraControlsView: UIView {
         }
     }
     
-    weak var delegate: CameraControlsViewDelegate? = nil
+    weak var delegate: CameraControlsViewDelegate?
     private let hasNoPhotoButton: Bool
     private var state: State = .regular
     

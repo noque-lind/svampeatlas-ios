@@ -116,7 +116,7 @@ Created by simplelocalize.io
 "elPhotosError_unknownSaveError_title" = "Unknown error";
 "error_addObservationError_lowAccuracy" = "Low accuracy";
 "error_cantDelete" = "Could not delete";
-"language_czech" = "";
+"language_czech" = "Czech";
 "language_danish" = "Danish";
 "language_english" = "English";
 "locationAnnotation_title" = "Observation location";

@@ -27,14 +27,14 @@ class DownloaderviewModel: NSObject {
     
     private func fetch() {
         
-        _state.set(.Loading(message: NSLocalizedString("Downloading taxons", comment: "")))
+        _state.set(.Loading(message: NSLocalizedString("downloader_message_taxon", comment: "")))
         
         DataService.instance.getMushrooms(searchString: nil, speciesQueries: [.images(required: false), .danishNames, Utilities.appLanguage() != .danish ? .attributes(presentInDenmark: false): nil].compactMap({$0}), limit: nil, offset: 0, largeDownload: true, useCache: false) { [weak self] result in
             switch result {
             case .success(let mushrooms):
                 let dispatchGroup = DispatchGroup()
                 dispatchGroup.enter()
-                self?._state.set(.Loading(message: NSLocalizedString("Downloading metadata", comment: "")))
+                self?._state.set(.Loading(message: NSLocalizedString("downloader_title", comment: "")))
                 DataService.instance.downloadSubstrateGroups(completion: { _ in
                     dispatchGroup.leave()
                 })
@@ -55,7 +55,7 @@ class DownloaderviewModel: NSObject {
     }
     
     private func saveToDatabase(mushrooms: [Mushroom]) {
-        _state.set(.Loading(message: NSLocalizedString("Saving to local storage", comment: "")))
+        _state.set(.Loading(message: NSLocalizedString("message_savingToStorage", comment: "")))
         Database.instance.mushroomsRepository.save(items: mushrooms) { [weak self] result in
             switch result {
             case .success: self?._state.set(.Completed);  UserDefaultsHelper.lastDataUpdateDate = Date()

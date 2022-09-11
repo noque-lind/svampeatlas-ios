@@ -120,13 +120,13 @@ class NotesVC: UIViewController {
     }
     
     private func setupView() {
-        title = NSLocalizedString("Notebook", comment: "")
+        title = NSLocalizedString("notebook_title", comment: "")
         navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: eLRevealViewController(), action: #selector(eLRevealViewController()?.toggleSideMenu)), animated: false)
         navigationItem.rightBarButtonItem?.width = 100
         navigationItem.setRightBarButton(.init(customView: ActionButton().then({
             $0.addTarget(self, action: #selector(newNote), for: .touchUpInside)
             $0.addInteraction(UIContextMenuInteraction(delegate: self))
-            $0.configure(text: NSLocalizedString("New note", comment: ""), icon: UIImage.init(systemName: "plus"))
+            $0.configure(text: NSLocalizedString("action_newNote", comment: ""), icon: UIImage.init(systemName: "plus"))
         })), animated: false)
             
         view.backgroundColor = UIColor.appPrimaryColour()

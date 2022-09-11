@@ -95,11 +95,11 @@ class ObservationSpecieCell: UICollectionViewCell {
         case editing
         
         var title: String {
-            return NSLocalizedString("You are editing an observation", comment: "")
+            return NSLocalizedString("message_editingObservation", comment: "")
         }
         
         var message: String {
-            return NSLocalizedString("The ability to change your determination for one of your already uploaded observations is coming soon. For now, you can only edit the other properties", comment: "")
+            return NSLocalizedString("observationEdit_changeValidation", comment: "")
         }
         
         var recoveryAction: RecoveryAction? {

@@ -482,10 +482,10 @@ extension DetailsViewController: CellProviderDelegate {
         
         switch viewModel.observation.value {
         case .items(item: let observation):
-            let actionVC = UIAlertController(title: String.localizedStringWithFormat(NSLocalizedString("Observation with ID: %d", comment: ""), observation.id), message: NSLocalizedString("You have the options below:", comment: ""), preferredStyle: .actionSheet).then({
+            let actionVC = UIAlertController(title: String.localizedStringWithFormat(NSLocalizedString("observation_id", comment: ""), observation.id), message: NSLocalizedString("common_twoChoices", comment: ""), preferredStyle: .actionSheet).then({
                 if let session = session {
                     if observation.isEditable(user: session.user) {
-                        $0.addAction(.init(title: NSLocalizedString("Edit observation", comment: ""), style: .default, handler: { [weak self] (_) in
+                        $0.addAction(.init(title: NSLocalizedString("action_editObservation", comment: ""), style: .default, handler: { [weak self] (_) in
                             AddObservationVC(type: .edit(observationID: observation.id), session: session).do({
                                 self?.navigationController?.pushViewController($0, animated: true)
                             })
@@ -495,14 +495,14 @@ extension DetailsViewController: CellProviderDelegate {
                     }
                     
                     if observation.isDeleteable(user: session.user) {
-                        $0.addAction(.init(title: NSLocalizedString("Delete observation", comment: ""), style: .destructive, handler: { [weak self] (_) in
+                        $0.addAction(.init(title: NSLocalizedString("action_deleteObservation", comment: ""), style: .destructive, handler: { [weak self] (_) in
                             Spinner.start(onView: self?.view)
                             session.deleteObservation(id: observation.id) { (result) in
                                 Spinner.stop()
                                 switch result {
                                 case .failure(let error):
                                     DispatchQueue.main.async {
-                                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: NSLocalizedString("Could not delete", comment: ""), secondaryText: error.message, location: .bottom).show(animationType: .fromBottom)
+                                        ELNotificationView.appNotification(style: .error(actions: nil), primaryText: NSLocalizedString("error_cantDelete", comment: ""), secondaryText: error.message, location: .bottom).show(animationType: .fromBottom)
                                     }
                                 case .success:
                                     DispatchQueue.main.async {
@@ -518,7 +518,7 @@ extension DetailsViewController: CellProviderDelegate {
                     addReportContentButton($0, observationID: observation.id)
                     }
                 
-                $0.addAction(.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
+                $0.addAction(.init(title: NSLocalizedString("action_cancel", comment: ""), style: .cancel, handler: nil))
             })
             present(actionVC, animated: true, completion: nil)
         default: return

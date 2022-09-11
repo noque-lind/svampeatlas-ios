@@ -30,9 +30,9 @@ class AddObservationViewModel: NSObject {
             case .deleted:
                 return ""
             case .editWithError, .editCompleted:
-                return NSLocalizedString("The observation was successfully edited", comment: "")
+                return NSLocalizedString("message_observationUpdated", comment: "")
             case .noteSave:
-                return NSLocalizedString("The note is saved", comment: "")
+                return NSLocalizedString("message_noteSaved", comment: "")
             case .uploadedWithError:
                 return NSLocalizedString("addObservationVC_successfullUpload_title", comment: "")
             case .uploaded:
@@ -48,7 +48,7 @@ class AddObservationViewModel: NSObject {
             switch self {
             case .deleted: return ""
             case .noteSave:
-                return NSLocalizedString("The note has been saved in local storage, you can see it in your notebook", comment: "")
+                return NSLocalizedString("message_noteSaved_message", comment: "")
             case .editWithError(message: let message):
                 return message
             case .editCompleted(id: let id):
@@ -446,10 +446,10 @@ class AddObservationViewModel: NSObject {
             switch validationError {
             case .lowAccuracy:
                 notification.post(value: (Notification.validationError(error: validationError), ELNotificationView.Style.action(backgroundColor: .appSecondaryColour(), actions: [
-                    .positive(NSLocalizedString("Yes, find my location", comment: ""), { [weak self] in
+                    .positive(NSLocalizedString("action_findLocation", comment: ""), { [weak self] in
                         self?.locationManager.start()
                     }),
-                    .negative(NSLocalizedString("No, I'll adjust it myself", comment: ""), {})])))
+                    .negative(NSLocalizedString("action_adjustSelf", comment: ""), {})])))
             default: notification.post(value: (Notification.validationError(error: validationError), ELNotificationView.Style.error(actions: nil)))
             }
             return false
@@ -471,7 +471,7 @@ class AddObservationViewModel: NSObject {
                 if data.uploadedImagesCount == self?._images.value.count {
                     self?.notification.post(value: (Notification.uploaded(id: data.observationID), ELNotificationView.Style.success))
                 } else {
-                    self?.notification.post(value: (Notification.uploadedWithError(message: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), data.uploadedImagesCount, self?._images.value.count ?? 0)), ELNotificationView.Style.warning(actions: nil)))
+                    self?.notification.post(value: (Notification.uploadedWithError(message: String(format: NSLocalizedString("addObservationError_imageUploadError", comment: ""), data.uploadedImagesCount, self?._images.value.count ?? 0)), ELNotificationView.Style.warning(actions: nil)))
                 }
             }
             
@@ -497,7 +497,7 @@ class AddObservationViewModel: NSObject {
                 if data.uploadedImagesCount == self?.userObservation.images.filter({$0.type == .new}).count {
                     self?.notification.post(value: (Notification.editCompleted(id: data.observationID), ELNotificationView.Style.success))
                 } else {
-                    self?.notification.post(value: (Notification.editWithError(message: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), data.uploadedImagesCount, self?._images.value.count ?? 0)), ELNotificationView.Style.warning(actions: nil)))
+                    self?.notification.post(value: (Notification.editWithError(message: String(format: NSLocalizedString("addObservationError_imageUploadError", comment: ""), data.uploadedImagesCount, self?._images.value.count ?? 0)), ELNotificationView.Style.warning(actions: nil)))
                 }
             }
         }

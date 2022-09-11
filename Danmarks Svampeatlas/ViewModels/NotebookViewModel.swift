@@ -59,11 +59,11 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
     
     private func evaluteData() {
         func shouldDownload() {
-            show.post(value: .appNotification(style: .action(backgroundColor: .appPrimaryColour(), actions: [.positive(NSLocalizedString("Yes, fetch data", comment: ""), { [weak self] in
+            show.post(value: .appNotification(style: .action(backgroundColor: .appPrimaryColour(), actions: [.positive(NSLocalizedString("action_fetchData", comment: ""), { [weak self] in
                 self?.present.post(value: OfflineDownloader())
-            }), .neutral(NSLocalizedString("No, not right now", comment: ""), {
+            }), .neutral(NSLocalizedString("action_no", comment: ""), {
         
-            })]), primaryText: NSLocalizedString("Do you want to fetch data?", comment: ""), secondaryText: NSLocalizedString("In order to use this functionality, you need to download data for offline usage. If you have already done so, you might be getting this notification because your downloaded data needs to be updated. Only do it if you have a good internet connection! Are you ready?", comment: ""), location: .bottom))
+            })]), primaryText: NSLocalizedString("prompt_taxonData_title", comment: ""), secondaryText: NSLocalizedString("prompt_taxonData_message", comment: ""), location: .bottom))
         }
         
         if let lastUpdateDate = UserDefaultsHelper.lastDataUpdateDate {
@@ -100,7 +100,7 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
                     if imageCount == userObservation.images.count {
                         self?.show.post(value: .appNotification(style: .success, primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: "DMS: \(id)", location: .bottom))
                     } else {
-                        self?.show.post(value: .appNotification(style: .warning(actions: nil), primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: String(format: NSLocalizedString("Although an error occured uploading the image/s. %d out of %d images has been successfully uploaded", comment: ""), imageCount, userObservation.images.count), location: .bottom))
+                        self?.show.post(value: .appNotification(style: .warning(actions: nil), primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: String(format: NSLocalizedString("addObservationError_imageUploadError", comment: ""), imageCount, userObservation.images.count), location: .bottom))
                     }
                 case .failure(let error):
                     self?.show.post(value: .appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom))

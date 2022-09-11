@@ -159,7 +159,7 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
         
         switch viewModel.context {
         case .newNote:
-            title = "New note"
+            title = NSLocalizedString("action_newNote", comment: "")
         case .new:
             title = NSLocalizedString("addObservationVC_title", comment: "")
             navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu)), animated: false)
@@ -170,7 +170,7 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
                 $0.addArrangedSubview(UILabel().then({
                     $0.font = .appTitle()
                     $0.textColor = .appWhite()
-                    $0.text = NSLocalizedString("Edit observation", comment: "")
+                    $0.text = NSLocalizedString("action_editObservation", comment: "")
                 }))
                 
                 $0.addArrangedSubview(idLabel)
@@ -183,7 +183,7 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
                 $0.addArrangedSubview(UILabel().then({
                     $0.font = .appTitle()
                     $0.textColor = .appWhite()
-                    $0.text = NSLocalizedString("Edit note", comment: "")
+                    $0.text = NSLocalizedString("action_editNote", comment: "")
                 }))
                 
                 $0.addArrangedSubview(idLabel)
@@ -385,7 +385,7 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
     private func getStateForActionView() -> ActionButton.State {
         switch viewModel.context {
         case .editNote, .edit, .newNote:
-            return  .init(title: NSLocalizedString("Save", comment: ""), icon: #imageLiteral(resourceName: "Glyphs_Checkmark"), backgroundColor: .appGreen())
+            return  .init(title: NSLocalizedString("action_save", comment: ""), icon: #imageLiteral(resourceName: "Glyphs_Checkmark"), backgroundColor: .appGreen())
         case .new, .uploadNote:
             switch categoryView.selectedItem.type {
             case .Details, .Location:
@@ -504,15 +504,15 @@ extension AddObservationVC: UIContextMenuInteractionDelegate {
            
         }
         
-        let saveNote = UIAction(title: NSLocalizedString("Save as note", comment: ""), image: UIImage(systemName: "checkmark")?.withRenderingMode(.alwaysTemplate)) { [weak self] _ in
+        let saveNote = UIAction(title: NSLocalizedString("action_saveAsNote", comment: ""), image: UIImage(systemName: "checkmark")?.withRenderingMode(.alwaysTemplate)) { [weak self] _ in
             self?.viewModel.saveNew()
         }
         
-        let deleteNote = UIAction(title: NSLocalizedString("Delete note", comment: ""), image: UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate), attributes: .destructive) { [weak self] _ in
+        let deleteNote = UIAction(title: NSLocalizedString("action_deleteNote", comment: ""), image: UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate), attributes: .destructive) { [weak self] _ in
             self?.viewModel.deleteNote()
         }
         
-        let deleteObservation = UIAction(title: NSLocalizedString("Delete observation", comment: ""), image: UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate), attributes: .destructive) { [weak self] _ in
+        let deleteObservation = UIAction(title: NSLocalizedString("action_deleteObservation", comment: ""), image: UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate), attributes: .destructive) { [weak self] _ in
             self?.viewModel.deleteObservation()
         }
         

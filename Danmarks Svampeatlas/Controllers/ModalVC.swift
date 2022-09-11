@@ -156,22 +156,22 @@ class ModalVC: UIViewController {
     private func configure() {
         switch terms {
         case .deleteImageTip:
-            header.configure(title: NSLocalizedString("Deletions are final", comment: ""))
-            textView.text = NSLocalizedString("When editing an observation, deletions of images are final, even if you do not submit your other changes. This message will only be shown once, and if you still want to delete the image, you will have to delete the it again", comment: "")
+            header.configure(title: NSLocalizedString("message_deletionsAreFinal", comment: ""))
+            textView.text = NSLocalizedString("message_imageDeletetionsPermanent", comment: "")
         case .mlPredict:
             header.configure(title: NSLocalizedString("termsVC_mlPredict_title", comment: ""))
             
             textView.text = NSLocalizedString("termsVC_mlPredict_message", comment: "")
         case .localityHelper:
-            header.configure(title: NSLocalizedString("Remember to confirm your position", comment: ""))
-            textView.text = NSLocalizedString("It is important for the quality of your collected data, that you make sure the position of the observation you are submitting are correct. You can see on the clip below how to adjust the position manually.\n\nIf a photo added to the observation contains a GPS tag, the app will suggest using the position from the image instead\n\nWe will remind you of this every once in a while. You can turn this reminder off in the settings.", comment: "")
+            header.configure(title: NSLocalizedString("modal_localityHelper_title", comment: ""))
+            textView.text = NSLocalizedString("modal_localityHelper_message", comment: "")
             imageView.loadGif(name: "LocalityHelper")
             imageView.heightAnchor.constraint(equalToConstant: 276).isActive = true
         case .cameraHelper:
             header.configure(title: NSLocalizedString("termsVC_cameraHelper_title", comment: ""))
             textView.text = NSLocalizedString("termsVC_cameraHelper_message", comment: "")
         case .whatsNew:
-            header.configure(title: NSLocalizedString("Whats new?", comment: ""))
+            header.configure(title: NSLocalizedString("whats_new_title", comment: ""))
             textView.text = NSLocalizedString("whats_new_2_0", comment: "")
         }
     }

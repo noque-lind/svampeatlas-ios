@@ -233,7 +233,7 @@ class ObservationLocationCell: UICollectionViewCell {
     func configureLocation(location: CLLocation, locked: Bool) {
         mapView.clearAnnotations()
         mapView.addLocationAnnotation(location: location.coordinate)
-        precisionLabel.text = (locked ? "🔒 ": "") + String.localizedStringWithFormat(NSLocalizedString("Precision %0.2f m.", comment: ""), location.horizontalAccuracy.rounded(toPlaces: 2))
+        precisionLabel.text = (locked ? "🔒 ": "") + String.localizedStringWithFormat(NSLocalizedString("precision", comment: ""), location.horizontalAccuracy.rounded(toPlaces: 2))
         mapView.addCirclePolygon(center: location.coordinate, radius: location.horizontalAccuracy, setRegion: false, clearPrevious: true)
         mapView.setRegion(center: location.coordinate)
     }

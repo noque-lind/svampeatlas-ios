@@ -53,7 +53,7 @@ class UserObservation {
             case .noSubstrateGroup, .noVegetationType, .noMushroom: return NSLocalizedString("newObservationError_missingInformation", comment: "")
             case .noLocality: return NSLocalizedString("newObservationError_noLocality_title", comment: "")
             case .noCoordinates: return NSLocalizedString("newObservationError_noCoordinates_title", comment: "")
-            case .lowAccuracy: return NSLocalizedString("Low accuracy", comment: "")
+            case .lowAccuracy: return NSLocalizedString("error_addObservationError_lowAccuracy", comment: "")
             }
         }
         
@@ -64,7 +64,7 @@ class UserObservation {
             case .noVegetationType: return NSLocalizedString("newObservationError_noVegetationType_message", comment: "")
             case .noCoordinates: return NSLocalizedString("newObservationError_noCoordinates_message", comment: "")
             case .noLocality: return NSLocalizedString("newObservationError_noLocality_message", comment: "")
-            case .lowAccuracy(let accurracy): return String(format: NSLocalizedString("The location accurracy is: %0.2f m, which is too imprecise. Would you like to use your current location instead?", comment: ""), accurracy.rounded(toPlaces: 2))
+            case .lowAccuracy(let accurracy): return String(format: NSLocalizedString("newObservationError_tooInaccurate", comment: ""), accurracy.rounded(toPlaces: 2))
             }
         }
     }

@@ -51,7 +51,7 @@ enum CoreDataError: AppError {
             case .favoritedMushrooms:
                 return NSLocalizedString("databaseError_noEntries_favoritedMushrooms_message", comment: "")
             case .Notes:
-                return NSLocalizedString("You do not yet have any saved notes. This functionality enables you to save your observations locally, without uploading it before you are ready. Perhaps once you have a better internet connection", comment: "")
+                return NSLocalizedString("notebook_message", comment: "")
             default: return NSLocalizedString("databaseError_noEntries_message", comment: "")
             }
         case .readError:

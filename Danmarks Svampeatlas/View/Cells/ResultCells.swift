@@ -150,7 +150,7 @@ class UnknownSpeciesCellButton: BaseCell {
     }
     
     private func configure() {
-        titleLabel.text = NSLocalizedString("Record unidentifed mushroom", comment: "")
+        titleLabel.text = NSLocalizedString("action_selectUnknownSpecie", comment: "")
         secondaryLabel.isHidden = true
         roundedImageView.configureImage(image: #imageLiteral(resourceName: "Icons_Utils_Missing").withRenderingMode(.alwaysTemplate))
     }

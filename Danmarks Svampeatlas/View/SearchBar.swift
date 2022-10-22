@@ -203,6 +203,7 @@ extension SearchBar: ProgressBarViewDelegate {
         guard let entry = text, entry != recentSearch else {return}
         searchBarDelegate?.newSearchEntry(entry: entry)
         recentSearch = entry
+        _ = self.resignFirstResponder()
         
         UIView.animate(withDuration: 0.1, animations: {
             self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)

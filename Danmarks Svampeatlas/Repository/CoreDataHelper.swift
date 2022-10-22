@@ -137,7 +137,7 @@ class Database {
         persistentContainer.loadPersistentStores { (storeDescription, error) in
             if let _ = error as NSError? {
                 ELNotificationView.appNotification(style: .error(actions: [.neutral(CoreDataError.initError.recoveryAction?.localizableText, {
-                    UserDefaultsHelper.lastDataUpdateDate = nil
+                    UserDefaultsHelper.shouldUpdateDatabase = true
                     
                     guard let url = self.persistentContainer.persistentStoreDescriptions.first?.url else {return}
                     try? self.persistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: url, ofType: NSSQLiteStoreType, options: nil)

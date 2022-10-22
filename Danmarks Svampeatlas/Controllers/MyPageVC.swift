@@ -9,9 +9,9 @@
 import UIKit
 
 class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
-
+    
     private lazy var elNavigationBar: ELNavigationBar = {
-       let view = ELNavigationBar()
+        let view = ELNavigationBar()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.setTitle(title: session.user.name)
         
@@ -27,11 +27,6 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         return view
     }()
     
-    private lazy var menuButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: UIBarButtonItem.Style.plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu))
-        return button
-    }()
-    
     private lazy var scrollView: MyPageScrollView = {
         let view = MyPageScrollView(session: session)
         view.delegate = self
@@ -40,7 +35,7 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
+    
     private let session: Session
     
     init(session: Session) {
@@ -64,7 +59,10 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
-        self.navigationItem.setLeftBarButton(menuButton, animated: false)
+        self.navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu)), animated: false)
+       self.navigationItem.setRightBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Glyphs_Neutral"), style: .plain, target: self, action: #selector(showUserOptions)), animated: false)
+        
+ 
         navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.tintColor = UIColor.appWhite()
         super.viewWillAppear(animated)
@@ -77,9 +75,8 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
             
             if scrollView.contentInset.top != elNavigationBar.maxHeight {
                 scrollView.contentInset.top = elNavigationBar.maxHeight
-                scrollView.scrollIndicatorInsets.top = elNavigationBar.maxHeight
+                scrollView.verticalScrollIndicatorInsets = UIEdgeInsets(top: elNavigationBar.maxHeight, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
                 scrollView.contentInset.bottom = view.safeAreaInsets.bottom
-                scrollView.scrollIndicatorInsets.bottom = view.safeAreaInsets.bottom
             }
         }
         super.viewWillLayoutSubviews()
@@ -99,6 +96,39 @@ class MyPageVC: UIViewController, UIGestureRecognizerDelegate {
         elNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         elNavigationBar.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
     }
+    
+    @objc private func showUserOptions() {
+        UIAlertController(title: NSLocalizedString("navigationItem_myPageVC", comment: ""), message: NSLocalizedString("common_twoChoices", comment: ""), preferredStyle: .actionSheet).then({
+            
+            $0.addAction(.init(title: NSLocalizedString("myPageScrollView_logout", comment: ""), style: .default, handler: { [weak self] _ in
+                self?.session.logout()
+            }))
+            
+            
+            $0.addAction(.init(title: NSLocalizedString("myPage_deleteProfile", comment: ""), style: .destructive, handler: { [weak self] _ in
+                UIAlertController(title: NSLocalizedString("myPage_confirmDeletion_title", comment: ""), message: NSLocalizedString("myPage_confirmDeletion_message", comment: ""), preferredStyle: .alert).then({ vc in
+                    vc.addTextField { textField in
+                        textField.placeholder = NSLocalizedString("loginVC_passwordTextField_placeholder", comment: "")
+                        textField.isSecureTextEntry = true
+                        textField.font = .appPrimary()
+                    }
+                    vc.addAction(.init(title: NSLocalizedString("myPage_deleteProfile", comment: ""), style: .destructive, handler: { _ in
+                        guard let pw = vc.textFields?.first?.text else {return}
+                        self?.session.deleteProfile(currentPassword: pw)
+                    }))
+                    vc.addAction(.init(title: NSLocalizedString("action_cancel", comment: ""), style: .cancel))
+                }).do({
+                    self?.present($0, animated: true, completion: nil)
+                })
+                    }))
+            
+            
+            
+            $0.addAction(.init(title: NSLocalizedString("action_cancel", comment: ""), style: .cancel, handler: nil))
+        }).do({
+            present($0, animated: true, completion: nil)
+        })
+            }
 }
 
 extension MyPageVC: UIScrollViewDelegate {
@@ -106,8 +136,8 @@ extension MyPageVC: UIScrollViewDelegate {
         let appBarAdjustedOffset = scrollView.contentOffset.y + elNavigationBar.maxHeight
         let percent = 1 - (appBarAdjustedOffset / elNavigationBar.maxHeight)
         elNavigationBar.setPercentExpanded(percent)
-        }
     }
+}
 
 extension MyPageVC: NavigationDelegate {
     func presentVC(_ vc: UIViewController) {
@@ -116,7 +146,7 @@ extension MyPageVC: NavigationDelegate {
     
     func pushVC(_ vc: UIViewController) {
         DispatchQueue.main.async {
-             self.navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

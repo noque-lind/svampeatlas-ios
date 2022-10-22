@@ -45,23 +45,3 @@ struct Locality: Decodable, Encodable, Equatable {
         case geoName
     }
 }
-
-extension Locality {
-    init?(_ cdNote: CDLocality) {
-        guard let name = cdNote.name else {return nil}
-        self.id = Int(cdNote.id)
-        self.name = name
-        self.latitude = cdNote.latitude
-        self.longitude = cdNote.longitude
-        self.geoName = nil
-    }
-    
-    func toCD(context: NSManagedObjectContext) -> CDLocality {
-        (NSEntityDescription.insertNewObject(forEntityName: "CDLocality", into: context) as! CDLocality).then({
-            $0.id = Int32(id)
-            $0.name = name
-            $0.latitude = latitude
-            $0.longitude = longitude
-        })
-    }
-}

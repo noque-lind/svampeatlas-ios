@@ -7,7 +7,6 @@
 //
 
 import MapKit.MKTypes
-import Then
 import UIKit
 
 class MapViewCell: UITableViewCell {

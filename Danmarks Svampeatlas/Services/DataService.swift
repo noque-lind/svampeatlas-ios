@@ -29,6 +29,13 @@ enum Result<ReturnValue, ErrorType> {
             handler(errorType)
         }
     }
+    
+    func isSuccess() -> Bool {
+        switch self {
+        case .success: return true
+        case .failure: return false
+        }
+    }
 }
 
 class DataService {
@@ -141,12 +148,42 @@ class DataService {
     static let instance = DataService()
     weak var sessionDelegate: SessionDelegate?
     private let imagesCache = NSCache<NSString, UIImage>()
-    private let mushroomCache = NSCache<NSString, NSData>()
     private var currentlyDownloading = [String: URLSessionTask]()
     
     lazy var observationsRepository = ObservationsData(ds: self)
+    lazy var mushroomsData = MushroomsData(ds: self)
     
     //CLASS FUNCTIONS
+    
+    internal func createDataTaskRequestAsync(url: String, method: String = "GET", data: Data? = nil, contentType: String? = "application/json", contentLenght: Int? = nil, token: String? = nil, largeDownload: Bool = false) async -> Result<Data, URLSessionError> {
+        var request = URLRequest(url: URL.init(string: url)!)
+        if !largeDownload {
+            request.timeoutInterval = 20
+        }
+
+        request.httpMethod = method
+        request.httpBody = data
+
+        if let contentType = contentType {
+            request.addValue(contentType, forHTTPHeaderField: "Content-Type")
+        }
+
+        if let contentLenght = contentLenght {
+            request.addValue(String(contentLenght), forHTTPHeaderField: "Content-Lenght")
+        }
+
+        if let token = token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        
+        do {
+            let (mData, response) =  try await  URLSession.shared.data(from: request)
+            let data = try self.handleURLSession(data: mData, response: response, error: nil)
+            return Result.success(data)
+        }  catch {
+            return Result.failure(handleURLSessionError(error: error))
+        }
+    }
     
     internal func createDataTaskRequest(url: String, method: String = "GET", data: Data? = nil, contentType: String? = nil, contentLenght: Int? = nil, token: String? = nil, largeDownload: Bool = false, completion: @escaping (Result<Data, URLSessionError>) -> Void) {
         var request = URLRequest(url: URL.init(string: url)!)
@@ -184,7 +221,7 @@ class DataService {
     }
     
     internal func handleURLSession(data: Data?, response: URLResponse?, error: Error?) throws -> Data {
-        guard error == nil, let response = response as? HTTPURLResponse else {
+            guard error == nil, let response = response as? HTTPURLResponse else {
             throw handleURLSessionError(error: error)
         }
 
@@ -245,9 +282,7 @@ extension DataService {
                                       }
         }
         
-        if useCache, let data = mushroomCache.object(forKey: NSString(string: api)) {
-            handleData(data: Data(data))
-        } else {
+        
             createDataTaskRequest(url: api) { (result) in
                        switch result {
                        case .failure(let error):
@@ -257,23 +292,6 @@ extension DataService {
                        }
                    }
         }
-    }
-    
-    func getMushroom(withID id: Int, completion: @escaping (Result<Mushroom, AppError>) -> Void) {
-        createDataTaskRequest(url: API.Request.Mushroom(id: id).encodedURL) { (result) in
-            switch result {
-            case .failure(let error):
-                completion(Result.failure(error))
-            case .success(let data):
-                do {
-                    guard let mushroom = try JSONDecoder().decode([Mushroom].self, from: data).first else {completion(Result.failure(DataServiceError.extractionError)); return}
-                    completion(Result.success(mushroom))
-                } catch {
-                    completion(Result.failure(DataServiceError.decodingError(error)))
-                }
-            }
-        }
-    }
 }
 
 extension DataService {
@@ -327,11 +345,6 @@ extension DataService {
             }
         }
     }
-}
-
-extension DataService {
-
-    // POST and UPLOAD FUNCTIONS
 }
 
 extension DataService {
@@ -582,24 +595,4 @@ extension DataService {
         }
         task.resume()
     }
-    
-    func getImagePredictions(image: UIImage, completion: @escaping (Result<[PredictionResult], AppError>) -> Void) {
-        DispatchQueue.global(qos: .default).async {
-             let parameters = ["instances": [["image_in": ["b64": image.rotate().toBase64()]]]] as [String: Any]
-                   let data = try! JSONSerialization.data(withJSONObject: parameters, options: [])
-            self.createDataTaskRequest(url: API.Post.imagePredict(speciesQueries: [.attributes(presentInDenmark: nil), .danishNames, .images(required: false), .redlistData, .statistics, .acceptedTaxon]).encodedURL, method: "POST", data: data, contentType: "application/json", contentLenght: nil, token: nil) { (result) in
-                       switch result {
-                       case .failure(let error):
-                           completion(Result.failure(error))
-                       case .success(let data):
-                           do {
-                               let predictionResults = try JSONDecoder().decode([PredictionResult].self, from: data)
-                               completion(Result.success(predictionResults))
-                           } catch {
-                               completion(Result.failure(DataServiceError.decodingError(error)))
-                           }
-                   }
-               }
-        }
-}
 }

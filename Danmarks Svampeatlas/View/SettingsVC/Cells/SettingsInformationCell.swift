@@ -6,7 +6,6 @@
 //  Copyright © 2020 NaturhistoriskMuseum. All rights reserved.
 //
 
-import Then
 import UIKit
 
 class SettingsInformationCell: UITableViewCell {

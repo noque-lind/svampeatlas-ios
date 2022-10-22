@@ -58,6 +58,8 @@ class CameraVC: UIViewController {
     
     var onImageCaptured: ((URL) -> Void)?
     
+    private let recognitionService = RecognitionService()
+    
     private var currentImageURL: URL?
     private let usage: Usage
     private var errorView: ErrorView?
@@ -224,18 +226,26 @@ class CameraVC: UIViewController {
     }
     
     private func getPredictions(imageURL: URL) {
-        guard let image = UIImage.init(url: imageURL) else {return}
-           DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
-               switch result {
-               case .failure(let error):
-                   self?.cameraView.showError(error: error)
-               case .success(let predictions):
-                   self?.cameraView.showResults(results: predictions)
-               }
-           }
+        Task.init(priority: .userInitiated) { [weak self] in
+            _ = await recognitionService.addImage(imageURL: imageURL)
+            let result = await recognitionService.getResults()
+            
+            switch result {
+            case .success(let result):
+               let predictions = await DataService.instance.mushroomsData.fetchMushrooms(from: result)
+                DispatchQueue.main.async {
+                    self?.cameraView.showResults(results: predictions, reliablePrediction: result.reliablePrediction ?? false)
+                }
+              
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.cameraView.showError(error: error)
+                }
+            }
+        }
        }
     
-    private func createNewObservationRecord(imageURL: URL?, mushroom: Mushroom?, predictionResults: [PredictionResult]?, session: Session) {
+    private func createNewObservationRecord(imageURL: URL?, mushroom: Mushroom?, predictionResults: [Prediction]?, session: Session) {
         
         // When CameraVC is in the context of creating a newObservation Record and show the AddObservationVC.
         
@@ -269,6 +279,8 @@ class CameraVC: UIViewController {
 }
 
 extension CameraVC: CameraViewDelegate {
+
+    
     func move(expanded: Bool) {
         cameraViewTopConstraint.constant = expanded ? ( -avView.frame.height / 4) * 3: 0
     }
@@ -314,7 +326,7 @@ extension CameraVC: CameraViewDelegate {
         reset()
     }
     
-    func mushroomSelected(predictionResult: PredictionResult, predictionResults: [PredictionResult]) {
+    func mushroomSelected(predictionResult: Prediction, predictionResults: [Prediction]) {
         switch usage {
         case .mlPredict(session: let session):
             if let session = session {

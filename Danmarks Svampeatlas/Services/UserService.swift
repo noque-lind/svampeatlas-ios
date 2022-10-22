@@ -9,6 +9,7 @@
 import ELKit
 import Foundation
 import UIKit.UIImage
+import Security
 
 protocol SessionDelegate: class {
     func userUpdated(user: User)
@@ -69,6 +70,22 @@ class Session {
     func logout() {
         CoreDataHelper.deleteUser()
         UserDefaultsHelper.token = nil
+        DispatchQueue.main.async {
+            (UIApplication.shared.delegate as? AppDelegate)?.session = nil
+        }
+    }
+    
+    func deleteProfile(currentPassword: String) {
+        let dataEmail = try? JSONSerialization.data(withJSONObject: ["email": "bruger-slettet@svampe.dk"], options: [])
+        let dataName = try? JSONSerialization.data(withJSONObject: ["name": "Anonym bruger"], options: [])
+        let dataPw = try? JSONSerialization.data(withJSONObject: ["oldPassword": currentPassword, "newPassword": SecCreateSharedWebCredentialPassword()! as String], options: [])
+        Task {
+            let deleteEmailResult =  await DataService.instance.createDataTaskRequestAsync(url: API.Put.changeEmail.encodedURL, method: "PUT", data: dataEmail, contentType: "application/json", token: self.token)
+            let deleteNameResult = await DataService.instance.createDataTaskRequestAsync(url: API.Put.changeName.encodedURL, method: "PUT", data: dataName, contentType: "application/json", token: self.token)
+            let changePasswordResult = await DataService.instance.createDataTaskRequestAsync(url: API.Put.changePassword(userId: user.id).encodedURL, method: "PUT", data: dataPw, contentType: "application/json", token: self.token)
+            guard deleteEmailResult.isSuccess() && deleteNameResult.isSuccess() && changePasswordResult.isSuccess() else {return}
+            logout()
+        }
     }
     
     func getNotificationCount(completion: @escaping (Result<Int, AppError>) -> Void) {

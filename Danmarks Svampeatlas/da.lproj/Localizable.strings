@@ -36,7 +36,7 @@ Created by simplelocalize.io
 "addObservationError_imageUploadError" = "Men der skete en fejl med at uploade billedet/ne. %1$d ud af %2$d billeder er blevet uploaded";
 "addObservationVC_localityFoundError_title" = "Nærmeste placering kunne ikke findes.";
 "addObservationVC_localityFound_title" = "Fundets placering er blevet bestemt";
-"addObservationVC_observationCategories_details" = "Detajler";
+"addObservationVC_observationCategories_details" = "Detaljer";
 "addObservationVC_observationCategories_location" = "Lokalitet";
 "addObservationVC_observationCategories_species" = "Art";
 "addObservationVC_successfullUpload_title" = "Dit fund er blevet oprettet";
@@ -68,7 +68,7 @@ Created by simplelocalize.io
 "common_upload" = "Indsend";
 "containedResultCell_genus" = "Slægt: ";
 "creditationCell_ai" = "Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
-"creditationCell_aiNewObservation" = "Disse navneforslag er baseret på det første billede du har tilføjet til dette fund. Billedegenkendelses systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
+"creditationCell_aiNewObservation" = "Disse navneforslag er baseret på billederne du har tilføjet til observationen. Metadata såsom substrat, vegetationstype og måned indgår også i algoritmen navneforslagene er baseret på. \n\nBilledegenkendelses systemet er udviklet af Milan Šulc og \nProfessor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas.";
 "dataServiceError_decodingError_message" = "Den modtagne data kunne ikke læses";
 "dataServiceError_decodingError_title" = "Dekodningsfejl";
 "dataServiceError_empty_message" = "Svaret indeholdte ingen data";
@@ -177,6 +177,10 @@ Created by simplelocalize.io
 "myPageScrollView_logout" = "Log ud";
 "myPageScrollView_notificationsHeader" = "Notifikationer";
 "myPageScrollView_observationsHeader" = "Observationer";
+"myPage_changeDetails" = "Skift brugeroplysninger";
+"myPage_confirmDeletion_message" = "Når du har sletter din profil, kan du ikke få den tilbage. Dine fund slettes ikke, men alt information knyttet til dig forsvinder.";
+"myPage_confirmDeletion_title" = "Er du sikker?";
+"myPage_deleteProfile" = "Slet profil";
 "navigationItem_about" = "Om";
 "navigationItem_cameraVC" = "Navneforslag";
 "navigationItem_facebook" = "Facebook";
@@ -197,6 +201,7 @@ Created by simplelocalize.io
 "newObservationError_noSubstrateGroup_message" = "Du mangler at angive et substrat.";
 "newObservationError_noVegetationType_message" = "Du mangler at angive en vegetationstype.";
 "newObservationError_tooInaccurate" = "Den nuværende præcision er: %0.2f m, hvilket er for upræcist. Vil du bruge din nuværende placering i stedet for?";
+"note_createdDate" = "Note oprettet: %@";
 "notebook_message" = "Du har ingen gemte noter. Denne funktionalitet lader dig gemme observationer lokalt uden at indsende dem før du er klar. Det er smart hvis du tit har dårlig forbindelse når du er ude og finde svampe.";
 "notebook_title" = "Notesbog";
 "notificationCell_determinationExpertApproved" = " er blevet ekspertgodkendt";
@@ -244,6 +249,9 @@ Created by simplelocalize.io
 "precision" = "Præcision %.2f m.";
 "prompt_taxonData_message" = "For at du kan bruge denne funktionalitet, skal du have data downloaded til offline brug. Hvis du allerede har hentet data, skal dataen opdateres. Gør kun dette hvis du har en god internet forbindelse. Er du klar?";
 "prompt_taxonData_title" = "Vil du gerne hente data til offline brug?";
+"recognitionServiceError_addingDataError_message" = "Der skete en fejl i forbindelse med at tilføje input til navneforslags servicen";
+"recognitionServiceError_addingFetchingResults_message" = "Der skete en fejl i forbindelse med at hente forslag fra navneforslags servicen.";
+"recognitionServiceError_title" = "Kunne ikke finde navneforslag";
 "recoveryAction_activate" = "Aktivér";
 "recoveryAction_login" = "Log ind";
 "recoveryAction_openSettings" = "Åben indstillinger";
@@ -256,6 +264,8 @@ Created by simplelocalize.io
 "reloadCell_tryAgain" = "Prøv igen";
 "resultsView_header_message" = "Bemærk at disse forslag er vejledende og aldrig må stå alene, hvis du ønsker at spise de svampe du har fundet.";
 "resultsView_header_title" = "Vi har %d forslag til dig";
+"resultsView_unpredictable_message" = "Vi kunne ikke med en tilstrækkelig sikkerhed give dig et bestemmelsesforslag, nedenfor ser du blot vores bedste gæt.";
+"resultsView_unpredictable_title" = "Ingen tilstrækkelige forslag";
 "searchBar_placeholder" = "Søg efter en art her ...";
 "searchCell_title" = "Søg på en vært her 👇";
 "searchVC_cancelButton" = "Annuller";
@@ -318,5 +328,6 @@ Created by simplelocalize.io
 "notificationCell_determinationApproved_1" = "Et fund du følger er blevet valideret og godkendt som: ";
 "notificationCell_commentAdded_2" = "som du følger.";
 "notificationCell_determinationAdded_2" = " til et fund som du følger.";
-"whats_new_2_0" = "Vi har netop lanceret en ny version af Svampeatlas appen (version 2.0), og denne gang med ganske væsentlige ændringer og forbedringer. Mest væsentligt er:\n\n1)	Ændret indberetningsflow. Vi har byttet om på rækkefølgen når man opretter et nyt fund, så man starter med lokalitet, dernæst vælger habitat, substrat og vært for til sidst at vælge art. Ændringen skyldes først og fremmest at vi snart vil lancere en ny forbedret version af vores billedgenkendelses AI, som vil give bedre artsforslag baseret på data om habitat og substrat. Ønsker du fremover at starte med at få et artsforslag kan du stadig bruge funktionen navneforslag i sidemenuen\n\n2)	Mulighed for at låse lokalitetnavn og koordinater. Vi har gjort det muligt at låse lokalitetsnavn og eventuelt også fund-koordinater, hvis man indberetter mange fund fra den samme lokalitet, eller fra et enkelt hotspot. Dermed kan man spare tid og batteri i felten og samtidigt få mere konsistente lokalitetsnavne på dine fund. Funktionen kan nulstilles manuelt eller automatisk efter en time.\n\n3)	Forenkling af notesbogfunktion. Vi har nu opdateret notesbogfunktionen så den ikke kan anvende AI til artsbestemmelse eller søge efter lokalitetsnavne når du opretter nye noter. Du kan stadig vælge artsnavne fra din artsliste på telefonen og tilføje metadata, men AI og valg af lokalitet aktiveres først når du åbner fundet fra notesbogen igen for at redigere det inden du oploader det til Svampeatlas. Formålet med ændringen er at spare tid og batteri i felten, så du udelukkende kan koncentrere dig om at oprette svampefund. Koordinater kobles enten til de foto du tilføjer i notesbogen eller din placering når en ny fundnote oprettes uden foto. Husk derfor at tage fotos eller oprette noter lige der hvor din svamp er fundet.\n\nDerudover er der gennemført en række mindre forbedringer og bug fixes. Man kan igen søge arter ved hjælp af 3 + 3 koder (fx ama mus for Amanita muscaria), ligesom billedvisning på artspræsentationer er forbedret.   ";
+"whats_new_2_0" = "Vi har netop lanceret en ny version af Svampeatlas appen (version 2.0), og denne gang med ganske væsentlige ændringer og forbedringer. Mest væsentligt er:\n\n1) Changed reporting flow. \n2) It is possible to lock coordinates and localities.\n3) Simplification of the notebook functionality\n4) Bug fixes";
+"whats_new_3_0" = "Vi har netop lanceret en ny version af Svampeatlas appen (version 3.0), og denne gang med ganske væsentlige ændringer og forbedringer. Mest væsentligt er:\n\n1) Ny forbedret version af billedgenkendelse. Vi har opdateret vores algoritmer, og billedegenkendelsen baserer nu sine forslag på alle billeder du tilføjer til et fund. Data såsom substrat og vegetationstype indgår også i en forbedring af navneforslagene.\n2) Diverse fejlrettelser\n\nTidligere versioner:\n\n2.0:\n1)	Ændret indberetningsflow. Vi har byttet om på rækkefølgen når man opretter et nyt fund, så man starter med lokalitet, dernæst vælger habitat, substrat og vært for til sidst at vælge art. Ændringen skyldes først og fremmest at vi snart vil lancere en ny forbedret version af vores billedgenkendelses AI, som vil give bedre artsforslag baseret på data om habitat og substrat. Ønsker du fremover at starte med at få et artsforslag kan du stadig bruge funktionen navneforslag i sidemenuen\n\n2)	Mulighed for at låse lokalitetnavn og koordinater. Vi har gjort det muligt at låse lokalitetsnavn og eventuelt også fund-koordinater, hvis man indberetter mange fund fra den samme lokalitet, eller fra et enkelt hotspot. Dermed kan man spare tid og batteri i felten og samtidigt få mere konsistente lokalitetsnavne på dine fund. Funktionen kan nulstilles manuelt eller automatisk efter en time.\n\n3)	Forenkling af notesbogfunktion. Vi har nu opdateret notesbogfunktionen så den ikke kan anvende AI til artsbestemmelse eller søge efter lokalitetsnavne når du opretter nye noter. Du kan stadig vælge artsnavne fra din artsliste på telefonen og tilføje metadata, men AI og valg af lokalitet aktiveres først når du åbner fundet fra notesbogen igen for at redigere det inden du oploader det til Svampeatlas. Formålet med ændringen er at spare tid og batteri i felten, så du udelukkende kan koncentrere dig om at oprette svampefund. Koordinater kobles enten til de foto du tilføjer i notesbogen eller din placering når en ny fundnote oprettes uden foto. Husk derfor at tage fotos eller oprette noter lige der hvor din svamp er fundet.\n\nDerudover er der gennemført en række mindre forbedringer og bug fixes. Man kan igen søge arter ved hjælp af 3 + 3 koder (fx ama mus for Amanita muscaria), ligesom billedvisning på artspræsentationer er forbedret.   ";
 

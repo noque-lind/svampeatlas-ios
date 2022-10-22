@@ -137,10 +137,6 @@ class UserObservation {
             observationLocation =  (location, location.timestamp == UserDefaultsHelper.lockedLocation?.timestamp)
         }
         
-        if let cdLocality = note.locality, let locality = Locality(cdLocality) {
-            self.locality = (locality, locality == UserDefaultsHelper.lockedLocality)
-        }
-        
         if let images = note.images?.allObjects as? [CDNoteImage] {
             self.images = images.compactMap({
                 guard let url = $0.url, let filename = $0.filename else {return nil}
@@ -179,11 +175,11 @@ class UserObservation {
     }
     
     func validate(overrideAccuracy: Bool) -> ValidationError? {
-        guard locality != nil else {return .noLocality}
         guard let observationLocation = observationLocation?.item else {return .noCoordinates}
         if !overrideAccuracy {
             guard observationLocation.horizontalAccuracy <= 150 else {return .lowAccuracy(accurracy: observationLocation.horizontalAccuracy)}
         }
+        guard locality != nil else {return .noLocality}
         guard substrate != nil else {return .noSubstrateGroup}
         guard vegetationType != nil else {return .noVegetationType}
         guard mushroom != nil else {return .noMushroom}
@@ -197,9 +193,9 @@ class UserObservation {
         guard let observationCoordinate = observationLocation else {return nil}
 
         var dict: [String: Any] = [:]
-        dict["observationDate"] = observationDate.convert(into: "yyyy-MM-dd")
         dict["os"] = "iOS"
-        dict["browser"] = "Native App"
+        dict["browser"] = "Native App - \(UIApplication.currentVersion())"
+        dict["observationDate"] = observationDate.convert(into: "yyyy-MM-dd")
         dict["substrate_id"] = substrate.id
         dict["vegetationtype_id"] = vegetationType.id
         dict["decimalLatitude"] = observationCoordinate.item.coordinate.latitude

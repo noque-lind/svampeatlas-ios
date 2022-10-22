@@ -43,6 +43,12 @@ class ObservationImagesView: UIView {
     var imageDeleted: ((UserObservation.Image) -> Void)?
     var shouldAnimateHeight: ((CGFloat) -> Void)?
     
+    var isEnabled: Bool = true {
+        didSet {
+            collectionView.isUserInteractionEnabled = isEnabled
+            collectionView.alpha = isEnabled ? 1.0: 0.4
+        }
+    }
     var isExpanded: Bool = false
     
     private var images = [UserObservation.Image]() {

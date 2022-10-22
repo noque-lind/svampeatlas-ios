@@ -26,6 +26,7 @@ struct Mushroom: Decodable, Equatable {
     public private(set) var rankName: String?
     public private(set) var statistics: Statistics?
     public private(set) var attributes: Attributes?
+    public private(set) var acceptedTaxon: AcceptedTaxon?
     private var vernacularNameDK: VernacularNameDK?
     private var redlistData: [RedlistData]?
     private var _images: [Image]?
@@ -65,6 +66,7 @@ struct Mushroom: Decodable, Equatable {
         case attributes
         case _images = "Images"
         case statistics = "Statistics"
+        case acceptedTaxon
     }
     
     private init(id: Int, fullName: String, isGenus: Bool) {
@@ -100,6 +102,10 @@ struct Mushroom: Decodable, Equatable {
         updatedAt = cdMushroom.updatedAt
         redlistData = [RedlistData(status: cdMushroom.redlistStatus)]
         probability = Int(cdMushroom.probability)
+        
+        if cdMushroom.acceptedId != 0 {
+            acceptedTaxon = AcceptedTaxon(id: Int(cdMushroom.acceptedId), fullName: "")
+        }
         
         if let cdAttributes = cdMushroom.attributes {
             attributes = Attributes(cdAttributes)

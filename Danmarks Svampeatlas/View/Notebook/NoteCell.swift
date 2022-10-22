@@ -167,17 +167,7 @@ class NoteCell: UITableViewCell {
         
         imageCountLabel.text = "\(note.images?.allObjects.count ?? 0)"
        
-        upperTitle.text = "\(note.observationDate?.convert(into: .short, ignoreRecentFormatting: true, ignoreTime: true) ?? "Ingen dato") | \(note.locality?.name ?? "Lokation ikke valgt")"
+        upperTitle.text = "\(NSLocalizedString("observationDetailsScrollView_observationDate", comment: "")) \(note.observationDate?.convert(into: .short, ignoreRecentFormatting: true, ignoreTime: true) ?? "Ingen dato")"
         mainTitle.text = note.specie != nil ? (note.specie?.danishName ?? note.specie?.fullName): "Ikke valgt art"
-        
-//        guard note.specie != nil, note.vegetationType != nil, note.substrate != nil, note.locality != nil, note.location != nil else {
-//            actionButton.isEnabled = false
-//            statusLabel.text = NSLocalizedString("✗ Not ready for upload", comment: "")
-//            statusLabel.textColor = .appRed()
-//            return}
-//        statusLabel.text = NSLocalizedString("✔︎ Ready for upload", comment: "")
-//        statusLabel.textColor = .appGreen()
-//        actionButton.isEnabled = true
-    
     }
 }

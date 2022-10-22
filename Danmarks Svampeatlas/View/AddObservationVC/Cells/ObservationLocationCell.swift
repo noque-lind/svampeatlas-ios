@@ -11,30 +11,14 @@ import UIKit
 
 class ObservationLocationCell: UICollectionViewCell {
 
-    private lazy var settingsButton = UIButton().then({
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+    private lazy var settingsButton = IconButton().then({
         $0.addTarget(self, action: #selector(openSettingsModal), for: UIControl.Event.touchUpInside)
-        let size: CGFloat = 40
-        $0.widthAnchor.constraint(equalToConstant: size).isActive = true
-        $0.heightAnchor.constraint(equalToConstant: size).isActive = true
-        let inset = (size / 2) - 14
-        $0.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         $0.setImage(#imageLiteral(resourceName: "Glyphs_Settings"), for: [])
-        $0.layer.cornerRadius = CGFloat.cornerRadius()
     })
 
-    private lazy var retryButton = UIButton().then({
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+    private lazy var retryButton = IconButton().then({
         $0.addTarget(self, action: #selector(getNearbyLocalities), for: UIControl.Event.touchUpInside)
-        let size: CGFloat = 40
-        $0.widthAnchor.constraint(equalToConstant: size).isActive = true
-        $0.heightAnchor.constraint(equalToConstant: size).isActive = true
-        let inset = (size / 2) - 14
-        $0.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
         $0.setImage(#imageLiteral(resourceName: "Glyphs_Reload"), for: [])
-        $0.layer.cornerRadius = CGFloat.cornerRadius()
     })
     
     private lazy var precisionLabel = UILabel().then({
@@ -43,24 +27,16 @@ class ObservationLocationCell: UICollectionViewCell {
         $0.font = UIFont.appPrimary()
     })
     
-    private lazy var annotationButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.appGreen().withAlphaComponent(0.5)
-        button.addTarget(self, action: #selector(annotationButtonPressed), for: .touchUpInside)
-        let size: CGFloat = 40
-        button.widthAnchor.constraint(equalToConstant: size).isActive = true
-        button.heightAnchor.constraint(equalToConstant: size).isActive = true
-        let inset = (size / 2) - 14
-        button.contentEdgeInsets = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        button.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_Location_Alternative"), for: [])
-        button.layer.shadowOffset = CGSize.shadowOffset()
-        button.layer.shadowOpacity = Float.shadowOpacity()
-        button.layer.cornerRadius = CGFloat.cornerRadius()
+    private lazy var annotationButton = IconButton().then({
+        $0.backgroundColor = UIColor.appGreen().withAlphaComponent(0.5)
+        $0.addTarget(self, action: #selector(annotationButtonPressed), for: .touchUpInside)
+        $0.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_Location_Alternative"), for: [])
+        $0.layer.shadowOffset = CGSize.shadowOffset()
+        $0.layer.shadowOpacity = Float.shadowOpacity()
+        $0.layer.cornerRadius = CGFloat.cornerRadius()
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleGesture(gesture:)))
-        button.addGestureRecognizer(panGestureRecognizer)
-        return button
-    }()
+        $0.addGestureRecognizer(panGestureRecognizer)
+    })
     
     private lazy var mapView: NewMapView = {
         let view = NewMapView(type: .localities)
@@ -69,7 +45,7 @@ class ObservationLocationCell: UICollectionViewCell {
         view.filterByCategory(category: .regular)
         view.localityPicked = { [unowned self] locality in
             if locality != self.viewModel?.locality.value?.locality {
-                self.didSelectLocality(locality: locality)
+                self.viewModel?.setLocality(locality: locality)
             }
         }
         return view
@@ -89,7 +65,33 @@ class ObservationLocationCell: UICollectionViewCell {
     }()
     
     private var localities = [Locality]()
-    weak var viewModel: AddObservationViewModel?
+    weak var viewModel: AddObservationViewModel? {
+        didSet {
+            viewModel?.observationLocation.observe(listener: { [weak self] state in
+                switch state {
+                case .error(error: let error, handler: let handler):
+                    self?.mapView.showError(error: error as! AppError, handler: handler)
+                case .items(item: let item):
+                    self?.configureLocation(location: item.item, locked: item.locked)
+                default: return
+                }
+            })
+            
+            viewModel?.localities.observe(listener: { [weak self] state in
+                switch state {
+                case .items(item: let items): self?.configureLocalities(localities: items)
+                default: return
+                }
+            })
+            
+            
+            viewModel?.locality.observe(listener: { [weak self] locality in
+                if let locality = locality {
+                    self?.configureLocality(locality: locality.locality, locked: locality.locked)
+                }
+            })
+        }
+    }
     weak var delegate: NavigationDelegate?
 
     override init(frame: CGRect) {
@@ -103,7 +105,7 @@ class ObservationLocationCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        mapView.layoutMargins = UIEdgeInsets(top: 0.0, left: 0.0, bottom: (frame.height - collectionView.frame.minY) + 8, right: 0.0)
+//        mapView.layoutMargins = UIEdgeInsets(top: 0.0, left: 0.0, bottom: (frame.height - collectionView.frame.minY) + 8, right: 0.0)
     }
     
     private func setupView() {
@@ -158,6 +160,7 @@ class ObservationLocationCell: UICollectionViewCell {
             $0.topAnchor.constraint(equalTo: retryButton.bottomAnchor, constant: 8).isActive = true
             $0.centerXAnchor.constraint(equalTo: retryButton.centerXAnchor).isActive = true
         })
+            
         
         precisionView.do({
             $0.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8).isActive = true
@@ -219,18 +222,14 @@ class ObservationLocationCell: UICollectionViewCell {
     @objc private func annotationButtonPressed() {
         delegate?.presentVC(ModalVC(terms: .localityHelper))
     }
-    
-    private func didSelectLocality(locality: Locality) {
-        viewModel?.setLocality(locality: locality)
-    }
-        
-    func configureLocalities(localities: [Locality]) {
+            
+    private func configureLocalities(localities: [Locality]) {
         self.localities = localities
         collectionView.reloadData()
         mapView.addLocalityAnnotations(localities: localities)
     }
     
-    func configureLocation(location: CLLocation, locked: Bool) {
+    private func configureLocation(location: CLLocation, locked: Bool) {
         mapView.clearAnnotations()
         mapView.addLocationAnnotation(location: location.coordinate)
         precisionLabel.text = (locked ? "🔒 ": "") + String.localizedStringWithFormat(NSLocalizedString("precision", comment: ""), location.horizontalAccuracy.rounded(toPlaces: 2))
@@ -238,7 +237,7 @@ class ObservationLocationCell: UICollectionViewCell {
         mapView.setRegion(center: location.coordinate)
     }
     
-    func configureLocality(locality: Locality, locked: Bool) {
+    private func configureLocality(locality: Locality, locked: Bool) {
         self.collectionView.reloadData()
         self.mapView.selectAnnotationAtCoordinate(locality.location.coordinate)
         if let selected = collectionView.indexPathsForSelectedItems {

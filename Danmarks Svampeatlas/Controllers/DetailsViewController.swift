@@ -82,7 +82,7 @@ class DetailsViewController: UIViewController {
         
         switch detailsContent {
         case .mushroom(mushroom: let mushroom):
-            vm = .init(mushroom: mushroom)
+            vm = .init(mushroomID: mushroom.id)
         case .observation(observation: let observation, showSpeciesView: let showSpeciesView):
             vm = .init(observation: observation, showSpecies: showSpeciesView)
         case .mushroomWithID(taxonID: let id):
@@ -498,7 +498,10 @@ extension DetailsViewController: CellProviderDelegate {
                         $0.addAction(.init(title: NSLocalizedString("action_deleteObservation", comment: ""), style: .destructive, handler: { [weak self] (_) in
                             Spinner.start(onView: self?.view)
                             session.deleteObservation(id: observation.id) { (result) in
-                                Spinner.stop()
+                                DispatchQueue.main.async {
+                                    Spinner.stop()
+                                }
+                              
                                 switch result {
                                 case .failure(let error):
                                     DispatchQueue.main.async {

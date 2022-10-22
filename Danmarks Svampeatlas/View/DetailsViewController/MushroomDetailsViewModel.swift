@@ -19,7 +19,13 @@ class DetailsViewControllerViewModel: NSObject {
     
     let type: Type
     
-    lazy var mushroom = ELListener<SimpleState<Mushroom>>.init(.empty)
+    lazy var mushroom = ELListener<SimpleState<Mushroom>>.init(.empty) { [weak self] state in
+        switch state {
+        case .items(item: let mushroom):
+            self?.fetchRelatedObservations(id: mushroom.id)
+        default: return
+        }
+    }
     lazy var observation = ELListener<SimpleState<Observation>>(.empty)
     
     lazy var relatedObservations = ELListener<State<Observation>>.init(.empty)
@@ -91,14 +97,9 @@ class DetailsViewControllerViewModel: NSObject {
     convenience init(mushroomID: Int) {
         self.init(type: .mushroom(id: mushroomID))
         fetchMushroom(id: mushroomID)
+        
     }
-    
-    convenience init(mushroom: Mushroom) {
-        self.init(type: .mushroom(id: mushroom.id))
-        self.mushroom.set(.items(item: mushroom))
-        fetchRelatedObservations(id: mushroom.id)
-    }
-    
+        
     private func fetchRelatedObservations(id: Int) {
         relatedObservations.set(.loading)
         DataService.instance.getObservationsForMushroom(withID: id, limit: 20, offset: 0) { [weak relatedObservations] (result) in
@@ -155,13 +156,13 @@ class DetailsViewControllerViewModel: NSObject {
     
     private func fetchMushroom(id: Int) {
         mushroom.set(.loading)
-        DataService.instance.getMushroom(withID: id) { [weak self] (result) in
-            switch result {
-            case .failure(let error):
-                self?.mushroom.set(.error(error: error, handler: nil))
-            case .success(let mushroom):
-                self?.mushroom.set(.items(item: mushroom))
+        Task.init { [weak self] in
+                switch await DataService.instance.mushroomsData.getMushroom(id: id, ignoreLocal: true) {
+                case .failure(let error):
+                    self?.mushroom.set(.error(error: error, handler: nil))
+                case .success(let mushroom):
+                    self?.mushroom.set(.items(item: mushroom))
+                }
             }
-        }
     }
 }

@@ -71,6 +71,7 @@ struct API {
         case Mushrooms(searchString: String?, speciesQueries: [SpeciesQueries], limit: Int?, offset: Int)
         case Mushroom(id: Int)
         case Hosts(searchString: String?)
+        case ImagePredictionGetResults(id: String)
         
         var encodedURL: String {
             
@@ -123,7 +124,6 @@ struct API {
                 
                 queryItems.append(URLQueryItem(name: "include", value: parseSpeciesQueries(queries: speciesQueries)))
                 url.queryItems = queryItems
-                print(url.url!.absoluteString)
                 return url.url!.absoluteString
                 
             case .Mushroom(id: let id):
@@ -132,10 +132,9 @@ struct API {
                 url.host = "svampe.databasen.org"
                 url.path = "/api/taxa"
                 
-                let limitQuery = URLQueryItem(name: "include", value: parseSpeciesQueries(queries: [SpeciesQueries.attributes(presentInDenmark: nil), SpeciesQueries.danishNames, SpeciesQueries.images(required: false), SpeciesQueries.redlistData, SpeciesQueries.statistics]))
+                let limitQuery = URLQueryItem(name: "include", value: parseSpeciesQueries(queries: [SpeciesQueries.attributes(presentInDenmark: nil), SpeciesQueries.acceptedTaxon, SpeciesQueries.danishNames, SpeciesQueries.images(required: false), SpeciesQueries.redlistData, SpeciesQueries.statistics]))
                 let whereQuery = URLQueryItem(name: "where", value: "{\"_id\":\(id)}")
                 url.queryItems = [limitQuery, whereQuery]
-                //                debugPrint(url.url!.absoluteString)
                 return url.url!.absoluteString
             case .Hosts(searchString: let searchString):
                 
@@ -148,8 +147,8 @@ struct API {
                     
                 }
                 return url
-            default:
-                return ""
+            case .ImagePredictionGetResults(id: let id):
+                return "https://fungi.piva-ai.com/get_results/\(id)"
             }
         }
     }
@@ -157,6 +156,8 @@ struct API {
     enum Post {
         case comment(taxonID: Int)
         case offensiveContentComment(taxonID: Int)
+        case ImagePredictionAddPhoto(id: String?)
+        case ImagePredictionAddMetadata(id: String)
         case imagePredict(speciesQueries: [SpeciesQueries])
         
         var encodedURL: String {
@@ -171,10 +172,16 @@ struct API {
                 url.host = "svampe.databasen.org"
                 url.path = "/api/imagevision"
                 url.queryItems = [URLQueryItem(name: "include", value: parseSpeciesQueries(queries: speciesQueries))]
-                print(url.url!.absoluteString)
                 return url.url!.absoluteString
-            default:
-                return ""
+            case .ImagePredictionAddPhoto(id: let id):
+                var url =  "https://fungi.piva-ai.com/add_photo"
+                if let id = id {
+                    url.append(contentsOf: "/\(id)")
+                }
+                return url
+            case .ImagePredictionAddMetadata(id: let id):
+                return "https://fungi.piva-ai.com/add_metadata/\(id)"
+            
             }
         }
     }
@@ -182,14 +189,19 @@ struct API {
     enum Put {
         case observation(id: Int)
         case notificationLastRead(notificationID: Int)
-        
+        case changeEmail
+        case changeName
+        case changePassword(userId: Int)
         var encodedURL: String {
             switch self {
+            case .changePassword(userId: let userId): return BASE_URL_API + "users/\(userId)/password"
+            case .changeName: return BASE_URL_API + "users/me/name"
+            case .changeEmail:
+                return BASE_URL_API + "users/me/email"
             case .observation(id: let id):
                 return BASE_URL_API + "observations/\(id)"
             case .notificationLastRead(let notificationID):
                 let url = BASE_URL_API + "users/me/feed/\(notificationID)/lastread"
-                //                debugPrint(url)
                 return BASE_URL_API + "users/me/feed/\(notificationID)/lastread"
             }
         }
@@ -344,7 +356,6 @@ struct API {
     
     static func observationsURL(includeQueries: [ObservationIncludeQueries], limit: Int, offset: Int) -> String {
         let url = BASE_URL_API + "observations?_order=%5B%5B%22observationDate%22,%22DESC%22,%22ASC%22%5D,%5B%22_id%22,%22DESC%22%5D%5D" + includeQuery(includeQueries: includeQueries) + "&limit=\(limit)&offset=\(offset)&where=%7B%7D"
-        //        print(url)
         return url
     }
     
@@ -396,7 +407,6 @@ struct API {
             return result
         } else {
             let url = BASE_URL_API + "geonames/findnearby?lat=\(coordinates.latitude)&lng=\(coordinates.longitude)"
-            //            print(url)
             return url
         }
         
@@ -451,7 +461,6 @@ func SEARCHFORMUSHROOM_URL(searchTerm: String) -> String {
     }
     
     let returned = BASE_URL_API + "taxa?" + "include=%5B%7B%22model%22%3A%22TaxonRedListData%22%2C%22as%22%3A%22redlistdata%22%2C%22required%22%3Afalse%2C%22attributes%22%3A%5B%22status%22%5D%2C%22where%22%3A%22%7B%5C%22year%5C%22%3A2009%7D%22%7D%2C%7B%22model%22%3A%22Taxon%22%2C%22as%22%3A%22acceptedTaxon%22%7D%2C%7B%22model%22%3A%22TaxonAttributes%22%2C%22as%22%3A%22attributes%22%2C%22attributes%22%3A%5B%22PresentInDK%22%2C%20%22forvekslingsmuligheder%22%2C%20%22oekologi%22%2C%20%22diagnose%22%5D%2C%22where%22%3A%22%7B%7D%22%7D%2C%7B%22model%22%3A%22TaxonDKnames%22%2C%22as%22%3A%22Vernacularname_DK%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonStatistics%22%2C%22as%22%3A%22Statistics%22%2C%22required%22%3Afalse%7D%2C%7B%22model%22%3A%22TaxonImages%22%2C%22as%22%3A%22images%22%2C%22required%22%3Afalse%7D%5D" + "&nocount=true&where=%7B%22%24or%22%3A%5B%7B%22FullName%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22%24Vernacularname_DK.vernacularname_dk%24%22%3A%7B%22like%22%3A%22%25\(fullSearchTerm)%25%22%7D%7D%2C%7B%22FullName%22%3A%7B%22like%22%3A%22\(genus)%25%22%7D%2C%22TaxonName%22%3A%7B%22like%22%3A%22\(taxonName)%25%22%7D%7D%5D%7D"
-    //    print(returned)
     return returned
 }
 

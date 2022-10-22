@@ -321,7 +321,7 @@ extension ObservationSpecieCell: CustomSearchBarDelegate {
         tableView.performUpdates(updates: { (updater) in
             updater.updateSection(section: self.middleSection)
         }) { [weak middleSection, weak tableView] in
-            if UserDefaultsHelper.lastDataUpdateDate != nil {
+            if UserDefaultsHelper.offlineDatabasePresent {
                 Database.instance.mushroomsRepository.searchTaxon(searchString: entry) { result in
                     switch result {
                     case .failure(let error):

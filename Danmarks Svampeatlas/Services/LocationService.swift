@@ -8,6 +8,7 @@
 
 import ELKit
 import MapKit
+import LogRocket
 
 protocol LocationManagerDelegate: class {
     func locationInaccessible(error: LocationManager.LocationManagerError)
@@ -111,7 +112,15 @@ class LocationManager: NSObject {
         case .high: locationManager?.desiredAccuracy = 65
         case .low: locationManager?.desiredAccuracy = accuracy.value
         }
-        locationManager?.requestWhenInUseAuthorization()
+        if #available(iOS 14.0, *) {
+            if locationManager?.authorizationStatus == .denied || locationManager?.authorizationStatus == .restricted {
+                state.set(.error(error: .permissionDenied))
+            } else if CLLocationManager.authorizationStatus() == .denied || CLLocationManager.authorizationStatus() == .restricted {
+                state.set(.error(error: .permissionDenied))
+            } else {
+                locationManager?.requestWhenInUseAuthorization()
+            }
+        }
     }
     
     private func startUpdatingLocation() {
@@ -166,6 +175,7 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        Logger.error(message: error.localizedDescription)
         if let error = CLError.Code.init(rawValue: (error as NSError).code) {
             switch error {
             case .network:

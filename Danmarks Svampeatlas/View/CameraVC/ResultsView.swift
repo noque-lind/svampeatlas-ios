@@ -7,142 +7,87 @@
 //
 
 import UIKit
+import ELKit
 
 protocol ResultsViewDelegate: class {
     func retry()
-    func mushroomSelected(predictionResult: PredictionResult, predictionResults: [PredictionResult])
+    func mushroomSelected(predictionResult: Prediction, predictionResults: [Prediction])
 }
 
-class ResultsTableView: ELTableViewOld<ResultsTableView.Item> {
-    
+class ResultsView: UIView, UIGestureRecognizerDelegate {
+
     enum Item {
-        case result(predictionResult: PredictionResult)
+        case title(title: String, subtitle: String)
+        case result(prediction: Prediction)
         case tryAgain
         case creditation
         case lowConfidence
     }
     
-    var scrollViewDidScroll: ((UIScrollView) -> Void)?
-    
-    override init() {
-        super.init()
-        register(cellClass: ContainedResultCell.self, forCellReuseIdentifier: ContainedResultCell.identifier)
-        register(cellClass: ReloadCell.self, forCellReuseIdentifier: ReloadCell.identifier)
-        register(cellClass: CreditationCell.self, forCellReuseIdentifier: CreditationCell.identifier)
-        register(cellClass: CautionCell.self, forCellReuseIdentifier: CautionCell.identifier)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-    
-    override func cellForItem(_ item: ResultsTableView.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        switch item {
-        case .result(predictionResult: let predictionResult):
-            let cell = tableView.dequeueReusableCell(withIdentifier: ContainedResultCell.identifier, for: indexPath) as! ContainedResultCell
-            cell.configureCell(mushroom: predictionResult.mushroom)
-            return cell
-            
-        case .tryAgain:
-            let cell = tableView.dequeueReusableCell(withIdentifier: ReloadCell.identifier, for: indexPath) as! ReloadCell
-            cell.configureCell(type: .tryAgain)
-            return cell
-        case .creditation:
-            let cell = tableView.dequeueReusableCell(withIdentifier: CreditationCell.identifier, for: indexPath) as! CreditationCell
-            cell.configureCell(creditation: .AI)
-            return cell
-        case .lowConfidence:
-            let cell = tableView.dequeueReusableCell(withIdentifier: CautionCell.identifier, for: indexPath) as! CautionCell
-            cell.configureCell(type: .lowConfidence)
-            return cell
-        }
-    }
-    
-    override func heightForItem(_ item: ResultsTableView.Item) -> CGFloat {
-        switch item {
-        case .tryAgain:
-            return LoaderCell.height
-        case .result, .creditation, .lowConfidence:
-            return UITableView.automaticDimension
-        }
-    }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        scrollViewDidScroll?(scrollView)
-    }
-}
-
-class ResultsView: UIView, UIGestureRecognizerDelegate {
-
-    private lazy var headerLabel: UILabel = {
-       let label = UILabel()
-        label.font = UIFont.appTitle()
-        label.textColor = UIColor.appWhite()
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private lazy var secondaryLabel: UILabel = {
-       let label = UILabel()
-        label.font = UIFont.appPrimary()
-        label.textColor = UIColor.appWhite()
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
-    }()
-    
-    private lazy var topView: UIView = {
-       let view = UIView()
-        view.backgroundColor = UIColor.clear
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.alpha = 0
+    class CellProvider: NSObject, ELTableViewCellProvider {
+        typealias CellItem = Item
         
-        let stackView: UIStackView = {
-            let view = UIStackView()
-            view.axis = .vertical
-            view.translatesAutoresizingMaskIntoConstraints = false
-            view.addArrangedSubview(headerLabel)
-            view.addArrangedSubview(secondaryLabel)
-            view.distribution = .fillProportionally
-            return view
-        }()
-        
-        view.addSubview(stackView)
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 16).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        return view
-    }()
-    
-    private lazy var tableView: ResultsTableView = {
-        let tableView = ResultsTableView()
-        tableView.separatorStyle = .none
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        tableView.didSelectItem = { [weak delegate, unowned self] item, _ in
+        func cellForItem(_ item: ResultsView.Item, tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
             switch item {
+            case .title(title: let title, subtitle: let subtitle):
+                let cell = tableView.dequeueReusableCell(withIdentifier: ResultsTitleCell.identifier, for: indexPath) as! ResultsTitleCell
+                cell.configure(title: title, subtitle: subtitle)
+                return cell
+            case .result(prediction: let predictionResult):
+                let cell = tableView.dequeueReusableCell(withIdentifier: ContainedResultCell.identifier, for: indexPath) as! ContainedResultCell
+                cell.configureCell(mushroom: predictionResult.mushroom)
+                return cell
+                
+            case .tryAgain:
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReloadCell.identifier, for: indexPath) as! ReloadCell
+                cell.configureCell(type: .tryAgain)
+                return cell
+            case .creditation:
+                let cell = tableView.dequeueReusableCell(withIdentifier: CreditationCell.identifier, for: indexPath) as! CreditationCell
+                cell.configureCell(creditation: .AI)
+                return cell
+            case .lowConfidence:
+                let cell = tableView.dequeueReusableCell(withIdentifier: CautionCell.identifier, for: indexPath) as! CautionCell
+                cell.configureCell(type: .lowConfidence)
+                return cell
+            }
+        }
+        
+        func heightForItem(_ item: ResultsView.Item, tableView: UITableView, indexPath: IndexPath) -> CGFloat {
+            switch item {
+            case .tryAgain:
+                return LoaderCell.height
+            case .result, .creditation, .lowConfidence, .title:
+                return UITableView.automaticDimension
+            }
+        }
+        
+        func registerCells(tableView: UITableView) {
+            tableView.register(ContainedResultCell.self, forCellReuseIdentifier: ContainedResultCell.identifier)
+            tableView.register(ReloadCell.self, forCellReuseIdentifier: ReloadCell.identifier)
+            tableView.register(CreditationCell.self, forCellReuseIdentifier: CreditationCell.identifier)
+            tableView.register(CautionCell.self, forCellReuseIdentifier: CautionCell.identifier)
+            tableView.register(ResultsTitleCell.self, forCellReuseIdentifier: ResultsTitleCell.identifier)
+        }
+    }
+    
+   
+    
+    private lazy var tableView = ELTableView.build(provider: CellProvider()).then({
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.separatorStyle = .none
+        $0.contentInset = UIEdgeInsets(top: 32, left: 0, bottom: 32, right: 0)
+        $0.didSelectItem.handleEvent { [weak delegate, unowned self] item in
+            switch item.Item {
             case .tryAgain: delegate?.retry()
-            case .result(predictionResult: let predictionsResult):
+            case .result(prediction: let predictionsResult):
                 delegate?.mushroomSelected(predictionResult: predictionsResult, predictionResults: self.results)
             default: break
             }
         }
-
-        return tableView
-    }()
-    
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if otherGestureRecognizer === tableView.panGestureRecognizer {
-//            print("IT IS")
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
+    })
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        print(tableView.scrollView.contentOffset)
         if tableView.scrollView.contentOffset == CGPoint.zero {
             return false
         } else {
@@ -150,16 +95,8 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if gestureRecognizer === tableView.panGestureRecognizer {
-//            print("IT IS")
-//            return true
-//        } else {
-//            return true
-//        }
-//    }
-    
-    private var results = [PredictionResult]()
+    private var results = [Prediction]()
+    private var reliablePrediction: Bool = true
     weak var delegate: ResultsViewDelegate?
     private var error: AppError?
     
@@ -176,34 +113,23 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
         alpha = 0
     }
     
-    func configure(results: [PredictionResult]) {
+    func configure(results: [Prediction], reliablePrediction: Bool) {
         self.results = results
-        
-        if results.count > 0 {
-            headerLabel.text = String.localizedStringWithFormat(NSLocalizedString("resultsView_header_title", comment: ""), results.count)
-            secondaryLabel.text = NSLocalizedString("resultsView_header_message", comment: "")
-            secondaryLabel.textColor = UIColor.red
-        } else {
-            headerLabel.text = "Øv"
-            secondaryLabel.text = "Vi har desværre ingen forslag til dig. Prøv igen, evt. fra en anden vinkel."
-            secondaryLabel.textColor = UIColor.appWhite()
-        }
+        self.reliablePrediction = reliablePrediction
     }
     
     func showResults() {
-        addSubview(topView)
-        topView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        topView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        topView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        
         self.addSubview(tableView)
         tableView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: topView.bottomAnchor, constant: 16).isActive = true
+        tableView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         if let error = error {
-            tableView.setSections(sections: [.init(title: nil, state: .error(error: error, handler: nil))])
+            tableView.setSections(sections: [
+                .init(title: nil, state: .error(error: error, handler: nil)),
+                .init(title: nil, state: .items(items: [.tryAgain]))
+            ])
             self.error = nil
         } else {
             var highestConfidence = 0.0
@@ -214,19 +140,30 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
                 }
             }
             
-            var items = results.compactMap({ResultsTableView.Item.result(predictionResult: $0)})
+            
+            var items = results.compactMap({Item.result(prediction: $0)})
             items.append(.creditation)
-            items.append(.tryAgain)
             
             if highestConfidence < 50.0 {
                 items.insert(.lowConfidence, at: 0)
             }
             
-            tableView.setSections(sections: [.init(title: nil, state: .items(items: items))])
+            if reliablePrediction {
+                tableView.setSections(sections: [
+                    .init(title: nil, state: .items(items: [.title(title: NSLocalizedString("resultsView_header_title", comment: ""), subtitle:  NSLocalizedString("resultsView_header_message", comment: ""))])),
+                    .init(title: nil, state: .items(items: items)),
+                    .init(title: nil, state: .items(items: [.tryAgain]))
+                ])
+            } else {
+                tableView.setSections(sections: [
+                    .init(title: nil, state: .items(items: [.title(title: NSLocalizedString("resultsView_unpredictable_title", comment: ""), subtitle:  NSLocalizedString("resultsView_unpredictable_message", comment: ""))])),
+                    .init(title: nil, state: .items(items: [.tryAgain])),
+                        .init(title: nil, state: .items(items: items)),
+                ])
+            }
         }
         
         UIView.animate(withDuration: 0.2) {
-            self.topView.alpha = 1
             self.tableView.alpha = 1
             self.alpha = 1
         }
@@ -239,9 +176,7 @@ class ResultsView: UIView, UIGestureRecognizerDelegate {
     func reset() {
         results.removeAll()
         tableView.setSections(sections: [])
-        topView.alpha = 0
         tableView.alpha = 0
-        topView.removeFromSuperview()
         tableView.removeFromSuperview()
         alpha = 0
     }

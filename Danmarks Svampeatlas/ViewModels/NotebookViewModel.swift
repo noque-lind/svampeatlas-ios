@@ -35,9 +35,6 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
         switch type {
         case .insert, .update:
             evaluateNotes()
-        case .delete:
-            guard let indexPath = indexPath else {return}
-            deleteNote.post(value: indexPath)
         default: return
         }
     }
@@ -66,13 +63,8 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
             })]), primaryText: NSLocalizedString("prompt_taxonData_title", comment: ""), secondaryText: NSLocalizedString("prompt_taxonData_message", comment: ""), location: .bottom))
         }
         
-        if let lastUpdateDate = UserDefaultsHelper.lastDataUpdateDate {
-            let components = NSCalendar.current.dateComponents([Calendar.Component.day, Calendar.Component.hour], from: lastUpdateDate, to: Date())
-            if let day = components.day, day > 30 {
+        if UserDefaultsHelper.shouldUpdateDatabase {
                 shouldDownload()
-            }
-        } else {
-            shouldDownload()
         }
     }
     
@@ -80,33 +72,10 @@ class NotebookViewModel: NSObject, NSFetchedResultsControllerDelegate {
         Database.instance.notesRepository.delete(note: note) { [weak self] result in
             switch result {
             case .success:
-                print("here")
-//                self?.deleteNote.post(value: indexPath)
+                    self?.deleteNote.post(value: indexPath)
             case .failure(let error):
                 return
             }
         }
     }
-    
-    func uploadNote(note: CDNote, indexPath: IndexPath) {
-        let userObservation = UserObservation(note)
-        loading.set(true)
-        session.uploadObservation(userObservation: .init(note)) { [weak self] result in
-            self?.loading.set(false)
-            DispatchQueue.main.async {
-                switch result {
-                case .success((let id, let imageCount)):
-                    Database.instance.notesRepository.delete(note: note) { _ in }
-                    if imageCount == userObservation.images.count {
-                        self?.show.post(value: .appNotification(style: .success, primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: "DMS: \(id)", location: .bottom))
-                    } else {
-                        self?.show.post(value: .appNotification(style: .warning(actions: nil), primaryText: NSLocalizedString("addObservationVC_successfullUpload_title", comment: ""), secondaryText: String(format: NSLocalizedString("addObservationError_imageUploadError", comment: ""), imageCount, userObservation.images.count), location: .bottom))
-                    }
-                case .failure(let error):
-                    self?.show.post(value: .appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom))
-                }
-            }
-        }
-    }
-
 }

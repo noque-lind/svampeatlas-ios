@@ -110,10 +110,8 @@ extension Spinner {
     }
     
     public static func stop() {
-        DispatchQueue.main.async {
             self.staticSpinnerView?.removeFromSuperview()
-            staticSpinnerView = nil
-        }
+            self.staticSpinnerView = nil
     }
 
 }

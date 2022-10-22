@@ -58,14 +58,8 @@ class MushroomsRepository: Repository {
                 case .english:
                     predicate = (\CDMushroom.fullName).contains(searchString) || (\CDMushroom.attributes?.enName).contains(searchString) || ((\CDMushroom.fullName).beginsWith(speciesSearchResult.genus) && (\CDMushroom.taxonName).contains(speciesSearchResult.taxonName))
                 }
-                
-                struct Inspector: NSFetchRequestInspector {
-                  func inspect<Result>(_ request: NSFetchRequest<Result>) {
-                    print(request)
-                  }
-                }
-                
-                let mushrooms: [CDMushroom] =  try self.backgroundThread.fetch(where: predicate).inspect(on: Inspector()).sorted(by: \.probability, .descending).result()
+                                
+                let mushrooms: [CDMushroom] =  try self.backgroundThread.fetch(where: predicate).sorted(by: \.probability, .descending).result()
                 
                 
                 if mushrooms.isEmpty {
@@ -194,32 +188,6 @@ class MushroomsRepository: Repository {
                 }
     }
     
-//    func delete(mushroom: Mushroom, completion: @escaping ((Result<Void, CoreDataError>) -> ())) {
-//        backgroundThread.perform { [unowned backgroundThread] in
-//            let fetchRequest: NSFetchRequest<CDMushroom> = CDMushroom.fetchRequest()
-//            fetchRequest.predicate = NSPredicate(format: "id == %i", mushroom.id)
-//
-//            do {
-//                let cdMushrooms = try backgroundThread.fetch(fetchRequest)
-//                cdMushrooms.forEach({
-//
-//                    ($0.images?.allObjects as? [CDImage])?.forEach({
-//                                                                    ELFileManager.deleteMushroomImage(withUrl: $0.url ?? "")
-//                                                                    backgroundThread.delete($0)})
-//                    })
-//
-//                try backgroundThread.save()
-//                DispatchQueue.main.async {
-//                    completion(.success(()))
-//                }
-//            } catch {
-//                DispatchQueue.main.async {
-//                     completion(.failure(.saveError))
-//                }
-//            }
-//        }
-//    }
-    
     /// Must call this method on the main thread
     func exists(mushroom: Mushroom) -> Bool {
         let local = try? getDevice()
@@ -245,6 +213,7 @@ class MushroomsRepository: Repository {
         cdMushroom.danishName = item.localizedName
         cdMushroom.redlistStatus = item.redlistStatus
         cdMushroom.updatedAt = item.updatedAt
+        cdMushroom.acceptedId = Int32(item.acceptedTaxon?.id ?? 0)
         cdMushroom.probability = Int64(item.probability ?? 0)
         
         item.attributes?.toDatabase(cdMushroom: cdMushroom, context: backgroundThread)

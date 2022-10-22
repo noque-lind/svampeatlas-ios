@@ -60,7 +60,6 @@ class NewMapView: UIView {
         if #available(iOS 13.0, *) {
             mapView.overrideUserInterfaceStyle = .light
         } else {}
-        mapView.insetsLayoutMarginsFromSafeArea = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.showsUserLocation = self.showsUserLocation
         mapView.register(HeatAnnotationView.self, forAnnotationViewWithReuseIdentifier: "heatAnnotationView")
@@ -84,17 +83,22 @@ class NewMapView: UIView {
     private var spinner = Spinner()
     private var tempIsUserInteractionEnabled: Bool = true
     private var category = Categories.regular
+    
     private var errorView: ErrorView? {
         willSet {
+            let oldValue = self.errorView
             if newValue == nil {
-                     self.errorView?.removeFromSuperview()
+                DispatchQueue.main.async {
+                    oldValue?.removeFromSuperview()
+                    
+                }
             }
         }
         didSet {
             DispatchQueue.main.async {
                 if self.errorView == nil && oldValue != nil {
                     self.isUserInteractionEnabled = self.tempIsUserInteractionEnabled
-                } else if !(self.errorView == nil) {
+                } else if self.errorView != nil && oldValue == nil {
                     self.tempIsUserInteractionEnabled = self.isUserInteractionEnabled
                     self.isUserInteractionEnabled = true
                     self.addSubview(self.errorView!)
@@ -270,7 +274,7 @@ class NewMapView: UIView {
     
     func addLocalityAnnotations(localities: [Locality]) {
         errorView = nil
-        guard let originalElements = self.localities?.returnOriginalElements(newElements: localities), originalElements.count > 0 else {debugPrint("No new items"); return}
+        guard let originalElements = self.localities?.returnOriginalElements(newElements: localities), originalElements.count > 0 else {return}
         self.localities?.append(contentsOf: originalElements)
             
             var annotations = [LocalityAnnotation]()

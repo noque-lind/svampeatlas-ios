@@ -95,9 +95,9 @@ class CameraView: UIVisualEffectView {
         }
     }
     
-    func showResults(results: [PredictionResult]) {
+    func showResults(results: [Prediction], reliablePrediction: Bool) {
         DispatchQueue.main.async {
-            self.resultsView.configure(results: results)
+            self.resultsView.configure(results: results, reliablePrediction: reliablePrediction)
             self.expandView()
         }
     }

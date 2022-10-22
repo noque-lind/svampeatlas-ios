@@ -115,23 +115,36 @@ class ModalVC: UIViewController {
         configure()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         let maxHeight: CGFloat = (UIScreen.main.bounds.height / 4) * 3
 
+        heightAnchor.isActive = false
         if contentStackView.frame.height >= (maxHeight) {
             heightAnchor.constant = maxHeight
         } else {
             heightAnchor.constant = contentStackView.frame.height
         }
+        
+        heightAnchor.isActive = true
+        UIView.animate(withDuration: 0.5) {
+            self.view.subviews.forEach({$0.alpha = 1})
+         
+        }
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
+    
     
     private func setupView() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         
         let scrollView: UIScrollView = {
             let scrollView = UIScrollView()
+            scrollView.alpha = 0
             scrollView.backgroundColor = UIColor.appSecondaryColour()
             scrollView.translatesAutoresizingMaskIntoConstraints = false
             scrollView.layer.cornerRadius = 16
@@ -172,7 +185,7 @@ class ModalVC: UIViewController {
             textView.text = NSLocalizedString("termsVC_cameraHelper_message", comment: "")
         case .whatsNew:
             header.configure(title: NSLocalizedString("whats_new_title", comment: ""))
-            textView.text = NSLocalizedString("whats_new_2_0", comment: "")
+            textView.text = NSLocalizedString("whats_new_3_0", comment: "")
         }
     }
     

@@ -21,7 +21,7 @@ struct ELMultipartFormData {
         init?(withImage imageURL: URL, forKey key: String) {
             self.key = key
             self.mimeType = "image/jpeg"
-            self.filename = "photo-\(Date().convert(into: DateFormatter.Style.full)).jpg"
+            self.filename = "photo-\(Date().timeIntervalSince1970).jpg"
             guard let image = UIImage.init(url: imageURL) else {return nil}
             guard let data = image.rotate().jpegData(sizeInMB: 0.6) else {return nil}
             self.data = data

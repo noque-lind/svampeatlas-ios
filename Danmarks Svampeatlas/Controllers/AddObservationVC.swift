@@ -45,11 +45,6 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
         }
     })
     
-    private lazy var idLabel = UILabel().then({
-        $0.font = .appMuted()
-        $0.textColor = .appWhite()
-    })
-    
     private lazy var observationImagesView = ObservationImagesView().then({ view in
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isExpanded = !(viewModel.images.value.count == 0)
@@ -97,6 +92,18 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
             guard let index = ObservationCategories.allCases.firstIndex(of: category) else {return}
             actionButton.configure(state: getStateForActionView())
             collectionView.scrollToItem(at: IndexPath.init(row: index, section: 0), at: UICollectionView.ScrollPosition.centeredHorizontally, animated: true)
+            
+            switch category {
+            case .Species:
+                viewModel.getPredictions()
+                observationImagesView.isEnabled = false
+            case .Location:
+                validateReminderState()
+                observationImagesView.isEnabled = true
+            case .Details:
+                observationImagesView.isEnabled = true
+            }
+            
             self.view.endEditing(true)
         }
         return view
@@ -164,46 +171,16 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
             title = NSLocalizedString("addObservationVC_title", comment: "")
             navigationItem.setLeftBarButton(UIBarButtonItem(image: #imageLiteral(resourceName: "Icons_MenuIcons_MenuButton"), style: .plain, target: self.eLRevealViewController(), action: #selector(self.eLRevealViewController()?.toggleSideMenu)), animated: false)
         case .edit(observationID: let id):
-            self.navigationItem.titleView = UIStackView().then({
-                $0.axis = .vertical
-                $0.alignment = .center
-                $0.addArrangedSubview(UILabel().then({
-                    $0.font = .appTitle()
-                    $0.textColor = .appWhite()
-                    $0.text = NSLocalizedString("action_editObservation", comment: "")
-                }))
-                
-                $0.addArrangedSubview(idLabel)
-            })
-            idLabel.text = "ID: \(id)"
+            title = NSLocalizedString("action_editObservation", comment: "")
+            navigationItem.prompt = "ID: \(id)"
         case .editNote(node: let note):
-            self.navigationItem.titleView = UIStackView().then({
-                $0.axis = .vertical
-                $0.alignment = .center
-                $0.addArrangedSubview(UILabel().then({
-                    $0.font = .appTitle()
-                    $0.textColor = .appWhite()
-                    $0.text = NSLocalizedString("action_editNote", comment: "")
-                }))
-                
-                $0.addArrangedSubview(idLabel)
-            })
-            idLabel.text = note.observationDate?.convert(into: .medium, ignoreRecentFormatting: true, ignoreTime: true)
+           title = NSLocalizedString("action_editNote", comment: "")
+            navigationItem.prompt = note.observationDate?.convert(into: .medium, ignoreRecentFormatting: true, ignoreTime: true)
         case .uploadNote(note: let note):
-            self.navigationItem.titleView = UIStackView().then({
-                $0.axis = .vertical
-                $0.alignment = .center
-                $0.addArrangedSubview(UILabel().then({
-                    $0.font = .appTitle()
-                    $0.textColor = .appWhite()
-                    $0.text = NSLocalizedString("action_upload_note", comment: "")
-                }))
-                
-                $0.addArrangedSubview(idLabel)
-            })
-            idLabel.text = note.observationDate?.convert(into: .medium, ignoreRecentFormatting: true, ignoreTime: true)
+            title = NSLocalizedString("action_upload_note", comment: "")
+            navigationItem.prompt = note.observationDate?.convert(into: .medium, ignoreRecentFormatting: true, ignoreTime: true)
         }
-        
+    
         navigationItem.setRightBarButton(.init(customView: actionButton), animated: false)
         
         let gradientView = GradientView().then({
@@ -239,17 +216,17 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
                         })
                             }
     
-
+    
     private func setupViewModel() {
         viewModel.setupState.observe { [weak self] (state) in
-            DispatchQueue.main.async {
                 switch state {
                 case .empty: return
                 case .error(error: _, handler: _):
                     return
-                case .loading: Spinner.start(onView: self?.view)
+                case .loading:
+                    Spinner.start(onView: self?.view)
                 case .items:
-                    self?.collectionView.reloadData()
+                    Spinner.stop()
                     guard let type = self?.viewModel.context else {return}
                     switch type {
                     case .new, .newNote, .editNote, .uploadNote:
@@ -257,7 +234,6 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
                     case .edit:
                         self?.categoryView.selectCategory(category: .Details)
                     }
-                }
             }
         }
         
@@ -294,11 +270,8 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
                 switch state {
                 case .loading:
                     self?.categoryView.setCategoryLoadingState(category: .Location, loading: true)
-                case .items(item: let location):
+                case .items:
                     self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
-                    if let cell = self?.collectionView.visibleCells.first as? ObservationLocationCell {
-                        cell.configureLocation(location: location.item, locked: location.locked)
-                    }
                 default: self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
                 }
             }
@@ -307,22 +280,13 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
         viewModel.localities.observe { [weak self] (state) in
             DispatchQueue.main.async {
                 switch state {
-                case .loading: self?.categoryView.setCategoryLoadingState(category: .Location, loading: true)
-                case .items(item: let localities):
+                case .error(error: let error, handler: _):
+                    ELNotificationView.appNotification(style: .error(actions: nil), primaryText: error.title, secondaryText: error.message, location: .bottom).show(animationType: .fromBottom, queuePosition: .front, onViewController: self)
                     self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
-                    if let cell = self?.collectionView.visibleCells.first as? ObservationLocationCell {
-                        cell.configureLocalities(localities: localities)
-                    }
+                case .loading: self?.categoryView.setCategoryLoadingState(category: .Location, loading: true)
+                case .items:
+                    self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
                 default: self?.categoryView.setCategoryLoadingState(category: .Location, loading: false)
-                }
-            }
-        }
-        
-        viewModel.locality.observe { [weak self] (locality) in
-            guard let locality = locality else {return}
-            DispatchQueue.main.async {
-                if let cell = self?.collectionView.visibleCells.first as? ObservationLocationCell {
-                    cell.configureLocality(locality: locality.locality, locked: locality.locked)
                 }
             }
         }
@@ -337,8 +301,8 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
                     case .edit:
                         // When an observation is deleted, we go all the way back to my page.
                         self?.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: viewModel.session)), overrideTypeCheckIgnore: true)
-                    
-                    // When a locally stored note is deleted, we should go back to notesVC
+                        
+                        // When a locally stored note is deleted, we should go back to notesVC
                     case .editNote, .uploadNote:
                         self?.navigationController?.popViewController(animated: true)
                     default: break // Should never happen
@@ -351,7 +315,7 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
                     default:
                         viewModel.reset()
                     }
-                   
+                    
                 case .editCompleted, .editWithError:
                     notif.show(animationType: .fromBottom, queuePosition: .front, onViewController: nil)
                     self?.eLRevealViewController()?.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: viewModel.session)))
@@ -359,7 +323,7 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
                     notif.show(animationType: .fromBottom, queuePosition: .front, onViewController: self)
                 case .noteSave:
                     switch self?.action {
-                    case .newNote, .editNote:
+                    case .newNote, .editNote, .uploadNote:
                         self?.navigationController?.popViewController(animated: true)
                     default:
                         notif.show(animationType: .fromBottom, onViewController: nil)
@@ -400,7 +364,7 @@ class AddObservationVC: UIViewController, UIPopoverPresentationControllerDelegat
     private func validateReminderState() {
         UserDefaultsHelper.decreasePositionReminderCounter()
         if UserDefaultsHelper.shouldShowPositionReminder {
-            presentVC(ModalVC(terms: .localityHelper))
+            self.presentVC(ModalVC(terms: .localityHelper))
         }
     }
     
@@ -447,31 +411,15 @@ extension AddObservationVC: UICollectionViewDelegate, UICollectionViewDataSource
             return cell
         }
     }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if let cell = cell as? ObservationLocationCell {
-            // We want to check reminder state, every time position screen is shown
-            validateReminderState()
         
-            cell.configureLocalities(localities: viewModel.localities.value.item ?? [])
-        
-            if let location = viewModel.observationLocation.value?.item {
-                cell.configureLocation(location: location.item, locked: location.locked)
-            }
-            
-            if let locality = viewModel.locality.value {
-                cell.configureLocality(locality: locality.locality, locked: locality.locked)
-            }
-        }
-    }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        categoryView.moveSelector(toCellAtIndexPath: IndexPath(row: Int(ceil(collectionView.contentOffset.x/collectionView.bounds.size.width)), section: 0))
-        actionButton.configure(state: getStateForActionView())
+     let category = ObservationCategories.allCases[Int(ceil(collectionView.contentOffset.x/collectionView.bounds.size.width))]
+        categoryView.selectCategory(category: category)
+        
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -494,26 +442,21 @@ extension AddObservationVC: NavigationDelegate {
 @available(iOS 13.0, *)
 extension AddObservationVC: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-                
+        
         let saveChanges = UIAction(title: NSLocalizedString("action_save_changes", comment: ""), image: UIImage(systemName: "checkmark")?.withRenderingMode(.alwaysTemplate)) { [weak self] _ in
-            switch self?.action {
-            case .editNote(node: let note):
-                self?.viewModel.editNote(note)
-            default: return
-            }
-           
+            self?.viewModel.saveLocally()
         }
         
         let saveNote = UIAction(title: NSLocalizedString("action_saveAsNote", comment: ""), image: UIImage(systemName: "checkmark")?.withRenderingMode(.alwaysTemplate)) { [weak self] _ in
-            self?.viewModel.saveNew()
+            self?.viewModel.saveLocally()
         }
         
         let deleteNote = UIAction(title: NSLocalizedString("action_deleteNote", comment: ""), image: UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate), attributes: .destructive) { [weak self] _ in
-            self?.viewModel.deleteNote()
+            self?.viewModel.delete()
         }
         
         let deleteObservation = UIAction(title: NSLocalizedString("action_deleteObservation", comment: ""), image: UIImage(systemName: "trash")?.withRenderingMode(.alwaysTemplate), attributes: .destructive) { [weak self] _ in
-            self?.viewModel.deleteObservation()
+            self?.viewModel.delete()
         }
         
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in

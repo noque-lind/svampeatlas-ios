@@ -28,14 +28,13 @@ class ErrorView: UIView {
         return label
     }()
     
-    private let actionButton: UIButton = {
-        let button = UIButton(type: UIButton.ButtonType.system)
-        button.setTitleColor(UIColor.appThird(), for: [])
-        button.titleLabel?.font = UIFont.appPrimaryHightlighed()
-        button.isHidden = true
-        button.addTarget(ErrorView.self, action: #selector(actionButtonPressed), for: UIControl.Event.touchUpInside)
-        return button
-    }()
+    private lazy var actionButton = UIButton().then({
+        $0.setTitleColor(UIColor.appThird(), for: [])
+        $0.titleLabel?.font = UIFont.appPrimaryHightlighed()
+        $0.isHidden = true
+        $0.addTarget(self, action: #selector(actionButtonPressed), for: UIControl.Event.touchUpInside)
+    })
+
     
     private var handler: ELHandler?
     private var recoveryAction: RecoveryAction?

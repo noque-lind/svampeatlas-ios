@@ -62,14 +62,26 @@ struct UserDefaultsHelper {
         }
     }
     
+    static var offlineDatabasePresent: Bool {
+        return UserDefaults.standard.object(forKey: "databaseLastUpdatedDate") != nil
+    }
+    
     static var shouldUpdateDatabase: Bool {
         get {
             guard let databaseLastUpdatedDate = UserDefaults.standard.object(forKey: "databaseLastUpdatedDate") as? Date else {return true}
             
-            if Calendar.current.dateComponents([.day], from: databaseLastUpdatedDate).day ?? 0 < 30 {
+            let day = Calendar.current.dateComponents([.day], from: databaseLastUpdatedDate, to: Date()).day
+            if day ?? 0 < 30 {
                 return false
             } else {
                 return true
+            }
+        }
+        set {
+            if newValue == true {
+                UserDefaults.standard.set(Date(age: 4), forKey: "databaseLastUpdatedDate")
+            } else {
+                UserDefaults.standard.set(Date(), forKey: "databaseLastUpdatedDate")
             }
         }
     }
@@ -161,22 +173,6 @@ struct UserDefaultsHelper {
         }
     }
     
-    static var lastDataUpdateDate: Date? {
-        get {
-            let dateString = UserDefaults.standard.double(forKey: "lastDataUpdate")
-            if dateString != 0 {
-                return Date(timeIntervalSince1970: dateString)
-            } else {
-                return nil
-            }
-        } set {
-            if let date = newValue {
-                UserDefaults.standard.setValue(date.timeIntervalSince1970, forKey: "lastDataUpdate")
-            } else {
-                UserDefaults.standard.removeObject(forKey: "lastDataUpdate")
-            }
-        }
-    }
     
     /// Wether the user would like to recieve position reminders, toggleable in settings.
     static var shouldShowPositionReminderToggle: Bool {
@@ -191,7 +187,6 @@ struct UserDefaultsHelper {
     /// Keeps track of how many sent observations it has been since user was last reminded about precision importance
     private static var positionReminderObservationCount: Int {
         get {
-            print(UserDefaults.standard.integer(forKey: "positionReminderObservationCount"))
             return UserDefaults.standard.integer(forKey: "positionReminderObservationCount")
         } set {
             UserDefaults.standard.set(newValue, forKey: "positionReminderObservationCount")

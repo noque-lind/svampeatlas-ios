@@ -1,12 +1,21 @@
 {
   "pins" : [
     {
+      "identity" : "logrocket-ios-swift-package",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LogRocket/logrocket-ios-swift-package",
+      "state" : {
+        "revision" : "fdebe3668bc02d5546bdd409cb8e507bffcf4fef",
+        "version" : "1.6.2"
+      }
+    },
+    {
       "identity" : "predicatekit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ftchirou/PredicateKit.git",
       "state" : {
-        "revision" : "b7f9071ebf9cb7fa7115cbc4c186bf158ea0c24a",
-        "version" : "1.4.0"
+        "revision" : "ecb1d4313d12b4be0780e7a2a8f3086ea1cfbbc0",
+        "version" : "1.5.0"
       }
     },
     {

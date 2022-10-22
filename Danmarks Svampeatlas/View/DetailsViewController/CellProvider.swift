@@ -7,7 +7,6 @@
 //
 
 import ELKit
-import Then
 
 protocol CellProviderDelegate: ObservationDetailHeaderCellDelegate, AddCommentCellDelegate {}
 

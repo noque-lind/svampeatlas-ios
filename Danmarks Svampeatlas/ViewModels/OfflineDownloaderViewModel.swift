@@ -29,7 +29,7 @@ class DownloaderviewModel: NSObject {
         
         _state.set(.Loading(message: NSLocalizedString("downloader_message_taxon", comment: "")))
         
-        DataService.instance.getMushrooms(searchString: nil, speciesQueries: [.images(required: false), .danishNames, Utilities.appLanguage() != .danish ? .attributes(presentInDenmark: false): nil].compactMap({$0}), limit: nil, offset: 0, largeDownload: true, useCache: false) { [weak self] result in
+        DataService.instance.getMushrooms(searchString: nil, speciesQueries: [.images(required: false), .acceptedTaxon, .danishNames, Utilities.appLanguage() != .danish ? .attributes(presentInDenmark: false): nil, .redlistData].compactMap({$0}), limit: nil, offset: 0, largeDownload: true, useCache: false) { [weak self] result in
             switch result {
             case .success(let mushrooms):
                 let dispatchGroup = DispatchGroup()
@@ -58,7 +58,7 @@ class DownloaderviewModel: NSObject {
         _state.set(.Loading(message: NSLocalizedString("message_savingToStorage", comment: "")))
         Database.instance.mushroomsRepository.save(items: mushrooms) { [weak self] result in
             switch result {
-            case .success: self?._state.set(.Completed);  UserDefaultsHelper.lastDataUpdateDate = Date()
+            case .success: self?._state.set(.Completed);  UserDefaultsHelper.shouldUpdateDatabase = false
             case .failure(let error):
                 self?._state.set(.Error(error: error))
             }

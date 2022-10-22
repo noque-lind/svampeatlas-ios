@@ -77,23 +77,4 @@ extension UIImageView {
         self.image = image
         self.layer.add(crossFade, forKey: "animateContents")
     }
-
-//    func downloadImage(size: DataService.ImageSize, urlString: String?) {
-//        guard let urlString = urlString else {return}
-//        DataService.instance.getImage(forUrl: urlString, size: size) { (image, url) in
-//            DispatchQueue.main.async { [weak self] in
-////                debugPrint("Downloaded an image where self.urlString == downloaded URl is:  \(urlString == url)")
-////                debugPrint(urlString)
-////                debugPrint(url)
-//                if true {
-//                    if url == "https://graph.facebook.com/10206479571848603/picture?width=70&height=70" {
-//                        debugPrint("THOMAS LÆSSØE")
-//                    }
-//
-//
-//                    self?.fadeToNewImage(image: image)
-//                }
-//            }
-//        }
-//    }
 }

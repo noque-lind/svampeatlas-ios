@@ -9,7 +9,6 @@
 import ELKit
 import ImageIO
 import MapKit
-import Then
 import UIKit
 
 class AddObservationViewModel: NSObject {
@@ -66,6 +65,9 @@ class AddObservationViewModel: NSObject {
         }
     }
     
+    // If null during session - then we do not want to find predictions
+    private var recognitionService: RecognitionService? = nil
+    private var getPredictionsTask: Task<Void, Never>?
     let session: Session
     let context: AddObservationVC.Action
     
@@ -89,9 +91,15 @@ class AddObservationViewModel: NSObject {
             }
 
             // When a new userObservation is assigned, we always want to make sure the images listener contains the newest value
-            if userObservation.images != self.images.value {
                 _images.set(userObservation.images)
-            }
+            recognitionService?.reset()
+            guard !userObservation.images.isEmpty else {return}
+                Task.init { [weak self] in
+  
+                    for image in _images.value {
+                        await self?.recognitionService?.addImage(imageURL: image.url)
+                    }
+                }
         }
     }
     
@@ -103,7 +111,7 @@ class AddObservationViewModel: NSObject {
             userObservation.mushroom = newValue
             
             // If the selected mushroom is one of the predictionresults, we add it to the determination notes.
-            guard let mushroom = newValue, case Section<PredictionResult>.State.items(items: let predictionResults) = _predictionResults.value, let predictionResult = predictionResults.first(where: {$0.mushroom.id == mushroom.id}) else {userObservation.determinationNotes = nil; return}
+            guard let mushroom = newValue, case Section<Prediction>.State.items(items: let predictionResults) = _predictionResults.value, let predictionResult = predictionResults.first(where: {$0.mushroom.id == mushroom.id}) else {userObservation.determinationNotes = nil; return}
             var string = "#imagevision_score: \(predictionResult.score.rounded(toPlaces: 2)) #imagevision_list: "
             predictionResults.forEach({
                 string += "\($0.mushroom.fullName) (\($0.score.rounded(toPlaces: 2))), "
@@ -176,13 +184,8 @@ class AddObservationViewModel: NSObject {
     }
     
     private lazy var _images = ELListener<[UserObservation.Image]>.init([]) { [weak self] value in
+       // Is called everytime the value of the array changes.
         self?.userObservation.images = value
-        if value.count >= 1 && self?.mushroom == nil {
-            switch self?.context {
-            case .new, .uploadNote: self?.getPredictions(imageURL: value[0].url)
-            default: break
-            }
-        }
     }
     
     lazy var images = ELListenerImmutable(_images)
@@ -211,7 +214,7 @@ class AddObservationViewModel: NSObject {
     private let _localities = ELListener<SimpleState<[Locality]>>.init(.empty)
     lazy var localities = ELListenerImmutable(_localities)
     
-    private let _predictionResults = ELListener<Section<PredictionResult>.State>.init(.empty)
+    private let _predictionResults = ELListener<Section<Prediction>.State>.init(.empty)
     lazy var predictionResults = ELListenerImmutable(_predictionResults)
     
     let uploadState = ELListener<SimpleState<Void>>.init(.empty)
@@ -223,7 +226,7 @@ class AddObservationViewModel: NSObject {
     let notification = ELEvent<(Notification, ELNotificationView.Style)>.init()
     let presentVC = ELEvent<UIViewController>.init()
     
-    init(action: AddObservationVC.Action, session: Session, predictionResults: [PredictionResult]? = nil) {
+    init(action: AddObservationVC.Action, session: Session, predictionResults: [Prediction]? = nil) {
         self.context = action
         self.session = session
         super.init()
@@ -276,7 +279,11 @@ class AddObservationViewModel: NSObject {
     
     func start(action: AddObservationVC.Action) {
         switch action {
-        case .new, .newNote:
+        case .new:
+            recognitionService = RecognitionService()
+            userObservation = UserObservation()
+            setupState.set(.items(item: ()))
+        case .newNote:
             userObservation = UserObservation()
             setupState.set(.items(item: ()))
         case .editNote(node: let note):
@@ -294,6 +301,7 @@ class AddObservationViewModel: NSObject {
                 }
             }
         case .uploadNote(note: let note):
+            recognitionService = RecognitionService()
             userObservation = UserObservation(note)
             setupState.set(.items(item: ()))
         }
@@ -307,11 +315,8 @@ class AddObservationViewModel: NSObject {
     }
     
     func addImage(newObservationImage: UserObservation.Image) {
-        if _images.value.count == 0 && mushroom == nil {
-            switch context {
-            case .new, .uploadNote: getPredictions(imageURL: newObservationImage.url)
-            default: break
-            }
+        Task.init { [weak self] in
+            await self?.recognitionService?.addImage(imageURL: newObservationImage.url)
         }
         
         _images.value.append(newObservationImage)
@@ -352,6 +357,17 @@ class AddObservationViewModel: NSObject {
             _images.value.remove(at: index)
             removedImage.post(value: index)
             
+        }
+        
+        // After removal of image, we want to reset everything related to RecognitionService.
+        Task {
+            _predictionResults.set(.empty)
+            getPredictionsTask?.cancel()
+            getPredictionsTask = nil
+            recognitionService?.reset()
+            for image in _images.value {
+                await recognitionService?.addImage(imageURL: image.url)
+            }
         }
         
         if _images.value.isEmpty {
@@ -402,6 +418,7 @@ class AddObservationViewModel: NSObject {
         DataService.instance.getLocalitiesNearby(coordinates: location.coordinate) { [weak self] result in
             switch result {
             case .success(let localities):
+                // We want to set the locality closest to location as the locality.
                 self?._localities.set(.items(item: localities))
                 let closest = localities.min(by: {$0.location.distance(from: location) < $1.location.distance(from: location)})
                 
@@ -414,17 +431,27 @@ class AddObservationViewModel: NSObject {
         }
     }
     
-    private func getPredictions(imageURL: URL) {
-        guard let image = UIImage(url: imageURL) else {return}
+    func getPredictions() {
+        // If recongitionService is null, then we won't be able to fetch any result.
+        guard !images.value.isEmpty else {return }
+        guard let recognitionService = recognitionService else {return }
+        // Cancel previous request
+        getPredictionsTask?.cancel()
+        
         _predictionResults.set(.loading)
-        DataService.instance.getImagePredictions(image: image) { [weak self] (result) in
-            switch result {
+        getPredictionsTask = Task.init(priority: .userInitiated, operation: { [weak self] in
+            if let substrate = substrate, let vegetationType = vegetationType {
+                await recognitionService.addMetadata(substrate: substrate, vegetationType: vegetationType, date: observationDate)
+            }
+          
+            switch await recognitionService.getResults() {
+            case .success(let predictions):
+                let predictions = await DataService.instance.mushroomsData.fetchMushrooms(from: predictions)
+                self?._predictionResults.set(.items(items: predictions))
             case .failure(let error):
                 self?._predictionResults.set(.error(error: error, handler: nil))
-            case .success(let predictionResults):
-                self?._predictionResults.set(.items(items: predictionResults))
             }
-        }
+        })
     }
     
     func performAction() {
@@ -433,10 +460,8 @@ class AddObservationViewModel: NSObject {
             upload()
         case .edit(observationID: let id):
             edit(id: id)
-        case .newNote:
-            saveNew()
-        case .editNote(node: let note):
-            editNote(note)
+        case .newNote, .editNote:
+            saveLocally()
         }
     }
     
@@ -464,6 +489,7 @@ class AddObservationViewModel: NSObject {
         guard isValid() else {return}
         uploadState.set(.loading)
         session.uploadObservation(userObservation: userObservation) { [weak self] result in
+            self?.uploadState.set(.empty)
             switch result {
             case .failure(let error):
                 self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
@@ -502,37 +528,59 @@ class AddObservationViewModel: NSObject {
             }
         }
     }
-    
-    func saveNew() {
-        uploadState.set(.loading)
-        Database.instance.notesRepository.save(userObservation: userObservation) { [weak self] result in
-            switch result {
-            case .failure(let error):
-                self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
-            case .success:
-                self?.notification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
+        
+    func saveLocally() {
+        func handleSaveChanges(note: CDNote) {
+            Database.instance.notesRepository.saveChanges(note: note, userObservation: userObservation) { [weak self] result in
+                switch result {
+                case .failure(let error):
+                    self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
+                case .success:
+                    self?.notification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
+                }
+                self?.uploadState.set(.empty)
             }
-            
-            self?.uploadState.set(.empty)
         }
-    }
-    
-    func editNote(_ note: CDNote) {
-        uploadState.set(.loading)
-        Database.instance.notesRepository.saveChanges(note: note, userObservation: userObservation) { [weak self] result in
-            switch result {
-            case .failure(let error):
-                self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
-            case .success:
-                self?.notification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
+        
+        func handleSaveNewLocally(userObservation: UserObservation) {
+            Database.instance.notesRepository.save(userObservation: userObservation) { [weak self] result in
+                switch result {
+                case .failure(let error):
+                    self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
+                case .success:
+                    self?.notification.post(value: (Notification.noteSave, ELNotificationView.Style.success))
+                }
+                
+                self?.uploadState.set(.empty)
             }
-            
-            self?.uploadState.set(.empty)
         }
-    }
-    
-    func deleteNote() {
+        
+        uploadState.set(.loading)
         switch context {
+        case .new, .newNote:
+            handleSaveNewLocally(userObservation: userObservation)
+        case .editNote(node: let cdNote):
+           handleSaveChanges(note: cdNote)
+        case .uploadNote(note: let cdNote):
+            handleSaveChanges(note: cdNote)
+        default: fatalError("Called in wrong context, must never happen")
+        }
+    }
+    
+    func delete() {
+        uploadState.set(.loading)
+        switch context {
+        case .edit(observationID: let id):
+            session.deleteObservation(id: id) { [weak self] (result) in
+                self?.uploadState.set(.empty)
+                switch result {
+                case .failure(let error):
+                    self?.notification.post(value: (Notification.error(error: error), ELNotificationView.Style.error(actions: nil)))
+                case .success:
+                    self?.notification.post(value: (Notification.deleted, ELNotificationView.Style.success))
+                }
+                
+            }
         case .uploadNote(note: let cdNote):
             Database.instance.notesRepository.delete(note: cdNote) { [weak self] _ in
                 self?.notification.post(value: (Notification.deleted, .success))
@@ -540,22 +588,6 @@ class AddObservationViewModel: NSObject {
         case .editNote(node: let cdNote):
             Database.instance.notesRepository.delete(note: cdNote) { [weak self] _ in
                 self?.notification.post(value: (Notification.deleted, .success))
-            }
-        default: return
-        }
-    }
-    
-    func deleteObservation() {
-        uploadState.set(.loading)
-        switch context {
-        case .edit(observationID: let id):
-            session.deleteObservation(id: id) { [weak self] (result) in
-                switch result {
-                case .failure(let error): break
-                case .success:
-                    self?.notification.post(value: (Notification.deleted, ELNotificationView.Style.success))
-                }
-                
             }
         default: return
         }

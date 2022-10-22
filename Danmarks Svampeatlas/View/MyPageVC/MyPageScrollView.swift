@@ -59,15 +59,6 @@ class MyPageScrollView: UIScrollView {
         return view
     }()
     
-    private lazy var logoutButton: UIButton = {
-       let button = UIButton()
-        button.setImage(#imageLiteral(resourceName: "Icons_MenuIcons_LogOut"), for: [])
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.widthAnchor.constraint(equalToConstant: 24).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        button.addTarget(self, action: #selector(logoutButtonPressed), for: .touchUpInside)
-        return button
-    }()
     
     private var notificationsCount = 0
     private var session: Session
@@ -89,31 +80,11 @@ class MyPageScrollView: UIScrollView {
     }
     
     private func setupView() {
-        
-        addSubview(logoutButton)
-        logoutButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
-        logoutButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        
-        let logoutLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIFont.appPrimaryHightlighed()
-            label.textColor = UIColor.appWhite()
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.textAlignment = .center
-            label.text = NSLocalizedString("myPageScrollView_logout", comment: "")
-            label.heightAnchor.constraint(equalToConstant: 30).isActive = true
-            return label
-        }()
-    
-        addSubview(logoutLabel)
-        logoutLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        logoutLabel.bottomAnchor.constraint(equalTo: logoutButton.topAnchor, constant: -10).isActive = true
-       
         addSubview(contentView)
         contentView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         contentView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         contentView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        contentView.bottomAnchor.constraint(equalTo: logoutLabel.topAnchor, constant: -32).isActive = true
+        contentView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -32).isActive = true
         contentView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         
         let notificationsStackView: UIStackView = {
@@ -268,10 +239,5 @@ class MyPageScrollView: UIScrollView {
                 })
             }
         }
-    }
-    
-    @objc private func logoutButtonPressed() {
-        session.logout()
-        (UIApplication.shared.delegate as? AppDelegate)?.session = nil
     }
 }

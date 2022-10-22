@@ -82,6 +82,7 @@ class NotesVC: UIViewController {
     })).then({
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.separatorStyle = .singleLine
+        $0.contentInset = .init(top: 16, left: 0, bottom: 16, right: 0)
         
         $0.didSelectItem.handleEvent { [unowned self] (item, _) in
             switch item {
@@ -152,7 +153,17 @@ class NotesVC: UIViewController {
     private func setupViewModel() {
         vm.notes.observe { [weak tableView] state in
             switch state {
-            case .items(item: let items): tableView?.setSections(sections: [.init(title: nil, state: .items(items: items.map({Item.note(($0))})))])
+            case .items(item: let items):
+                var dateSortedNotes = [Double: [CDNote]]()
+                items.forEach({
+                    let date = ($0.creationDate ?? Date()).removeTimeStamp().timeIntervalSince1970
+                    if dateSortedNotes[date] == nil {
+                        dateSortedNotes[date] = [$0]
+                    } else {
+                        dateSortedNotes[date]?.append($0)
+                    }
+                })
+                tableView?.setSections(sections: dateSortedNotes.sorted(by: { $0.key > $1.key}).map({.init(title: String.localizedStringWithFormat(NSLocalizedString("note_createdDate", comment: ""), Date(timeIntervalSince1970: $0.key).convert(into: .medium, ignoreRecentFormatting: false, ignoreTime: true)), state: .items(items: $0.value.map({Item.note($0)})))}))
             case .loading: tableView?.setSections(sections: [.init(title: nil, state: .loading)])
             case .error(error: let error, handler: let handler):
                 tableView?.setSections(sections: [.init(title: nil, state: .error(error: error, handler: handler))])

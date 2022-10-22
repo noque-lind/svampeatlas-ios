@@ -9,6 +9,7 @@
 import CoreData
 import ELKit
 import UIKit
+import LogRocket
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,12 +28,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             navigationVC.session = session
             
             if let session = session {
+                SDK.identify(userID: session.user.initials)
+             
                 elRevealViewController.pushNewViewController(viewController: UINavigationController(rootViewController: MyPageVC(session: session)))
                 if !UserDefaultsHelper.hasSeenWhatsNew {
-                    UserDefaultsHelper.lastDataUpdateDate = nil
+                    if UserDefaultsHelper.offlineDatabasePresent {
+                        UserDefaultsHelper.shouldUpdateDatabase = true
+                    }
                     elRevealViewController.currentViewController.present(ModalVC(terms: .whatsNew), animated: true, completion: nil)
                 }
             } else {
+                SDK.identifyAsAnonymous(userID: "")
                 elRevealViewController.pushNewViewController(viewController: UINavigationController(rootViewController: MushroomVC(session: session)))
             }
             
@@ -77,6 +83,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        SDK.initialize(configuration: Configuration(appID: "nluvzb/svampeatlas", viewScanningEnabled: false))
+        
         
         #if DEBUG
         // Short-circuit starting app if running unit tests
